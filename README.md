@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/AndreaDiotallevi/andreadiotalleviart.svg?style=shield)](https://circleci.com/gh/AndreaDiotallevi/andreadiotalleviart)
-
 # Generative Art Website
 
 [Description](#description) | [Live Website](#live-website) | [Getting Started](#getting-started) | [How to Run the App](#how-to-run-the-app) | [Technologies Used](#technologies-used)
