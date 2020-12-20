@@ -1,0 +1,26 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    background-color: rgb(56, 68, 76);
+    margin-bottom: auto;
+
+    div {
+        width: 1010px;
+
+        @media (max-width: 1090px) {
+            width: 660px;
+        }
+    
+        @media (max-width: 740px) {
+            width: 88vw;
+        }
+    }
+}
+
+.react-p5,
+.p5Canvas {
+  height: 100%;
+  width: 100%;
+}
