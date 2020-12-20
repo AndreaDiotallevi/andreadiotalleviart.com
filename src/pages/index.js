@@ -1,5 +1,16 @@
 import React from "react"
 
-export default function Home() {
-  return <div>Hello world!</div>
+import Layout from "../templates/layout"
+import Moonlight from "../components/moonlight"
+
+import "../styles/index.css"
+
+const Home = () => {
+	return (
+		<Layout>
+			<Moonlight />
+		</Layout>
+	)
 }
+
+export default Home
