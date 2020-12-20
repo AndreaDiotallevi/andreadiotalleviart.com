@@ -1,31 +1,51 @@
 {
-  "name": "gatsby-starter-hello-world",
-  "private": true,
-  "description": "A simplified bare-bones starter for Gatsby",
-  "version": "0.1.0",
-  "license": "0BSD",
-  "scripts": {
-    "build": "gatsby build",
-    "develop": "gatsby develop",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "npm run develop",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
-  },
-  "dependencies": {
-    "gatsby": "^2.26.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
-  },
-  "devDependencies": {
-    "prettier": "2.2.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
-  }
+	"name": "andreadiotalleviart-gatsby",
+	"private": true,
+	"description": "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist.",
+	"version": "0.1.0",
+	"license": "0BSD",
+	"scripts": {
+		"build": "gatsby build",
+		"develop": "env-cmd -f .env.development gatsby develop",
+		"format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+		"start": "npm run develop",
+		"serve": "gatsby serve",
+		"clean": "gatsby clean",
+		"test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+	},
+	"dependencies": {
+		"@loadable/component": "^5.14.1",
+		"dotenv": "^8.2.0",
+		"gatsby": "^2.24.79",
+		"gatsby-image": "^2.4.21",
+		"gatsby-plugin-google-analytics": "^2.4.0",
+		"gatsby-plugin-google-fonts": "^1.0.1",
+		"gatsby-plugin-react-helmet": "^3.3.14",
+		"gatsby-plugin-sass": "^2.3.19",
+		"gatsby-plugin-sharp": "^2.6.43",
+		"gatsby-remark-images": "^3.3.39",
+		"gatsby-remark-reading-time": "^1.1.0",
+		"gatsby-remark-relative-images": "^2.0.2",
+		"gatsby-source-filesystem": "^2.3.35",
+		"gatsby-transformer-json": "^2.8.0",
+		"gatsby-transformer-remark": "^2.8.45",
+		"gatsby-transformer-sharp": "^2.5.20",
+		"node-sass": "^4.14.1",
+		"p5": "^1.1.9",
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0",
+		"react-helmet": "^6.1.0",
+		"react-p5-wrapper": "^2.3.0"
+	},
+	"devDependencies": {
+		"env-cmd": "^10.1.0",
+		"prettier": "2.1.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
+	},
+	"bugs": {
+		"url": "https://github.com/gatsbyjs/gatsby/issues"
+	}
 }
