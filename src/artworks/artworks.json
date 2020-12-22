@@ -2,6 +2,7 @@
     {
         "slug": "agate-stone",
         "name": "Agate stone",
+        "description": "A simulation of the concentric layers of the banded patterns characteristic of many gemstones.",
         "images": [
             "./images/agate-stone-0.png"
         ]
@@ -9,6 +10,7 @@
     {
         "slug": "marble-lake",
         "name": "Marble lake",
+        "description": "This artwork was made with p5.js and particles with variable colour and alpha channel flowing through a noise field.",
         "images": [
             "./images/marble-lake-0.png"
         ]
@@ -16,6 +18,7 @@
     {
         "slug": "fluid",
         "name": "Fluid",
+        "description": "A series of fluid forms made with circles and gradients.",
         "images": [
             "./images/fluid-0.png",
             "./images/fluid-1.png",
@@ -26,6 +29,7 @@
     {
         "slug": "daisy",
         "name": "Daisy",
+        "description": "A mathematical approach for drawing a daisy.",
         "images": [
             "./images/daisy-0.png"
         ]
@@ -33,6 +37,7 @@
     {
         "slug": "white-cherry",
         "name": "White cherry",
+        "description": "A fractal experimentation with processing.",
         "images": [
             "./images/white-cherry-0.png"
         ]
@@ -40,6 +45,7 @@
     {
         "slug": "black-hole",
         "name": "Black hole",
+        "description": "A radial combination of Bezier curves.",
         "images": [
             "./images/black-hole-0.png"
         ]
@@ -47,6 +53,7 @@
     {
         "slug": "divergent-flow",
         "name": "Divergent flow",
+        "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/divergent-flow-0.png"
         ]
@@ -54,6 +61,7 @@
     {
         "slug": "imaginary-topography",
         "name": "Imaginary topography",
+        "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/imaginary-topography-0.png",
             "./images/imaginary-topography-1.png"
@@ -62,6 +70,7 @@
     {
         "slug": "textile-craters",
         "name": "Textile craters",
+        "description": "Thirteen colourful dotted particles let free for two hours.",
         "images": [
             "./images/textile-craters-0.png",
             "./images/textile-craters-1.png",
@@ -72,6 +81,7 @@
     {
         "slug": "lava-sea",
         "name": "Lava sea",
+        "description": "A glitched version of a shore.",
         "images": [
             "./images/lava-sea-0.png"
         ]
@@ -79,6 +89,7 @@
     {
         "slug": "waving-fabric",
         "name": "Waving fabric",
+        "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/waving-fabric-0.png"
         ]
@@ -86,6 +97,7 @@
     {
         "slug": "water-currents",
         "name": "Water currents",
+        "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/water-currents-0.png",
             "./images/water-currents-1.png"

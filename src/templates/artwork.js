@@ -1,15 +1,19 @@
 import React from "react"
 import { graphql } from "gatsby"
+import Img from "gatsby-image"
 
 import Layout from "./layout"
+
+import artworkStyles from "./artwork.module.scss"
 
 export const query = graphql`
     query ($slug: String!) {
         artworksJson ( slug: { eq: $slug }) {
             name
+            description
             images {
                 childImageSharp {
-                    fluid(maxWidth: 310) {
+                    fluid(maxWidth: 485) {
                         ...GatsbyImageSharpFluid
                     }
                 }
@@ -21,7 +25,21 @@ export const query = graphql`
 const Artwork = (props) => {
     return (
         <Layout>
-            {props.data.artworksJson.name}
+            <div className={artworkStyles.container}>
+                <div>
+                    <ul>
+                        {props.data.artworksJson.images.map(image => (
+                            <li key={image.childImageSharp.fluid}>
+                                <Img fluid={image.childImageSharp.fluid} />
+                            </li>
+                        ))}
+                    </ul>
+                    <div>
+                        <h3>{props.data.artworksJson.name}</h3>
+                        <p>{props.data.artworksJson.description}</p>
+                    </div>
+                </div>
+            </div>
         </Layout>
     )
 }
