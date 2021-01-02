@@ -28,8 +28,8 @@ const Artwork = (props) => {
             <div className={artworkStyles.container}>
                 <div>
                     <ul>
-                        {props.data.artworksJson.images.map(image => (
-                            <li key={image.childImageSharp.fluid}>
+                        {props.data.artworksJson.images.map((image, index) => (
+                            <li key={index}>
                                 <Img fluid={image.childImageSharp.fluid} />
                             </li>
                         ))}

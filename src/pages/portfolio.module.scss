@@ -49,6 +49,15 @@
 @media (max-width: 740px) {
     .container ul {
         width: 88vw;
+        margin-bottom: 16.21vw;
+
+        li {
+            max-width: 41vw;
+        }
+
+        li a p {
+            margin-bottom: 9.45vw;
+        }
 
         li a .image {
             width: 41vw;

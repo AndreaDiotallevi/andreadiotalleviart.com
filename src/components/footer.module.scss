@@ -24,6 +24,11 @@
     height: 80px;
     width: 1010px;
 
+    div a {
+        display: flex;
+        align-items: center;
+    }
+
     @media (max-width: 1090px) {
         width: 660px;
     }
