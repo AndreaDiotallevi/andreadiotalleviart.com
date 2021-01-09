@@ -3,6 +3,7 @@ import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
 import Layout from "../templates/layout"
+import Seo from "../components/seo"
 
 import contactStyles from "./contact.module.scss"
 
@@ -21,6 +22,10 @@ export const query = graphql`
 const Contact = (props) => {
     return (
         <Layout>
+            <Seo
+                title="Contact | Andrea Diotallevi"
+                description="Get in touch if you are interested in working together"
+            />
             <div className={contactStyles.container}>
                 <div>
                     <div className={contactStyles.image}>

@@ -4,6 +4,7 @@ import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
 import Layout from "../templates/layout"
+import Seo from "../components/seo"
 
 import portfolioStyles from "./portfolio.module.scss"
 
@@ -30,6 +31,10 @@ export const query = graphql`
 const Portfolio = (props) => {
     return (
         <Layout>
+            <Seo
+                title="Portfolio | Andrea Diotallevi"
+                description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+            />
             <div className={portfolioStyles.container}>
                 <ul>
                     {props.data.allArtworksJson.edges.map(({ node }) => (
