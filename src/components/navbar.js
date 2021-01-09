@@ -8,7 +8,7 @@ import navbarStyles from "./navbar.module.scss"
 
 const Navbar = ({ open, onClick, isHome }) => {
     return (
-        <div className={`${navbarStyles.container} ${isHome ? navbarStyles.isHome : ""}`}>
+        <header className={`${navbarStyles.container} ${isHome ? navbarStyles.isHome : ""}`}>
             <nav className={navbarStyles.navbar}>
                 <div>
                     <Link to="/">
@@ -34,7 +34,7 @@ const Navbar = ({ open, onClick, isHome }) => {
                     isHome={isHome}
                 />
             </nav>
-        </div>
+        </header>
     )
 }
 
