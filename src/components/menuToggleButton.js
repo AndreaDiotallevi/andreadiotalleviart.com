@@ -2,10 +2,10 @@ import React from "react"
 
 import menuToggleButtonStyles from "./menuToggleButton.module.scss"
 
-const MenuToggleButton = ({ open, onClick, location }) => {
+const MenuToggleButton = ({ open, onClick, isHome }) => {
     return (
         <button
-            className={`${menuToggleButtonStyles.toggleButton} ${open ? menuToggleButtonStyles.menuOpen : ""} ${location.pathname === "/" ? menuToggleButtonStyles.isHome : ""}`}
+            className={`${menuToggleButtonStyles.toggleButton} ${open ? menuToggleButtonStyles.menuOpen : ""} ${isHome ? menuToggleButtonStyles.isHome : ""}`}
             onClick={onClick}
             aria-label="menu-toggle"
         >

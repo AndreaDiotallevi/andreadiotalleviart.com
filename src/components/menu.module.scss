@@ -1,16 +1,33 @@
 .menu {
-    height: 100%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 
-    @media (min-width: 750px) {
-        display: none;
+    &.isHome {
+        background-color: rgb(56, 68, 76);
     }
 
     ul {
-        margin: 0;
-        width: 100%;
+        width: 1010px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center
+    }
+}
+
+@media (min-width: 1090px) {
+    .menu {
+        display: none;
+    }
+}
+
+@media (max-width: 1090px) {
+    .menu ul {
+        width: 660px;
+    }
+}
+
+@media (max-width: 740px) {
+    .menu ul {
+        width: 88vw;
     }
 }

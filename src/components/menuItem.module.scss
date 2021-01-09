@@ -1,6 +1,20 @@
 .link {
-    text-decoration: none;
-    font-size: 1.62671rem;
-    padding: 20px;
-    color: inherit;
+    color: rgb(68, 68, 68);
+    font-size: 15px;
+    padding: 10px 0;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(132, 132, 132, 0.2);
+
+    &.isHome {
+        color: white;
+    }
+
+    &:hover {
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+}
+
+.active-nav-item {
+    opacity: 0.6;
 }

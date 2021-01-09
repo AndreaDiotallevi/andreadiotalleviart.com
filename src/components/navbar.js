@@ -6,13 +6,13 @@ import routes from "../utils/routes"
 
 import navbarStyles from "./navbar.module.scss"
 
-const Navbar = ({ open, onClick, location }) => {
+const Navbar = ({ open, onClick, isHome }) => {
     return (
-        <div className={`${navbarStyles.container} ${location.pathname === "/" ? navbarStyles.isHome : ""}`}>
+        <div className={`${navbarStyles.container} ${isHome ? navbarStyles.isHome : ""}`}>
             <nav className={navbarStyles.navbar}>
                 <div>
                     <Link to="/">
-                        <p className={`${location.pathname === "/" ? navbarStyles.isHome : ""}`}>Andrea Diotallevi</p>
+                        <p className={`${isHome ? navbarStyles.isHome : ""}`}>Andrea Diotallevi</p>
                     </Link>
                 </div>
                 <ul>
@@ -20,7 +20,7 @@ const Navbar = ({ open, onClick, location }) => {
                         <li key={menuName}>
                             <Link
                                 to={baseUrl}
-                                className={`${location.pathname === "/" ? navbarStyles.isHome : ""}`}
+                                className={`${isHome ? navbarStyles.isHome : ""}`}
                                 activeClassName={navbarStyles.activeNavItem}
                             >
                                 {menuName}
@@ -31,7 +31,7 @@ const Navbar = ({ open, onClick, location }) => {
                 <MenuToggleButton
                     open={open}
                     onClick={onClick}
-                    location={location}
+                    isHome={isHome}
                 />
             </nav>
         </div>

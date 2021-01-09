@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Location } from '@reach/router'
 
 import Navbar from "../components/navbar"
+import Menu from "../components/menu"
 import PageTitle from "../components/pageTitle"
 import Footer from "../components/footer"
 
@@ -15,11 +16,16 @@ const Layout = ({ children }) => {
                     <Navbar
                         open={isMenuOpen}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        location={location}
+                        isHome={location.pathname === "/"}
                     />
-                    <PageTitle location={location} />
+                    <Menu
+                        open={isMenuOpen}
+                        onClick={() => setIsMenuOpen(false)}
+                        isHome={location.pathname === "/"}
+                    />
+                    <PageTitle isHome={location.pathname === "/"} />
                     {children}
-                    <Footer location={location} />
+                    <Footer isHome={location.pathname === "/"} />
                 </div>
             )}
         </Location>

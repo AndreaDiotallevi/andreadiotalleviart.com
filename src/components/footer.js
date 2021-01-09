@@ -2,9 +2,9 @@ import React from "react"
 
 import footerStyles from "./footer.module.scss"
 
-const Footer = ({ location }) => {
+const Footer = ({ isHome }) => {
     return (
-        <div className={`${footerStyles.container} ${location.pathname === "/" ? footerStyles.isHome : ""}`}>
+        <div className={`${footerStyles.container} ${isHome ? footerStyles.isHome : ""}`}>
             <footer className={footerStyles.footer}>
                 <div>
                     <p className={footerStyles.copyright}>

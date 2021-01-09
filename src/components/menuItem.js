@@ -3,12 +3,13 @@ import { Link } from "gatsby"
 
 import menuItemStyles from "./menuItem.module.scss"
 
-const MenuItem = ({ item, onClick }) => {
+const MenuItem = ({ item, onClick, isHome }) => {
     return (
         <Link
             to={`${item.baseUrl}`}
             onClick={onClick}
-            className={menuItemStyles.link}
+            className={`${menuItemStyles.link} ${isHome ? menuItemStyles.isHome : ""}`}
+            activeClassName={menuItemStyles.activeNavItem}
         >
             {item.menuName}
         </Link>
