@@ -39,10 +39,7 @@ const Portfolio = (props) => {
                 <ul>
                     {props.data.allArtworksJson.edges.map(({ node }) => (
                         <li key={node.name}>
-                            <Link
-                                to={`/portfolio/${node.slug}`}
-                                className="artwork-link"
-                            >
+                            <Link to={`/portfolio/${node.slug}`}>
                                 <Img
                                     fluid={node.images[0].childImageSharp.fluid}
                                     className={portfolioStyles.image}
