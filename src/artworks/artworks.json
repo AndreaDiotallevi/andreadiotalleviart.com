@@ -1,7 +1,7 @@
 [
     {
         "slug": "agate-stone",
-        "name": "Agate stone",
+        "name": "Agate Stone",
         "description": "A simulation of the concentric layers of the banded patterns characteristic of many gemstones.",
         "images": [
             "./images/agate-stone-0.png"
@@ -9,7 +9,7 @@
     },
     {
         "slug": "marble-lake",
-        "name": "Marble lake",
+        "name": "Marble Lake",
         "description": "This artwork was made with p5.js and particles with variable colour and alpha channel flowing through a noise field.",
         "images": [
             "./images/marble-lake-0.png"
@@ -36,7 +36,7 @@
     },
     {
         "slug": "white-cherry",
-        "name": "White cherry",
+        "name": "White Cherry",
         "description": "A fractal experimentation with processing.",
         "images": [
             "./images/white-cherry-0.png"
@@ -44,7 +44,7 @@
     },
     {
         "slug": "black-hole",
-        "name": "Black hole",
+        "name": "Black Hole",
         "description": "A radial combination of Bezier curves.",
         "images": [
             "./images/black-hole-0.png"
@@ -52,7 +52,7 @@
     },
     {
         "slug": "divergent-flow",
-        "name": "Divergent flow",
+        "name": "Divergent Flow",
         "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/divergent-flow-0.png"
@@ -60,7 +60,7 @@
     },
     {
         "slug": "imaginary-topography",
-        "name": "Imaginary topography",
+        "name": "Imaginary Topography",
         "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/imaginary-topography-0.png",
@@ -69,7 +69,7 @@
     },
     {
         "slug": "textile-craters",
-        "name": "Textile craters",
+        "name": "Textile Craters",
         "description": "Thirteen colourful dotted particles let free for two hours.",
         "images": [
             "./images/textile-craters-0.png",
@@ -80,7 +80,7 @@
     },
     {
         "slug": "lava-sea",
-        "name": "Lava sea",
+        "name": "Lava Sea",
         "description": "A glitched version of a shore.",
         "images": [
             "./images/lava-sea-0.png"
@@ -88,7 +88,7 @@
     },
     {
         "slug": "waving-fabric",
-        "name": "Waving fabric",
+        "name": "Waving Fabric",
         "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/waving-fabric-0.png"
@@ -96,7 +96,7 @@
     },
     {
         "slug": "water-currents",
-        "name": "Water currents",
+        "name": "Water Currents",
         "description": "Colour-filled particles flowing through a perlin noise vector field.",
         "images": [
             "./images/water-currents-0.png",
@@ -123,7 +123,7 @@
     },
     {
         "slug": "memory-of-a-shore",
-        "name": "Memory of a shore",
+        "name": "Memory of a Shore",
         "description": "Image processing with a pixel sorting algorithm.",
         "images": [
             "./images/memory-of-a-shore-0.png"
