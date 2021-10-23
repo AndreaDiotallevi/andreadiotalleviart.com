@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 
-import { loadableP5 as P5Wrapper } from './loadable'
-import Sketch from './sketch'
+import { loadableP5 as P5Wrapper } from "./loadable"
+import Sketch from "./sketch"
 
-import moonlightStyles from "./moonlight.module.scss"
+import * as moonlightStyles from "./moonlight.module.scss"
 
 class Moonlight extends Component {
     render() {
