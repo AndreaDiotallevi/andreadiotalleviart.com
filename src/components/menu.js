@@ -3,7 +3,7 @@ import React from "react"
 import MenuItem from "./menuItem"
 import routes from "../utils/routes"
 
-import menuStyles from "./menu.module.scss"
+import * as menuStyles from "./menu.module.scss"
 
 const Menu = ({ open, onClick, isHome }) => {
     if (!open) {
@@ -11,7 +11,9 @@ const Menu = ({ open, onClick, isHome }) => {
     }
 
     return (
-        <div className={`${menuStyles.menu} ${isHome ? menuStyles.isHome : ""}`}>
+        <div
+            className={`${menuStyles.menu} ${isHome ? menuStyles.isHome : ""}`}
+        >
             <ul>
                 {routes.map((item, index) => (
                     <MenuItem
