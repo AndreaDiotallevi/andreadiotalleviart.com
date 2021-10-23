@@ -5,7 +5,7 @@ import Img from "gatsby-image"
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
 
-import contactStyles from "./contact.module.scss"
+import * as contactStyles from "./contact.module.scss"
 
 export const query = graphql`
     query {
@@ -19,7 +19,7 @@ export const query = graphql`
     }
 `
 
-const Contact = (props) => {
+const Contact = props => {
     return (
         <Layout>
             <Seo
@@ -29,16 +29,22 @@ const Contact = (props) => {
             <div className={contactStyles.container}>
                 <div>
                     <div className={contactStyles.image}>
-                        <Img fluid={props.data.fileName.childImageSharp.fluid} />
+                        <Img
+                            fluid={props.data.fileName.childImageSharp.fluid}
+                        />
                     </div>
                     <div className={contactStyles.text}>
-                        <p>I am a generative artist and creative coder based in London.</p>
                         <p>
-                            As a pianist and former architect, I am fascinated by the
-                            intersection between art and technology and I am in constant
-                            exploration of generative art concepts. For each new work, I design
-                            a custom algorithm capable of generating a sequence of unique, but
-                            aesthetically related images.
+                            I am a generative artist and creative coder based in
+                            London.
+                        </p>
+                        <p>
+                            As a pianist and former architect, I am fascinated
+                            by the intersection between art and technology and I
+                            am in constant exploration of generative art
+                            concepts. For each new work, I design a custom
+                            algorithm capable of generating a sequence of
+                            unique, but aesthetically related images.
                         </p>
                         <p>------</p>
                         <p>Email</p>

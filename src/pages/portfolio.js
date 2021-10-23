@@ -6,7 +6,7 @@ import Img from "gatsby-image"
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
 
-import portfolioStyles from "./portfolio.module.scss"
+import * as portfolioStyles from "./portfolio.module.scss"
 
 export const query = graphql`
     query {
@@ -28,7 +28,7 @@ export const query = graphql`
     }
 `
 
-const Portfolio = (props) => {
+const Portfolio = props => {
     return (
         <Layout>
             <Seo
