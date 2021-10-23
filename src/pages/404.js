@@ -1,3 +1,5 @@
-export default () => {
+const NotFound = () => {
     return null
 }
+
+export default NotFound
