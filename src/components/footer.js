@@ -43,7 +43,7 @@ const Footer = ({ isHome }) => {
                     </div>
                     <div>
                         <a
-                            href="https://twitter.com/a_diotallevi_"
+                            href="https://twitter.com/adiotalleviart"
                             target="_blank"
                             rel="noopener noreferrer"
                         >

@@ -10,7 +10,7 @@ module.exports = {
             "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist.",
         url: "https://www.andreadiotalleviart.com",
         image: "/moonlight.png",
-        twitterUsername: "@a_diotallevi_",
+        twitterUsername: "@adiotalleviart",
     },
     plugins: [
         "gatsby-plugin-react-helmet",
