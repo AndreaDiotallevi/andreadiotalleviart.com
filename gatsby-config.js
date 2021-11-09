@@ -20,33 +20,33 @@ module.exports = {
             options: {
                 name: "src",
                 path: `${__dirname}/src/`,
-                cssLoaderOptions: {
-                    esModule: false,
-                    modules: {
-                        namedExport: false,
-                    },
-                },
+                // cssLoaderOptions: {
+                //     esModule: false,
+                //     modules: {
+                //         namedExport: false,
+                //     },
+                // },
             },
         },
         "gatsby-plugin-sharp",
         "gatsby-transformer-sharp",
         "gatsby-transformer-json",
-        {
-            resolve: "gatsby-transformer-remark",
-            options: {
-                plugins: [
-                    // "gatsby-remark-reading-time",
-                    "gatsby-remark-relative-images",
-                    {
-                        resolve: "gatsby-remark-images",
-                        options: {
-                            maxWidth: 750,
-                            linkImagesToOriginal: false,
-                        },
-                    },
-                ],
-            },
-        },
+        // {
+        //     resolve: "gatsby-transformer-remark",
+        //     options: {
+        //         plugins: [
+        //             // "gatsby-remark-reading-time",
+        //             "gatsby-remark-relative-images",
+        //             {
+        //                 resolve: "gatsby-remark-images",
+        //                 options: {
+        //                     maxWidth: 750,
+        //                     linkImagesToOriginal: false,
+        //                 },
+        //             },
+        //         ],
+        //     },
+        // },
         {
             resolve: `gatsby-plugin-google-fonts`,
             options: {
