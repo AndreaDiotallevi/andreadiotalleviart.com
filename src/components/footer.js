@@ -12,7 +12,7 @@ const Footer = ({ isHome }) => {
             <footer className={footerStyles.footer}>
                 <div>
                     <p className={footerStyles.copyright}>
-                        © 2021, ANDREA DIOTALLEVI
+                        © 2022, ANDREA DIOTALLEVI
                     </p>
                 </div>
                 <div style={{ display: "flex", marginLeft: "25px" }}>
