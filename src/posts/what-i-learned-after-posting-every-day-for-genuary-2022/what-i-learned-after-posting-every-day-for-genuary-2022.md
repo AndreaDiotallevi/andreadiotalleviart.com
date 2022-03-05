@@ -1,13 +1,13 @@
 ---
 title: "What I learned after posting every day for Genuary 2022"
-description: "In this post I describe more extensively reflections i have had during this journey."
+description: "In this post I describe more extensively reflections I have had during this journey."
 date: "2022-02-05"
 tags: ["Generative Art", "Genuary"]
-featuredImage: genuary22-1400x840.png
+featuredImage: genuary16-1400x840.png
 ---
 
 <figcaption>
-    <a href="https://twitter.com/adiotalleviart/status/1484898206198677506" target="_blank">My Genuary #22</a>
+    <a href="https://twitter.com/adiotalleviart/status/1483007977615511553" target="_blank">My Genuary #16</a>
 </figcaption>
 
 Last month I partecipated for the first time in <a href="https://genuary.art/" target="_blank">Genuary</a>, "_an artificially generated month of time where we build code that makes beautiful things_".
