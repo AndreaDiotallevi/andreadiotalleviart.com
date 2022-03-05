@@ -1,15 +1,15 @@
 .container {
     width: 100%;
+    height: calc(100vh - 80px - 120px - 80px - 20px);
     display: flex;
     justify-content: center;
-    flex: 1;
     background-color: rgb(56, 68, 76);
-    margin-bottom: auto;
+    padding-bottom: 20px;
 
     div {
         width: 1010px;
 
-        @media (max-width: 1090px) {
+        @media (max-width: 699.98px) {
             width: 660px;
         }
 

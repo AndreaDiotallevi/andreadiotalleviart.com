@@ -9,7 +9,14 @@ class Moonlight extends Component {
     render() {
         return (
             <div className={moonlightStyles.container}>
-                <div id="moonlight-container">
+                <div
+                    id="moonlight-container"
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
                     <P5Wrapper sketch={Sketch} />
                 </div>
             </div>
