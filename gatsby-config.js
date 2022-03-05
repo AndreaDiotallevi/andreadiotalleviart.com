@@ -50,7 +50,12 @@ module.exports = {
         {
             resolve: `gatsby-plugin-google-fonts`,
             options: {
-                fonts: ["Work Sans:400,600,700"],
+                fonts: [
+                    // "Work Sans:400,500,600,700",
+                    // "Lato:400,500,600,700",
+                    // "Rubik:400,500,600,700",
+                    "Nunito:500,700",
+                ],
                 display: "swap",
             },
         },
