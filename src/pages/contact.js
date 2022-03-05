@@ -61,10 +61,11 @@ const Contact = props => {
                                 images.
                             </p>
                             <p>------</p>
-                            <p>Email</p>
+                            <p>Email:</p>
                             <a
-                                className={contactStyles.email}
                                 href="mailto: andrea.diotallevi@outlook.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 andrea.diotallevi@outlook.com
                             </a>

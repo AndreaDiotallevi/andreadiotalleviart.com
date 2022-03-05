@@ -4,6 +4,16 @@
     justify-content: center;
     align-items: center;
 
+    a {
+        color: rgb(70, 83, 197);
+        color: rgb(37, 102, 146);
+        font-weight: 600;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
     > div {
         display: flex;
         width: 1010px;
@@ -43,23 +53,5 @@
                 padding-left: 0;
             }
         }
-    }
-}
-
-// @media (max-width: 740px) {
-//     .container {
-//         > div {
-//             width: 88vw;
-//         }
-//     }
-// }
-
-.email {
-    border-bottom: 1px solid white;
-    color: rgb(68, 68, 68);
-
-    &:hover {
-        border-bottom: 1px solid black;
-        transition: 0.3s;
     }
 }
