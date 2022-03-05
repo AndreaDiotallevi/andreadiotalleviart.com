@@ -1,0 +1,39 @@
+.container {
+    display: grid;
+    grid-template-columns: 310px 310px 310px;
+    grid-gap: 40px;
+    list-style: none;
+    margin: 0 16px;
+    // text-transform: uppercase;
+
+    li {
+        margin-bottom: 20px;
+
+        &:hover {
+            transition: 0.3s;
+            opacity: 0.75;
+        }
+    }
+
+    p {
+        margin-top: 10px;
+    }
+
+    h2 {
+        margin-top: 10px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 1041.99px) {
+        grid-template-columns: 310px 310px;
+    }
+
+    @media (max-width: 691.99px) {
+        grid-template-columns: calc(100vw / 2 - 26px) calc(100vw / 2 - 26px);
+        grid-gap: 20px;
+
+        p {
+            font-size: 14px;
+        }
+    }
+}
