@@ -1,7 +1,10 @@
 /* Reset provided by https://github.com/gatsbyjs/gatsby-starter-blog via MIT license */
 * {
     font-family: "Work Sans", sans-serif;
-    font-weight: 400;
+    font-family: "Lato", sans-serif;
+    // font-family: "Rubik", sans-serif;
+    font-family: "Nunito", sans-serif;
+    font-weight: 500;
     font-size: 18px;
     margin: 0;
     padding: 0;
@@ -28,7 +31,7 @@ body {
 }
 
 h1 {
-    font-weight: 600;
+    font-weight: bold;
     text-rendering: optimizeLegibility;
     font-size: 2.1rem;
     line-height: 1.1;
@@ -40,7 +43,7 @@ h1 {
 }
 
 h2 {
-    font-weight: 600;
+    font-weight: bold;
     text-rendering: optimizeLegibility;
     font-size: 1.3rem;
     // font-size: 1.62671rem;

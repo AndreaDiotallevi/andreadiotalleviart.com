@@ -6,7 +6,7 @@ import Moonlight from "../components/moonlight"
 import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 
-import "../styles/index2.scss"
+import "../styles/index.scss"
 
 export const query = graphql`
     query {
