@@ -1,10 +1,11 @@
 import React, { useState } from "react"
-import { Location } from '@reach/router'
+import { Location } from "@reach/router"
 
 import Navbar from "../components/navbar"
 import Menu from "../components/menu"
-import PageTitle from "../components/pageTitle"
 import Footer from "../components/footer"
+
+import "../styles/prism-modified.css"
 
 const Layout = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,7 +13,15 @@ const Layout = ({ children }) => {
     return (
         <Location>
             {({ location }) => (
-                <div className="app">
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        width: "100%",
+                        minHeight: "100vh",
+                    }}
+                >
                     <Navbar
                         open={isMenuOpen}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -23,8 +32,16 @@ const Layout = ({ children }) => {
                         onClick={() => setIsMenuOpen(false)}
                         isHome={location.pathname === "/"}
                     />
-                    <PageTitle isHome={location.pathname === "/"} />
-                    {children}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            flex: "auto",
+                            width: "100%",
+                        }}
+                    >
+                        {children}
+                    </div>
                     <Footer isHome={location.pathname === "/"} />
                 </div>
             )}
