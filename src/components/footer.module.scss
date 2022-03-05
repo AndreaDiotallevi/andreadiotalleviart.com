@@ -3,7 +3,6 @@
     justify-content: center;
     width: 100%;
     height: 80px;
-    // text-transform: uppercase;
     border-top: 1px solid rgb(132, 132, 132, 0.2);
 
     &.homepage {
@@ -45,6 +44,7 @@
 
         p {
             margin-bottom: 0;
+            margin-right: 8px;
 
             @media (max-width: 691.99px) {
                 font-size: 16px;
@@ -67,7 +67,7 @@
     svg {
         display: block;
         fill: rgb(68, 68, 68);
-        height: 18px;
+        height: 20px;
     }
 
     span {
