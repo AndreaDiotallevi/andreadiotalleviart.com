@@ -2,16 +2,14 @@ import React from "react"
 
 import * as pageTitleStyles from "./pageTitle.module.scss"
 
-const PageTitle = ({ isHome }) => {
+const PageTitle = ({ isHome, text }) => {
     return (
         <div
             className={`${pageTitleStyles.container} ${
                 isHome ? pageTitleStyles.isHome : ""
             }`}
         >
-            <div>
-                <p>generative artist and creative coder</p>
-            </div>
+            <h1>{text}</h1>
         </div>
     )
 }
