@@ -3,12 +3,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: auto;
 
     > div {
         display: flex;
         width: 1010px;
-        margin-bottom: 60px;
+        margin: 0 16px;
+        margin-bottom: 50px;
 
         .image {
             width: 50%;
@@ -26,7 +26,7 @@
     }
 }
 
-@media (max-width: 1090px) {
+@media (max-width: 691.99px) {
     .container {
         > div {
             flex-direction: column;
@@ -46,13 +46,13 @@
     }
 }
 
-@media (max-width: 740px) {
-    .container {
-        > div {
-            width: 88vw;
-        }
-    }
-}
+// @media (max-width: 740px) {
+//     .container {
+//         > div {
+//             width: 88vw;
+//         }
+//     }
+// }
 
 .email {
     border-bottom: 1px solid white;
