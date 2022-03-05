@@ -5,13 +5,17 @@
     width: 100%;
     min-height: 150px;
 
-    @media (max-width: 691.99px) {
-        justify-content: start;
-    }
-
     h1 {
         text-align: center;
         margin: 0 16px;
+    }
+
+    @media (max-width: 691.99px) {
+        justify-content: start;
+
+        h1 {
+            text-align: left;
+        }
     }
 
     &.isHome {
@@ -20,6 +24,7 @@
         min-height: 120px;
 
         h1 {
+            text-align: center;
             color: white;
             font-size: 18px;
             font-weight: 400;
