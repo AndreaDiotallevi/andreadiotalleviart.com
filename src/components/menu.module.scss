@@ -8,26 +8,16 @@
     }
 
     ul {
-        width: 1010px;
+        width: 100%;
         display: flex;
         flex-direction: column;
+        margin: 0;
+        padding: 0 16px;
     }
 }
 
-@media (min-width: 1090px) {
+@media (min-width: 692px) {
     .menu {
         display: none;
-    }
-}
-
-@media (max-width: 1090px) {
-    .menu ul {
-        width: 660px;
-    }
-}
-
-@media (max-width: 740px) {
-    .menu ul {
-        width: 88vw;
     }
 }

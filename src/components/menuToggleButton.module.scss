@@ -12,9 +12,9 @@
     transition: 0.5s ease-in-out;
     cursor: pointer;
     border: none;
-	background-color: transparent;
-	
-	@media (min-width: 1090px) {
+    background-color: transparent;
+
+    @media (min-width: 692px) {
         display: none;
     }
 
@@ -22,7 +22,7 @@
         background-color: white;
     }
 }
-  
+
 .toggle-button span {
     display: block;
     position: absolute;
@@ -40,47 +40,46 @@
     -o-transition: 0.25s ease-in-out;
     transition: 0.25s ease-in-out;
 }
-  
+
 .toggle-button span:nth-child(1) {
     top: 0px;
 }
-  
+
 .toggle-button span:nth-child(2),
 .toggle-button span:nth-child(3) {
     top: 6px;
 }
-  
+
 .toggle-button span:nth-child(4) {
     top: 12px;
 }
-  
+
 .toggle-button.menu-open span:nth-child(1) {
     top: 6px;
     width: 0%;
     left: 50%;
 }
-  
+
 .toggle-button.menu-open span:nth-child(2) {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -o-transform: rotate(45deg);
     transform: rotate(45deg);
 }
-  
+
 .toggle-button.menu-open span:nth-child(3) {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
-  
+
 .toggle-button.menu-open span:nth-child(4) {
     top: 6px;
     width: 0%;
     left: 50%;
 }
-  
+
 .toggle-button:focus {
     outline: none;
 }
-  
