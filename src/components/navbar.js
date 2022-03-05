@@ -19,7 +19,7 @@ const Navbar = ({ open, onClick, isHome }) => (
             <ul>
                 {routes.map(({ menuName, baseUrl }) => (
                     <li key={menuName}>
-                        <Link to={baseUrl} activeStyle={{ fontWeight: 600 }}>
+                        <Link to={baseUrl} activeStyle={{ opacity: 0.75 }}>
                             {menuName}
                         </Link>
                     </li>
