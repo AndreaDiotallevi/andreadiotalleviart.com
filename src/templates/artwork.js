@@ -4,6 +4,7 @@ import Img from "gatsby-image"
 
 import Layout from "./layout"
 import Seo from "../components/seo"
+import PageTitle from "../components/pageTitle"
 
 import * as artworkStyles from "./artwork.module.scss"
 
@@ -36,21 +37,33 @@ const Artwork = props => {
                     props.data.artworksJson.images[0].childImageSharp.fixed.src
                 }
             />
-            <div className={artworkStyles.container}>
-                <div>
-                    <ul>
-                        {props.data.artworksJson.images.map((image, index) => (
-                            <li key={index}>
-                                <Img
-                                    fluid={image.childImageSharp.fluid}
-                                    alt={`${props.data.artworksJson.name}-${index}`}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "100%",
+                    marginBottom: "50px",
+                }}
+            >
+                <PageTitle isHome={false} text={props.data.artworksJson.name} />
+                <div className={artworkStyles.container}>
                     <div>
-                        <h3>{props.data.artworksJson.name}</h3>
-                        <p>{props.data.artworksJson.description}</p>
+                        <ul>
+                            {props.data.artworksJson.images.map(
+                                (image, index) => (
+                                    <li key={index}>
+                                        <Img
+                                            fluid={image.childImageSharp.fluid}
+                                            alt={`${props.data.artworksJson.name}-${index}`}
+                                        />
+                                    </li>
+                                )
+                            )}
+                        </ul>
+                        <div>
+                            <p>{props.data.artworksJson.description}</p>
+                        </div>
                     </div>
                 </div>
             </div>
