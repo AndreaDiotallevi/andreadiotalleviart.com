@@ -5,7 +5,15 @@ import routes from "../utils/routes"
 
 import * as menuStyles from "./menu.module.scss"
 
-const Menu = ({ open, onClick, isHome }) => {
+type DataProps = {
+    open: boolean
+    onClick: () => void
+    isHome: boolean
+}
+
+const Menu = (props: DataProps) => {
+    const { open, onClick, isHome } = props
+
     if (!open) {
         return null
     }

@@ -2,7 +2,15 @@ import React from "react"
 
 import * as menuToggleButtonStyles from "./menuToggleButton.module.scss"
 
-const MenuToggleButton = ({ open, onClick, isHome }) => {
+type DataProps = {
+    open: boolean
+    onClick: () => void
+    isHome: boolean
+}
+
+const MenuToggleButton = (props: DataProps) => {
+    const { open, onClick, isHome } = props
+
     return (
         <button
             className={`${menuToggleButtonStyles.toggleButton} ${

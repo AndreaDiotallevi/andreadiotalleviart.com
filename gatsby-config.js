@@ -20,12 +20,6 @@ module.exports = {
             options: {
                 name: "src",
                 path: `${__dirname}/src/`,
-                // cssLoaderOptions: {
-                //     esModule: false,
-                //     modules: {
-                //         namedExport: false,
-                //     },
-                // },
             },
         },
         `gatsby-plugin-image`,
@@ -36,7 +30,6 @@ module.exports = {
             resolve: "gatsby-transformer-remark",
             options: {
                 plugins: [
-                    // "gatsby-remark-reading-time",
                     "gatsby-remark-relative-images",
                     {
                         resolve: "gatsby-remark-images",

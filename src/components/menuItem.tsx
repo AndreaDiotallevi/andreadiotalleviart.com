@@ -1,9 +1,18 @@
 import React from "react"
 import { Link } from "gatsby"
+import { RouteType } from "../utils/routes"
 
 import * as menuItemStyles from "./menuItem.module.scss"
 
-const MenuItem = ({ item, onClick, isHome }) => {
+type DataProps = {
+    item: RouteType
+    onClick: () => void
+    isHome: boolean
+}
+
+const MenuItem = (props: DataProps) => {
+    const { item, onClick, isHome } = props
+
     return (
         <Link
             to={`${item.baseUrl}`}

@@ -2,7 +2,14 @@ import React from "react"
 
 import * as pageTitleStyles from "./pageTitle.module.scss"
 
-const PageTitle = ({ isHome, text }) => {
+type DataProps = {
+    isHome: boolean
+    text: string
+}
+
+const PageTitle = (props: DataProps) => {
+    const { isHome, text } = props
+
     return (
         <div
             className={`${pageTitleStyles.container} ${

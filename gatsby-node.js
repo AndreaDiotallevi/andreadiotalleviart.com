@@ -16,8 +16,8 @@ module.exports.onCreateNode = ({ node, actions }) => {
 
 module.exports.createPages = async ({ graphql, actions }) => {
     const { createPage } = actions
-    const blogTemplate = path.resolve("./src/templates/blog.js")
-    const artworkTemplate = path.resolve("./src/templates/artwork.js")
+    const blogTemplate = path.resolve("./src/templates/blog.tsx")
+    const artworkTemplate = path.resolve("./src/templates/artwork.tsx")
 
     const res = await graphql(`
         query {
@@ -65,8 +65,8 @@ module.exports.createPages = async ({ graphql, actions }) => {
     // 3. Create new pages
 }
 
-module.exports.onCreatePage = async ({ page, actions: { deletePage } }) => {
-    if (page.path.match(/^\/blog/)) {
-        deletePage(page)
-    }
-}
+// module.exports.onCreatePage = async ({ page, actions: { deletePage } }) => {
+//     if (page.path.match(/^\/blog/)) {
+//         deletePage(page)
+//     }
+// }

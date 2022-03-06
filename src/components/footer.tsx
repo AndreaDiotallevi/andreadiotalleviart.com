@@ -2,7 +2,13 @@ import React from "react"
 
 import * as footerStyles from "./footer.module.scss"
 
-const Footer = ({ isHome }) => {
+type DataProps = {
+    isHome: boolean
+}
+
+const Footer = (props: DataProps) => {
+    const { isHome } = props
+
     return (
         <footer
             className={`${footerStyles.footer} ${
@@ -16,10 +22,9 @@ const Footer = ({ isHome }) => {
                         href="https://foundation.app/andreadiotalleviart"
                         target="_blank"
                         rel="noopener noreferrer"
-                        alt="Foundation"
                         aria-label="Foundation"
                     >
-                        {/* <span>Foundation</span> */}
+                        <span>Foundation</span>
                         <svg
                             aria-hidden="true"
                             focusable="false"
@@ -34,10 +39,9 @@ const Footer = ({ isHome }) => {
                         href="https://twitter.com/adiotalleviart"
                         target="_blank"
                         rel="noopener noreferrer"
-                        alt="Twitter"
                         aria-label="Twitter"
                     >
-                        {/* <span>Twitter</span> */}
+                        <span>Twitter</span>
                         <svg
                             aria-hidden="true"
                             focusable="false"
@@ -52,10 +56,9 @@ const Footer = ({ isHome }) => {
                         href="https://www.instagram.com/andreadiotalleviart/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        alt="Instagram"
                         aria-label="Instagram"
                     >
-                        {/* <span>Instagram</span> */}
+                        <span>Instagram</span>
                         <svg
                             aria-hidden="true"
                             focusable="false"

@@ -1,10 +1,17 @@
 import React from "react"
-import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { useLocation } from "@reach/router"
 import { useStaticQuery, graphql } from "gatsby"
 
-const SEO = ({ title, description, image, article }) => {
+type DataProps = {
+    title: string
+    description: string
+    image?: string
+    article?: boolean
+}
+
+const SEO = (props: DataProps) => {
+    const { title, description, image, article } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -27,13 +34,15 @@ const SEO = ({ title, description, image, article }) => {
         <Helmet
             title={seo.title}
             htmlAttributes={{
-                lang: 'en',
+                lang: "en",
             }}
         >
             <meta name="description" content={seo.description} />
             <meta name="image" content={seo.image} />
             {seo.url && <meta property="og:url" content={seo.url} />}
-            {(article ? true : null) && <meta property="og:type" content="article" />}
+            {(article ? true : null) && (
+                <meta property="og:type" content="article" />
+            )}
             {seo.title && <meta property="og:title" content={seo.title} />}
             {seo.description && (
                 <meta property="og:description" content={seo.description} />
@@ -48,37 +57,26 @@ const SEO = ({ title, description, image, article }) => {
                 <meta name="twitter:description" content={seo.description} />
             )}
             {seo.image && <meta name="twitter:image" content={seo.image} />}
-            <meta name="google-site-verification" content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY" />
+            <meta
+                name="google-site-verification"
+                content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
+            />
         </Helmet>
     )
 }
 
 export default SEO
 
-SEO.propTypes = {
-    title: PropTypes.string,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    article: PropTypes.bool,
-}
-
-SEO.defaultProps = {
-    title: null,
-    description: null,
-    image: null,
-    article: false,
-}
-
 const query = graphql`
-  query SEO {
-    site {
-      siteMetadata {
-        defaultTitle: title
-        defaultDescription: description
-        siteUrl: url
-        defaultImage: image
-        twitterUsername
-      }
+    query SEO {
+        site {
+            siteMetadata {
+                defaultTitle: title
+                defaultDescription: description
+                siteUrl: url
+                defaultImage: image
+                twitterUsername
+            }
+        }
     }
-  }
 `

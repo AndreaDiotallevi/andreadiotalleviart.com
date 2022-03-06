@@ -7,7 +7,11 @@ import Footer from "../components/footer"
 
 import "../styles/prism-modified.css"
 
-const Layout = ({ children }) => {
+type DataProps = {
+    children: JSX.Element
+}
+
+const Layout = ({ children }: DataProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     return (

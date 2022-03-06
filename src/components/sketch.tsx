@@ -1,3 +1,4 @@
+//@ts-nocheck
 const Sketch = p5 => {
     let t = 0
 

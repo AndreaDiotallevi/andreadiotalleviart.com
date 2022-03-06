@@ -5,8 +5,6 @@
     height: 80px;
     border-bottom: 1px solid rgb(132, 132, 132, 0.2);
 
-    // background-color: rgb(237, 245, 251);
-
     h2 {
         text-transform: uppercase;
     }
@@ -38,16 +36,6 @@
         width: 100%;
         max-width: 1010px;
         margin: 0 16px;
-
-        // > a {
-        //     // font-size: 25px;
-        //     font-weight: bold;
-        //     // text-transform: uppercase;
-
-        //     @media (max-width: 691.99px) {
-        //         font-size: 21px;
-        //     }
-        // }
 
         ul {
             display: flex;
