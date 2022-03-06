@@ -65,8 +65,8 @@ module.exports.createPages = async ({ graphql, actions }) => {
     // 3. Create new pages
 }
 
-// module.exports.onCreatePage = async ({ page, actions: { deletePage } }) => {
-//     if (page.path.match(/^\/blog/)) {
-//         deletePage(page)
-//     }
-// }
+module.exports.onCreatePage = async ({ page, actions: { deletePage } }) => {
+    if (page.path.match(/^\/blog/)) {
+        deletePage(page)
+    }
+}
