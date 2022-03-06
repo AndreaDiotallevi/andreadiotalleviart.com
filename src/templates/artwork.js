@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "./layout"
 import Seo from "../components/seo"
@@ -15,9 +15,11 @@ export const query = graphql`
             description
             images {
                 childImageSharp {
-                    fluid(maxWidth: 660) {
-                        ...GatsbyImageSharpFluid
-                    }
+                    gatsbyImageData(
+                        width: 660
+                        layout: CONSTRAINED
+                        placeholder: BLURRED
+                    )
                     fixed {
                         src
                     }
@@ -34,7 +36,8 @@ const Artwork = props => {
                 title={`${props.data.artworksJson.name} | Andrea Diotallevi`}
                 description={props.data.artworksJson.description}
                 image={
-                    props.data.artworksJson.images[0].childImageSharp.fixed.src
+                    props.data.artworksJson.images[0].childImageSharp
+                        .gatsbyImageData.src
                 }
             />
             <div
@@ -53,8 +56,11 @@ const Artwork = props => {
                             {props.data.artworksJson.images.map(
                                 (image, index) => (
                                     <li key={index}>
-                                        <Img
-                                            fluid={image.childImageSharp.fluid}
+                                        <GatsbyImage
+                                            image={
+                                                image.childImageSharp
+                                                    .gatsbyImageData
+                                            }
                                             alt={`${props.data.artworksJson.name}-${index}`}
                                         />
                                     </li>

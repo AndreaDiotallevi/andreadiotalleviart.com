@@ -1,6 +1,6 @@
 import React from "react"
 import { Link, graphql, useStaticQuery } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
@@ -10,7 +10,7 @@ import * as blogStyles from "./blog.module.scss"
 
 const BlogPage = () => {
     const data = useStaticQuery(graphql`
-        query {
+        {
             allMarkdownRemark(
                 sort: { order: DESC, fields: [frontmatter___date] }
             ) {
@@ -23,9 +23,11 @@ const BlogPage = () => {
                             tags
                             featuredImage {
                                 childImageSharp {
-                                    fluid(maxWidth: 310) {
-                                        ...GatsbyImageSharpFluid
-                                    }
+                                    gatsbyImageData(
+                                        width: 310
+                                        layout: CONSTRAINED
+                                        placeholder: BLURRED
+                                    )
                                 }
                             }
                         }
@@ -63,11 +65,12 @@ const BlogPage = () => {
                                     key={edge.node.frontmatter.title}
                                 >
                                     <div>
-                                        <Img
-                                            fluid={
+                                        <GatsbyImage
+                                            image={
                                                 edge.node.frontmatter
                                                     .featuredImage
-                                                    .childImageSharp.fluid
+                                                    .childImageSharp
+                                                    .gatsbyImageData
                                             }
                                         />
                                     </div>

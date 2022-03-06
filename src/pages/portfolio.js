@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
@@ -10,7 +10,7 @@ import PageTitle from "../components/pageTitle"
 import * as portfolioStyles from "./portfolio.module.scss"
 
 export const query = graphql`
-    query {
+    {
         allArtworksJson {
             edges {
                 node {
@@ -18,9 +18,11 @@ export const query = graphql`
                     name
                     images {
                         childImageSharp {
-                            fluid(maxWidth: 310) {
-                                ...GatsbyImageSharpFluid
-                            }
+                            gatsbyImageData(
+                                width: 310
+                                layout: CONSTRAINED
+                                placeholder: BLURRED
+                            )
                         }
                     }
                 }
@@ -51,9 +53,10 @@ const Portfolio = props => {
                         {props.data.allArtworksJson.edges.map(({ node }) => (
                             <li key={node.name}>
                                 <Link to={`/portfolio/${node.slug}`}>
-                                    <Img
-                                        fluid={
-                                            node.images[0].childImageSharp.fluid
+                                    <GatsbyImage
+                                        image={
+                                            node.images[0].childImageSharp
+                                                .gatsbyImageData
                                         }
                                     />
                                     <h2>{node.name}</h2>

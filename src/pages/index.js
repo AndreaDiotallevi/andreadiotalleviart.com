@@ -9,12 +9,14 @@ import Seo from "../components/seo"
 import "../styles/index.scss"
 
 export const query = graphql`
-    query {
+    {
         fileName: file(relativePath: { eq: "assets/test.png" }) {
             childImageSharp {
-                fluid(maxWidth: 660) {
-                    ...GatsbyImageSharpFluid
-                }
+                gatsbyImageData(
+                    width: 660
+                    layout: CONSTRAINED
+                    placeholder: BLURRED
+                )
             }
         }
     }

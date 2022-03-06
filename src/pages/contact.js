@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
@@ -9,12 +9,14 @@ import PageTitle from "../components/pageTitle"
 import * as contactStyles from "./contact.module.scss"
 
 export const query = graphql`
-    query {
+    {
         fileName: file(relativePath: { eq: "assets/profile-photo.jpg" }) {
             childImageSharp {
-                fluid(maxWidth: 660) {
-                    ...GatsbyImageSharpFluid
-                }
+                gatsbyImageData(
+                    width: 660
+                    layout: CONSTRAINED
+                    placeholder: BLURRED
+                )
             }
         }
     }
@@ -40,9 +42,10 @@ const Contact = props => {
                 <div className={contactStyles.container}>
                     <div>
                         <div className={contactStyles.image}>
-                            <Img
-                                fluid={
-                                    props.data.fileName.childImageSharp.fluid
+                            <GatsbyImage
+                                image={
+                                    props.data.fileName.childImageSharp
+                                        .gatsbyImageData
                                 }
                             />
                         </div>
