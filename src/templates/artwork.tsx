@@ -33,7 +33,15 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                     title={`${artworksJson.name} | Andrea Diotallevi`}
                     description={artworksJson.description}
                     image={artworksJson.images[0].childImageSharp.fixed.src}
-                    tags={[artworksJson.name]}
+                    tags={[
+                        artworksJson.name,
+                        "Generative Art",
+                        "p5.js",
+                        "Processing",
+                        "Procedural",
+                        "Print",
+                        "Giclee",
+                    ]}
                 />
                 <div
                     style={{

@@ -42,6 +42,11 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
                         "Generative Art",
                         "Album Covers",
                         "NFTs",
+                        "p5.js",
+                        "Processing",
+                        "Procedural",
+                        "Print",
+                        "Giclee",
                     ]}
                 />
                 <div
