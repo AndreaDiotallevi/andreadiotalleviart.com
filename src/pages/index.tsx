@@ -14,6 +14,13 @@ const Home = () => {
                 <Seo
                     title="Andrea Diotallevi | Generative Artist and Creative Coder"
                     description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+                    tags={[
+                        "Andrea Diotallevi",
+                        "Andrea Diotallevi Art",
+                        "Generative Art",
+                        "Album Covers",
+                        "NFTs",
+                    ]}
                 />
                 <div
                     style={{

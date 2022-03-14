@@ -36,6 +36,13 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
                 <Seo
                     title="Portfolio | Andrea Diotallevi"
                     description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+                    tags={[
+                        "Andrea Diotallevi",
+                        "Andrea Diotallevi Art",
+                        "Generative Art",
+                        "Album Covers",
+                        "NFTs",
+                    ]}
                 />
                 <div
                     style={{
@@ -84,7 +91,7 @@ export const query = graphql`
                         childImageSharp {
                             gatsbyImageData(
                                 width: 310
-                                quality: 100
+                                quality: 99
                                 layout: CONSTRAINED
                                 placeholder: BLURRED
                             )

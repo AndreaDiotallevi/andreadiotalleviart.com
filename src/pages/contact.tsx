@@ -23,6 +23,7 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                 <Seo
                     title="Contact | Andrea Diotallevi"
                     description="Get in touch if you are interested in working together"
+                    tags={["Contact", "About"]}
                 />
                 <div
                     style={{

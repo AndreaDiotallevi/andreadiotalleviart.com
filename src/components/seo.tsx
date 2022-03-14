@@ -8,10 +8,11 @@ type DataProps = {
     description: string
     image?: string
     article?: boolean
+    tags: string[]
 }
 
 const SEO = (props: DataProps) => {
-    const { title, description, image, article } = props
+    const { title, description, image, article, tags } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -38,6 +39,7 @@ const SEO = (props: DataProps) => {
             }}
         >
             <meta name="description" content={seo.description} />
+            <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />
             {seo.url && <meta property="og:url" content={seo.url} />}
             {(article ? true : null) && (

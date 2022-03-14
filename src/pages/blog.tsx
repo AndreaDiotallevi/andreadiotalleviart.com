@@ -40,6 +40,7 @@ const BlogPage = ({ data: { allMarkdownRemark } }: PageProps<DataProps>) => {
                 <Seo
                     title="Blog | Andrea Diotallevi"
                     description="Andrea Diotallevi's blog posts"
+                    tags={["Andrea Diotallevi Art's Blog"]}
                 />
                 <div style={{ marginBottom: 50 }}>
                     <div
@@ -104,7 +105,7 @@ export const query = graphql`
                             childImageSharp {
                                 gatsbyImageData(
                                     width: 310
-                                    quality: 100
+                                    quality: 99
                                     layout: CONSTRAINED
                                     placeholder: BLURRED
                                 )

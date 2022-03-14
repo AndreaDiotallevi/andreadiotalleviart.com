@@ -39,6 +39,7 @@ const Blog = ({ data: { markdownRemark } }: PageProps<DataProps>) => {
                     description={description}
                     image={featuredImage.childImageSharp.fixed.src}
                     article={true}
+                    tags={[title]}
                 />
                 <article className={blogStyles.article}>
                     <PageTitle isHome={false} text={frontmatter.title} />
@@ -71,7 +72,7 @@ export const query = graphql`
                     childImageSharp {
                         gatsbyImageData(
                             width: 660
-                            quality: 100
+                            quality: 99
                             layout: CONSTRAINED
                             placeholder: BLURRED
                         )

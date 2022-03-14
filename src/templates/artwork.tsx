@@ -33,6 +33,7 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                     title={`${artworksJson.name} | Andrea Diotallevi`}
                     description={artworksJson.description}
                     image={artworksJson.images[0].childImageSharp.fixed.src}
+                    tags={[artworksJson.name]}
                 />
                 <div
                     style={{
@@ -81,7 +82,7 @@ export const query = graphql`
                 childImageSharp {
                     gatsbyImageData(
                         width: 660
-                        quality: 100
+                        quality: 99
                         layout: CONSTRAINED
                         placeholder: BLURRED
                     )
