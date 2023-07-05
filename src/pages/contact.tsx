@@ -57,15 +57,6 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                                     capable of generating a sequence of unique,
                                     but aesthetically related images.
                                 </p>
-                                <p>------</p>
-                                <p>Email:</p>
-                                <a
-                                    href="mailto: andrea.diotallevi@outlook.com"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    andrea.diotallevi@outlook.com
-                                </a>
                             </div>
                         </div>
                     </div>
