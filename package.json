@@ -32,13 +32,13 @@
 		"gatsby-transformer-remark": "^5.1.1",
 		"gatsby-transformer-sharp": "^4.9.0",
 		"gbimage-bridge": "^0.2.1",
-		"node-sass": "^6.0.1",
 		"p5": "^1.4.0",
 		"prismjs": "^1.26.0",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-helmet": "^6.1.0",
-		"react-p5-wrapper": "^2.4.1"
+		"react-p5-wrapper": "^2.4.1",
+		"sass": "^1.63.6"
 	},
 	"devDependencies": {
 		"@types/loadable__component": "^5.13.4",
