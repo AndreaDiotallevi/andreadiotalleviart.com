@@ -16,7 +16,7 @@ const Footer = (props: DataProps) => {
             }`}
         >
             <div>
-                <p>© 2022, Andrea Diotallevi</p>
+                <p>© 2023, Andrea Diotallevi</p>
                 <ul>
                     <li>
                         <a
