@@ -16,7 +16,6 @@ module.exports.onCreateNode = ({ node, actions }) => {
 
 module.exports.createPages = async ({ graphql, actions }) => {
     const { createPage } = actions
-    const blogTemplate = path.resolve("./src/templates/blog.tsx")
     const artworkTemplate = path.resolve("./src/templates/artwork.tsx")
 
     const res = await graphql(`
@@ -40,16 +39,6 @@ module.exports.createPages = async ({ graphql, actions }) => {
         }
     `)
 
-    res.data.allMarkdownRemark.edges.forEach(edge => {
-        createPage({
-            component: blogTemplate,
-            path: `/blog/${edge.node.fields.slug}`,
-            context: {
-                slug: edge.node.fields.slug,
-            },
-        })
-    })
-
     res.data.allArtworksJson.edges.forEach(edge => {
         createPage({
             component: artworkTemplate,
@@ -63,10 +52,4 @@ module.exports.createPages = async ({ graphql, actions }) => {
     // 1. Get path to template
     // 2. Get markdown data
     // 3. Create new pages
-}
-
-module.exports.onCreatePage = async ({ page, actions: { deletePage } }) => {
-    if (page.path.match(/^\/blog/)) {
-        deletePage(page)
-    }
 }
