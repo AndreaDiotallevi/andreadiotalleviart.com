@@ -79,7 +79,11 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                             alt={node.product.name}
                                         />
                                         <h2>{node.product.name}</h2>
-                                        <p>{node.unit_amount / 100}</p>
+                                        <p>
+                                            {(node.unit_amount / 100).toFixed(
+                                                2
+                                            )}
+                                        </p>
                                     </Link>
                                 </li>
                             ))}
