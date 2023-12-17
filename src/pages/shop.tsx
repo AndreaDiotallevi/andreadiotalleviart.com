@@ -6,36 +6,15 @@ import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
 import PageTitle from "../components/pageTitle"
+import { StripePrice } from "../models/stripe"
 
 import * as portfolioStyles from "./shop.module.scss"
 
 type DataProps = {
-    allStripePrice: {
-        edges: [
-            {
-                node: {
-                    active: boolean
-                    unit_amount: number
-                    id: string
-                    product: {
-                        id: string
-                        name: string
-                        localFiles: [
-                            {
-                                childImageSharp: {
-                                    gatsbyImageData: IGatsbyImageData
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
+    allStripePrice: StripePrice[]
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
-    console.log(allStripePrice)
     return (
         <Layout>
             <React.Fragment>
@@ -69,7 +48,9 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                         <ul className={portfolioStyles.container}>
                             {allStripePrice.edges.map(({ node }) => (
                                 <li key={node.id}>
-                                    <Link to={`/portfolio/${node.id}`}>
+                                    <Link
+                                        to={`/shop/${node.product.metadata.slug}`}
+                                    >
                                         <GatsbyImage
                                             image={
                                                 node.product.localFiles[0]
@@ -80,6 +61,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                         />
                                         <h2>{node.product.name}</h2>
                                         <p>
+                                            £
                                             {(node.unit_amount / 100).toFixed(
                                                 2
                                             )}
@@ -102,23 +84,7 @@ export const query = graphql`
         allStripePrice {
             edges {
                 node {
-                    active
-                    id
-                    unit_amount
-                    product {
-                        id
-                        name
-                        localFiles {
-                            childImageSharp {
-                                gatsbyImageData(
-                                    width: 310
-                                    quality: 99
-                                    layout: CONSTRAINED
-                                    placeholder: BLURRED
-                                )
-                            }
-                        }
-                    }
+                    ...StripePriceFragment
                 }
             }
         }
