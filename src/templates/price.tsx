@@ -118,7 +118,7 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
                                     }
                                     onClick={() => redirectToCheckout()}
                                 >
-                                    Pay
+                                    Buy Now
                                 </button>
                             </div>
                         </div>

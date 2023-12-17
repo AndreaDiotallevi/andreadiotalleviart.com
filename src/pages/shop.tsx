@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { graphql, PageProps } from "gatsby"
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
@@ -12,11 +12,12 @@ import * as portfolioStyles from "./shop.module.scss"
 
 type DataProps = {
     allStripePrice: {
-        edges: { node: StripePrice }[]
+        edges: [{ node: StripePrice }]
     }
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
+    console.log(allStripePrice)
     return (
         <Layout>
             <React.Fragment>
