@@ -17,6 +17,7 @@ module.exports.onCreateNode = ({ node, actions }) => {
 module.exports.createPages = async ({ graphql, actions }) => {
     const { createPage } = actions
     const artworkTemplate = path.resolve("./src/templates/artwork.tsx")
+    const priceTemplate = path.resolve("./src/templates/price.tsx")
 
     const res = await graphql(`
         query {
@@ -36,6 +37,15 @@ module.exports.createPages = async ({ graphql, actions }) => {
                     }
                 }
             }
+            allStripeProduct {
+                edges {
+                    node {
+                        metadata {
+                            slug
+                        }
+                    }
+                }
+            }
         }
     `)
 
@@ -49,7 +59,13 @@ module.exports.createPages = async ({ graphql, actions }) => {
         })
     })
 
-    // 1. Get path to template
-    // 2. Get markdown data
-    // 3. Create new pages
+    res.data.allStripeProduct.edges.forEach(edge => {
+        createPage({
+            component: priceTemplate,
+            path: `/shop/${edge.node.metadata.slug}`,
+            context: {
+                slug: edge.node.metadata.slug,
+            },
+        })
+    })
 }
