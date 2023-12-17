@@ -11,7 +11,9 @@ import { StripePrice } from "../models/stripe"
 import * as portfolioStyles from "./shop.module.scss"
 
 type DataProps = {
-    allStripePrice: StripePrice[]
+    allStripePrice: {
+        edges: { node: StripePrice }[]
+    }
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
