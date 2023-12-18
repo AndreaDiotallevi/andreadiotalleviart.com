@@ -13,10 +13,30 @@ import * as artworkStyles from "./price.module.scss"
 
 type DataProps = {
     stripePrice: StripePrice
+    allPrintsJson: {
+        edges: [
+            {
+                node: {
+                    slug: string
+                    name: string
+                    images: [
+                        {
+                            childImageSharp: {
+                                gatsbyImageData: IGatsbyImageData
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
 }
 
-const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
+const Price = ({
+    data: { stripePrice, allPrintsJson },
+}: PageProps<DataProps>) => {
     const [loading, setLoading] = useState(false)
+    const [slideShowIndex, setSliderShowIndex] = useState(0)
 
     const redirectToCheckout = async () => {
         setLoading(true)
@@ -39,6 +59,8 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
             setLoading(false)
         }
     }
+
+    const images = allPrintsJson.edges[0].node.images
 
     return (
         <Layout>
@@ -73,6 +95,64 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
                     <div className={artworkStyles.container}>
                         <div>
                             <ul>
+                                <li>
+                                    <GatsbyImage
+                                        image={
+                                            images[slideShowIndex]
+                                                .childImageSharp.gatsbyImageData
+                                        }
+                                        alt={`${stripePrice.product.name}`}
+                                    />
+                                </li>
+                                <div style={{ display: "flex" }}>
+                                    {images.map((image, index) => (
+                                        <div
+                                            onClick={() =>
+                                                setSliderShowIndex(index)
+                                            }
+                                            style={{
+                                                width: "70px",
+                                                cursor: "pointer",
+                                                marginRight: "10px",
+                                                border: "1px solid white",
+                                                borderStyle: "dotted",
+                                                borderColor:
+                                                    slideShowIndex === index
+                                                        ? "rgb(68, 68, 68)"
+                                                        : "white",
+                                            }}
+                                        >
+                                            <GatsbyImage
+                                                image={
+                                                    image.childImageSharp
+                                                        .gatsbyImageData
+                                                }
+                                                alt={`${stripePrice.product.name}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </ul>
+                            {/* <div>
+                                <div>
+                                    <GatsbyImage
+                                        image={
+                                            stripePrice.product.localFiles[0]
+                                                .childImageSharp.gatsbyImageData
+                                        }
+                                        alt={`${stripePrice.product.name}`}
+                                    />
+                                </div>
+                                <div style={{ display: "flex" }}>
+                                    <div style={{ border: "1px solid black" }}>
+                                        a
+                                    </div>
+                                    <div style={{ border: "1px solid black" }}>
+                                        b
+                                    </div>
+                                </div>
+                            </div> */}
+                            {/* <ul>
                                 {stripePrice.product.localFiles.map(
                                     (image, index) => (
                                         <li key={index}>
@@ -86,7 +166,7 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
                                         </li>
                                     )
                                 )}
-                            </ul>
+                            </ul> */}
                             <div>
                                 {/* <h1>{stripePrice.product.name}</h1> */}
                                 {/* <p>{stripePrice.product.description}</p> */}
@@ -165,6 +245,17 @@ export const query = graphql`
     query($slug: String!) {
         stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
             ...StripePriceFragment
+        }
+        allPrintsJson(filter: { slug: { eq: $slug } }) {
+            edges {
+                node {
+                    images {
+                        childImageSharp {
+                            gatsbyImageData
+                        }
+                    }
+                }
+            }
         }
     }
 `

@@ -14,29 +14,9 @@ type DataProps = {
     allStripePrice: {
         edges: [{ node: StripePrice }]
     }
-    allPrintsJson: {
-        edges: [
-            {
-                node: {
-                    slug: string
-                    name: string
-                    images: [
-                        {
-                            childImageSharp: {
-                                gatsbyImageData: IGatsbyImageData
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
 }
 
-const Shop = ({
-    data: { allStripePrice, allPrintsJson },
-}: PageProps<DataProps>) => {
-    console.log(allPrintsJson)
+const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <React.Fragment>
@@ -112,24 +92,6 @@ export const query = graphql`
             edges {
                 node {
                     ...StripePriceFragment
-                }
-            }
-        }
-        allPrintsJson {
-            edges {
-                node {
-                    slug
-                    name
-                    images {
-                        childImageSharp {
-                            gatsbyImageData(
-                                width: 310
-                                quality: 99
-                                layout: CONSTRAINED
-                                placeholder: BLURRED
-                            )
-                        }
-                    }
                 }
             }
         }
