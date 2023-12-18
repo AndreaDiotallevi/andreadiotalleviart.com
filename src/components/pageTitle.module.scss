@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-height: 150px;
+    min-height: 120px;
 
     h1 {
         text-align: center;
@@ -14,9 +14,9 @@
         justify-content: flex-start;
         min-height: 120px;
 
-        h1 {
-            text-align: left;
-        }
+        // h1 {
+        //     text-align: left;
+        // }
     }
 
     &.isHome {

@@ -40,23 +40,6 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
         }
     }
 
-    const buttonStyles = {
-        display: "block",
-        fontSize: "13px",
-        // textAlign: "center",
-        color: "#000",
-        padding: "12px",
-        boxShadow: "2px 5px 10px rgba(0,0,0,.1)",
-        backgroundColor: "rgb(255, 178, 56)",
-        borderRadius: "6px",
-        letterSpacing: "1.5px",
-    }
-
-    const buttonDisabledStyles = {
-        opacity: "0.5",
-        cursor: "not-allowed",
-    }
-
     return (
         <Layout>
             <React.Fragment>
@@ -105,19 +88,30 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
                                 )}
                             </ul>
                             <div>
+                                {/* <h1>{stripePrice.product.name}</h1> */}
+                                <p>
+                                    A2 420 x 594 mm (16.5 x 23.4 inches) fine
+                                    art print on Hahnemule Photo Rag at 308gsm
+                                    with subtle fibrous finish.
+                                </p>
+                                <p>
+                                    Print purchases are posted with a
+                                    certificate of authenticity that includes
+                                    the artist’s signature, edition number, size
+                                    and paper stock.
+                                </p>
+                                <p>
+                                    Prints are only touched with paper-handling
+                                    gloves, each is wrapped in paper before
+                                    being placed in a shipping tube for
+                                    delivery.
+                                </p>
+                                <p>
+                                    All prints come with a white border for
+                                    framing. Framing not included.
+                                </p>
                                 <p>{stripePrice.product.description}</p>
-                                <button
-                                    disabled={loading}
-                                    style={
-                                        loading
-                                            ? {
-                                                  ...buttonStyles,
-                                                  ...buttonDisabledStyles,
-                                              }
-                                            : buttonStyles
-                                    }
-                                    onClick={() => redirectToCheckout()}
-                                >
+                                <button onClick={() => redirectToCheckout()}>
                                     Buy Now
                                 </button>
                             </div>

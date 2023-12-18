@@ -17,7 +17,6 @@ type DataProps = {
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
-    console.log(allStripePrice)
     return (
         <Layout>
             <React.Fragment>
@@ -46,7 +45,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="Shop" />
+                    <PageTitle isHome={false} text="Archival Prints" />
                     <div>
                         <ul className={portfolioStyles.container}>
                             {allStripePrice.edges.map(({ node }) => (
