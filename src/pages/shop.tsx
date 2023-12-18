@@ -65,7 +65,7 @@ const Shop = ({
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="Archival Prints" />
+                    <PageTitle isHome={false} text="Fine Art Prints" />
                     <div>
                         <ul className={portfolioStyles.container}>
                             {allStripePrice.edges.map(({ node }) => (

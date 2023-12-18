@@ -104,9 +104,9 @@ const Price = ({ data: { stripePrice } }: PageProps<DataProps>) => {
                                 <p>
                                     {/* The work is executed as an archival pigment
                                     print on matte fine-art paper. */}
-                                    Fine art archival pigment print on
-                                    Hahnemühle Photo Rag at 308gsm with subtle
-                                    fibrous finish.
+                                    Fine art archival giclée print on Hahnemühle
+                                    Photo Rag at 308gsm with subtle fibrous
+                                    finish.
                                 </p>
                                 <p>
                                     Paper dimensions: 22 x 27.25 in (56 x 69.25
