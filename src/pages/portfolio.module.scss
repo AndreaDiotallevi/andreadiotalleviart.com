@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    grid-template-columns: 310px 310px 310px;
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 40px;
     list-style: none;
     margin: 0 16px;
@@ -24,7 +24,7 @@
     }
 
     @media (max-width: 1041.99px) {
-        grid-template-columns: 310px 310px;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     @media (max-width: 691.99px) {
