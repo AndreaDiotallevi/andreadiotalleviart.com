@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { graphql, PageProps } from "gatsby"
-import { GatsbyImage } from "gatsby-plugin-image"
+import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import Seo from "../components/seo"
@@ -14,9 +14,29 @@ type DataProps = {
     allStripePrice: {
         edges: [{ node: StripePrice }]
     }
+    allPrintsJson: {
+        edges: [
+            {
+                node: {
+                    slug: string
+                    name: string
+                    images: [
+                        {
+                            childImageSharp: {
+                                gatsbyImageData: IGatsbyImageData
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
 }
 
-const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
+const Shop = ({
+    data: { allStripePrice, allPrintsJson },
+}: PageProps<DataProps>) => {
+    console.log(allPrintsJson)
     return (
         <Layout>
             <React.Fragment>
@@ -54,6 +74,11 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                         to={`/shop/${node.product.metadata.slug}`}
                                     >
                                         <GatsbyImage
+                                            // image={
+                                            //     allPrintsJson.edges[0].node
+                                            //         .images[0].childImageSharp
+                                            //         .gatsbyImageData
+                                            // }
                                             image={
                                                 node.product.localFiles[0]
                                                     .childImageSharp
@@ -83,10 +108,28 @@ export default Shop
 
 export const query = graphql`
     {
-        allStripePrice {
+        allStripePrice(filter: { active: { eq: true } }) {
             edges {
                 node {
                     ...StripePriceFragment
+                }
+            }
+        }
+        allPrintsJson {
+            edges {
+                node {
+                    slug
+                    name
+                    images {
+                        childImageSharp {
+                            gatsbyImageData(
+                                width: 310
+                                quality: 99
+                                layout: CONSTRAINED
+                                placeholder: BLURRED
+                            )
+                        }
+                    }
                 }
             }
         }
