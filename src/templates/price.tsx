@@ -94,7 +94,7 @@ const Price = ({
                     <PageTitle isHome={false} text={stripePrice.product.name} />
                     <div className={artworkStyles.container}>
                         <div>
-                            <ul>
+                            <div>
                                 <div>
                                     <GatsbyImage
                                         image={
@@ -104,9 +104,16 @@ const Price = ({
                                         alt={`${stripePrice.product.name}`}
                                     />
                                 </div>
-                                <div style={{ display: "flex" }}>
+                                <ul
+                                    style={{
+                                        display: "flex",
+                                        marginTop: 20,
+                                        listStyle: "none",
+                                    }}
+                                >
                                     {images.map((image, index) => (
-                                        <div
+                                        <li
+                                            key={"image" + index}
                                             onClick={() =>
                                                 setSliderShowIndex(index)
                                             }
@@ -129,10 +136,10 @@ const Price = ({
                                                 }
                                                 alt={`${stripePrice.product.name}`}
                                             />
-                                        </div>
+                                        </li>
                                     ))}
-                                </div>
-                            </ul>
+                                </ul>
+                            </div>
                             <div>
                                 <h2>Description</h2>
                                 <p>

@@ -18,7 +18,7 @@ const Footer = (props: DataProps) => {
             <div>
                 <p>© 2023, Andrea Diotallevi</p>
                 <ul>
-                    <li>
+                    <li key="Foundation">
                         <a
                             href="https://foundation.app/andreadiotalleviart"
                             target="_blank"
@@ -37,7 +37,7 @@ const Footer = (props: DataProps) => {
                             </svg>
                         </a>
                     </li>
-                    <li>
+                    <li key="Twitter">
                         <a
                             href="https://twitter.com/adiotalleviart"
                             target="_blank"
@@ -56,7 +56,7 @@ const Footer = (props: DataProps) => {
                             </svg>
                         </a>
                     </li>
-                    <li>
+                    <li key="Instagram">
                         <a
                             href="https://www.instagram.com/andreadiotalleviart/"
                             target="_blank"
