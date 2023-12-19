@@ -17,8 +17,6 @@ type DataProps = {
         edges: [
             {
                 node: {
-                    slug: string
-                    name: string
                     images: [
                         {
                             childImageSharp: {

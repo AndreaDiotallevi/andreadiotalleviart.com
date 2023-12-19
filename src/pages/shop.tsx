@@ -14,9 +14,27 @@ type DataProps = {
     allStripePrice: {
         edges: [{ node: StripePrice }]
     }
+    allPrintsJson: {
+        edges: [
+            {
+                node: {
+                    slug: string
+                    images: [
+                        {
+                            childImageSharp: {
+                                gatsbyImageData: IGatsbyImageData
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
 }
 
-const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
+const Shop = ({
+    data: { allStripePrice, allPrintsJson },
+}: PageProps<DataProps>) => {
     return (
         <Layout>
             <React.Fragment>
@@ -54,16 +72,27 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                         to={`/shop/${node.product.metadata.slug}`}
                                     >
                                         <GatsbyImage
+                                            image={
+                                                allPrintsJson.edges.filter(
+                                                    edge =>
+                                                        edge.node.slug ===
+                                                        node.product.metadata
+                                                            .slug
+                                                )[0].node.images[0]
+                                                    .childImageSharp
+                                                    .gatsbyImageData
+                                            }
                                             // image={
                                             //     allPrintsJson.edges[0].node
                                             //         .images[0].childImageSharp
                                             //         .gatsbyImageData
                                             // }
-                                            image={
-                                                node.product.localFiles[0]
-                                                    .childImageSharp
-                                                    .gatsbyImageData
-                                            }
+
+                                            // image={
+                                            //     node.product.localFiles[0]
+                                            //         .childImageSharp
+                                            //         .gatsbyImageData
+                                            // }
                                             alt={node.product.name}
                                         />
                                         <h2>{node.product.name}</h2>
@@ -92,6 +121,18 @@ export const query = graphql`
             edges {
                 node {
                     ...StripePriceFragment
+                }
+            }
+        }
+        allPrintsJson {
+            edges {
+                node {
+                    slug
+                    images {
+                        childImageSharp {
+                            gatsbyImageData
+                        }
+                    }
                 }
             }
         }
