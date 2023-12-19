@@ -13,6 +13,10 @@
     },
     {
         "slug": "lake-at-dawn",
-        "images": ["./images/lake-at-dawn-1.png"]
+        "images": [
+            "./images/lake3.png",
+            "./images/lake2.png",
+            "./images/lake-at-dawn-1.png"
+        ]
     }
 ]
