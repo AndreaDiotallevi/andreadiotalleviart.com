@@ -40,8 +40,6 @@ export const query = graphql`
             description
             metadata {
                 slug
-                medium
-                dimensions
             }
             localFiles {
                 childImageSharp {

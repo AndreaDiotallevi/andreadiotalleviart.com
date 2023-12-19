@@ -1,18 +1,18 @@
 [
     {
-        "slug": "sandstorm-1",
+        "slug": "sandstorm",
         "images": ["./images/sandstorm-1.jpg", "./images/sandstorm-2.png"]
     },
     {
-        "slug": "skylines-1",
+        "slug": "skylines",
         "images": ["./images/skyslines1.jpg"]
     },
     {
-        "slug": "marble-lake-139",
+        "slug": "marble-lake",
         "images": ["./images/marble-lake-1.jpg"]
     },
     {
-        "slug": "lake-at-dawn-1",
+        "slug": "lake-at-dawn",
         "images": ["./images/lake-at-dawn-1.png"]
     }
 ]

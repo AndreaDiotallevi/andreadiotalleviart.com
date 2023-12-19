@@ -95,7 +95,7 @@ const Price = ({
                     <div className={artworkStyles.container}>
                         <div>
                             <ul>
-                                <li>
+                                <div>
                                     <GatsbyImage
                                         image={
                                             images[slideShowIndex]
@@ -103,7 +103,7 @@ const Price = ({
                                         }
                                         alt={`${stripePrice.product.name}`}
                                     />
-                                </li>
+                                </div>
                                 <div style={{ display: "flex" }}>
                                     {images.map((image, index) => (
                                         <div
@@ -133,57 +133,9 @@ const Price = ({
                                     ))}
                                 </div>
                             </ul>
-                            {/* <div>
-                                <div>
-                                    <GatsbyImage
-                                        image={
-                                            stripePrice.product.localFiles[0]
-                                                .childImageSharp.gatsbyImageData
-                                        }
-                                        alt={`${stripePrice.product.name}`}
-                                    />
-                                </div>
-                                <div style={{ display: "flex" }}>
-                                    <div style={{ border: "1px solid black" }}>
-                                        a
-                                    </div>
-                                    <div style={{ border: "1px solid black" }}>
-                                        b
-                                    </div>
-                                </div>
-                            </div> */}
-                            {/* <ul>
-                                {stripePrice.product.localFiles.map(
-                                    (image, index) => (
-                                        <li key={index}>
-                                            <GatsbyImage
-                                                image={
-                                                    image.childImageSharp
-                                                        .gatsbyImageData
-                                                }
-                                                alt={`${stripePrice.product.name}-${index}`}
-                                            />
-                                        </li>
-                                    )
-                                )}
-                            </ul> */}
                             <div>
-                                {/* <h1>{stripePrice.product.name}</h1> */}
-                                {/* <p>{stripePrice.product.description}</p> */}
-                                {/* <p>
-                                    Fine art archival pigment paper of '{" "}
-                                    {stripePrice.product.name}', a generative
-                                    artwork made with Processing.
-                                </p> */}
-                                {/* <p>
-                                    A2 420 x 594 mm (16.5 x 23.4 inches) fine
-                                    art print on Hahnemule Photo Rag at 308gsm
-                                    with subtle fibrous finish.
-                                </p> */}
-                                <h2>About the work</h2>
+                                <h2>Description</h2>
                                 <p>
-                                    {/* The work is executed as an archival pigment
-                                    print on matte fine-art paper. */}
                                     Fine art archival giclée print on Hahnemühle
                                     Photo Rag at 308gsm with subtle fibrous
                                     finish.
@@ -195,17 +147,7 @@ const Price = ({
                                     1.5 inches on sides, and 1.875 inches on top
                                     and bottom (3.80 and 4.75 cm, respectively).
                                 </p>
-                                {/* <p>
-                                    Prints are only touched with paper-handling
-                                    gloves, each is wrapped in paper before
-                                    being placed in a shipping tube for
-                                    delivery.
-                                </p> */}
-                                {/* <p>
-                                    All prints come with a white border for
-                                    framing. Framing not included.
-                                </p> */}
-                                <p>
+                                <p style={{ marginBottom: 48 }}>
                                     Print purchases are posted with a
                                     certificate of authenticity that includes
                                     the artist’s signature, edition number, size
@@ -216,7 +158,7 @@ const Price = ({
                                     The prints are sold unframed and packaged
                                     flat between cardboard for protection.
                                 </p>
-                                <p>
+                                <p style={{ marginBottom: 48 }}>
                                     UK shipping is free and can take 2-3 weeks
                                     to arrive. International shipping is £150
                                     GBP and can take up to 4 weeks to arrive.
