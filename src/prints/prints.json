@@ -1,7 +1,10 @@
 [
     {
         "slug": "sandstorm",
-        "images": ["./images/sandstorm-1.jpg", "./images/sandstorm-2.png"]
+        "images": [
+            "./images/sandstorm-white.png",
+            "./images/sandstorm-black.png"
+        ]
     },
     {
         "slug": "skylines",
@@ -9,11 +12,12 @@
     },
     {
         "slug": "marble-lake",
-        "images": ["./images/marble-lake-1.jpg"]
+        "images": ["./images/marble-lake-wood.png"]
     },
     {
         "slug": "lake-at-dawn",
         "images": [
+            "./images/lake-at-dawn-black.png",
             "./images/lake3.png",
             "./images/lake2.png",
             "./images/lake-at-dawn-1.png"
