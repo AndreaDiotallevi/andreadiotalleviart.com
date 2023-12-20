@@ -1,39 +1,22 @@
 .container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 100px;
+    margin: 0 16px;
+    max-width: 1400px;
 
     > div {
         display: flex;
-        width: 1000px;
-        margin: 0 16px;
+        flex-direction: column;
 
-        > div {
-            display: flex;
-            flex-direction: column;
-            width: 50%;
-            list-style: none;
+        h2 {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
 
-            h2 {
-                font-size: 25px;
-                font-weight: bold;
-                margin-bottom: 15px;
-                opacity: 1;
-            }
-
-            p {
-                margin-bottom: 24px;
-                font-size: 16px;
-            }
-
-            &:first-of-type {
-                padding-right: 20px;
-            }
-
-            &:last-of-type {
-                padding-left: 20px;
-            }
+        p {
+            margin-bottom: 24px;
+            font-size: 16px;
         }
     }
 
@@ -49,7 +32,6 @@
         padding: 13px 0;
         width: 100%;
         border: none;
-        // margin-top: 15px;
         font-weight: 500;
         border-radius: var(--border-radius);
 
@@ -62,22 +44,29 @@
 
 @media (max-width: 691.99px) {
     .container {
-        > div {
-            flex-direction: column;
-            width: 660px;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 50px;
+    }
+}
 
-            > div {
-                width: 100%;
-                margin-bottom: 40px;
+.fixed {
+    position: fixed;
+    top: 160px;
 
-                &:first-of-type {
-                    padding: 0;
-                }
+    p {
+        writing-mode: vertical-rl;
+        font-size: 38px;
+    }
 
-                &:last-of-type {
-                    padding: 0;
-                }
-            }
+    @media (max-width: 691.99px) {
+        position: static;
+        width: 100%;
+
+        p {
+            writing-mode: horizontal-tb;
+            padding: 0 16px;
+            margin-bottom: 8px;
+            font-size: 24px;
         }
     }
 }

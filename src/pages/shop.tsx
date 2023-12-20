@@ -8,7 +8,7 @@ import Seo from "../components/seo"
 import PageTitle from "../components/pageTitle"
 import { StripePrice } from "../models/stripe"
 
-import * as portfolioStyles from "./shop.module.scss"
+import * as shopStyles from "./shop.module.scss"
 
 type DataProps = {
     allStripePrice: {
@@ -63,9 +63,10 @@ const Shop = ({
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="Fine Art Prints" />
+                    <PageTitle isHome={false} text="" />
+                    <p className={shopStyles.fixed}>Prints</p>
                     <div>
-                        <ul className={portfolioStyles.container}>
+                        <ul className={shopStyles.container}>
                             {allStripePrice.edges.map(({ node }) => (
                                 <li key={node.id}>
                                     <Link

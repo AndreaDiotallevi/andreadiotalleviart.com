@@ -2,25 +2,27 @@
     {
         "slug": "sandstorm",
         "images": [
+            "./images/skylines-new2.png",
             "./images/sandstorm-white.png",
             "./images/sandstorm-black.png"
         ]
     },
     {
         "slug": "skylines",
-        "images": ["./images/skylines-ok.png"]
+        "images": ["./images/waving-fabric-new.png", "./images/skylines-ok.png"]
     },
     {
         "slug": "marble-lake",
-        "images": ["./images/marble-lake-wood.png"]
+        "images": [
+            "./images/marble-lake-new.png",
+            "./images/marble-lake-wood.png"
+        ]
     },
     {
         "slug": "lake-at-dawn",
         "images": [
-            "./images/lake-at-dawn-black.png",
-            "./images/lake3.png",
-            "./images/lake2.png",
-            "./images/lake-at-dawn-1.png"
+            "./images/agate-stone-new.png",
+            "./images/lake-at-dawn-black.png"
         ]
     }
 ]
