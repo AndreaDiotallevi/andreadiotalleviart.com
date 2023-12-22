@@ -1,7 +1,11 @@
 .link {
-    color: rgb(68, 68, 68);
+    // color: rgb(68, 68, 68);
+    color: white;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(132, 132, 132, 0.2);
+    font-size: 38px;
+    text-align: center;
+    text-transform: lowercase;
+    // border-bottom: 1px solid rgba(132, 132, 132, 0.2);
 
     &.isHome {
         color: white;

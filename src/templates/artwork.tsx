@@ -3,7 +3,6 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "./layout"
-import Seo from "../components/seo"
 import PageTitle from "../components/pageTitle"
 
 import * as artworkStyles from "./artwork.module.scss"
@@ -27,22 +26,22 @@ type DataProps = {
 
 const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
     return (
-        <Layout>
+        <Layout
+            seo={{
+                title: `${artworksJson.name} | Andrea Diotallevi`,
+                description: artworksJson.description,
+                tags: [
+                    artworksJson.name,
+                    "Generative Art",
+                    "p5.js",
+                    "Processing",
+                    "Procedural",
+                    "Print",
+                    "Giclee",
+                ],
+            }}
+        >
             <React.Fragment>
-                <Seo
-                    title={`${artworksJson.name} | Andrea Diotallevi`}
-                    description={artworksJson.description}
-                    image={artworksJson.images[0].childImageSharp.fixed.src}
-                    tags={[
-                        artworksJson.name,
-                        "Generative Art",
-                        "p5.js",
-                        "Processing",
-                        "Procedural",
-                        "Print",
-                        "Giclee",
-                    ]}
-                />
                 <div
                     style={{
                         display: "flex",

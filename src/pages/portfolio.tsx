@@ -4,7 +4,6 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
-import Seo from "../components/seo"
 import PageTitle from "../components/pageTitle"
 
 import * as portfolioStyles from "./portfolio.module.scss"
@@ -31,24 +30,26 @@ type DataProps = {
 
 const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
-        <Layout>
+        <Layout
+            seo={{
+                title: "Portfolio | Andrea Diotallevi",
+                description:
+                    "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist",
+                tags: [
+                    "Andrea Diotallevi",
+                    "Andrea Diotallevi Art",
+                    "Generative Art",
+                    "Album Covers",
+                    "NFTs",
+                    "p5.js",
+                    "Processing",
+                    "Procedural",
+                    "Print",
+                    "Giclee",
+                ],
+            }}
+        >
             <React.Fragment>
-                <Seo
-                    title="Portfolio | Andrea Diotallevi"
-                    description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
-                    tags={[
-                        "Andrea Diotallevi",
-                        "Andrea Diotallevi Art",
-                        "Generative Art",
-                        "Album Covers",
-                        "NFTs",
-                        "p5.js",
-                        "Processing",
-                        "Procedural",
-                        "Print",
-                        "Giclee",
-                    ]}
-                />
                 <div
                     style={{
                         display: "flex",

@@ -11,13 +11,13 @@ const routes: RouteType[] = [
     //     pageTitle: "Generative Artist and Creative Coder",
     // },
     // { menuName: "Blog", baseUrl: "/blog", pageTitle: "Blog" },
-    { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
-    { menuName: "Contact", baseUrl: "/contact", pageTitle: "About Me" },
     // {
     //     menuName: "Home",
     //     baseUrl: "/",
     //     pageTitle: "Generative Artist and Creative Coder",
     // },
+    { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
+    { menuName: "Contact", baseUrl: "/contact", pageTitle: "About Me" },
 ]
 
 export default routes

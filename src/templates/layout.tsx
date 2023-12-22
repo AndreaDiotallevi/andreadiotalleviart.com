@@ -4,14 +4,20 @@ import { Location } from "@reach/router"
 import Navbar from "../components/navbar"
 import Menu from "../components/menu"
 import Footer from "../components/footer"
+import Seo from "../components/seo"
 
 import "../styles/prism-modified.css"
 
 type DataProps = {
     children: JSX.Element
+    seo: {
+        title: string
+        description: string
+        tags: string[]
+    }
 }
 
-const Layout = ({ children }: DataProps) => {
+const Layout = ({ children, seo }: DataProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     return (
@@ -26,6 +32,12 @@ const Layout = ({ children }: DataProps) => {
                         minHeight: "100vh",
                     }}
                 >
+                    <Seo
+                        title={seo.title}
+                        description={seo.description}
+                        tags={seo.tags}
+                        isMenuOpen={isMenuOpen}
+                    />
                     <Navbar
                         open={isMenuOpen}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}

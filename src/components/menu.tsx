@@ -20,7 +20,9 @@ const Menu = (props: DataProps) => {
 
     return (
         <div
-            className={`${menuStyles.menu} ${isHome ? menuStyles.isHome : ""}`}
+            className={`${menuStyles.menu} ${isHome ? menuStyles.isHome : ""} ${
+                open ? menuStyles.open : ""
+            }`}
         >
             <ul>
                 {routes.map((item, index) => (

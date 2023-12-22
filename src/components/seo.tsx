@@ -9,10 +9,11 @@ type DataProps = {
     image?: string
     article?: boolean
     tags: string[]
+    isMenuOpen: boolean
 }
 
 const SEO = (props: DataProps) => {
-    const { title, description, image, article, tags } = props
+    const { title, description, image, article, tags, isMenuOpen } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -33,6 +34,7 @@ const SEO = (props: DataProps) => {
 
     return (
         <Helmet
+            bodyAttributes={isMenuOpen ? { class: "overflow-hidden" } : {}}
             title={seo.title}
             htmlAttributes={{
                 lang: "en",

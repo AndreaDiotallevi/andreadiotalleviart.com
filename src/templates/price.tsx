@@ -3,7 +3,6 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "./layout"
-import Seo from "../components/seo"
 import PageTitle from "../components/pageTitle"
 import { StripePrice } from "../models/stripe"
 import { countryCodes } from "../utils/countryCodes"
@@ -61,25 +60,22 @@ const Price = ({
     const images = allPrintsJson.edges[0].node.images
 
     return (
-        <Layout>
+        <Layout
+            seo={{
+                title: `${stripePrice.product.name} | Andrea Diotallevi`,
+                description: stripePrice.product.description,
+                tags: [
+                    stripePrice.product.name,
+                    "Generative Art",
+                    "p5.js",
+                    "Processing",
+                    "Procedural",
+                    "Print",
+                    "Giclee",
+                ],
+            }}
+        >
             <React.Fragment>
-                <Seo
-                    title={`${stripePrice.product.name} | Andrea Diotallevi`}
-                    description={stripePrice.product.description}
-                    image={
-                        stripePrice.product.localFiles[0].childImageSharp.fixed
-                            .src
-                    }
-                    tags={[
-                        stripePrice.product.name,
-                        "Generative Art",
-                        "p5.js",
-                        "Processing",
-                        "Procedural",
-                        "Print",
-                        "Giclee",
-                    ]}
-                />
                 <div
                     style={{
                         display: "flex",
