@@ -23,7 +23,7 @@ const Navbar = (props: DataProps) => {
         >
             <div>
                 <Link to="/">
-                    <h2>andreadiotallevi</h2>
+                    <h2>AD</h2>
                 </Link>
                 <ul>
                     {routes.map(({ menuName, baseUrl }) => (
