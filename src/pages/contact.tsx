@@ -35,16 +35,19 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                     </div>
                     <div className={styles.gridItem2}>
                         <p>
-                            I am a generative artist and creative coder based in
-                            London.
+                            My name is Andrea Diotallevi. I am a generative
+                            artist and creative coder based in London.
                         </p>
                         <p>
                             As a pianist and former architect, I am fascinated
                             by the intersection between art and technology and I
                             am in constant exploration of generative art
-                            concepts. For each new work, I design a custom
-                            algorithm capable of generating a sequence of
-                            unique, but aesthetically related images.
+                            concepts.
+                        </p>
+                        <p>
+                            For each new work, I design a custom algorithm
+                            capable of generating a sequence of unique, but
+                            aesthetically related images.
                         </p>
                     </div>
                 </div>
