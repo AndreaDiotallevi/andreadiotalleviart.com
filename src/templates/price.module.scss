@@ -1,76 +1,94 @@
 .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.h1 {
+    position: fixed;
+    top: 128px;
+    writing-mode: vertical-rl;
+    font-size: 38px;
+    font-weight: 700;
+
+    @media (max-width: 691.99px) {
+        position: static;
+        writing-mode: horizontal-tb;
+        font-size: 24px;
+        margin: 0 16px;
+        margin-bottom: 8px;
+    }
+}
+
+.grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 100px;
     margin: 0 16px;
     max-width: 1400px;
-    margin-top: 48px;
 
-    > div {
-        display: flex;
-        flex-direction: column;
-
-        h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        p {
-            margin-bottom: 24px;
-            font-size: 16px;
-        }
-    }
-
-    button {
-        text-decoration: none;
-        cursor: pointer;
-        text-align: center;
-        background-color: white;
-        background-color: rgb(68, 68, 68);
-        color: white;
-        box-shadow: none;
-        font-size: 18px;
-        padding: 13px 0;
-        width: 100%;
-        border: none;
-        font-weight: 500;
-        border-radius: var(--border-radius);
-
-        &:hover {
-            transition: 0.3s;
-            background-color: rgb(100, 100, 100);
-        }
-    }
-}
-
-@media (max-width: 691.99px) {
-    .container {
+    @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
-        grid-gap: 50px;
-        // margin-top: 0;
     }
 }
 
-.fixed {
-    position: fixed;
-    top: 128px;
+.grid1 {
+    display: flex;
+    flex-direction: column;
+}
 
-    h1 {
-        writing-mode: vertical-rl;
-        font-size: 38px;
+.imageList {
+    display: flex;
+    list-style: none;
+    margin-top: 20px;
+}
+
+.imageListItem {
+    width: 70px;
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid white;
+    border-style: dotted;
+
+    &.active {
+        border-color: rgb(68, 68, 68);
+    }
+}
+
+.button {
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+    background-color: white;
+    background-color: rgb(68, 68, 68);
+    color: white;
+    box-shadow: none;
+    font-size: 18px;
+    padding: 13px 0;
+    width: 100%;
+    border: none;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+
+    &:hover {
+        transition: 0.3s;
+        background-color: rgb(100, 100, 100);
+    }
+}
+
+.grid2 {
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
         font-weight: 700;
     }
 
-    @media (max-width: 691.99px) {
-        position: static;
-        width: 100%;
-
-        h1 {
-            writing-mode: horizontal-tb;
-            padding: 0 16px;
-            margin-bottom: 8px;
-            font-size: 24px;
-        }
+    p {
+        margin-bottom: 24px;
+        font-size: 16px;
     }
 }

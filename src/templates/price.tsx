@@ -74,105 +74,80 @@ const Price = ({
                 ],
             }}
         >
-            <React.Fragment>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: "100%",
-                        marginBottom: "50px",
-                    }}
-                >
-                    <div className={priceStyles.fixed}>
-                        <h1>{stripePrice.product.name}</h1>
-                    </div>
-                    <div className={priceStyles.container}>
+            <div className={priceStyles.container}>
+                <h1 className={priceStyles.h1}>{stripePrice.product.name}</h1>
+                <div className={priceStyles.grid}>
+                    <div className={priceStyles.grid1}>
                         <div>
-                            <div>
-                                <GatsbyImage
-                                    image={
-                                        images[slideShowIndex].childImageSharp
-                                            .gatsbyImageData
-                                    }
-                                    alt={`${stripePrice.product.name}`}
-                                />
-                            </div>
-                            <ul
-                                style={{
-                                    display: "flex",
-                                    marginTop: 20,
-                                    listStyle: "none",
-                                }}
-                            >
-                                {images.map((image, index) => (
-                                    <li
-                                        key={"image" + index}
-                                        onClick={() =>
-                                            setSliderShowIndex(index)
+                            <GatsbyImage
+                                image={
+                                    images[slideShowIndex].childImageSharp
+                                        .gatsbyImageData
+                                }
+                                alt={`${stripePrice.product.name}`}
+                            />
+                        </div>
+                        <ul className={priceStyles.imageList}>
+                            {images.map((image, index) => (
+                                <li
+                                    key={`image-${index}`}
+                                    onClick={() => setSliderShowIndex(index)}
+                                    className={`${priceStyles.imageListItem} ${
+                                        slideShowIndex === index
+                                            ? priceStyles.active
+                                            : ""
+                                    }`}
+                                >
+                                    <GatsbyImage
+                                        image={
+                                            image.childImageSharp
+                                                .gatsbyImageData
                                         }
-                                        style={{
-                                            width: "70px",
-                                            cursor: "pointer",
-                                            marginRight: "10px",
-                                            border: "1px solid white",
-                                            borderStyle: "dotted",
-                                            borderColor:
-                                                slideShowIndex === index
-                                                    ? "rgb(68, 68, 68)"
-                                                    : "white",
-                                        }}
-                                    >
-                                        <GatsbyImage
-                                            image={
-                                                image.childImageSharp
-                                                    .gatsbyImageData
-                                            }
-                                            alt={`${stripePrice.product.name}`}
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div>
-                            <h2>Description</h2>
-                            <p>
-                                Fine art archival giclée print on Hahnemühle
-                                Photo Rag at 308gsm with subtle fibrous finish.
-                            </p>
-                            <p>
-                                Paper dimensions: 22 x 27.25 in (56 x 69.25 cm).
-                                <br></br>Image dimensions: 21 x 26.25 in (35.25
-                                x 66.75 cm).<br></br>Suggested mat: 1.5 inches
-                                on sides, and 1.875 inches on top and bottom
-                                (3.80 and 4.75 cm, respectively).
-                            </p>
-                            <p style={{ marginBottom: 48 }}>
-                                Print purchases are posted with a certificate of
-                                authenticity that includes the artist’s
-                                signature, edition number, size and paper stock.
-                            </p>
-                            <h2>Shipping</h2>
-                            <p>
-                                The prints are sold unframed and packaged flat
-                                between cardboard for protection.
-                            </p>
-                            <p style={{ marginBottom: 48 }}>
-                                UK shipping is free and can take 2-3 weeks to
-                                arrive. International shipping is £150 GBP and
-                                can take up to 4 weeks to arrive. Read the full
-                                shipping and returns details here.
-                            </p>
-                            <h2>
-                                £{(stripePrice.unit_amount / 100).toFixed(2)}
-                            </h2>
-                            <button onClick={() => redirectToCheckout()}>
-                                Buy Now
-                            </button>
-                        </div>
+                                        alt={`${stripePrice.product.name}`}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className={priceStyles.grid2}>
+                        <h2>Description</h2>
+                        <p>
+                            Fine art archival giclée print on Hahnemühle Photo
+                            Rag at 308gsm with subtle fibrous finish.
+                        </p>
+                        <p>
+                            Paper dimensions: 22 x 27.25 in (56 x 69.25 cm).
+                            <br></br>Image dimensions: 21 x 26.25 in (35.25 x
+                            66.75 cm).<br></br>Suggested mat: 1.5 inches on
+                            sides, and 1.875 inches on top and bottom (3.80 and
+                            4.75 cm, respectively).
+                        </p>
+                        <p style={{ marginBottom: 48 }}>
+                            Print purchases are posted with a certificate of
+                            authenticity that includes the artist’s signature,
+                            edition number, size and paper stock.
+                        </p>
+                        <h2>Shipping</h2>
+                        <p>
+                            The prints are sold unframed and packaged flat
+                            between cardboard for protection.
+                        </p>
+                        <p style={{ marginBottom: 48 }}>
+                            UK shipping is free and can take 2-3 weeks to
+                            arrive. International shipping is £150 GBP and can
+                            take up to 4 weeks to arrive. Read the full shipping
+                            and returns details here.
+                        </p>
+                        <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
+                        <button
+                            className={priceStyles.button}
+                            onClick={() => redirectToCheckout()}
+                        >
+                            Buy Now
+                        </button>
                     </div>
                 </div>
-            </React.Fragment>
+            </div>
         </Layout>
     )
 }
