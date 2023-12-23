@@ -9,15 +9,14 @@
     position: fixed;
     top: 128px;
     writing-mode: vertical-rl;
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 700;
 
     @media (max-width: 691.99px) {
-        position: static;
-        writing-mode: horizontal-tb;
         font-size: 24px;
         margin: 0 16px;
         margin-bottom: 8px;
+        left: 0;
     }
 }
 
@@ -30,6 +29,8 @@
 
     @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
+        grid-gap: 48px;
+        padding-left: 48px;
     }
 }
 
@@ -68,8 +69,7 @@
     padding: 13px 0;
     width: 100%;
     border: none;
-    font-weight: 500;
-    border-radius: var(--border-radius);
+    font-weight: 700;
 
     &:hover {
         transition: 0.3s;
@@ -83,12 +83,20 @@
 
     h2 {
         font-size: 24px;
-        margin-bottom: 15px;
+        margin-bottom: 8px;
         font-weight: 700;
+
+        @media (max-width: 691.99px) {
+            font-size: 18px;
+        }
     }
 
     p {
         margin-bottom: 24px;
         font-size: 16px;
+
+        @media (max-width: 691.99px) {
+            font-size: 14px;
+        }
     }
 }
