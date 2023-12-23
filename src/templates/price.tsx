@@ -77,7 +77,7 @@ const Price = ({
             <div className={priceStyles.container}>
                 <h1 className={priceStyles.h1}>{stripePrice.product.name}</h1>
                 <div className={priceStyles.grid}>
-                    <div className={priceStyles.grid1}>
+                    <div className={priceStyles.gridItem1}>
                         <div>
                             <GatsbyImage
                                 image={
@@ -109,7 +109,7 @@ const Price = ({
                             ))}
                         </ul>
                     </div>
-                    <div className={priceStyles.grid2}>
+                    <div className={priceStyles.gridItem2}>
                         <h2>Description</h2>
                         <p>
                             Fine art archival giclée print on Hahnemühle Photo
