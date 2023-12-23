@@ -6,7 +6,7 @@ import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
 
-import * as shopStyles from "./shop.module.scss"
+import * as styles from "./shop.module.scss"
 
 type DataProps = {
     allStripePrice: {
@@ -53,62 +53,30 @@ const Shop = ({
                 ],
             }}
         >
-            <React.Fragment>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: "100%",
-                        marginBottom: "50px",
-                    }}
-                >
-                    <h1 className={shopStyles.fixed}>Prints</h1>
-                    <div>
-                        <ul className={shopStyles.container}>
-                            {allStripePrice.edges.map(({ node }) => (
-                                <li key={node.id}>
-                                    <Link
-                                        to={`/shop/${node.product.metadata.slug}`}
-                                    >
-                                        <GatsbyImage
-                                            image={
-                                                allPrintsJson.edges.filter(
-                                                    edge =>
-                                                        edge.node.slug ===
-                                                        node.product.metadata
-                                                            .slug
-                                                )[0].node.images[0]
-                                                    .childImageSharp
-                                                    .gatsbyImageData
-                                            }
-                                            // image={
-                                            //     allPrintsJson.edges[0].node
-                                            //         .images[0].childImageSharp
-                                            //         .gatsbyImageData
-                                            // }
-
-                                            // image={
-                                            //     node.product.localFiles[0]
-                                            //         .childImageSharp
-                                            //         .gatsbyImageData
-                                            // }
-                                            alt={node.product.name}
-                                        />
-                                        <h2>{node.product.name}</h2>
-                                        <p>
-                                            £
-                                            {(node.unit_amount / 100).toFixed(
-                                                2
-                                            )}
-                                        </p>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            <div className={styles.container}>
+                <h1 className={styles.h1}>Prints</h1>
+                <div className={styles.grid}>
+                    {allStripePrice.edges.map(({ node }) => (
+                        <li key={node.id} className={styles.gridItem}>
+                            <Link to={`/shop/${node.product.metadata.slug}`}>
+                                <GatsbyImage
+                                    image={
+                                        allPrintsJson.edges.filter(
+                                            edge =>
+                                                edge.node.slug ===
+                                                node.product.metadata.slug
+                                        )[0].node.images[0].childImageSharp
+                                            .gatsbyImageData
+                                    }
+                                    alt={node.product.name}
+                                />
+                                <h2>{node.product.name}</h2>
+                                <p>£{(node.unit_amount / 100).toFixed(2)}</p>
+                            </Link>
+                        </li>
+                    ))}
                 </div>
-            </React.Fragment>
+            </div>
         </Layout>
     )
 }
