@@ -35,9 +35,9 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="" />
+                    {/* <PageTitle isHome={false} text="" /> */}
                     <div className={contactStyles.fixed}>
-                        <p>Contact</p>
+                        <h1>Contact</h1>
                     </div>
                     <div className={contactStyles.container}>
                         <div className={contactStyles.image}>

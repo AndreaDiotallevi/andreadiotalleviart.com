@@ -85,9 +85,9 @@ const Price = ({
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="" />
+                    {/* <PageTitle isHome={false} text="" /> */}
                     <div className={priceStyles.fixed}>
-                        <p>{stripePrice.product.name}</p>
+                        <h1>{stripePrice.product.name}</h1>
                     </div>
                     <div className={priceStyles.container}>
                         <div>

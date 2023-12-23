@@ -64,8 +64,8 @@ const Shop = ({
                         marginBottom: "50px",
                     }}
                 >
-                    <PageTitle isHome={false} text="" />
-                    <p className={shopStyles.fixed}>Prints</p>
+                    {/* <PageTitle isHome={false} text="" /> */}
+                    <h1 className={shopStyles.fixed}>Prints</h1>
                     <div>
                         <ul className={shopStyles.container}>
                             {allStripePrice.edges.map(({ node }) => (

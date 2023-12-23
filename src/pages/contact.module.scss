@@ -4,6 +4,7 @@
     grid-gap: 100px;
     margin: 0 16px;
     max-width: 1400px;
+    margin-top: 48px;
 
     .text {
         display: flex;
@@ -14,30 +15,28 @@
         }
     }
 
-    // @media (max-width: 1041.99px) {
-    //     grid-template-columns: repeat(2, 1fr);
-    // }
-
     @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
         grid-gap: 50px;
+        margin-top: 0;
     }
 }
 
 .fixed {
     position: fixed;
-    top: 160px;
+    top: 128px;
 
-    p {
+    h1 {
         writing-mode: vertical-rl;
         font-size: 38px;
+        font-weight: 700;
     }
 
     @media (max-width: 691.99px) {
         position: static;
         width: 100%;
 
-        p {
+        h1 {
             writing-mode: horizontal-tb;
             padding: 0 16px;
             margin-bottom: 8px;
