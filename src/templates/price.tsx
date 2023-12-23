@@ -7,7 +7,7 @@ import { StripePrice } from "../models/stripe"
 import { countryCodes } from "../utils/countryCodes"
 import getStripe from "../utils/stripejs"
 
-import * as priceStyles from "./price.module.scss"
+import * as styles from "./price.module.scss"
 
 type DataProps = {
     stripePrice: StripePrice
@@ -74,10 +74,10 @@ const Price = ({
                 ],
             }}
         >
-            <div className={priceStyles.container}>
-                <h1 className={priceStyles.h1}>{stripePrice.product.name}</h1>
-                <div className={priceStyles.grid}>
-                    <div className={priceStyles.gridItem1}>
+            <div className={styles.container}>
+                <h1 className={styles.h1}>{stripePrice.product.name}</h1>
+                <div className={styles.grid}>
+                    <div className={styles.gridItem1}>
                         <div>
                             <GatsbyImage
                                 image={
@@ -87,14 +87,14 @@ const Price = ({
                                 alt={`${stripePrice.product.name}`}
                             />
                         </div>
-                        <ul className={priceStyles.imageList}>
+                        <ul className={styles.imageList}>
                             {images.map((image, index) => (
                                 <li
                                     key={`image-${index}`}
                                     onClick={() => setSliderShowIndex(index)}
-                                    className={`${priceStyles.imageListItem} ${
+                                    className={`${styles.imageListItem} ${
                                         slideShowIndex === index
-                                            ? priceStyles.active
+                                            ? styles.active
                                             : ""
                                     }`}
                                 >
@@ -109,7 +109,7 @@ const Price = ({
                             ))}
                         </ul>
                     </div>
-                    <div className={priceStyles.gridItem2}>
+                    <div className={styles.gridItem2}>
                         <h2>Description</h2>
                         <p>
                             Fine art archival giclée print on Hahnemühle Photo
@@ -140,7 +140,7 @@ const Price = ({
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <button
-                            className={priceStyles.button}
+                            className={styles.button}
                             onClick={() => redirectToCheckout()}
                         >
                             Buy Now

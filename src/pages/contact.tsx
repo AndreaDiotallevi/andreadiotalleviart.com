@@ -3,9 +3,8 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
-import PageTitle from "../components/pageTitle"
 
-import * as contactStyles from "./contact.module.scss"
+import * as styles from "./contact.module.scss"
 
 type DataProps = {
     file: {
@@ -25,45 +24,31 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                 tags: ["Contact", "About"],
             }}
         >
-            <React.Fragment>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: "100%",
-                        marginBottom: "50px",
-                    }}
-                >
-                    {/* <PageTitle isHome={false} text="" /> */}
-                    <div className={contactStyles.fixed}>
-                        <h1>Contact</h1>
+            <div className={styles.container}>
+                <h1 className={styles.h1}>Contact</h1>
+                <div className={styles.grid}>
+                    <div>
+                        <GatsbyImage
+                            image={file.childImageSharp.gatsbyImageData}
+                            alt="Profile image"
+                        />
                     </div>
-                    <div className={contactStyles.container}>
-                        <div>
-                            <GatsbyImage
-                                image={file.childImageSharp.gatsbyImageData}
-                                alt="Profile image"
-                            />
-                        </div>
-                        <div className={contactStyles.text}>
-                            <p>
-                                I am a generative artist and creative coder
-                                based in London.
-                            </p>
-                            <p>
-                                As a pianist and former architect, I am
-                                fascinated by the intersection between art and
-                                technology and I am in constant exploration of
-                                generative art concepts. For each new work, I
-                                design a custom algorithm capable of generating
-                                a sequence of unique, but aesthetically related
-                                images.
-                            </p>
-                        </div>
+                    <div className={styles.gridItem2}>
+                        <p>
+                            I am a generative artist and creative coder based in
+                            London.
+                        </p>
+                        <p>
+                            As a pianist and former architect, I am fascinated
+                            by the intersection between art and technology and I
+                            am in constant exploration of generative art
+                            concepts. For each new work, I design a custom
+                            algorithm capable of generating a sequence of
+                            unique, but aesthetically related images.
+                        </p>
                     </div>
                 </div>
-            </React.Fragment>
+            </div>
         </Layout>
     )
 }
