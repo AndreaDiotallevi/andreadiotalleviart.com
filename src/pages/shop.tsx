@@ -4,7 +4,6 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
-import PageTitle from "../components/pageTitle"
 import { StripePrice } from "../models/stripe"
 
 import * as shopStyles from "./shop.module.scss"
@@ -64,7 +63,6 @@ const Shop = ({
                         marginBottom: "50px",
                     }}
                 >
-                    {/* <PageTitle isHome={false} text="" /> */}
                     <h1 className={shopStyles.fixed}>Prints</h1>
                     <div>
                         <ul className={shopStyles.container}>

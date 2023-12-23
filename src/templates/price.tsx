@@ -3,7 +3,6 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "./layout"
-import PageTitle from "../components/pageTitle"
 import { StripePrice } from "../models/stripe"
 import { countryCodes } from "../utils/countryCodes"
 import getStripe from "../utils/stripejs"
@@ -85,7 +84,6 @@ const Price = ({
                         marginBottom: "50px",
                     }}
                 >
-                    {/* <PageTitle isHome={false} text="" /> */}
                     <div className={priceStyles.fixed}>
                         <h1>{stripePrice.product.name}</h1>
                     </div>

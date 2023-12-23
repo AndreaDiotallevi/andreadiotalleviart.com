@@ -40,7 +40,7 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                         <h1>Contact</h1>
                     </div>
                     <div className={contactStyles.container}>
-                        <div className={contactStyles.image}>
+                        <div>
                             <GatsbyImage
                                 image={file.childImageSharp.gatsbyImageData}
                                 alt="Profile image"
