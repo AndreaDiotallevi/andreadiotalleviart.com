@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import { graphql, PageProps } from "gatsby"
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
+import { Print } from "../models/prints"
 import { countryCodes } from "../utils/countryCodes"
 import getStripe from "../utils/stripejs"
 
@@ -12,19 +13,7 @@ import * as styles from "./price.module.scss"
 type DataProps = {
     stripePrice: StripePrice
     allPrintsJson: {
-        edges: [
-            {
-                node: {
-                    images: [
-                        {
-                            childImageSharp: {
-                                gatsbyImageData: IGatsbyImageData
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
+        edges: [{ node: Print }]
     }
 }
 
@@ -118,9 +107,7 @@ const Price = ({
                         <p>
                             Paper dimensions: 22 x 27.25 in (56 x 69.25 cm).
                             <br></br>Image dimensions: 21 x 26.25 in (35.25 x
-                            66.75 cm).<br></br>Suggested mat: 1.5 inches on
-                            sides, and 1.875 inches on top and bottom (3.80 and
-                            4.75 cm, respectively).
+                            66.75 cm).
                         </p>
                         <p style={{ marginBottom: 48 }}>
                             Print purchases are posted with a certificate of
@@ -130,13 +117,13 @@ const Price = ({
                         <h2>Shipping</h2>
                         <p>
                             The prints are sold unframed and packaged flat
-                            between cardboard for protection.
+                            between cardboard for protection.<br></br>All
+                            shipping costs included.
                         </p>
                         <p style={{ marginBottom: 48 }}>
-                            UK shipping is free and can take 2-3 weeks to
-                            arrive. International shipping is £150 GBP and can
-                            take up to 4 weeks to arrive. Read the full shipping
-                            and returns details here.
+                            UK shipping can take 2-3 weeks to arrive.
+                            International shipping take up to 4 weeks to arrive.
+                            Read the full shipping and returns details here.
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <button
@@ -162,11 +149,7 @@ export const query = graphql`
         allPrintsJson(filter: { slug: { eq: $slug } }) {
             edges {
                 node {
-                    images {
-                        childImageSharp {
-                            gatsbyImageData
-                        }
-                    }
+                    ...PrintFragment
                 }
             }
         }

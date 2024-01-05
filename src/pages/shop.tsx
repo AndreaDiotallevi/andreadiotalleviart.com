@@ -5,6 +5,7 @@ import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
+import { Print } from "../models/prints"
 
 import * as styles from "./shop.module.scss"
 
@@ -13,20 +14,7 @@ type DataProps = {
         edges: [{ node: StripePrice }]
     }
     allPrintsJson: {
-        edges: [
-            {
-                node: {
-                    slug: string
-                    images: [
-                        {
-                            childImageSharp: {
-                                gatsbyImageData: IGatsbyImageData
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
+        edges: [{ node: Print }]
     }
 }
 
@@ -95,12 +83,7 @@ export const query = graphql`
         allPrintsJson {
             edges {
                 node {
-                    slug
-                    images {
-                        childImageSharp {
-                            gatsbyImageData
-                        }
-                    }
+                    ...PrintFragment
                 }
             }
         }
