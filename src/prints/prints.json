@@ -1,5 +1,6 @@
 [
     {
+        "name": "Marble Lake",
         "slug": "marble-lake",
         "images": [
             "./images/marble-lake-MOCKUP.png",
@@ -7,18 +8,8 @@
         ]
     },
     {
+        "name": "Flames",
         "slug": "flames",
         "images": ["./images/flames-MOCKUP.png", "./images/flames-IMAGE.png"]
-    },
-    {
-        "slug": "sandstorm",
-        "images": ["./images/skylines-new2.png", "./images/skylines-new2.png"]
-    },
-    {
-        "slug": "skylines",
-        "images": [
-            "./images/waving-fabric-new.png",
-            "./images/waving-fabric-new.png"
-        ]
     }
 ]

@@ -46,7 +46,23 @@ const Shop = ({
             <div className={styles.container}>
                 <h1 className={styles.h1}>Prints</h1>
                 <div className={styles.grid}>
-                    {allStripePrice.edges.map(({ node }) => (
+                    {allPrintsJson.edges.map(({ node }) => (
+                        <li key={node.slug} className={styles.gridItem}>
+                            <Link to={`/shop/${node.slug}`}>
+                                <GatsbyImage
+                                    image={
+                                        node.images[0].childImageSharp
+                                            .gatsbyImageData
+                                    }
+                                    alt={node.slug}
+                                />
+                                <h2>{node.name}</h2>
+                                {/* <p>£{(node.unit_amount / 100).toFixed(2)}</p> */}
+                                <p>£{(20000 / 100).toFixed(2)}</p>
+                            </Link>
+                        </li>
+                    ))}
+                    {/* {allStripePrice.edges.map(({ node }) => (
                         <li key={node.id} className={styles.gridItem}>
                             <Link to={`/shop/${node.product.metadata.slug}`}>
                                 <GatsbyImage
@@ -64,7 +80,7 @@ const Shop = ({
                                 <p>£{(node.unit_amount / 100).toFixed(2)}</p>
                             </Link>
                         </li>
-                    ))}
+                    ))} */}
                 </div>
             </div>
         </Layout>
