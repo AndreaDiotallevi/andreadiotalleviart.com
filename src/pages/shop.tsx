@@ -91,7 +91,9 @@ export default Shop
 
 export const query = graphql`
     {
-        allStripePrice(filter: { active: { eq: true } }) {
+        allStripePrice(
+            filter: { active: { eq: true }, product: { active: { eq: true } } }
+        ) {
             edges {
                 node {
                     ...StripePriceFragment
