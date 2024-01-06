@@ -1,5 +1,16 @@
 [
     {
+        "slug": "marble-lake",
+        "images": [
+            "./images/marble-lake-MOCKUP.png",
+            "./images/marble-lake-IMAGE.png"
+        ]
+    },
+    {
+        "slug": "flames",
+        "images": ["./images/flames-MOCKUP.png", "./images/flames-IMAGE.png"]
+    },
+    {
         "slug": "sandstorm",
         "images": ["./images/skylines-new2.png", "./images/skylines-new2.png"]
     },
@@ -8,20 +19,6 @@
         "images": [
             "./images/waving-fabric-new.png",
             "./images/waving-fabric-new.png"
-        ]
-    },
-    {
-        "slug": "marble-lake",
-        "images": [
-            "./images/marble-lake-3x4.png",
-            "./images/marble-lake-IMAGE.png"
-        ]
-    },
-    {
-        "slug": "lake-at-dawn",
-        "images": [
-            "./images/agate-stone-new.png",
-            "./images/agate-stone-new.png"
         ]
     }
 ]

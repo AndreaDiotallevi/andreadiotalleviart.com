@@ -21,6 +21,8 @@ type DataProps = {
 const Shop = ({
     data: { allStripePrice, allPrintsJson },
 }: PageProps<DataProps>) => {
+    // console.log(allPrintsJson)
+    // console.log(allStripePrice)
     return (
         <Layout
             seo={{
