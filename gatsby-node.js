@@ -37,7 +37,7 @@ module.exports.createPages = async ({ graphql, actions }) => {
                     }
                 }
             }
-            allStripeProduct {
+            allStripeProduct(filter: { active: { eq: true } }) {
                 edges {
                     node {
                         metadata {
