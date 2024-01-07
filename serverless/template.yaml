@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for andreadiotalleviart.com
+
+Globals:
+    Function:
+        CodeUri: ./
+        Timeout: 30
+        Runtime: nodejs16.x
+        MemorySize: 1024
+        Tracing: Active
+        Architectures:
+            - x86_64
+
+Resources:
+    ApiGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: Prod
+            Cors:
+                AllowMethods: "'*'"
+                AllowHeaders: "'content-type, authorization'"
+                AllowOrigin: "'*'"
+
+    GetBlogsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendEmail
+            Handler: src/handlers/sendEmail.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /blogs
+                        Method: GET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendEmail.ts
