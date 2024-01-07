@@ -1,4 +1,10 @@
 .toggle-button {
+    display: none;
+
+    @media (max-width: 691.99px) {
+        display: block;
+    }
+
     width: 28px;
     height: 22px;
     position: relative;
@@ -14,10 +20,6 @@
     border: none;
     background-color: transparent;
     z-index: 3;
-
-    @media (min-width: 692px) {
-        display: none;
-    }
 
     &.isHome span {
         background-color: white;
