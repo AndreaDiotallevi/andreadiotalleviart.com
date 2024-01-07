@@ -3,6 +3,10 @@
     flex-direction: column;
     align-items: center;
     margin: 48px 0;
+
+    @media (max-width: 691.99px) {
+        margin-top: 12px;
+    }
 }
 
 .h1 {
@@ -17,6 +21,40 @@
         margin: 0 16px;
         margin-bottom: 8px;
         left: 0;
+    }
+}
+
+.backButtonContainer {
+    display: none;
+
+    @media (max-width: 691.99px) {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        width: 100%;
+        height: 24px;
+    }
+
+    .backButtonIcon {
+        content: " ";
+        border-left: 3px solid #000;
+        border-bottom: 3px solid #000;
+        width: 12px;
+        height: 12px;
+        transform: rotate(45deg);
+        cursor: pointer;
+        display: block;
+        margin-left: 62px;
+    }
+
+    .backButtonText {
+        font-size: 24px;
+        font-weight: 700;
+        margin-left: 8px;
+
+        @media (max-width: 691.99px) {
+            font-size: 18px;
+        }
     }
 }
 

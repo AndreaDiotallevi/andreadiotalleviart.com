@@ -6,6 +6,7 @@ export type Print = {
     slug: string
     images: [
         {
+            id: string
             childImageSharp: {
                 gatsbyImageData: IGatsbyImageData
             }
@@ -18,6 +19,7 @@ export const query = graphql`
         name
         slug
         images {
+            id
             childImageSharp {
                 gatsbyImageData(
                     width: 660

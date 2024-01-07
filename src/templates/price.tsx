@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { graphql, PageProps } from "gatsby"
+import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "./layout"
@@ -12,14 +12,10 @@ import * as styles from "./price.module.scss"
 
 type DataProps = {
     stripePrice: StripePrice
-    allPrintsJson: {
-        edges: [{ node: Print }]
-    }
+    printsJson: Print
 }
 
-const Price = ({
-    data: { stripePrice, allPrintsJson },
-}: PageProps<DataProps>) => {
+const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
     const [loading, setLoading] = useState(false)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
@@ -45,8 +41,6 @@ const Price = ({
         }
     }
 
-    const images = allPrintsJson.edges[0].node.images
-
     return (
         <Layout
             seo={{
@@ -65,19 +59,23 @@ const Price = ({
         >
             <div className={styles.container}>
                 <h1 className={styles.h1}>{stripePrice.product.name}</h1>
+                <Link to="/shop" className={styles.backButtonContainer}>
+                    <div className={styles.backButtonIcon} />
+                    <p className={styles.backButtonText}>Shop</p>
+                </Link>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
                         <div>
                             <GatsbyImage
+                                alt={printsJson.images[slideShowIndex].id}
                                 image={
-                                    images[slideShowIndex].childImageSharp
-                                        .gatsbyImageData
+                                    printsJson.images[slideShowIndex]
+                                        .childImageSharp.gatsbyImageData
                                 }
-                                alt={`${stripePrice.product.name}`}
                             />
                         </div>
                         <ul className={styles.imageList}>
-                            {images.map((image, index) => (
+                            {printsJson.images.map((image, index) => (
                                 <li
                                     key={`image-${index}`}
                                     onClick={() => setSliderShowIndex(index)}
@@ -88,11 +86,11 @@ const Price = ({
                                     }`}
                                 >
                                     <GatsbyImage
+                                        alt={printsJson.images[index].id}
                                         image={
                                             image.childImageSharp
                                                 .gatsbyImageData
                                         }
-                                        alt={`${stripePrice.product.name}`}
                                     />
                                 </li>
                             ))}
@@ -146,12 +144,8 @@ export const query = graphql`
         stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
             ...StripePriceFragment
         }
-        allPrintsJson(filter: { slug: { eq: $slug } }) {
-            edges {
-                node {
-                    ...PrintFragment
-                }
-            }
+        printsJson(slug: { eq: $slug }) {
+            ...PrintFragment
         }
     }
 `
