@@ -37,14 +37,15 @@
 
     .backButtonIcon {
         content: " ";
-        border-left: 3px solid #000;
-        border-bottom: 3px solid #000;
-        width: 12px;
-        height: 12px;
+        border-left: 3px solid rgb(68, 68, 68);
+        border-bottom: 3px solid rgb(68, 68, 68);
+        width: 14px;
+        height: 14px;
         transform: rotate(45deg);
         cursor: pointer;
         display: block;
         margin-left: 62px;
+        border-radius: 2px;
     }
 
     .backButtonText {
@@ -87,9 +88,9 @@
     width: 70px;
     cursor: pointer;
     margin-right: 10px;
-    border: 1px solid white;
+    border: 2px solid white;
     border-style: dotted;
-    padding: 1px;
+    padding: 2px;
 
     &.active {
         border-color: rgb(68, 68, 68);
