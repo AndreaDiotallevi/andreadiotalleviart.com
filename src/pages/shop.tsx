@@ -21,8 +21,12 @@ type DataProps = {
 const Shop = ({
     data: { allStripePrice, allPrintsJson },
 }: PageProps<DataProps>) => {
-    // console.log(allPrintsJson)
-    // console.log(allStripePrice)
+    const getStripePrice = (slug: string) => {
+        return allStripePrice.edges.filter(
+            edge => edge.node.product.metadata.slug === slug
+        )[0]
+    }
+
     return (
         <Layout
             seo={{
@@ -50,15 +54,20 @@ const Shop = ({
                         <li key={node.slug} className={styles.gridItem}>
                             <Link to={`/shop/${node.slug}`}>
                                 <GatsbyImage
+                                    alt={node.images[0].id}
                                     image={
                                         node.images[0].childImageSharp
                                             .gatsbyImageData
                                     }
-                                    alt={node.slug}
                                 />
                                 <h2>{node.name}</h2>
-                                {/* <p>£{(node.unit_amount / 100).toFixed(2)}</p> */}
-                                <p>£{(20000 / 100).toFixed(2)}</p>
+                                <p>
+                                    £
+                                    {(
+                                        getStripePrice(node.slug).node
+                                            .unit_amount / 100
+                                    ).toFixed(2)}
+                                </p>
                             </Link>
                         </li>
                     ))}
