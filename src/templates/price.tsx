@@ -30,8 +30,8 @@ const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
         const { error } = await stripe.redirectToCheckout({
             mode: "payment",
             lineItems: [{ price: priceId, quantity: 1 }],
-            successUrl: `${window.location.origin}/shop`,
-            cancelUrl: `${window.location.origin}/shop`,
+            successUrl: window.location.href,
+            cancelUrl: window.location.href,
             shippingAddressCollection: { allowedCountries: countryCodes },
         })
 
