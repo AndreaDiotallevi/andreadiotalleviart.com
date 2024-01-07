@@ -4,7 +4,7 @@ import { Link } from "gatsby"
 import MenuToggleButton from "./menuToggleButton"
 import routes from "../utils/routes"
 
-import * as navbarStyles from "./navbar.module.scss"
+import * as styles from "./navbar.module.scss"
 
 type DataProps = {
     open: boolean
@@ -16,18 +16,14 @@ const Navbar = (props: DataProps) => {
     const { open, onClick, isHome } = props
 
     return (
-        <header
-            className={`${navbarStyles.header} ${
-                isHome ? navbarStyles.homepage : ""
-            }`}
-        >
-            <div>
+        <header className={`${styles.header} ${isHome ? styles.home : ""}`}>
+            <div className={styles.headerContainer}>
                 <Link to="/">
-                    <h2>AD</h2>
+                    <h2 className={styles.logo}>AD</h2>
                 </Link>
-                <ul>
+                <ul className={styles.linksContainer}>
                     {routes.map(({ menuName, baseUrl }) => (
-                        <li key={menuName}>
+                        <li key={menuName} className={styles.link}>
                             <Link to={baseUrl} activeStyle={{ opacity: 0.7 }}>
                                 {menuName}
                             </Link>
