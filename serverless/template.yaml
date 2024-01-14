@@ -5,7 +5,7 @@ Description: SAM Template for andreadiotalleviart.com
 Globals:
     Function:
         CodeUri: ./
-        Timeout: 30
+        Timeout: 100
         Runtime: nodejs16.x
         MemorySize: 1024
         Tracing: Active
@@ -21,6 +21,11 @@ Resources:
                 AllowMethods: "'*'"
                 AllowHeaders: "'content-type, authorization'"
                 AllowOrigin: "'*'"
+
+    EventBus:
+        Type: "AWS::Events::EventBus"
+        Properties:
+            Name: EventBus
 
     CreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function
@@ -41,3 +46,32 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/createCheckoutSession.ts
+
+    # WebhookFunction:
+    #     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    #     # DependsOn: WebhookSecretsManager
+    #     Properties:
+    #         FunctionName: !Sub [
+    #                 "InboundWebhook-Lambda-${ID}",
+    #                 ID: !Select [2, !Split ["/", !Ref AWS::StackId]],
+    #             ] # Append the stack UUID
+    #         CodeUri:
+    #             Bucket: !Sub "eventbridge-inbound-webhook-templates-prod-${AWS::Region}"
+    #             Key: "lambda-templates/stripe-lambdasrc.zip"
+    #         Handler: app.lambda_handler
+    #         Environment:
+    #             Variables:
+    #                 STRIPE_WEBHOOK_SECRET_ARN: !Ref WebhookSecretsManager
+    #                 EVENT_BUS_NAME: !Ref EventBusName
+    #         FunctionUrlConfig:
+    #             AuthType: NONE
+    #         # Policies:
+    #         #     - EventBridgePutEventsPolicy:
+    #         #         EventBusName: !Ref EventBusName
+    #         #     - Version: "2012-10-17"
+    #         #     Statement:
+    #         #         - Effect: Allow
+    #         #             Action:
+    #         #                 - secretsmanager:DescribeSecret
+    #         #                 - secretsmanager:GetSecretValue
+    #         #             Resource: !Ref WebhookSecretsManager
