@@ -6,7 +6,7 @@ Globals:
     Function:
         CodeUri: ./
         Timeout: 100
-        Runtime: nodejs16.x
+        Runtime: nodejs20.x
         MemorySize: 1024
         Tracing: Active
         Architectures:
@@ -17,13 +17,56 @@ Resources:
         Type: AWS::Serverless::Api
         Properties:
             StageName: Prod
+            Auth:
+                AddApiKeyRequiredToCorsPreflight: false
+                ApiKeyRequired: true
+                UsagePlan:
+                    CreateUsagePlan: PER_API
+                    Description: Usage plan for this API
             Cors:
                 AllowMethods: "'*'"
-                AllowHeaders: "'content-type, authorization'"
+                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
                 AllowOrigin: "'*'"
+    # ApiGateway:
+    #     Type: AWS::Serverless::Api
+    #     Properties:
+    #         StageName: Prod
+    #         Cors:
+    #             AllowMethods: "'*'"
+    #             AllowHeaders: "'content-type, authorization'"
+    #             AllowOrigin: "'*'"
+
+    # ApiGatewayKey:
+    #     Type: AWS::ApiGateway::ApiKey
+    #     # DependsOn:
+    #     #     - HvgnApi
+    #     Properties:
+    #         KeyId: !Ref ApiKey
+    #         KeyType: API_KEY
+    #         UsagePlanId: !Ref UsagePlan
+    #         # Name: ApiGatewayKey
+    #         # Enabled: true
+    #         # StageKeys:
+    #         #     - RestApiId: !Ref ApiGateway
+    #         #       StageName: Prod
+
+    # UsagePlan:
+    #     Type: AWS::ApiGateway::UsagePlan
+    #     Properties:
+    #         UsagePlanName: UsagePlan
+    #         ApiStages:
+    #             - ApiId: !Ref ApiGateway
+    #               Stage: Prod
+    #         Quota:
+    #             Limit: 1000
+    #             Offset: 2
+    #             Period: MONTH
+    #         Throttle:
+    #             BurstLimit: 5
+    #             RateLimit: 2
 
     EventBus:
-        Type: "AWS::Events::EventBus"
+        Type: AWS::Events::EventBus
         Properties:
             Name: EventBus
 
@@ -47,31 +90,39 @@ Resources:
                 EntryPoints:
                     - src/handlers/createCheckoutSession.ts
 
-    # WebhookFunction:
-    #     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    #     # DependsOn: WebhookSecretsManager
-    #     Properties:
-    #         FunctionName: !Sub [
-    #                 "InboundWebhook-Lambda-${ID}",
-    #                 ID: !Select [2, !Split ["/", !Ref AWS::StackId]],
-    #             ] # Append the stack UUID
-    #         CodeUri:
-    #             Bucket: !Sub "eventbridge-inbound-webhook-templates-prod-${AWS::Region}"
-    #             Key: "lambda-templates/stripe-lambdasrc.zip"
-    #         Handler: app.lambda_handler
-    #         Environment:
-    #             Variables:
-    #                 STRIPE_WEBHOOK_SECRET_ARN: !Ref WebhookSecretsManager
-    #                 EVENT_BUS_NAME: !Ref EventBusName
-    #         FunctionUrlConfig:
-    #             AuthType: NONE
-    #         # Policies:
-    #         #     - EventBridgePutEventsPolicy:
-    #         #         EventBusName: !Ref EventBusName
-    #         #     - Version: "2012-10-17"
-    #         #     Statement:
-    #         #         - Effect: Allow
-    #         #             Action:
-    #         #                 - secretsmanager:DescribeSecret
-    #         #                 - secretsmanager:GetSecretValue
-    #         #             Resource: !Ref WebhookSecretsManager
+    StripeWebhookFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        # DependsOn: WebhookSecretsManager
+        Properties:
+            FunctionName: Test
+            # FunctionName: !Sub [
+            #         "InboundWebhook-Lambda-${ID}",
+            #         ID: !Select [2, !Split ["/", !Ref AWS::StackId]],
+            #     ] # Append the stack UUID
+            # CodeUri:
+            #     Bucket: !Sub "eventbridge-inbound-webhook-templates-prod-${AWS::Region}"
+            #     Key: "lambda-templates/stripe-lambdasrc.zip"
+            Handler: src/handlers/stripeWebhook.handler
+            # Environment:
+            #     Variables:
+            #         STRIPE_WEBHOOK_SECRET_ARN: !Ref WebhookSecretsManager
+            #         EVENT_BUS_NAME: !Ref EventBusName
+            FunctionUrlConfig:
+                AuthType: NONE
+            # Policies:
+            #     - EventBridgePutEventsPolicy:
+            #         EventBusName: !Ref EventBusName
+            #     - Version: "2012-10-17"
+            #     Statement:
+            #         - Effect: Allow
+            #             Action:
+            #                 - secretsmanager:DescribeSecret
+            #                 - secretsmanager:GetSecretValue
+            #             Resource: !Ref WebhookSecretsManager
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/stripeWebhook.ts
