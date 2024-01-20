@@ -40,7 +40,8 @@
 		"react-dom": "^17.0.2",
 		"react-helmet": "^6.1.0",
 		"react-p5-wrapper": "^2.4.1",
-		"sass": "^1.63.6"
+		"sass": "^1.63.6",
+		"stripe": "^14.13.0"
 	},
 	"devDependencies": {
 		"@types/loadable__component": "^5.13.4",

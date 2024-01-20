@@ -8798,7 +8798,7 @@ qs@6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
-qs@^6.6.0:
+qs@^6.11.0, qs@^6.6.0:
   version "6.11.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.2.tgz#64bea51f12c1f5da1bc01496f48ffcff7c69d7d9"
   integrity sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==
@@ -9982,6 +9982,14 @@ stripe@8.191.0:
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.6.0"
+
+stripe@^14.13.0:
+  version "14.13.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-14.13.0.tgz#ee6012a3908215e2b54e640fa9efe6640b04613f"
+  integrity sha512-uLOfWtBUL1amJCTpKCXWrHntFOSaO2PWb/2hsxV/OlXLr0bz5MyU8IW1pFlmZqpw6hBqAW5Fad7Ty7xRxDYrzA==
+  dependencies:
+    "@types/node" ">=8.1.0"
+    qs "^6.11.0"
 
 strtok3@^6.2.4:
   version "6.3.0"
