@@ -23,9 +23,9 @@ export const handler = async (
         statusCode,
         body,
         headers: {
-            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Methods": "*",
         },
     }
 }
