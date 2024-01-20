@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
-import Stripe from "stripe"
 
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
 import { Print } from "../models/prints"
-// import { countryCodes } from "../utils/countryCodes"
 import getStripe from "../utils/stripejs"
 
 import * as styles from "./price.module.scss"
@@ -19,19 +17,19 @@ type DataProps = {
 
 const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
     // const [loading, setLoading] = useState(false)
-    const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
+    const [sessionId, setSessionId] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
-    console.log(session)
+    // console.log(sessionId)
 
     useEffect(() => {
         const createSession = async () => {
-            const session = await createCheckoutSession({
+            const sessionId = await createCheckoutSession({
                 line_items: [{ price: stripePrice.id, quantity: 1 }],
                 success_url: window.location.href,
                 cancel_url: window.location.href,
             })
-            setSession(session)
+            setSessionId(sessionId)
         }
 
         createSession()
@@ -42,9 +40,9 @@ const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
 
         const stripe = await getStripe()
 
-        if (!stripe || !session) return
+        if (!stripe || !sessionId) return
 
-        stripe.redirectToCheckout({ sessionId: session?.id })
+        stripe.redirectToCheckout({ sessionId })
     }
 
     return (

@@ -25,9 +25,9 @@ export const createCheckoutSession = async (
 
         if (response.ok) {
             const data = (await response.json()) as {
-                session: Stripe.Checkout.Session
+                sessionId: string
             }
-            return data.session
+            return data.sessionId
         } else {
             console.error("Failed to get access token: ", response.statusText)
             return null
