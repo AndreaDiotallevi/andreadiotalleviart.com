@@ -75,6 +75,41 @@ Resources:
                 EntryPoints:
                     - src/handlers/createCheckoutSession.ts
 
+    SendEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendEmail
+            Handler: src/handlers/sendEmail.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /send-email
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: sendEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SOURCE
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_DESTINATION
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendEmail.ts
+
     StripeWebhookFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         # DependsOn: WebhookSecretsManager
