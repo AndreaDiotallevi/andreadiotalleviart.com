@@ -128,6 +128,7 @@ const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
                             Read the full shipping and returns details here.
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
+                        <p>Apply promotions at checkout.</p>
                         <button
                             className={styles.button}
                             onClick={() => redirectToCheckout()}
