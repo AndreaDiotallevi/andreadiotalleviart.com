@@ -1,6 +1,6 @@
 import Stripe from "stripe"
 
-const stripe = new Stripe("your_secret_key", {
+const stripe = new Stripe("sk_test_", {
     apiVersion: "2023-10-16",
 })
 
