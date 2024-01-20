@@ -27,28 +27,6 @@ Resources:
                 AllowMethods: "'*'"
                 AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
                 AllowOrigin: "'*'"
-    # ApiGateway:
-    #     Type: AWS::Serverless::Api
-    #     Properties:
-    #         StageName: Prod
-    #         Cors:
-    #             AllowMethods: "'*'"
-    #             AllowHeaders: "'content-type, authorization'"
-    #             AllowOrigin: "'*'"
-
-    # ApiGatewayKey:
-    #     Type: AWS::ApiGateway::ApiKey
-    #     # DependsOn:
-    #     #     - HvgnApi
-    #     Properties:
-    #         KeyId: !Ref ApiKey
-    #         KeyType: API_KEY
-    #         UsagePlanId: !Ref UsagePlan
-    #         # Name: ApiGatewayKey
-    #         # Enabled: true
-    #         # StageKeys:
-    #         #     - RestApiId: !Ref ApiGateway
-    #         #       StageName: Prod
 
     # UsagePlan:
     #     Type: AWS::ApiGateway::UsagePlan
@@ -82,6 +60,13 @@ Resources:
                         RestApiId: !Ref ApiGateway
                         Path: /create-checkout-session
                         Method: POST
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:

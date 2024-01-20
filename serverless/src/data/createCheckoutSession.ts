@@ -1,8 +1,7 @@
+import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
 import Stripe from "stripe"
 
-const stripe = new Stripe("sk_test_", {
-    apiVersion: "2023-10-16",
-})
+const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 
 export const createCheckoutSession = async (
     params: Pick<
@@ -10,6 +9,17 @@ export const createCheckoutSession = async (
         "line_items" | "cancel_url" | "success_url"
     >
 ) => {
+    const getParameterCommand = new GetParameterCommand({
+        Name: "STRIPE_SECRET_KEY",
+    })
+
+    const { Parameter } = await ssmClient.send(getParameterCommand)
+    const secretValue = Parameter?.Value as string
+
+    const stripe = new Stripe(secretValue, {
+        apiVersion: "2023-10-16",
+    })
+
     const { line_items, cancel_url, success_url } = params
 
     try {
