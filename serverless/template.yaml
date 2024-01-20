@@ -28,25 +28,24 @@ Resources:
                 AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
                 AllowOrigin: "'*'"
 
-    # UsagePlan:
-    #     Type: AWS::ApiGateway::UsagePlan
-    #     Properties:
-    #         UsagePlanName: UsagePlan
-    #         ApiStages:
-    #             - ApiId: !Ref ApiGateway
-    #               Stage: Prod
-    #         Quota:
-    #             Limit: 1000
-    #             Offset: 2
-    #             Period: MONTH
-    #         Throttle:
-    #             BurstLimit: 5
-    #             RateLimit: 2
-
     EventBus:
         Type: AWS::Events::EventBus
         Properties:
             Name: EventBus
+
+    CheckoutSessionCompletedEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: CheckoutSessionCompletedEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                        <p>Hello {{name}},</p>
+                        <p>Welcome to our platform!</p>
+                        </body>
+                    </html>
+                SubjectPart: "Thank you"
 
     CreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function
@@ -93,6 +92,7 @@ Resources:
                         Effect: Allow
                         Action:
                             - ses:SendEmail
+                            - ses:SendTemplatedEmail
                         Resource: "*"
                 - Statement:
                       - Sid: readParameterStore
