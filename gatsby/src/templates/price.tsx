@@ -1,14 +1,16 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
+import Stripe from "stripe"
 
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
 import { Print } from "../models/prints"
-import { countryCodes } from "../utils/countryCodes"
+// import { countryCodes } from "../utils/countryCodes"
 import getStripe from "../utils/stripejs"
 
 import * as styles from "./price.module.scss"
+import { createCheckoutSession } from "../api"
 
 type DataProps = {
     stripePrice: StripePrice
@@ -16,29 +18,33 @@ type DataProps = {
 }
 
 const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
+    const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
-    const redirectToCheckout = async () => {
-        setLoading(true)
+    console.log(session)
 
-        const priceId = stripePrice.id
+    useEffect(() => {
+        const createSession = async () => {
+            const session = await createCheckoutSession({
+                line_items: [{ price: stripePrice.id, quantity: 1 }],
+                success_url: window.location.href,
+                cancel_url: window.location.href,
+            })
+            setSession(session)
+        }
+
+        createSession()
+    }, [])
+
+    const redirectToCheckout = async () => {
+        // setLoading(true)
+
         const stripe = await getStripe()
 
-        if (!stripe) return
+        if (!stripe || !session) return
 
-        const { error } = await stripe.redirectToCheckout({
-            mode: "payment",
-            lineItems: [{ price: priceId, quantity: 1 }],
-            successUrl: window.location.href,
-            cancelUrl: window.location.href,
-            shippingAddressCollection: { allowedCountries: countryCodes },
-        })
-
-        if (error) {
-            console.warn("Error:", error)
-            setLoading(false)
-        }
+        stripe.redirectToCheckout({ sessionId: session?.id })
     }
 
     return (
