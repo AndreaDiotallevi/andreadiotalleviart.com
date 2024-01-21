@@ -21,7 +21,7 @@ export const retrieveCheckoutSession = async (params: {
 
     try {
         const session = await stripe.checkout.sessions.retrieve(sessionId, {
-            expand: ["line_items"],
+            expand: ["line_items", "line_items.data.price.product"],
         })
 
         return {

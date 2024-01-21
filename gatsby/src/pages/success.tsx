@@ -20,7 +20,7 @@ const Success = ({ data: { allPrintsJson } }: PageProps<DataProps>) => {
     const params = new URLSearchParams(location.search)
     const sessionId = params.get("session_id")
 
-    console.log(session)
+    // console.log(session)
 
     useEffect(() => {
         const fetchSession = async () => {
@@ -50,8 +50,13 @@ const Success = ({ data: { allPrintsJson } }: PageProps<DataProps>) => {
                     <div>
                         <GatsbyImage
                             image={
-                                allPrintsJson.edges[0].node.images[0]
-                                    .childImageSharp.gatsbyImageData
+                                allPrintsJson.edges.filter(
+                                    edge =>
+                                        edge.node.slug ===
+                                        session.line_items?.data[0].price
+                                            ?.product.metadata.slug
+                                )[0].node.images[0].childImageSharp
+                                    .gatsbyImageData
                             }
                             alt="Profile image"
                         />
