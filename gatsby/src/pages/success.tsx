@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import Stripe from "stripe"
 
 import Layout from "../templates/layout"
+import { retrieveCheckoutSession } from "../api"
 
-import * as styles from "./thank-you.module.scss"
+import * as styles from "./success.module.scss"
 
 type DataProps = {
     file: {
@@ -14,8 +16,25 @@ type DataProps = {
     }
 }
 
-const ThankYou = ({ data: { file } }: PageProps<DataProps>) => {
-    const name = "Andrea"
+const Success = ({ data: { file } }: PageProps<DataProps>) => {
+    const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
+    const params = new URLSearchParams(location.search)
+    const sessionId = params.get("session_id")
+
+    console.log(session)
+
+    useEffect(() => {
+        const fetchSession = async () => {
+            if (!sessionId) return
+
+            const session = await retrieveCheckoutSession({ sessionId })
+            setSession(session)
+        }
+
+        fetchSession()
+    }, [sessionId])
+
+    if (!session) return "Loading..."
 
     return (
         <Layout
@@ -36,7 +55,10 @@ const ThankYou = ({ data: { file } }: PageProps<DataProps>) => {
                         />
                     </div>
                     <div className={styles.gridItem2}>
-                        <h2>Thanks for your order {name}!</h2>
+                        <h2>
+                            Thanks for your order{" "}
+                            {session.customer_details?.name}!
+                        </h2>
                         <p>
                             As soon as your package is on its way, you will
                             receive a delivery confirmation from me by email.
@@ -44,9 +66,21 @@ const ThankYou = ({ data: { file } }: PageProps<DataProps>) => {
                         <h2>Delivery address</h2>
                         <p>
                             Full Name<br></br>
-                            Line 1<br></br>
-                            Line 2<br></br>
-                            SE1 4PU, London, UK
+                            {session.shipping_details?.address?.line1}
+                            {session.shipping_details?.address?.line2 ? (
+                                <>
+                                    <br></br>
+                                    {session.shipping_details.address.line2}
+                                </>
+                            ) : null}
+                            {session.shipping_details?.address?.line2}
+                            <br></br>
+                            {session.shipping_details?.address?.postal_code}
+                            <br></br>
+                            {session.shipping_details?.address?.city}
+                            <br></br>
+                            {session.shipping_details?.address?.country}
+                            <br></br>
                         </p>
                         <h2>Your items</h2>
                         <p>
@@ -61,7 +95,7 @@ const ThankYou = ({ data: { file } }: PageProps<DataProps>) => {
     )
 }
 
-export default ThankYou
+export default Success
 
 export const query = graphql`
     {
