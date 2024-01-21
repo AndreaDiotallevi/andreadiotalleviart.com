@@ -15,9 +15,12 @@ type DataProps = {
     }
 }
 
-const Success = ({ data: { allPrintsJson } }: PageProps<DataProps>) => {
+const Success = ({
+    data: { allPrintsJson },
+    location,
+}: PageProps<DataProps>) => {
     const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
-    const params = new URLSearchParams(window.location.search)
+    const params = new URLSearchParams(location.search)
     const sessionId = params.get("session_id")
 
     // console.log(session)
