@@ -41,11 +41,37 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
-                        <p>Hello {{name}},</p>
-                        <p>Welcome to our platform!</p>
+                            <h2>Thanks for your order {{name}}!</h2>
+                            <p>As soon as your package is on its way, you will receive a delivery confirmation from me by email.</p>
+                            <h3>Delivery address</h3>
+                            <div>
+                                {{fullName}}<br>
+                                {{addressLine1}}<br>
+                                {{addressLine2}}<br>
+                                {{postcode}}, {{town}}, {{country}}
+                            </div>
+                            <h3>Your items</h3>
+                            <div>
+                                <article>
+                                    Flames fine art print<br>
+                                    Dimensions: 30x30 cm<br>
+                                    Quantity: 1<br><br>
+                                    <img src="https://www.andreadiotalleviart.com/moonlight.png" alt="Print thumbnail" width="120" height="120">
+                                </article>
+                            </div>
+                            <h3>Payment summary</h3>
+                            <details>
+                                Payment method: {{paymentMethod}}<br>
+                                Subtotal: £99.00<br>
+                                Shipping fee: Free<br>
+                                Discounts: £0.00<br>
+                                Total: £99.00
+                            </details>
+                            <h3>With love, Andrea</h3>
+                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Thank you"
+                SubjectPart: "Your Andrea Diotallevi Art Order 2"
 
     CreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function

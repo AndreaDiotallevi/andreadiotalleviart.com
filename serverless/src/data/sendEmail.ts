@@ -1,8 +1,4 @@
-import {
-    SESClient,
-    SendEmailCommand,
-    SendTemplatedEmailCommand,
-} from "@aws-sdk/client-ses"
+import { SESClient, SendTemplatedEmailCommand } from "@aws-sdk/client-ses"
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
 
 const sesClient = new SESClient({ region: process.env.AWS_REGION })
@@ -22,30 +18,22 @@ export const sendEmail = async () => {
         const { Parameter: param2 } = await ssmClient.send(getParameterCommand2)
         const destinationEmail = param2?.Value as string
 
-        // const sendEmailCommand = new SendEmailCommand({
-        //     Source: sourceEmail,
-        //     Destination: {
-        //         ToAddresses: [destinationEmail],
-        //     },
-        //     Message: {
-        //         Subject: {
-        //             Data: "Hello, World!",
-        //         },
-        //         Body: {
-        //             Text: {
-        //                 Data: "This is a simple email sent using AWS SES.",
-        //             },
-        //         },
-        //     },
-        // })
-
         const sendEmailCommand = new SendTemplatedEmailCommand({
             Source: sourceEmail,
             Destination: {
                 ToAddresses: [destinationEmail],
             },
             Template: "CheckoutSessionCompletedEmailTemplate",
-            TemplateData: JSON.stringify({ name: "Bob" }),
+            TemplateData: JSON.stringify({
+                name: "Andrea",
+                fullName: "Andrea Diotallevi",
+                addressLine1: "Line 1",
+                addressLine2: "Line 2",
+                postcode: "Postcode",
+                town: "London",
+                country: "UK",
+                paymentMethod: "Debit / Credit Card",
+            }),
         })
 
         const response = await sesClient.send(sendEmailCommand)
