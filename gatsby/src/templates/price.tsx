@@ -20,13 +20,11 @@ const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
     const [sessionId, setSessionId] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
-    // console.log(sessionId)
-
     useEffect(() => {
         const createSession = async () => {
             const sessionId = await createCheckoutSession({
                 line_items: [{ price: stripePrice.id, quantity: 1 }],
-                success_url: window.location.href,
+                success_url: window.location.origin,
                 cancel_url: window.location.href,
             })
             setSessionId(sessionId)

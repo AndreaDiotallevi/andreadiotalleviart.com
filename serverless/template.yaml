@@ -100,6 +100,33 @@ Resources:
                 EntryPoints:
                     - src/handlers/createCheckoutSession.ts
 
+    RetrieveCheckoutSessionFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-RetrieveCheckoutSession
+            Handler: src/handlers/retrieveCheckoutSession.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /retrieve-checkout-session/{sessionId}
+                        Method: GET
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/retrieveCheckoutSession.ts
+
     SendEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
