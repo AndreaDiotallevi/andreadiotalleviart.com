@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react"
-import { graphql, PageProps } from "gatsby"
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import { graphql, PageProps, Link } from "gatsby"
+import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
 import Layout from "../templates/layout"
 import { retrieveCheckoutSession } from "../api"
+import { Print } from "../models/prints"
 
 import * as styles from "./success.module.scss"
 
 type DataProps = {
-    file: {
-        childImageSharp: {
-            gatsbyImageData: IGatsbyImageData
-        }
+    allPrintsJson: {
+        edges: [{ node: Print }]
     }
 }
 
-const Success = ({ data: { file } }: PageProps<DataProps>) => {
+const Success = ({ data: { allPrintsJson } }: PageProps<DataProps>) => {
     const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
     const params = new URLSearchParams(location.search)
     const sessionId = params.get("session_id")
@@ -50,7 +49,10 @@ const Success = ({ data: { file } }: PageProps<DataProps>) => {
                 <div className={styles.grid}>
                     <div>
                         <GatsbyImage
-                            image={file.childImageSharp.gatsbyImageData}
+                            image={
+                                allPrintsJson.edges[0].node.images[0]
+                                    .childImageSharp.gatsbyImageData
+                            }
                             alt="Profile image"
                         />
                     </div>
@@ -60,8 +62,8 @@ const Success = ({ data: { file } }: PageProps<DataProps>) => {
                             {session.customer_details?.name}!
                         </h2>
                         <p>
-                            As soon as your package is on its way, you will
-                            receive a delivery confirmation from me by email.
+                            You will receive a confirmation email with the
+                            details of your order.
                         </p>
                         <h2>Delivery address</h2>
                         <p>
@@ -100,7 +102,10 @@ const Success = ({ data: { file } }: PageProps<DataProps>) => {
                             Total: £
                             {((session.amount_total || 0) / 100).toFixed(2)}
                         </p>
-                        <h2>With love, Andrea</h2>
+                        <h2 style={{ marginBottom: 24 }}>With love, Andrea</h2>
+                        <Link to="/shop" className={styles.button}>
+                            Discover More
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -112,14 +117,11 @@ export default Success
 
 export const query = graphql`
     {
-        file(relativePath: { eq: "assets/profile-photo.jpg" }) {
-            childImageSharp {
-                gatsbyImageData(
-                    width: 660
-                    quality: 99
-                    layout: CONSTRAINED
-                    placeholder: BLURRED
-                )
+        allPrintsJson {
+            edges {
+                node {
+                    ...PrintFragment
+                }
             }
         }
     }
