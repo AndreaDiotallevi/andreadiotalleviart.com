@@ -65,7 +65,8 @@ const Success = ({ data: { file } }: PageProps<DataProps>) => {
                         </p>
                         <h2>Delivery address</h2>
                         <p>
-                            Full Name<br></br>
+                            {session.shipping_details?.name}
+                            <br></br>
                             {session.shipping_details?.address?.line1}
                             {session.shipping_details?.address?.line2 ? (
                                 <>
@@ -75,19 +76,31 @@ const Success = ({ data: { file } }: PageProps<DataProps>) => {
                             ) : null}
                             {session.shipping_details?.address?.line2}
                             <br></br>
-                            {session.shipping_details?.address?.postal_code}
-                            <br></br>
-                            {session.shipping_details?.address?.city}
-                            <br></br>
+                            {
+                                session.shipping_details?.address?.postal_code
+                            }, {session.shipping_details?.address?.city},{" "}
                             {session.shipping_details?.address?.country}
-                            <br></br>
                         </p>
                         <h2>Your items</h2>
+                        {session.line_items?.data.map(item => (
+                            <div key={item.id}>
+                                <p>
+                                    {item.description}
+                                    <br></br>
+                                    Quantity: {item.quantity}
+                                </p>
+                            </div>
+                        ))}
+                        <h2>Payment Summary</h2>
                         <p>
-                            Flames fine art print<br></br>
-                            Dimensions: 30x30 cm<br></br>
-                            Quantity: 1
+                            Subtotal:{" "}
+                            {((session.amount_subtotal || 0) / 100).toFixed(2)}
+                            <br></br>
+                            Shipping fee: Free<br></br>
+                            Total: £
+                            {((session.amount_total || 0) / 100).toFixed(2)}
                         </p>
+                        <h2>With love, Andrea</h2>
                     </div>
                 </div>
             </div>
