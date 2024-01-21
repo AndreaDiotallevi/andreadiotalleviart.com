@@ -15,7 +15,10 @@ type DataProps = {
     printsJson: Print
 }
 
-const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
+const Price = ({
+    data: { stripePrice, printsJson },
+    location,
+}: PageProps<DataProps>) => {
     // const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
@@ -24,8 +27,8 @@ const Price = ({ data: { stripePrice, printsJson } }: PageProps<DataProps>) => {
         const createSession = async () => {
             const sessionId = await createCheckoutSession({
                 line_items: [{ price: stripePrice.id, quantity: 1 }],
-                success_url: window.location.origin,
-                cancel_url: window.location.href,
+                success_url: location.origin,
+                cancel_url: location.href,
             })
             setSessionId(sessionId)
         }
