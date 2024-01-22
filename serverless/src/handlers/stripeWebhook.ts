@@ -1,30 +1,64 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
+import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
+import Stripe from "stripe"
 
 import { processStripeWebhook } from "../data/processStribeWebhook"
+
+const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 
 export const handler = async (
     event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-    console.log(event)
-    const payload = event.body || ""
-    const parsedPayload = JSON.parse(payload) as {
-        data: { object: { id: string } }
-    }
-    console.log(parsedPayload)
+    try {
+        const getParameterCommand = new GetParameterCommand({
+            Name: "STRIPE_SIGNING_SECRET",
+        })
+        const { Parameter } = await ssmClient.send(getParameterCommand)
+        const stripeSigningSecret = Parameter?.Value as string
 
-    const response = await processStripeWebhook({
-        sessionId: parsedPayload.data.object.id,
-    })
+        const { body, headers } = event
+        const stripeSignatureHeader = headers["Stripe-Signature"]
 
-    return {
-        statusCode: 200,
-        body: "",
-        headers: {
-            "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*",
-        },
+        const stripeEvent = Stripe.webhooks.constructEvent(
+            body || "",
+            stripeSignatureHeader || "",
+            stripeSigningSecret
+        )
+
+        const { entries, error } = await processStripeWebhook({ stripeEvent })
+
+        const statusCode = error ? 500 : 200
+
+        const responseBody = error
+            ? JSON.stringify({ error })
+            : JSON.stringify({ entries })
+
+        return {
+            statusCode,
+            body: responseBody,
+            headers: {
+                "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "*",
+            },
+        }
+    } catch (error) {
+        console.log(`Error handling webhook`)
+        console.error(error)
+
+        return { statusCode: 400, body: "Webhook error" }
     }
+
+    // console.log(event)
+    // const payload = event.body || ""
+    // const parsedPayload = JSON.parse(payload) as {
+    //     data: { object: { id: string } }
+    // }
+    // console.log(parsedPayload)
+
+    // const response = await processStripeWebhook({
+    //     sessionId: parsedPayload.data.object.id,
+    // })
 }
 
 // // server.js
