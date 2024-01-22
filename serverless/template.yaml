@@ -32,16 +32,30 @@ Resources:
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
         Properties:
-            Name: CheckoutSessionCompleted
             EventBusName: !Ref EventBus
             EventPattern:
+                account:
+                    - !Sub ${AWS::AccountId}
                 source:
-                    - "stripe"
-                detailType:
-                    - "CheckoutSessionCompleted"
+                    - stripe
+                detail-type:
+                    - CheckoutSessionCompleted
             Targets:
                 - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
                   Id: TestId
+
+    EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+            Queues:
+                - Ref: CheckoutSessionCompletedSendEmailQueue
 
     CheckoutSessionCompletedSendEmailQueue:
         Type: AWS::SQS::Queue
