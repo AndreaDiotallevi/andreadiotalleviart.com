@@ -85,9 +85,10 @@ Resources:
                             <h3>Your items</h3>
                             <div>
                                 <article>
-                                    {{itemDescription}}<br>
+                                    {{productName}}<br>
+                                    {{productDescription}}<br>
                                     Quantity: {{itemQuantity}}<br><br>
-                                    <img src="{{productImageSource}}" alt="{{itemDescription}}" width="120">
+                                    <img src="{{productImageSource}}" alt="{{productName}}" width="120">
                                 </article>
                             </div>
                             <h3>Payment summary</h3>

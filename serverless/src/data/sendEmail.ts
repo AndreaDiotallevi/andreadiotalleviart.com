@@ -40,7 +40,11 @@ export const sendEmail = async ({ sessionId }: { sessionId: string }) => {
                 town: session.shipping_details?.address?.city || "",
                 country: session.shipping_details?.address?.country || "",
                 paymentMethod: "Card",
-                itemDescription: session.line_items?.data[0].description || "",
+                productName:
+                    session.line_items?.data[0].price?.product.name || "",
+                productDescription:
+                    session.line_items?.data[0].price?.product.description ||
+                    "",
                 itemQuantity: session.line_items?.data[0].quantity || "",
                 amountSubtotal:
                     `£${((session.amount_subtotal || 0) / 100).toFixed(2)}` ||
