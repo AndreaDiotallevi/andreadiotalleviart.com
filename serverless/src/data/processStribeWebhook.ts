@@ -1,11 +1,9 @@
-import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
 import {
     EventBridgeClient,
     PutEventsCommand,
 } from "@aws-sdk/client-eventbridge"
 import Stripe from "stripe"
 
-const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 const eventBridgeClient = new EventBridgeClient({
     region: process.env.AWS_REGION,
 })

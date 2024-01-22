@@ -18,11 +18,7 @@ Resources:
         Properties:
             StageName: Prod
             Auth:
-                # AddApiKeyRequiredToCorsPreflight: false
                 ApiKeyRequired: false
-                # UsagePlan:
-                #     CreateUsagePlan: PER_API
-                #     Description: Usage plan for this API
             Cors:
                 AllowMethods: "'*'"
                 AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
@@ -32,6 +28,26 @@ Resources:
         Type: AWS::Events::EventBus
         Properties:
             Name: !Sub ${AWS::StackName}-EventBus
+
+    EventBusRuleCheckoutSessionCompleted:
+        Type: AWS::Events::Rule
+        Properties:
+            Name: CheckoutSessionCompleted
+            EventBusName: !Ref EventBus
+            EventPattern:
+                source:
+                    - "stripe"
+                detailType:
+                    - "CheckoutSessionCompleted"
+            Targets:
+                - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+                  Id: TestId
+
+    CheckoutSessionCompletedSendEmailQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
+            VisibilityTimeout: 100
 
     CheckoutSessionCompletedEmailTemplate:
         Type: AWS::SES::Template
@@ -139,6 +155,11 @@ Resources:
                         RestApiId: !Ref ApiGateway
                         Path: /send-email
                         Method: POST
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+                        BatchSize: 5
             Policies:
                 - Statement:
                       - Sid: sendEmail
