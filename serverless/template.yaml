@@ -18,11 +18,11 @@ Resources:
         Properties:
             StageName: Prod
             Auth:
-                AddApiKeyRequiredToCorsPreflight: false
-                ApiKeyRequired: true
-                UsagePlan:
-                    CreateUsagePlan: PER_API
-                    Description: Usage plan for this API
+                # AddApiKeyRequiredToCorsPreflight: false
+                ApiKeyRequired: false
+                # UsagePlan:
+                #     CreateUsagePlan: PER_API
+                #     Description: Usage plan for this API
             Cors:
                 AllowMethods: "'*'"
                 AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
@@ -164,34 +164,27 @@ Resources:
                     - src/handlers/sendEmail.ts
 
     StripeWebhookFunction:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-        # DependsOn: WebhookSecretsManager
+        Type: AWS::Serverless::Function
         Properties:
-            FunctionName: Test
-            # FunctionName: !Sub [
-            #         "InboundWebhook-Lambda-${ID}",
-            #         ID: !Select [2, !Split ["/", !Ref AWS::StackId]],
-            #     ] # Append the stack UUID
-            # CodeUri:
-            #     Bucket: !Sub "eventbridge-inbound-webhook-templates-prod-${AWS::Region}"
-            #     Key: "lambda-templates/stripe-lambdasrc.zip"
+            FunctionName: !Sub ${AWS::StackName}-StripeWebhook
             Handler: src/handlers/stripeWebhook.handler
-            # Environment:
-            #     Variables:
-            #         STRIPE_WEBHOOK_SECRET_ARN: !Ref WebhookSecretsManager
-            #         EVENT_BUS_NAME: !Ref EventBusName
-            FunctionUrlConfig:
-                AuthType: NONE
-            # Policies:
-            #     - EventBridgePutEventsPolicy:
-            #         EventBusName: !Ref EventBusName
-            #     - Version: "2012-10-17"
-            #     Statement:
-            #         - Effect: Allow
-            #             Action:
-            #                 - secretsmanager:DescribeSecret
-            #                 - secretsmanager:GetSecretValue
-            #             Resource: !Ref WebhookSecretsManager
+            Environment:
+                Variables:
+                    STRIPE_SIGNING_SECRET: whse
+            Events:
+                StripeWebhook:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /stripe-webhook
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -199,3 +192,40 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/stripeWebhook.ts
+
+    # StripeWebhookFunction:
+    #     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    #     # DependsOn: WebhookSecretsManager
+    #     Properties:
+    #         FunctionName: Test
+    #         # FunctionName: !Sub [
+    #         #         "InboundWebhook-Lambda-${ID}",
+    #         #         ID: !Select [2, !Split ["/", !Ref AWS::StackId]],
+    #         #     ] # Append the stack UUID
+    #         # CodeUri:
+    #         #     Bucket: !Sub "eventbridge-inbound-webhook-templates-prod-${AWS::Region}"
+    #         #     Key: "lambda-templates/stripe-lambdasrc.zip"
+    #         Handler: src/handlers/stripeWebhook.handler
+    #         # Environment:
+    #         #     Variables:
+    #         #         STRIPE_WEBHOOK_SECRET_ARN: !Ref WebhookSecretsManager
+    #         #         EVENT_BUS_NAME: !Ref EventBusName
+    #         FunctionUrlConfig:
+    #             AuthType: NONE
+    #         # Policies:
+    #         #     - EventBridgePutEventsPolicy:
+    #         #         EventBusName: !Ref EventBusName
+    #         #     - Version: "2012-10-17"
+    #         #     Statement:
+    #         #         - Effect: Allow
+    #         #             Action:
+    #         #                 - secretsmanager:DescribeSecret
+    #         #                 - secretsmanager:GetSecretValue
+    #         #             Resource: !Ref WebhookSecretsManager
+    #     Metadata:
+    #         BuildMethod: esbuild
+    #         BuildProperties:
+    #             Minify: true
+    #             Target: "es2020"
+    #             EntryPoints:
+    #                 - src/handlers/stripeWebhook.ts
