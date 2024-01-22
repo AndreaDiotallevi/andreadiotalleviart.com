@@ -77,7 +77,9 @@ Resources:
                             <div>
                                 {{name}}<br>
                                 {{addressLine1}}<br>
-                                {{addressLine2}}<br>
+                                {{#if addressLine2}}
+                                    {{addressLine2}}<br>
+                                {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
                             <h3>Your items</h3>
