@@ -37,7 +37,7 @@ export const createCheckoutSession = async (
         }
     } catch (error) {
         console.log("Error creating session")
-        console.log(error)
+        console.error(error)
         const errorMessage = "Could not create session"
 
         return {

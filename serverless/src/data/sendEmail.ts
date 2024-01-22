@@ -42,7 +42,7 @@ export const sendEmail = async () => {
         return { error: null }
     } catch (error) {
         console.log("Error sending email")
-        console.log(error)
+        console.error(error)
         const errorMessage = "Could not send email"
 
         return {

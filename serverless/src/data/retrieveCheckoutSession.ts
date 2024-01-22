@@ -29,7 +29,7 @@ export const retrieveCheckoutSession = async (params: {
         }
     } catch (error) {
         console.log("Error retrieving session")
-        console.log(error)
+        console.error(error)
         const errorMessage = "Could not retrieve session"
 
         return {
