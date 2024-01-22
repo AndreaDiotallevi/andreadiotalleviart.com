@@ -78,17 +78,15 @@ const Success = ({
                             {session.shipping_details?.name}
                             <br></br>
                             {session.shipping_details?.address?.line1}
+                            <br></br>
                             {session.shipping_details?.address?.line2 ? (
                                 <>
-                                    <br></br>
                                     {session.shipping_details.address.line2}
+                                    <br></br>
                                 </>
                             ) : null}
-                            {session.shipping_details?.address?.line2}
-                            <br></br>
-                            {
-                                session.shipping_details?.address?.postal_code
-                            }, {session.shipping_details?.address?.city},{" "}
+                            {session.shipping_details?.address?.postal_code},{" "}
+                            {session.shipping_details?.address?.city},{" "}
                             {session.shipping_details?.address?.country}
                         </p>
                         <h2>Your items</h2>

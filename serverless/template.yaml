@@ -84,21 +84,19 @@ Resources:
                             </div>
                             <h3>Your items</h3>
                             <div>
-                                <article>
-                                    {{productName}}<br>
-                                    {{productDescription}}<br>
-                                    Quantity: {{itemQuantity}}<br><br>
-                                    <img src="{{productImageSource}}" alt="{{productName}}" width="120">
-                                </article>
+                                {{productName}}<br>
+                                {{productDescription}}<br>
+                                Quantity: {{itemQuantity}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
                             </div>
                             <h3>Payment summary</h3>
-                            <details>
+                            <div>
                                 Payment method: {{paymentMethod}}<br>
                                 Subtotal: {{amountSubtotal}}<br>
                                 Shipping fee: Free<br>
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
-                            </details>
+                            </div>
                             <h3>With love, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
