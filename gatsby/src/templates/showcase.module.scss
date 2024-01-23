@@ -98,7 +98,7 @@
 
     @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
-        grid-gap: 48px;
+        grid-gap: 24px;
         padding-left: 46px;
     }
 }
@@ -113,7 +113,8 @@
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 6px;
     list-style: none;
-    margin-top: 20px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 
 .imageListItem {
