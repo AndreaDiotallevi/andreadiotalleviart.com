@@ -7,7 +7,7 @@ import { StripePrice } from "../models/stripe"
 import { Print } from "../models/prints"
 import getStripe from "../utils/stripejs"
 
-import * as styles from "./price.module.scss"
+import * as styles from "./showcase.module.scss"
 import { createCheckoutSession } from "../api"
 
 type DataProps = {
@@ -15,7 +15,7 @@ type DataProps = {
     printsJson: Print
 }
 
-const Price = ({
+const PricePage = ({
     data: { stripePrice, printsJson },
     location,
 }: PageProps<DataProps>) => {
@@ -143,7 +143,7 @@ const Price = ({
     )
 }
 
-export default Price
+export default PricePage
 
 export const query = graphql`
     query($slug: String!) {

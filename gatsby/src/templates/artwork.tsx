@@ -3,27 +3,15 @@ import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "./layout"
+import { Artwork } from "../models/artworks"
 
-import * as styles from "./price.module.scss"
+import * as styles from "./showcase.module.scss"
 
 type DataProps = {
-    artworksJson: {
-        name: string
-        description: string
-        images: [
-            {
-                childImageSharp: {
-                    gatsbyImageData: IGatsbyImageData
-                    fixed: {
-                        src: string
-                    }
-                }
-            }
-        ]
-    }
+    artworksJson: Artwork
 }
 
-const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
+const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
     return (
@@ -51,8 +39,7 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
                         <GatsbyImage
-                            // alt={artworksJson.images[slideShowIndex].id}
-                            alt="test"
+                            alt={artworksJson.images[slideShowIndex].id}
                             image={
                                 artworksJson.images[slideShowIndex]
                                     .childImageSharp.gatsbyImageData
@@ -73,8 +60,7 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                                         }`}
                                     >
                                         <GatsbyImage
-                                            // alt={artworksJson.images[index].id}
-                                            alt="test"
+                                            alt={artworksJson.images[index].id}
                                             image={
                                                 image.childImageSharp
                                                     .gatsbyImageData
@@ -95,26 +81,12 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
     )
 }
 
-export default Artwork
+export default ArtworkPage
 
 export const query = graphql`
     query($slug: String!) {
         artworksJson(slug: { eq: $slug }) {
-            name
-            description
-            images {
-                childImageSharp {
-                    gatsbyImageData(
-                        width: 660
-                        quality: 99
-                        layout: CONSTRAINED
-                        placeholder: BLURRED
-                    )
-                    fixed {
-                        src
-                    }
-                }
-            }
+            ...ArtworkFragment
         }
     }
 `

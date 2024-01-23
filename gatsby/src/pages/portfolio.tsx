@@ -1,29 +1,16 @@
 import React from "react"
 import { Link } from "gatsby"
 import { graphql, PageProps } from "gatsby"
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
+import { Artwork } from "../models/artworks"
 
 import * as styles from "./portfolio.module.scss"
 
 type DataProps = {
     allArtworksJson: {
-        edges: [
-            {
-                node: {
-                    slug: string
-                    name: string
-                    images: [
-                        {
-                            childImageSharp: {
-                                gatsbyImageData: IGatsbyImageData
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
+        edges: [{ node: Artwork }]
     }
 }
 
@@ -78,18 +65,7 @@ export const query = graphql`
         allArtworksJson {
             edges {
                 node {
-                    slug
-                    name
-                    images {
-                        childImageSharp {
-                            gatsbyImageData(
-                                width: 310
-                                quality: 99
-                                layout: CONSTRAINED
-                                placeholder: BLURRED
-                            )
-                        }
-                    }
+                    ...ArtworkFragment
                 }
             }
         }
