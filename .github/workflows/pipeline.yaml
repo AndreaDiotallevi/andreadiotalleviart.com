@@ -1,18 +1,22 @@
 name: Pipeline
 
-on:
-    push:
-        branches: ["*"]
-        paths:
-            - "serverless/**"
+defaults:
+    run:
+        working-directory: ./serverless
 
 # on:
 #     push:
-#         branches:
-#             # - "main"
-#             - "staging"
+#         branches: ["*"]
 #         paths:
 #             - "serverless/**"
+
+on:
+    push:
+        branches:
+            # - "main"
+            - "staging"
+        paths:
+            - "serverless/**"
 
 env:
     PIPELINE_USER_ACCESS_KEY_ID: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
