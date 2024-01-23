@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Location } from "@reach/router"
 
+import Loader from "../components/loader"
 import Navbar from "../components/navbar"
 import Menu from "../components/menu"
 import Footer from "../components/footer"
@@ -10,6 +11,7 @@ import "../styles/prism-modified.css"
 
 type DataProps = {
     children: JSX.Element
+    loading?: boolean
     seo: {
         title: string
         description: string
@@ -17,7 +19,7 @@ type DataProps = {
     }
 }
 
-const Layout = ({ children, seo }: DataProps) => {
+const Layout = ({ children, loading = false, seo }: DataProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     return (
@@ -56,7 +58,7 @@ const Layout = ({ children, seo }: DataProps) => {
                             width: "100%",
                         }}
                     >
-                        {children}
+                        {loading ? <Loader /> : children}
                     </div>
                     <Footer isHome={location.pathname === "/"} />
                 </div>

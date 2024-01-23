@@ -36,85 +36,92 @@ const Success = ({
         fetchSession()
     }, [sessionId])
 
-    if (!session) return <Loader />
-
     return (
         <Layout
+            loading={session === null}
             seo={{
-                title: "Thank You | Andrea Diotallevi",
+                title: "Order Confirmation | Andrea Diotallevi",
                 description:
-                    "Get in touch if you are interested in working together",
-                tags: ["Thank You"],
+                    "You will receive a confirmation email with the details of your order.",
+                tags: ["Thanks For Your Order"],
             }}
         >
-            <div className={styles.container}>
-                <h1 className={styles.h1}>Order Confirmation</h1>
-                <div className={styles.grid}>
-                    <div>
-                        <GatsbyImage
-                            image={
-                                allPrintsJson.edges.filter(
-                                    edge =>
-                                        edge.node.slug ===
-                                        session.line_items?.data[0].price
-                                            ?.product.metadata.slug
-                                )[0].node.images[0].childImageSharp
-                                    .gatsbyImageData
-                            }
-                            alt="Profile image"
-                        />
-                    </div>
-                    <div className={styles.gridItem2}>
-                        <h2>
-                            Thanks for your order{" "}
-                            {session.customer_details?.name}!
-                        </h2>
-                        <p>
-                            You will receive a confirmation email with the
-                            details of your order.
-                        </p>
-                        <h2>Delivery address</h2>
-                        <p>
-                            {session.shipping_details?.name}
-                            <br></br>
-                            {session.shipping_details?.address?.line1}
-                            <br></br>
-                            {session.shipping_details?.address?.line2 ? (
-                                <>
-                                    {session.shipping_details.address.line2}
-                                    <br></br>
-                                </>
-                            ) : null}
-                            {session.shipping_details?.address?.postal_code},{" "}
-                            {session.shipping_details?.address?.city},{" "}
-                            {session.shipping_details?.address?.country}
-                        </p>
-                        <h2>Your items</h2>
-                        {session.line_items?.data.map(item => (
-                            <div key={item.id}>
-                                <p>
-                                    {item.description}
-                                    <br></br>
-                                    Quantity: {item.quantity}
-                                </p>
-                            </div>
-                        ))}
-                        <h2>Payment Summary</h2>
-                        <p>
-                            Subtotal:{" "}
-                            {((session.amount_subtotal || 0) / 100).toFixed(2)}
-                            <br></br>
-                            Shipping fee: Free<br></br>
-                            Total: £
-                            {((session.amount_total || 0) / 100).toFixed(2)}
-                        </p>
-                        <h2 style={{ marginBottom: 24 }}>With love, Andrea</h2>
-                        <Link to="/shop" className={styles.button}>
-                            Discover More
-                        </Link>
+            {session ? (
+                <div className={styles.container}>
+                    <h1 className={styles.h1}>Order Confirmation</h1>
+                    <div className={styles.grid}>
+                        <div>
+                            <GatsbyImage
+                                image={
+                                    allPrintsJson.edges.filter(
+                                        edge =>
+                                            edge.node.slug ===
+                                            session.line_items?.data[0].price
+                                                ?.product.metadata.slug
+                                    )[0].node.images[0].childImageSharp
+                                        .gatsbyImageData
+                                }
+                                alt="Profile image"
+                            />
+                        </div>
+                        <div className={styles.gridItem2}>
+                            <h2>
+                                Thanks for your order{" "}
+                                {session.customer_details?.name}!
+                            </h2>
+                            <p>
+                                You will receive a confirmation email with the
+                                details of your order.
+                            </p>
+                            <h2>Delivery address</h2>
+                            <p>
+                                {session.shipping_details?.name}
+                                <br></br>
+                                {session.shipping_details?.address?.line1}
+                                <br></br>
+                                {session.shipping_details?.address?.line2 ? (
+                                    <>
+                                        {session.shipping_details.address.line2}
+                                        <br></br>
+                                    </>
+                                ) : null}
+                                {session.shipping_details?.address?.postal_code}
+                                , {session.shipping_details?.address?.city},{" "}
+                                {session.shipping_details?.address?.country}
+                            </p>
+                            <h2>Your items</h2>
+                            {session.line_items?.data.map(item => (
+                                <div key={item.id}>
+                                    <p>
+                                        {item.description}
+                                        <br></br>
+                                        Quantity: {item.quantity}
+                                    </p>
+                                </div>
+                            ))}
+                            <h2>Payment Summary</h2>
+                            <p>
+                                Subtotal:{" "}
+                                {((session.amount_subtotal || 0) / 100).toFixed(
+                                    2
+                                )}
+                                <br></br>
+                                Shipping fee: Free<br></br>
+                                Total: £
+                                {((session.amount_total || 0) / 100).toFixed(2)}
+                            </p>
+                            <h2 style={{ marginBottom: 24 }}>
+                                With love, Andrea
+                            </h2>
+                            <Link to="/shop" className={styles.button}>
+                                Discover More
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <></>
+            )}
         </Layout>
     )
 }
