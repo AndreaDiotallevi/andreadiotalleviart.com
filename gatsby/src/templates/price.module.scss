@@ -79,15 +79,15 @@
 }
 
 .imageList {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 6px;
     list-style: none;
     margin-top: 20px;
 }
 
 .imageListItem {
-    width: 70px;
     cursor: pointer;
-    margin-right: 10px;
     border: 2px solid white;
     border-style: dotted;
     padding: 2px;

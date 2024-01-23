@@ -1,11 +1,10 @@
-import React from "react"
-import { graphql, PageProps } from "gatsby"
+import React, { useState } from "react"
+import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "./layout"
-import PageTitle from "../components/pageTitle"
 
-import * as artworkStyles from "./artwork.module.scss"
+import * as styles from "./price.module.scss"
 
 type DataProps = {
     artworksJson: {
@@ -25,6 +24,8 @@ type DataProps = {
 }
 
 const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
+    const [slideShowIndex, setSliderShowIndex] = useState(0)
+
     return (
         <Layout
             seo={{
@@ -41,39 +42,55 @@ const Artwork = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                 ],
             }}
         >
-            <React.Fragment>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: "100%",
-                        marginBottom: "50px",
-                    }}
-                >
-                    <PageTitle isHome={false} text={artworksJson.name} />
-                    <div className={artworkStyles.container}>
-                        <div>
-                            <ul>
+            <div className={styles.container}>
+                <h1 className={styles.h1}>{artworksJson.name}</h1>
+                <Link to="/portfolio" className={styles.backButtonContainer}>
+                    <div className={styles.backButtonIcon} />
+                    <p className={styles.backButtonText}>Portfolio</p>
+                </Link>
+                <div className={styles.grid}>
+                    <div className={styles.gridItem1}>
+                        <GatsbyImage
+                            // alt={artworksJson.images[slideShowIndex].id}
+                            alt="test"
+                            image={
+                                artworksJson.images[slideShowIndex]
+                                    .childImageSharp.gatsbyImageData
+                            }
+                        />
+                        {artworksJson.images.length > 1 ? (
+                            <ul className={styles.imageList}>
                                 {artworksJson.images.map((image, index) => (
-                                    <li key={index}>
+                                    <li
+                                        key={`image-${index}`}
+                                        onClick={() =>
+                                            setSliderShowIndex(index)
+                                        }
+                                        className={`${styles.imageListItem} ${
+                                            slideShowIndex === index
+                                                ? styles.active
+                                                : ""
+                                        }`}
+                                    >
                                         <GatsbyImage
+                                            // alt={artworksJson.images[index].id}
+                                            alt="test"
                                             image={
                                                 image.childImageSharp
                                                     .gatsbyImageData
                                             }
-                                            alt={`${artworksJson.name}-${index}`}
                                         />
                                     </li>
                                 ))}
                             </ul>
-                            <div>
-                                <p>{artworksJson.description}</p>
-                            </div>
-                        </div>
+                        ) : null}
+                    </div>
+                    <div className={styles.gridItem2}>
+                        <h2>Description</h2>
+                        <p>{artworksJson.description}</p>
                     </div>
                 </div>
-            </React.Fragment>
+            </div>
         </Layout>
     )
 }
