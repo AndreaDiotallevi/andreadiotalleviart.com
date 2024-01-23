@@ -23,8 +23,6 @@ const Success = ({
     const params = new URLSearchParams(location.search)
     const sessionId = params.get("session_id")
 
-    // console.log(session)
-
     useEffect(() => {
         const fetchSession = async () => {
             if (!sessionId) return
