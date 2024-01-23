@@ -75,8 +75,22 @@ const PricePage = ({
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
-                        <div>
+                        <div
+                            className={styles.mainImage}
+                            onClick={() =>
+                                setSliderShowIndex(
+                                    (slideShowIndex + 1) %
+                                        printsJson.images.length
+                                )
+                            }
+                        >
                             <GatsbyImage
+                                onClick={() =>
+                                    setSliderShowIndex(
+                                        (slideShowIndex + 1) %
+                                            printsJson.images.length
+                                    )
+                                }
                                 alt={printsJson.images[slideShowIndex].id}
                                 image={
                                     printsJson.images[slideShowIndex]

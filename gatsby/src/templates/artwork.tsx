@@ -49,13 +49,23 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
-                        <GatsbyImage
-                            alt={artworksJson.images[slideShowIndex].id}
-                            image={
-                                artworksJson.images[slideShowIndex]
-                                    .childImageSharp.gatsbyImageData
+                        <div
+                            className={styles.mainImage}
+                            onClick={() =>
+                                setSliderShowIndex(
+                                    (slideShowIndex + 1) %
+                                        artworksJson.images.length
+                                )
                             }
-                        />
+                        >
+                            <GatsbyImage
+                                alt={artworksJson.images[slideShowIndex].id}
+                                image={
+                                    artworksJson.images[slideShowIndex]
+                                        .childImageSharp.gatsbyImageData
+                                }
+                            />
+                        </div>
                         {artworksJson.images.length > 1 ? (
                             <ul className={styles.imageList}>
                                 {artworksJson.images.map((image, index) => (

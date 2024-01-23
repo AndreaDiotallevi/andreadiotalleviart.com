@@ -108,6 +108,10 @@
     flex-direction: column;
 }
 
+.mainImage {
+    cursor: pointer;
+}
+
 .imageList {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
