@@ -19,7 +19,7 @@ const PricePage = ({
     data: { stripePrice, printsJson },
     location,
 }: PageProps<DataProps>) => {
-    // const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
@@ -37,17 +37,21 @@ const PricePage = ({
     }, [])
 
     const redirectToCheckout = async () => {
-        // setLoading(true)
+        setLoading(true)
 
         const stripe = await getStripe()
 
-        if (!stripe || !sessionId) return
+        if (!stripe || !sessionId) {
+            setLoading(false)
+            return
+        }
 
         stripe.redirectToCheckout({ sessionId })
     }
 
     return (
         <Layout
+            loading={loading}
             seo={{
                 title: `${stripePrice.product.name} | Andrea Diotallevi`,
                 description: stripePrice.product.description,
