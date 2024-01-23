@@ -3,9 +3,11 @@ import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
+import Loader from "../components/loader"
 import Layout from "../templates/layout"
-import { retrieveCheckoutSession } from "../api"
 import { Print } from "../models/prints"
+
+import { retrieveCheckoutSession } from "../api"
 
 import * as styles from "./success.module.scss"
 
@@ -34,7 +36,7 @@ const Success = ({
         fetchSession()
     }, [sessionId])
 
-    if (!session) return "Loading..."
+    if (!session) return <Loader />
 
     return (
         <Layout
