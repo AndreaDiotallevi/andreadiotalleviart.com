@@ -4,9 +4,8 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
-import PageTitle from "../components/pageTitle"
 
-import * as portfolioStyles from "./portfolio.module.scss"
+import * as styles from "./portfolio.module.scss"
 
 type DataProps = {
     allArtworksJson: {
@@ -49,37 +48,25 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
                 ],
             }}
         >
-            <React.Fragment>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: "100%",
-                        marginBottom: "50px",
-                    }}
-                >
-                    <PageTitle isHome={false} text="Generative Art" />
-                    <div>
-                        <ul className={portfolioStyles.container}>
-                            {allArtworksJson.edges.map(({ node }) => (
-                                <li key={node.name}>
-                                    <Link to={`/portfolio/${node.slug}`}>
-                                        <GatsbyImage
-                                            image={
-                                                node.images[0].childImageSharp
-                                                    .gatsbyImageData
-                                            }
-                                            alt={node.name}
-                                        />
-                                        <h2>{node.name}</h2>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            <div className={styles.container}>
+                <h1 className={styles.h1}>Generative Art</h1>
+                <div className={styles.grid}>
+                    {allArtworksJson.edges.map(({ node }) => (
+                        <li key={node.slug} className={styles.gridItem}>
+                            <Link to={`/portfolio/${node.slug}`}>
+                                <GatsbyImage
+                                    alt={node.name}
+                                    image={
+                                        node.images[0].childImageSharp
+                                            .gatsbyImageData
+                                    }
+                                />
+                                <h2>{node.name}</h2>
+                            </Link>
+                        </li>
+                    ))}
                 </div>
-            </React.Fragment>
+            </div>
         </Layout>
     )
 }

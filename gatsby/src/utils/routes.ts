@@ -5,11 +5,11 @@ export type RouteType = {
 }
 
 const routes: RouteType[] = [
-    // {
-    //     menuName: "Art",
-    //     baseUrl: "/portfolio",
-    //     pageTitle: "Generative Artist and Creative Coder",
-    // },
+    {
+        menuName: "Art",
+        baseUrl: "/portfolio",
+        pageTitle: "Generative Artist and Creative Coder",
+    },
     // { menuName: "Blog", baseUrl: "/blog", pageTitle: "Blog" },
     // {
     //     menuName: "Home",
