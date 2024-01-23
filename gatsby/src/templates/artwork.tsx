@@ -32,10 +32,21 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
         >
             <div className={styles.container}>
                 <h1 className={styles.h1}>{artworksJson.name}</h1>
-                <Link to="/portfolio" className={styles.backButtonContainer}>
-                    <div className={styles.backButtonIcon} />
-                    <p className={styles.backButtonText}>Portfolio</p>
-                </Link>
+                <div className={styles.linksContainer}>
+                    <div />
+                    <Link
+                        to="/portfolio"
+                        className={styles.backButtonContainer}
+                    >
+                        <div className={styles.backButtonIcon} />
+                        <p className={styles.linkText}>Portfolio</p>
+                    </Link>
+                    <Link to="/shop" className={styles.nextButtonContainer}>
+                        <p className={styles.linkText}>Shop</p>
+                        <div className={styles.nextButtonIcon} />
+                    </Link>
+                    <div />
+                </div>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
                         <GatsbyImage

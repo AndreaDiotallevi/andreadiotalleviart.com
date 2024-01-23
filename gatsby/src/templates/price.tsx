@@ -64,10 +64,15 @@ const PricePage = ({
         >
             <div className={styles.container}>
                 <h1 className={styles.h1}>{stripePrice.product.name}</h1>
-                <Link to="/shop" className={styles.backButtonContainer}>
-                    <div className={styles.backButtonIcon} />
-                    <p className={styles.backButtonText}>Shop</p>
-                </Link>
+                <div className={styles.linksContainer}>
+                    <div />
+                    <Link to="/shop" className={styles.backButtonContainer}>
+                        <div className={styles.backButtonIcon} />
+                        <p className={styles.linkText}>Shop</p>
+                    </Link>
+                    <div />
+                    <div />
+                </div>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
                         <div>
