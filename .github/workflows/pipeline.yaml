@@ -9,6 +9,7 @@ on:
         branches:
             # - "main"
             - "staging"
+            - "shop"
         paths:
             - "serverless/**"
 
