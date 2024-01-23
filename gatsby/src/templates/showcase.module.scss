@@ -115,20 +115,27 @@
 .imageList {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 6px;
+    grid-gap: 12px;
     list-style: none;
     margin-top: 24px;
     margin-bottom: 24px;
+
+    @media (max-width: 691.99px) {
+        grid-gap: 6px;
+    }
 }
 
 .imageListItem {
     cursor: pointer;
-    border: 2px solid white;
-    border-style: dotted;
-    padding: 2px;
+    border: 1px dashed white;
+    padding: 3px;
 
     &.active {
         border-color: rgb(68, 68, 68);
+    }
+
+    @media (max-width: 691.99px) {
+        padding: 1px;
     }
 }
 
