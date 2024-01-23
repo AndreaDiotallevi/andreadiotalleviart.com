@@ -1,0 +1,216 @@
+name: Pipeline
+
+defaults:
+    run:
+        working-directory: ./serverless
+
+on:
+    push:
+        branches:
+            # - "main"
+            - "staging"
+        paths:
+            - "serverless/**"
+
+env:
+    PIPELINE_USER_ACCESS_KEY_ID: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+    PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+    SAM_TEMPLATE: template.yaml
+    STAGING_STACK_NAME: andreadiotalleviart
+    STAGING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::064333731935:role/aws-sam-cli-managed-staging-PipelineExecutionRole-1W1TPFLBMMU3
+    STAGING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::064333731935:role/aws-sam-cli-managed-stagi-CloudFormationExecutionR-1SYTPNO18CA10
+    STAGING_ARTIFACTS_BUCKET: aws-sam-cli-managed-staging-pipel-artifactsbucket-1571mu0d2n3o
+    # If there are functions with "Image" PackageType in your template,
+    # uncomment the line below and add "--image-repository ${STAGING_IMAGE_REPOSITORY}" to
+    # staging "sam package" and "sam deploy" commands.
+    # STAGING_IMAGE_REPOSITORY = '0123456789.dkr.ecr.region.amazonaws.com/repository-name'
+    STAGING_REGION: eu-west-2
+    PROD_STACK_NAME: andreadiotalleviart
+    PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::562413347228:role/aws-sam-cli-managed-producti-PipelineExecutionRole-VKLQ0FRWJPF3
+    PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::562413347228:role/aws-sam-cli-managed-produ-CloudFormationExecutionR-RYK43HSG313I
+    PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-production-pi-artifactsbucket-3vlqavdhqvej
+    # If there are functions with "Image" PackageType in your template,
+    # uncomment the line below and add "--image-repository ${PROD_IMAGE_REPOSITORY}" to
+    # prod "sam package" and "sam deploy" commands.
+    # PROD_IMAGE_REPOSITORY = '0123456789.dkr.ecr.region.amazonaws.com/repository-name'
+    PROD_REGION: eu-west-2
+
+jobs:
+    test:
+        if: github.event_name == 'push'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - run: |
+                  # trigger the tests here
+
+    build-and-deploy-staging:
+        if: github.ref == 'refs/heads/staging'
+        needs: [test]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: aws-actions/setup-sam@v2
+              with:
+                  use-installer: true
+            - run: sam build --template ${SAM_TEMPLATE} --use-container
+
+            - name: Assume the staging pipeline user role
+              uses: aws-actions/configure-aws-credentials@v1-node16
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.STAGING_REGION }}
+                  role-to-assume: ${{ env.STAGING_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: staging-deployment
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Deploy to staging stack in the staging account
+              shell: bash
+              run: |
+                  sam deploy --stack-name ${STAGING_STACK_NAME} \
+                    --capabilities CAPABILITY_IAM \
+                    --region ${STAGING_REGION} \
+                    --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
+                    --no-fail-on-empty-changeset \
+                    --role-arn ${STAGING_CLOUDFORMATION_EXECUTION_ROLE}
+
+    build-and-package:
+        if: github.ref == 'refs/heads/main'
+        needs: [test]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: aws-actions/setup-sam@v2
+              with:
+                  use-installer: true
+
+            - name: Build resources
+              run: sam build --template ${SAM_TEMPLATE} --use-container
+
+            - name: Assume the staging pipeline user role
+              uses: aws-actions/configure-aws-credentials@v1-node16
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.STAGING_REGION }}
+                  role-to-assume: ${{ env.STAGING_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: staging-packaging
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Upload artifacts to staging artifact buckets
+              run: |
+                  sam package \
+                    --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
+                    --region ${STAGING_REGION} \
+                    --output-template-file packaged-staging.yaml
+
+            - uses: actions/upload-artifact@v2
+              with:
+                  name: packaged-staging.yaml
+                  path: serverless/packaged-staging.yaml
+
+            - name: Assume the prod pipeline user role
+              uses: aws-actions/configure-aws-credentials@v1-node16
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.PROD_REGION }}
+                  role-to-assume: ${{ env.PROD_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: prod-packaging
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Upload artifacts to production artifact buckets
+              run: |
+                  sam package \
+                    --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
+                    --region ${PROD_REGION} \
+                    --output-template-file packaged-prod.yaml
+
+            - uses: actions/upload-artifact@v2
+              with:
+                  name: packaged-prod.yaml
+                  path: serverless/packaged-prod.yaml
+
+    deploy-staging:
+        if: github.ref == 'refs/heads/main'
+        needs: [build-and-package]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: aws-actions/setup-sam@v2
+              with:
+                  use-installer: true
+            - uses: actions/download-artifact@v2
+              with:
+                  name: packaged-staging.yaml
+
+            - name: Assume the staging pipeline user role
+              uses: aws-actions/configure-aws-credentials@v1-node16
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.STAGING_REGION }}
+                  role-to-assume: ${{ env.STAGING_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: staging-deployment
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Deploy to staging account
+              run: |
+                  sam deploy --stack-name ${STAGING_STACK_NAME} \
+                    --template ../packaged-staging.yaml \
+                    --capabilities CAPABILITY_IAM \
+                    --region ${STAGING_REGION} \
+                    --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
+                    --no-fail-on-empty-changeset \
+                    --role-arn ${STAGING_CLOUDFORMATION_EXECUTION_ROLE}
+
+    integration-test:
+        if: github.ref == 'refs/heads/main'
+        needs: [deploy-staging]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - run: |
+                  # trigger the integration tests here
+
+    deploy-prod:
+        if: github.ref == 'refs/heads/main'
+        needs: [integration-test]
+        runs-on: ubuntu-latest
+        # Configure GitHub Action Environment to have a manual approval step before deployment to production
+        # https://docs.github.com/en/actions/reference/environments
+        # environment: <configured-environment>
+        steps:
+            - uses: actions/checkout@v3
+            - uses: aws-actions/setup-sam@v2
+              with:
+                  use-installer: true
+            - uses: actions/download-artifact@v2
+              with:
+                  name: packaged-prod.yaml
+
+            - name: Assume the prod pipeline user role
+              uses: aws-actions/configure-aws-credentials@v1-node16
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.PROD_REGION }}
+                  role-to-assume: ${{ env.PROD_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: prod-deployment
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Deploy to production account
+              run: |
+                  sam deploy --stack-name ${PROD_STACK_NAME} \
+                    --template ../packaged-prod.yaml \
+                    --capabilities CAPABILITY_IAM \
+                    --region ${PROD_REGION} \
+                    --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
+                    --no-fail-on-empty-changeset \
+                    --role-arn ${PROD_CLOUDFORMATION_EXECUTION_ROLE}
