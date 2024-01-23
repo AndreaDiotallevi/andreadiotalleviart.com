@@ -4,16 +4,10 @@ defaults:
     run:
         working-directory: ./serverless
 
-# on:
-#     push:
-#         branches: ["*"]
-#         paths:
-#             - "serverless/**"
-
 on:
     push:
         branches:
-            # - "main"
+            - "main"
             - "staging"
         # paths:
         #     - "serverless/**"
