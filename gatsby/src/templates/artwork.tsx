@@ -39,12 +39,13 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                         className={styles.backButtonContainer}
                     >
                         <div className={styles.backButtonIcon} />
-                        <p className={styles.linkText}>Portfolio</p>
+                        <p className={styles.linkText}>Back to Art</p>
                     </Link>
-                    <Link to="/shop" className={styles.nextButtonContainer}>
+                    {/* <Link to="/shop" className={styles.nextButtonContainer}>
                         <p className={styles.linkText}>Shop</p>
                         <div className={styles.nextButtonIcon} />
-                    </Link>
+                    </Link> */}
+                    <div />
                     <div />
                 </div>
                 <div className={styles.grid}>
