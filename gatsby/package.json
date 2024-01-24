@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@loadable/component": "^5.15.0",
+		"@stripe/react-stripe-js": "^2.4.0",
 		"@stripe/stripe-js": "^2.2.1",
 		"dotenv": "^10.0.0",
 		"gatsby": "^4.1.2",
