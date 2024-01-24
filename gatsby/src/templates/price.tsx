@@ -5,7 +5,6 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
 import { Print } from "../models/prints"
-import getStripe from "../utils/stripejs"
 
 import * as styles from "./showcase.module.scss"
 import { createCheckoutSession } from "../api"
@@ -19,39 +18,27 @@ const PricePage = ({
     data: { stripePrice, printsJson },
     location,
 }: PageProps<DataProps>) => {
-    const [loading, setLoading] = useState(false)
-    const [sessionId, setSessionId] = useState<string | null>(null)
+    const [clientSecret, setClientSecret] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
     useEffect(() => {
         const createSession = async () => {
-            const sessionId = await createCheckoutSession({
+            const data = await createCheckoutSession({
                 line_items: [{ price: stripePrice.id, quantity: 1 }],
                 success_url: location.origin,
                 cancel_url: location.href,
             })
-            setSessionId(sessionId)
+
+            if (!data) return
+
+            setClientSecret(data.session.client_secret)
         }
 
         createSession()
     }, [])
 
-    const redirectToCheckout = async () => {
-        setLoading(true)
-
-        const stripe = await getStripe()
-
-        if (!stripe || !sessionId) {
-            setLoading(false)
-            return
-        }
-
-        stripe.redirectToCheckout({ sessionId })
-    }
-
     return (
         <Layout
-            loading={loading}
             seo={{
                 title: `${stripePrice.product.name} | Andrea Diotallevi`,
                 description: stripePrice.product.description,
@@ -72,7 +59,7 @@ const PricePage = ({
                     <div />
                     <Link to="/shop" className={styles.backButtonContainer}>
                         <div className={styles.backButtonIcon} />
-                        <p className={styles.linkText}>Shop</p>
+                        <p className={styles.linkText}>Back to Shop</p>
                     </Link>
                     <div />
                     <div />
@@ -153,12 +140,12 @@ const PricePage = ({
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotions at checkout.</p>
-                        <button
+                        <Link
+                            to={`/checkout?clientSecret=${clientSecret}`}
                             className={styles.button}
-                            onClick={() => redirectToCheckout()}
                         >
                             Buy Now
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
