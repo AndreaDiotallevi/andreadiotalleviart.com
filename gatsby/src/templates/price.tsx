@@ -26,7 +26,6 @@ const PricePage = ({
             const data = await createCheckoutSession({
                 line_items: [{ price: stripePrice.id, quantity: 1 }],
                 success_url: location.origin,
-                cancel_url: location.href,
             })
 
             if (!data) return

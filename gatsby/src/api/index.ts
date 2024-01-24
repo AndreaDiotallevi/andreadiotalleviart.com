@@ -3,7 +3,7 @@ import Stripe from "stripe"
 export const createCheckoutSession = async (
     params: Pick<
         Stripe.Checkout.SessionCreateParams,
-        "line_items" | "cancel_url" | "success_url"
+        "line_items" | "success_url"
     >
 ) => {
     if (!process.env.GATSBY_API_KEY) {

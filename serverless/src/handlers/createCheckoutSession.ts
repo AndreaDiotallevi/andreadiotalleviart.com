@@ -6,13 +6,12 @@ import { createCheckoutSession } from "../data"
 export const handler = async (
     event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-    const { line_items, cancel_url, success_url } = JSON.parse(
+    const { line_items, success_url } = JSON.parse(
         event.body as string
     ) as Stripe.Checkout.SessionCreateParams
 
     const { session, error } = await createCheckoutSession({
         line_items,
-        cancel_url,
         success_url,
     })
 

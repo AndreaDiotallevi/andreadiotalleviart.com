@@ -6,7 +6,7 @@ const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 export const createCheckoutSession = async (
     params: Pick<
         Stripe.Checkout.SessionCreateParams,
-        "line_items" | "cancel_url" | "success_url"
+        "line_items" | "success_url"
     >
 ) => {
     const getParameterCommand = new GetParameterCommand({
@@ -20,7 +20,7 @@ export const createCheckoutSession = async (
         apiVersion: "2023-10-16",
     })
 
-    const { line_items, cancel_url, success_url } = params
+    const { line_items, success_url } = params
 
     try {
         const session = await stripe.checkout.sessions.create({
