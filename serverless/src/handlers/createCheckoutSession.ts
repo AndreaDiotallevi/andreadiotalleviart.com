@@ -18,9 +18,7 @@ export const handler = async (
 
     const statusCode = error ? 500 : 200
 
-    const body = error
-        ? JSON.stringify({ error })
-        : JSON.stringify({ sessionId: session?.id })
+    const body = error ? JSON.stringify({ error }) : JSON.stringify({ session })
 
     return {
         statusCode,
