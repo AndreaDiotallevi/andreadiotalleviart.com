@@ -25,15 +25,11 @@ export const createCheckoutSession = async (
 
         if (response.ok) {
             const data = (await response.json()) as {
-                sessionId: string
+                session: Stripe.Checkout.Session
             }
-            return data.sessionId
+            return data
         } else {
-            console.error(
-                "Failed to create checkout session: ",
-                response.statusText
-            )
-            return null
+            throw new Error("Failed to create checkout session")
         }
     } catch (error) {
         console.error("Error during request: ", error)
