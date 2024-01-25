@@ -62,6 +62,15 @@ Resources:
         Properties:
             QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
             VisibilityTimeout: 100
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
+                maxReceiveCount: 5
+
+    CheckoutSessionCompletedSendEmailDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
+            MessageRetentionPeriod: 1209600
 
     CheckoutSessionCompletedEmailTemplate:
         Type: AWS::SES::Template
