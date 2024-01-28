@@ -64,13 +64,44 @@ Resources:
             VisibilityTimeout: 100
             RedrivePolicy:
                 deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
-                maxReceiveCount: 5
+                maxReceiveCount: 3
 
     CheckoutSessionCompletedSendEmailDLQ:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
             MessageRetentionPeriod: 1209600
+
+    CheckoutSessionCompletedSendEmailAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: CheckoutSessionCompletedSendEmailAlarm
+            AlarmDescription: "There was an error while sending the confirmation email after checkout."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt CheckoutSessionCompletedSendEmailDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref CheckoutSessionCompletedSendEmailTopic
+
+    CheckoutSessionCompletedSendEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: CheckoutSessionCompletedSendEmailTopic
+            TopicName: CheckoutSessionCompletedSendEmailTopic
+
+    CheckoutSessionCompletedSendEmailTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref CheckoutSessionCompletedSendEmailTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
     CheckoutSessionCompletedEmailTemplate:
         Type: AWS::SES::Template
