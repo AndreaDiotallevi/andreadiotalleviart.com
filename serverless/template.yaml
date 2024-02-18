@@ -306,6 +306,17 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-CreatePresignedUrl
             Handler: src/handlers/createPresignedUrl.handler
+            Environment:
+                Variables:
+                    BUCKET: !Ref Bucket
+            Policies:
+                - Statement:
+                      - Sid: getObject
+                        Effect: Allow
+                        Action:
+                            - s3:GetObject
+                        Resource:
+                            - !Sub arn:aws:s3:::${Bucket}/*
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
