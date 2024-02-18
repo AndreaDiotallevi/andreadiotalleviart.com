@@ -38,12 +38,20 @@ Resources:
         Type: AWS::Serverless::StateMachine
         Properties:
             Definition:
-                StartAt: MyLambdaState
+                StartAt: CreatePresignedUrl
                 States:
-                    PlaceholderState:
-                        Type: Wait
-                        Seconds: 3
+                    CreatePresignedUrl:
+                        Type: Task
+                        Resource: !GetAtt CreatePresignedUrlFunction.Arn
                         End: true
+            Policies:
+                - Statement:
+                      - Sid: invokeFunction
+                        Effect: Allow
+                        Action:
+                            - lambda:InvokeFunction
+                        Resource:
+                            - !GetAtt CreatePresignedUrlFunction.Arn
 
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
@@ -292,3 +300,16 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/stripeWebhook.ts
+
+    CreatePresignedUrlFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-CreatePresignedUrl
+            Handler: src/handlers/createPresignedUrl.handler
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/createPresignedUrl.ts
