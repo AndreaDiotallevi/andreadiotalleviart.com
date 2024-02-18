@@ -10,7 +10,7 @@ export const createPresignedUrl = async () => {
             Key: "flames-A3.png",
         })
 
-        const url = getSignedUrl(client, command, { expiresIn: 3600 })
+        const url = await getSignedUrl(client, command, { expiresIn: 3600 })
 
         return { url }
     } catch (error) {
