@@ -13,6 +13,11 @@ Globals:
             - x86_64
 
 Resources:
+    Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Sub ${AWS::StackName}-images
+
     ApiGateway:
         Type: AWS::Serverless::Api
         Properties:
