@@ -34,6 +34,17 @@ Resources:
         Properties:
             Name: !Sub ${AWS::StackName}-EventBus
 
+    OrderFulfillmentStateMachine:
+        Type: AWS::Serverless::StateMachine
+        Properties:
+            Definition:
+                StartAt: MyLambdaState
+                States:
+                    PlaceholderState:
+                        Type: Wait
+                        Seconds: 3
+                        End: true
+
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
         Properties:
