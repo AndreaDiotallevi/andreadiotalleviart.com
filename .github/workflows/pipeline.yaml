@@ -70,6 +70,7 @@ jobs:
               shell: bash
               run: |
                   sam deploy --stack-name ${STAGING_STACK_NAME} \
+                    --parameter-overrides Environment=staging \
                     --capabilities CAPABILITY_IAM \
                     --region ${STAGING_REGION} \
                     --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
@@ -162,6 +163,7 @@ jobs:
             - name: Deploy to staging account
               run: |
                   sam deploy --stack-name ${STAGING_STACK_NAME} \
+                    --parameter-overrides Environment=staging \
                     --template ../packaged-staging.yaml \
                     --capabilities CAPABILITY_IAM \
                     --region ${STAGING_REGION} \
@@ -208,6 +210,7 @@ jobs:
             - name: Deploy to production account
               run: |
                   sam deploy --stack-name ${PROD_STACK_NAME} \
+                    --parameter-overrides Environment=production \
                     --template ../packaged-prod.yaml \
                     --capabilities CAPABILITY_IAM \
                     --region ${PROD_REGION} \
