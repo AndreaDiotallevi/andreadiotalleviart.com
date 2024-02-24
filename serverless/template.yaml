@@ -301,6 +301,44 @@ Resources:
                 EntryPoints:
                     - src/handlers/stripeWebhook.ts
 
+    ProdigiWebhookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-ProdigiWebhook
+            Handler: src/handlers/prodigiWebhook.handler
+            Environment:
+                Variables:
+                    EVENT_BUS_NAME: !Ref EventBus
+            Events:
+                ProdigiWebhook:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /prodigi-webhook
+                        Method: POST
+            # Policies:
+            #     - Statement:
+            #           - Sid: readParameterStore
+            #             Effect: Allow
+            #             Action:
+            #                 - ssm:GetParameter
+            #             Resource:
+            #                 - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+            #                 - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SIGNING_SECRET
+            #     - Statement:
+            #           - Sid: putEvents
+            #             Effect: Allow
+            #             Action:
+            #                 - events:PutEvents
+            #             Resource: !GetAtt EventBus.Arn
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/prodigiWebhook.ts
+
     CreatePresignedUrlFunction:
         Type: AWS::Serverless::Function
         Properties:
