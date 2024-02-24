@@ -9,8 +9,6 @@ export type CreatePresignedUrlResponse = {
 export const handler = async (event: {
     detail: Stripe.Event
 }): Promise<CreatePresignedUrlResponse> => {
-    console.log(event.detail)
-
     const { url } = await createPresignedUrl()
 
     return {

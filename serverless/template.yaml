@@ -397,6 +397,14 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-CreateOrder
             Handler: src/handlers/createOrder.handler
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PRODIGI_API_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
