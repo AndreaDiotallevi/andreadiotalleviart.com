@@ -12,6 +12,12 @@ Globals:
         Architectures:
             - x86_64
 
+Parameters:
+    BucketArn:
+        Type: String
+        Default: test
+        Description: S3 bucket with images to send to the printing service
+
 Resources:
     Bucket:
         Type: AWS::S3::Bucket
@@ -38,16 +44,28 @@ Resources:
         Type: AWS::Serverless::StateMachine
         Properties:
             Definition:
-                StartAt: CreatePresignedUrl
+                StartAt: InitialState
                 States:
-                    CreatePresignedUrl:
-                        Type: Task
-                        Resource: !GetAtt CreatePresignedUrlFunction.Arn
-                        Next: CreateOrder
-                    CreateOrder:
-                        Type: Task
-                        Resource: !GetAtt CreateOrderFunction.Arn
+                    InitialState:
+                        Type: Parallel
                         End: true
+                        Branches:
+                            - StartAt: CreatePresignedUrl
+                              States:
+                                  CreatePresignedUrl:
+                                      Type: Task
+                                      Resource: !GetAtt CreatePresignedUrlFunction.Arn
+                                      Next: CreateOrder
+                                  CreateOrder:
+                                      Type: Task
+                                      Resource: !GetAtt CreateOrderFunction.Arn
+                                      End: true
+                            - StartAt: SendEmailState
+                              States:
+                                  SendEmailState:
+                                      Type: Task
+                                      Resource: !GetAtt SendEmailFunction.Arn
+                                      End: true
             Policies:
                 - Statement:
                       - Sid: invokeFunction
@@ -57,6 +75,25 @@ Resources:
                         Resource:
                             - !GetAtt CreatePresignedUrlFunction.Arn
                             - !GetAtt CreateOrderFunction.Arn
+                            - !GetAtt SendEmailFunction.Arn
+
+    InvokeStateMachineRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    - Effect: "Allow"
+                      Principal:
+                          Service: "events.amazonaws.com"
+                      Action: "sts:AssumeRole"
+            Policies:
+                - PolicyName: "CloudWatchEventsInvokeStepFunctionsPolicy"
+                  PolicyDocument:
+                      Statement:
+                          - Effect: "Allow"
+                            Action:
+                                - "states:StartExecution"
+                            Resource: !GetAtt OrderFulfillmentStateMachine.Arn
 
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
@@ -70,54 +107,55 @@ Resources:
                 detail-type:
                     - CheckoutSessionCompleted
             Targets:
-                - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
-                  Id: TestId
+                - Arn: !GetAtt OrderFulfillmentStateMachine.Arn
+                  Id: OrderFulfillmentStateMachineTarget
+                  RoleArn: !GetAtt InvokeStateMachineRole.Arn
 
-    EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
-        Type: AWS::SQS::QueuePolicy
-        Properties:
-            PolicyDocument:
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service: events.amazonaws.com
-                      Action: sqs:SendMessage
-                      Resource: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
-            Queues:
-                - Ref: CheckoutSessionCompletedSendEmailQueue
+    # EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
+    #     Type: AWS::SQS::QueuePolicy
+    #     Properties:
+    #         PolicyDocument:
+    #             Statement:
+    #                 - Effect: Allow
+    #                   Principal:
+    #                       Service: events.amazonaws.com
+    #                   Action: sqs:SendMessage
+    #                   Resource: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+    #         Queues:
+    #             - Ref: CheckoutSessionCompletedSendEmailQueue
 
-    CheckoutSessionCompletedSendEmailQueue:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
-            VisibilityTimeout: 100
-            RedrivePolicy:
-                deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
-                maxReceiveCount: 3
+    # CheckoutSessionCompletedSendEmailQueue:
+    #     Type: AWS::SQS::Queue
+    #     Properties:
+    #         QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
+    #         VisibilityTimeout: 100
+    #         RedrivePolicy:
+    #             deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
+    #             maxReceiveCount: 3
 
-    CheckoutSessionCompletedSendEmailDLQ:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
-            MessageRetentionPeriod: 1209600
+    # CheckoutSessionCompletedSendEmailDLQ:
+    #     Type: AWS::SQS::Queue
+    #     Properties:
+    #         QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
+    #         MessageRetentionPeriod: 1209600
 
-    CheckoutSessionCompletedSendEmailAlarm:
-        Type: AWS::CloudWatch::Alarm
-        Properties:
-            AlarmName: CheckoutSessionCompletedSendEmailAlarm
-            AlarmDescription: "There was an error while sending the confirmation email after checkout."
-            Namespace: AWS/SQS
-            MetricName: ApproximateNumberOfMessagesVisible
-            Dimensions:
-                - Name: QueueName
-                  Value: !GetAtt CheckoutSessionCompletedSendEmailDLQ.QueueName
-            Statistic: Sum
-            Period: 300
-            EvaluationPeriods: 1
-            Threshold: 1
-            ComparisonOperator: GreaterThanOrEqualToThreshold
-            AlarmActions:
-                - !Ref CheckoutSessionCompletedSendEmailTopic
+    # CheckoutSessionCompletedSendEmailAlarm:
+    #     Type: AWS::CloudWatch::Alarm
+    #     Properties:
+    #         AlarmName: CheckoutSessionCompletedSendEmailAlarm
+    #         AlarmDescription: "There was an error while sending the confirmation email after checkout."
+    #         Namespace: AWS/SQS
+    #         MetricName: ApproximateNumberOfMessagesVisible
+    #         Dimensions:
+    #             - Name: QueueName
+    #               Value: !GetAtt CheckoutSessionCompletedSendEmailDLQ.QueueName
+    #         Statistic: Sum
+    #         Period: 300
+    #         EvaluationPeriods: 1
+    #         Threshold: 1
+    #         ComparisonOperator: GreaterThanOrEqualToThreshold
+    #         AlarmActions:
+    #             - !Ref CheckoutSessionCompletedSendEmailTopic
 
     CheckoutSessionCompletedSendEmailTopic:
         Type: AWS::SNS::Topic
@@ -231,18 +269,18 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-SendEmail
             Handler: src/handlers/sendEmail.handler
-            Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /send-email
-                        Method: POST
-                MySQSEvent:
-                    Type: SQS
-                    Properties:
-                        Queue: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
-                        BatchSize: 5
+            # Events:
+            #     Root:
+            #         Type: Api
+            #         Properties:
+            #             RestApiId: !Ref ApiGateway
+            #             Path: /send-email
+            #             Method: POST
+            #     MySQSEvent:
+            #         Type: SQS
+            #         Properties:
+            #             Queue: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+            #             BatchSize: 5
             Policies:
                 - Statement:
                       - Sid: sendEmail
