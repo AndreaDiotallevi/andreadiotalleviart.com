@@ -43,6 +43,7 @@ Resources:
     OrderFulfillmentStateMachine:
         Type: AWS::Serverless::StateMachine
         Properties:
+            Name: !Sub ${AWS::StackName}-OrderFulfillment
             Definition:
                 StartAt: InitialState
                 States:
@@ -60,9 +61,9 @@ Resources:
                                       Type: Task
                                       Resource: !GetAtt CreateOrderFunction.Arn
                                       End: true
-                            - StartAt: SendEmailState
+                            - StartAt: SendConfirmationEmail
                               States:
-                                  SendEmailState:
+                                  SendConfirmationEmail:
                                       Type: Task
                                       Resource: !GetAtt SendEmailFunction.Arn
                                       End: true
