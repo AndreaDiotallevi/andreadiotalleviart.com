@@ -13,16 +13,16 @@ Globals:
             - x86_64
 
 Parameters:
-    BucketArn:
+    Environment:
         Type: String
-        Default: test
-        Description: S3 bucket with images to send to the printing service
+        Default: sandbox
+        AllowedValues: [sandbox, staging, production]
 
 Resources:
     Bucket:
         Type: AWS::S3::Bucket
         Properties:
-            BucketName: !Sub ${AWS::StackName}-images
+            BucketName: !Sub ${AWS::StackName}-${Environment}
 
     ApiGateway:
         Type: AWS::Serverless::Api
