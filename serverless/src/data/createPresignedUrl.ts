@@ -14,12 +14,7 @@ export const createPresignedUrl = async () => {
 
         return { url }
     } catch (error) {
-        console.log("Error creating presigned URL")
         console.error(error)
-        const errorMessage = "Could not create presigned URL"
-
-        return {
-            error: errorMessage,
-        }
+        throw error
     }
 }

@@ -43,6 +43,10 @@ Resources:
                     CreatePresignedUrl:
                         Type: Task
                         Resource: !GetAtt CreatePresignedUrlFunction.Arn
+                        Next: CreateOrder
+                    CreateOrder:
+                        Type: Task
+                        Resource: !GetAtt CreateOrderFunction.Arn
                         End: true
             Policies:
                 - Statement:
@@ -52,6 +56,7 @@ Resources:
                             - lambda:InvokeFunction
                         Resource:
                             - !GetAtt CreatePresignedUrlFunction.Arn
+                            - !GetAtt CreateOrderFunction.Arn
 
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
@@ -347,3 +352,16 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/createPresignedUrl.ts
+
+    CreateOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-CreateOrder
+            Handler: src/handlers/createOrder.handler
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/createOrder.ts

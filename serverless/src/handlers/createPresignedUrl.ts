@@ -1,18 +1,13 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
-
 import { createPresignedUrl } from "../data"
 
-export const handler = async (
-    event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-    const { url, error } = await createPresignedUrl()
+export type CreatePresignedUrlResponse = {
+    url: string
+}
 
-    const statusCode = error ? 500 : 200
-
-    const body = error ? JSON.stringify({ error }) : JSON.stringify({ url })
+export const handler = async (): Promise<CreatePresignedUrlResponse> => {
+    const { url } = await createPresignedUrl()
 
     return {
-        statusCode,
-        body,
+        url,
     }
 }
