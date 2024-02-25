@@ -1,11 +1,11 @@
-import { SQSEvent, SQSRecord } from "aws-lambda"
+import { SQSEvent } from "aws-lambda"
 import Stripe from "stripe"
 
 import { sendEmail } from "../services/ses"
 
 export const handler = async (event: SQSEvent): Promise<void> => {
     try {
-        for (const record of event.Records as SQSRecord[]) {
+        for (const record of event.Records) {
             const body = JSON.parse(record.body)
             const stripeEvent = body.detail as Stripe.Event
             const sessionId = stripeEvent.data.object.id
