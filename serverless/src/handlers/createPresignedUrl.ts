@@ -1,14 +1,16 @@
+import { EventBridgeEvent } from "aws-lambda"
 import Stripe from "stripe"
 
-import { createPresignedUrl } from "../data"
+import { createPresignedUrl } from "../services/s3"
 
 export type CreatePresignedUrlResponse = {
     url: string
 }
 
-export const handler = async (event: {
-    detail: Stripe.Event
-}): Promise<CreatePresignedUrlResponse> => {
+export const handler = async (
+    event: EventBridgeEvent<"CheckoutSessionCompleted", Stripe.Event>
+): Promise<CreatePresignedUrlResponse> => {
+    console.log(event)
     const { url } = await createPresignedUrl()
 
     return {

@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
 import Stripe from "stripe"
 
-import { processStripeWebhook } from "../data/processStribeWebhook"
+import { processStripeWebhook } from "../services/stripe"
 
 const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 
@@ -25,17 +25,17 @@ export const handler = async (
             stripeSigningSecret
         )
 
-        const { entries, error } = await processStripeWebhook({ stripeEvent })
+        const { entries } = await processStripeWebhook({ stripeEvent })
 
-        const statusCode = error ? 500 : 200
+        // const statusCode = error ? 500 : 200
 
-        const responseBody = error
-            ? JSON.stringify({ error })
-            : JSON.stringify({ entries })
+        // const responseBody = error
+        //     ? JSON.stringify({ error })
+        //     : JSON.stringify({ entries })
 
         return {
-            statusCode,
-            body: responseBody,
+            statusCode: 200,
+            body: JSON.stringify({ entries }),
             headers: {
                 "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
                 "Access-Control-Allow-Origin": "*",

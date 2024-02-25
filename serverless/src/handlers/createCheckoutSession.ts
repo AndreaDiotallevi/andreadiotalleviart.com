@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import Stripe from "stripe"
 
-import { createCheckoutSession } from "../data"
+import { createCheckoutSession } from "../services/stripe"
 
 export const handler = async (
     event: APIGatewayProxyEvent
@@ -10,18 +10,14 @@ export const handler = async (
         event.body as string
     ) as Stripe.Checkout.SessionCreateParams
 
-    const { session, error } = await createCheckoutSession({
+    const { session } = await createCheckoutSession({
         line_items,
         success_url,
     })
 
-    const statusCode = error ? 500 : 200
-
-    const body = error ? JSON.stringify({ error }) : JSON.stringify({ session })
-
     return {
-        statusCode,
-        body,
+        statusCode: 200,
+        body: JSON.stringify({ session }),
         headers: {
             "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
             "Access-Control-Allow-Origin": "*",
