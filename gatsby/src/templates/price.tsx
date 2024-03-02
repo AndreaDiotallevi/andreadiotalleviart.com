@@ -140,7 +140,11 @@ const PricePage = ({
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotions at checkout.</p>
                         <Link
-                            to={`/checkout?clientSecret=${clientSecret}`}
+                            to={
+                                clientSecret
+                                    ? `/checkout?clientSecret=${clientSecret}`
+                                    : ""
+                            }
                             className={styles.button}
                         >
                             Buy Now
