@@ -29,7 +29,7 @@ export const createOrder = async ({
             name: "PRODIGI_API_KEY",
         })
 
-        const url = "https://api.sandbox.prodigi.com/v4.0/Orders/"
+        const url = `${process.env.PRODIGI_URL}/v4.0/Orders/`
 
         const requestBody = {
             merchantReference: "TBC",
@@ -72,10 +72,6 @@ export const createOrder = async ({
         }
 
         const response = await fetch(url, options)
-        console.log(typeof response)
-        console.log(response.body)
-        console.log(Object.entries(response))
-        console.log(JSON.stringify(response))
 
         if (!response.ok) {
             throw new Error("Failed to create order")

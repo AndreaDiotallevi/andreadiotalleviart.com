@@ -18,6 +18,15 @@ Parameters:
         Default: sandbox
         AllowedValues: [sandbox, staging, production]
 
+Mappings:
+    ProdigiUrlMapping:
+        sandbox:
+            ProdigiUrl: "https://api.sandbox.prodigi.com"
+        staging:
+            ProdigiUrl: "https://api.sandbox.prodigi.com"
+        production:
+            ProdigiUrl: "https://api.prodigi.com"
+
 Resources:
     Bucket:
         Type: AWS::S3::Bucket
@@ -402,6 +411,12 @@ Resources:
             Environment:
                 Variables:
                     BUCKET: !Ref Bucket
+                    PRODIGI_URL:
+                        !FindInMap [
+                            ProdigiUrlMapping,
+                            !Ref Environment,
+                            ProdigiUrl,
+                        ]
             Policies:
                 - Statement:
                       - Sid: readParameterStore
