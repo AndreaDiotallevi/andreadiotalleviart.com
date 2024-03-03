@@ -32,7 +32,7 @@ export const createOrder = async ({
         const url = "https://api.sandbox.prodigi.com/v4.0/Orders/"
 
         const requestBody = {
-            merchantReference: "PHOTOBOOK-SAMPLE",
+            merchantReference: "TBC",
             shippingMethod: "Standard",
             recipient: {
                 address: {
@@ -43,10 +43,10 @@ export const createOrder = async ({
                     townOrCity: shippingDetails.address.city,
                     stateOrCounty: shippingDetails.address.state || null, // Empty string breaks it
                 },
-                name: customerDetails.name + "6",
+                name: customerDetails.name + "7",
             },
             items: lineItems.data.map(item => ({
-                merchantReference: "A4 Hardback",
+                merchantReference: "TBC",
                 sku: "GLOBAL-HPR-A3", // Hahnemühle Photo Rag, 29.7x42 cm / 11.7x16.5" (A3)
                 copies: item.quantity,
                 sizing: "fillPrintArea",
