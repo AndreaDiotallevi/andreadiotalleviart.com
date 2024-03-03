@@ -2,7 +2,6 @@ import { EventBridgeEvent } from "aws-lambda"
 import Stripe from "stripe"
 
 import { createOrder } from "../services/prodigi"
-import { createPresignedUrl } from "../services/s3"
 import { retrieveCheckoutSession } from "../services/stripe"
 
 export const handler = async (
@@ -16,12 +15,9 @@ export const handler = async (
     console.log(session.shipping_details)
     console.log(session.line_items?.data)
 
-    const { url } = await createPresignedUrl()
-
     await createOrder({
         customerDetails: session.customer_details,
         shippingDetails: session.shipping_details,
         lineItems: session.line_items,
-        imageUrl: url,
     })
 }

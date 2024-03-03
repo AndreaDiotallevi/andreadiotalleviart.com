@@ -1,16 +1,16 @@
 import Stripe from "stripe"
 import { getParameterValue } from "./ssm"
 
+const fileName = "flames-A3.png"
+
 export const createOrder = async ({
     customerDetails,
     shippingDetails,
     lineItems,
-    imageUrl,
 }: {
     customerDetails: Stripe.Checkout.Session["customer_details"]
     shippingDetails: Stripe.Checkout.Session["shipping_details"]
     lineItems: Stripe.Checkout.Session["line_items"]
-    imageUrl: string
 }) => {
     try {
         if (!shippingDetails?.address) {
@@ -53,8 +53,7 @@ export const createOrder = async ({
                 assets: [
                     {
                         printArea: "Default",
-                        // url: imageUrl,
-                        url: "https://epfileconcierge.blob.core.windows.net/concierge/A4%20hardcover_update_new.pdf",
+                        url: `https://${process.env.BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`,
                     },
                 ],
             })),
