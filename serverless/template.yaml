@@ -23,6 +23,22 @@ Resources:
         Type: AWS::S3::Bucket
         Properties:
             BucketName: !Sub ${AWS::StackName}-${Environment}
+            PublicAccessBlockConfiguration:
+                BlockPublicPolicy: false
+
+    BucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref Bucket
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal: "*"
+                      Action:
+                          - "s3:GetObject"
+                      Resource:
+                          - !Sub "arn:aws:s3:::${Bucket}/*"
 
     ApiGateway:
         Type: AWS::Serverless::Api
@@ -45,12 +61,8 @@ Resources:
         Properties:
             Name: !Sub ${AWS::StackName}-OrderFulfillment
             Definition:
-                StartAt: CreatePresignedUrl
+                StartAt: CreateOrder
                 States:
-                    CreatePresignedUrl:
-                        Type: Task
-                        Resource: !GetAtt CreatePresignedUrlFunction.Arn
-                        Next: CreateOrder
                     CreateOrder:
                         Type: Task
                         Resource: !GetAtt CreateOrderFunction.Arn
@@ -387,6 +399,9 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-CreateOrder
             Handler: src/handlers/createOrder.handler
+            Environment:
+                Variables:
+                    BUCKET: !Ref Bucket
             Policies:
                 - Statement:
                       - Sid: readParameterStore
@@ -395,6 +410,7 @@ Resources:
                             - ssm:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PRODIGI_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
