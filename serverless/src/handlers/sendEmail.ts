@@ -7,7 +7,8 @@ export const handler = async (event: SQSEvent): Promise<void> => {
     try {
         for (const record of event.Records) {
             const body = JSON.parse(record.body)
-            const stripeEvent = body.detail as Stripe.Event
+            const stripeEvent =
+                body.detail as Stripe.CheckoutSessionCompletedEvent
             const sessionId = stripeEvent.data.object.id
             const { error } = await sendEmail({ sessionId })
 

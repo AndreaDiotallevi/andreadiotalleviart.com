@@ -5,7 +5,10 @@ import { createOrder } from "../services/prodigi"
 import { retrieveCheckoutSession } from "../services/stripe"
 
 export const handler = async (
-    event: EventBridgeEvent<"CheckoutSessionCompleted", Stripe.Event>
+    event: EventBridgeEvent<
+        "CheckoutSessionCompleted",
+        Stripe.CheckoutSessionCompletedEvent
+    >
 ) => {
     const { session } = await retrieveCheckoutSession({
         sessionId: event.detail.data.object.id,
