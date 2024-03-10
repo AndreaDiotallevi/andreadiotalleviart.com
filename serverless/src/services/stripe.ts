@@ -1,6 +1,5 @@
 import Stripe from "stripe"
 
-import { putEvent } from "./events"
 import { getParameterValue } from "./ssm"
 
 export const createCheckoutSession = async (
@@ -60,25 +59,6 @@ export const retrieveCheckoutSession = async (params: {
 
         return {
             session,
-        }
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
-}
-
-export const processStripeWebhook = async ({
-    stripeEvent,
-}: {
-    stripeEvent: Stripe.Event
-}) => {
-    try {
-        console.log(stripeEvent)
-
-        const response = await putEvent({ stripeEvent })
-
-        return {
-            entries: response.Entries,
         }
     } catch (error) {
         console.error(error)

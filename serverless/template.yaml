@@ -371,6 +371,13 @@ Resources:
                         RestApiId: !Ref ApiGateway
                         Path: /prodigi-webhook
                         Method: POST
+            Policies:
+                - Statement:
+                      - Sid: putEvents
+                        Effect: Allow
+                        Action:
+                            - events:PutEvents
+                        Resource: !GetAtt EventBus.Arn
         Metadata:
             BuildMethod: esbuild
             BuildProperties:

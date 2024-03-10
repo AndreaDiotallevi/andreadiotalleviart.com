@@ -3,30 +3,34 @@ import {
     PutEventsCommand,
 } from "@aws-sdk/client-eventbridge"
 import Stripe from "stripe"
+import { ProdigiEvent } from "./prodigi"
 
 const eventBridgeClient = new EventBridgeClient({
     region: process.env.AWS_REGION,
 })
 
 export const putEvent = async ({
-    stripeEvent,
+    source,
+    detailType,
+    event,
 }: {
-    stripeEvent: Stripe.Event
+    source: "stripe" | "prodigi"
+    detailType: "CheckoutSessionCompleted" | "OrderCompleted"
+    event: Stripe.Event | ProdigiEvent
 }) => {
     try {
         const putEventsCommand = new PutEventsCommand({
             Entries: [
                 {
-                    Source: "stripe",
-                    DetailType: "CheckoutSessionCompleted",
-                    Detail: JSON.stringify(stripeEvent),
+                    Source: source,
+                    DetailType: detailType,
+                    Detail: JSON.stringify(event),
                     EventBusName: process.env.EVENT_BUS_NAME,
                 },
             ],
         })
 
-        const response = await eventBridgeClient.send(putEventsCommand)
-        return response
+        return await eventBridgeClient.send(putEventsCommand)
     } catch (error) {
         console.error(error)
         throw error
