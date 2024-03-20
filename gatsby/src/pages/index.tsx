@@ -33,7 +33,8 @@ const Home = () => {
                 >
                     <PageTitle
                         isHome={true}
-                        text="Generative Artist & Creative Coder"
+                        // text="Generative Artist & Creative Coder"
+                        text="Generative Artist"
                     />
                     <Moonlight />
                 </div>

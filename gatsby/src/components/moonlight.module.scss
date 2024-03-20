@@ -1,10 +1,9 @@
 .container {
     width: 100%;
-    height: calc(100dvh - 80px - 120px - 80px - 20px);
+    height: calc(100dvh - 80px - 120px - 80px);
     display: flex;
     justify-content: center;
     background-color: rgb(56, 68, 76);
-    padding-bottom: 20px;
 
     div {
         width: 1400px;

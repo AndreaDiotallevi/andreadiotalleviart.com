@@ -6,9 +6,9 @@ export const createCheckoutSession = async (
         "line_items" | "success_url"
     >
 ) => {
-    if (!process.env.GATSBY_API_KEY) {
-        throw new Error("The api key is undefined.")
-    }
+    // if (!process.env.GATSBY_API_KEY) {
+    //     throw new Error("The api key is undefined.")
+    // }
 
     try {
         const response = await fetch(
@@ -17,7 +17,7 @@ export const createCheckoutSession = async (
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Api-Key": process.env.GATSBY_API_KEY,
+                    // "X-Api-Key": process.env.GATSBY_API_KEY,
                 },
                 body: JSON.stringify(params),
             }
