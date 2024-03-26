@@ -123,6 +123,21 @@ Resources:
                   Id: OrderFulfillmentStateMachineTarget
                   RoleArn: !GetAtt InvokeStateMachineRole.Arn
 
+    EventBusRuleOrderCompleted:
+        Type: AWS::Events::Rule
+        Properties:
+            EventBusName: !Ref EventBus
+            EventPattern:
+                account:
+                    - !Sub ${AWS::AccountId}
+                source:
+                    - prodigi
+                detail-type:
+                    - OrderCompleted
+            Targets:
+                - Arn: !GetAtt SendOrderShippedEmailQueue.Arn
+                  Id: SendOrderShippedEmailQueueTarget
+
     EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
@@ -149,6 +164,34 @@ Resources:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
+            MessageRetentionPeriod: 1209600
+
+    EventBusToSendOrderShippedEmailQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt SendOrderShippedEmailQueue.Arn
+            Queues:
+                - Ref: SendOrderShippedEmailQueue
+
+    SendOrderShippedEmailQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailQueue
+            VisibilityTimeout: 100
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt SendOrderShippedEmailDLQ.Arn
+                maxReceiveCount: 3
+
+    SendOrderShippedEmailDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
             MessageRetentionPeriod: 1209600
 
     CheckoutSessionCompletedSendEmailAlarm:
@@ -221,6 +264,19 @@ Resources:
                         </body>
                     </html>
                 SubjectPart: "Your Andrea Diotallevi Art Order"
+
+    SendOrderShippedEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: SendOrderShippedEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <p>Ciao</p>
+                        </body>
+                    </html>
+                SubjectPart: "Your Order Has Been Shipped"
 
     CreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function
@@ -317,6 +373,47 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/sendEmail.ts
+
+    SendOrderShippedEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
+            Handler: src/handlers/sendOrderShippedEmail.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /send-order-shipped-email-function
+                        Method: POST
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt SendOrderShippedEmailQueue.Arn
+                        BatchSize: 5
+            Policies:
+                - Statement:
+                      - Sid: sendOrderShippedEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendEmail
+                            - ses:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SOURCE
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_DESTINATION
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendOrderShippedEmail.ts
 
     StripeWebhookFunction:
         Type: AWS::Serverless::Function
