@@ -25,7 +25,7 @@ export const handler = async (
 
         const { Entries } = await putEvent({
             source: "stripe",
-            detailType: "CheckoutSessionCompleted",
+            detailType: stripeEvent.type,
             event: stripeEvent,
         })
 

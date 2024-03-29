@@ -28,6 +28,7 @@ Mappings:
             ProdigiUrl: "https://api.prodigi.com"
 
 Resources:
+    # BUCKETS
     Bucket:
         Type: AWS::S3::Bucket
         Properties:
@@ -49,61 +50,11 @@ Resources:
                       Resource:
                           - !Sub "arn:aws:s3:::${Bucket}/*"
 
-    ApiGateway:
-        Type: AWS::Serverless::Api
-        Properties:
-            StageName: Prod
-            Auth:
-                ApiKeyRequired: false
-            Cors:
-                AllowMethods: "'*'"
-                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
-                AllowOrigin: "'*'"
-
+    ## EVENTS
     EventBus:
         Type: AWS::Events::EventBus
         Properties:
             Name: !Sub ${AWS::StackName}-EventBus
-
-    OrderFulfillmentStateMachine:
-        Type: AWS::Serverless::StateMachine
-        Properties:
-            Name: !Sub ${AWS::StackName}-OrderFulfillment
-            Definition:
-                StartAt: CreateOrder
-                States:
-                    CreateOrder:
-                        Type: Task
-                        Resource: !GetAtt CreateOrderFunction.Arn
-                        End: True
-            Policies:
-                - Statement:
-                      - Sid: invokeFunction
-                        Effect: Allow
-                        Action:
-                            - lambda:InvokeFunction
-                        Resource:
-                            - !GetAtt CreatePresignedUrlFunction.Arn
-                            - !GetAtt CreateOrderFunction.Arn
-                            - !GetAtt SendEmailFunction.Arn
-
-    InvokeStateMachineRole:
-        Type: AWS::IAM::Role
-        Properties:
-            AssumeRolePolicyDocument:
-                Statement:
-                    - Effect: "Allow"
-                      Principal:
-                          Service: "events.amazonaws.com"
-                      Action: "sts:AssumeRole"
-            Policies:
-                - PolicyName: "CloudWatchEventsInvokeStepFunctionsPolicy"
-                  PolicyDocument:
-                      Statement:
-                          - Effect: "Allow"
-                            Action:
-                                - "states:StartExecution"
-                            Resource: !GetAtt OrderFulfillmentStateMachine.Arn
 
     EventBusRuleCheckoutSessionCompleted:
         Type: AWS::Events::Rule
@@ -115,15 +66,12 @@ Resources:
                 source:
                     - stripe
                 detail-type:
-                    - CheckoutSessionCompleted
+                    - checkout.session.completed
             Targets:
                 - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
                   Id: CheckoutSessionCompletedSendEmailQueueTarget
-                - Arn: !GetAtt OrderFulfillmentStateMachine.Arn
-                  Id: OrderFulfillmentStateMachineTarget
-                  RoleArn: !GetAtt InvokeStateMachineRole.Arn
 
-    EventBusRuleOrderCompleted:
+    EventBusRuleOrderShipped:
         Type: AWS::Events::Rule
         Properties:
             EventBusName: !Ref EventBus
@@ -133,11 +81,12 @@ Resources:
                 source:
                     - prodigi
                 detail-type:
-                    - OrderCompleted
+                    - com.prodigi.order.shipments.shipment#Complete
             Targets:
                 - Arn: !GetAtt SendOrderShippedEmailQueue.Arn
                   Id: SendOrderShippedEmailQueueTarget
 
+    # QUEUES
     EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
@@ -194,6 +143,7 @@ Resources:
             QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
             MessageRetentionPeriod: 1209600
 
+    # ALARMS
     CheckoutSessionCompletedSendEmailAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
@@ -212,6 +162,7 @@ Resources:
             AlarmActions:
                 - !Ref CheckoutSessionCompletedSendEmailTopic
 
+    # TOPICS
     CheckoutSessionCompletedSendEmailTopic:
         Type: AWS::SNS::Topic
         Properties:
@@ -225,6 +176,7 @@ Resources:
             TopicArn: !Ref CheckoutSessionCompletedSendEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
+    # EMAIL TEMPLATES
     CheckoutSessionCompletedEmailTemplate:
         Type: AWS::SES::Template
         Properties:
@@ -277,6 +229,18 @@ Resources:
                         </body>
                     </html>
                 SubjectPart: "Your Order Has Been Shipped"
+
+    # FUNCTIONS
+    ApiGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: Prod
+            Auth:
+                ApiKeyRequired: false
+            Cors:
+                AllowMethods: "'*'"
+                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
+                AllowOrigin: "'*'"
 
     CreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function

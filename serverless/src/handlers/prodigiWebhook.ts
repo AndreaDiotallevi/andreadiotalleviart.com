@@ -11,7 +11,7 @@ export const handler = async (event: APIGatewayProxyEvent) => {
 
         const { Entries } = await putEvent({
             source: "prodigi",
-            detailType: "OrderCompleted",
+            detailType: prodigiEvent.type,
             event: prodigiEvent,
         })
 

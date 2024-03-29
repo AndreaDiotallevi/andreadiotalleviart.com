@@ -15,7 +15,7 @@ export const putEvent = async ({
     event,
 }: {
     source: "stripe" | "prodigi"
-    detailType: "CheckoutSessionCompleted" | "OrderCompleted"
+    detailType: Stripe.Event["type"] | ProdigiEvent["type"]
     event: Stripe.Event | ProdigiEvent
 }) => {
     try {
