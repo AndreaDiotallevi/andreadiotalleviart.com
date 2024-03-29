@@ -173,12 +173,52 @@ Resources:
             QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
             MessageRetentionPeriod: 1209600
 
+    # TOPICS
+    CheckoutSessionCompletedSendEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: CheckoutSessionCompletedSendEmailTopic
+            TopicName: CheckoutSessionCompletedSendEmailTopic
+
+    CreateOrderTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: CreateOrderTopic
+            TopicName: CreateOrderTopic
+
+    SendOrderShippedEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: SendOrderShippedEmailTopic
+            TopicName: SendOrderShippedEmailTopic
+
+    CheckoutSessionCompletedSendEmailTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref CheckoutSessionCompletedSendEmailTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+
+    CreateOrderTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref CreateOrderTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+
+    SendOrderShippedEmailTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref SendOrderShippedEmailTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+
     # ALARMS
     CheckoutSessionCompletedSendEmailAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
             AlarmName: CheckoutSessionCompletedSendEmailAlarm
-            AlarmDescription: "There was an error while sending the confirmation email after checkout."
+            AlarmDescription: "There was an error while sending the confirmation email after checkout session completed."
             Namespace: AWS/SQS
             MetricName: ApproximateNumberOfMessagesVisible
             Dimensions:
@@ -192,19 +232,41 @@ Resources:
             AlarmActions:
                 - !Ref CheckoutSessionCompletedSendEmailTopic
 
-    # TOPICS
-    CheckoutSessionCompletedSendEmailTopic:
-        Type: AWS::SNS::Topic
+    CreateOrderAlarm:
+        Type: AWS::CloudWatch::Alarm
         Properties:
-            DisplayName: CheckoutSessionCompletedSendEmailTopic
-            TopicName: CheckoutSessionCompletedSendEmailTopic
+            AlarmName: CreateOrderAlarm
+            AlarmDescription: "There was an error while creating an order with Prodigi."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt CreateOrderDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref CreateOrderTopic
 
-    CheckoutSessionCompletedSendEmailTopicSubscription:
-        Type: AWS::SNS::Subscription
+    SendOrderShippedEmailAlarm:
+        Type: AWS::CloudWatch::Alarm
         Properties:
-            Protocol: email
-            TopicArn: !Ref CheckoutSessionCompletedSendEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            AlarmName: SendOrderShippedEmailAlarm
+            AlarmDescription: "There was an error while sending the email after order shipped."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt SendOrderShippedEmailDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref SendOrderShippedEmailTopic
 
     # EMAIL TEMPLATES
     CheckoutSessionCompletedEmailTemplate:
