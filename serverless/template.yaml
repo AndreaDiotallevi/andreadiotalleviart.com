@@ -296,18 +296,18 @@ Resources:
                 EntryPoints:
                     - src/handlers/retrieveCheckoutSession.ts
 
-    SendEmailFunction:
+    SendCheckoutSessionCompletedEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-SendEmail
-            Handler: src/handlers/sendEmail.handler
+            FunctionName: !Sub ${AWS::StackName}-SendCheckoutSessionCompletedEmail
+            Handler: src/handlers/sendCheckoutSessionCompletedEmail.handler
             Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /send-email
-                        Method: POST
+                # Root:
+                #     Type: Api
+                #     Properties:
+                #         RestApiId: !Ref ApiGateway
+                #         Path: /send-checkout-session-completed-email
+                #         Method: POST
                 MySQSEvent:
                     Type: SQS
                     Properties:
@@ -315,7 +315,7 @@ Resources:
                         BatchSize: 5
             Policies:
                 - Statement:
-                      - Sid: sendEmail
+                      - Sid: sendCheckoutSessionCompletedEmail
                         Effect: Allow
                         Action:
                             - ses:SendEmail
@@ -336,7 +336,7 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/sendEmail.ts
+                    - src/handlers/sendCheckoutSessionCompletedEmail.ts
 
     SendOrderShippedEmailFunction:
         Type: AWS::Serverless::Function
