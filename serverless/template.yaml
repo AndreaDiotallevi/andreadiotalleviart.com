@@ -70,6 +70,8 @@ Resources:
             Targets:
                 - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
                   Id: CheckoutSessionCompletedSendEmailQueueTarget
+                - Arn: !GetAtt CreateOrderQueue.Arn
+                  Id: CreateOrderQueueTarget
 
     EventBusRuleOrderShipped:
         Type: AWS::Events::Rule
@@ -113,6 +115,34 @@ Resources:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
+            MessageRetentionPeriod: 1209600
+
+    EventBusToCreateOrderQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt CreateOrderQueue.Arn
+            Queues:
+                - Ref: CreateOrderQueue
+
+    CreateOrderQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-CreateOrderQueue
+            VisibilityTimeout: 100
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt CreateOrderDLQ.Arn
+                maxReceiveCount: 3
+
+    CreateOrderDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-CreateOrderDLQ
             MessageRetentionPeriod: 1209600
 
     EventBusToSendOrderShippedEmailQueuePolicy:
@@ -302,12 +332,6 @@ Resources:
             FunctionName: !Sub ${AWS::StackName}-SendCheckoutSessionCompletedEmail
             Handler: src/handlers/sendCheckoutSessionCompletedEmail.handler
             Events:
-                # Root:
-                #     Type: Api
-                #     Properties:
-                #         RestApiId: !Ref ApiGateway
-                #         Path: /send-checkout-session-completed-email
-                #         Method: POST
                 MySQSEvent:
                     Type: SQS
                     Properties:
@@ -476,6 +500,12 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-CreateOrder
             Handler: src/handlers/createOrder.handler
+            Events:
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt CreateOrderQueue.Arn
+                        BatchSize: 5
             Environment:
                 Variables:
                     BUCKET: !Ref Bucket
