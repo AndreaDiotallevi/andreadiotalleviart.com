@@ -65,10 +65,7 @@ const Success = ({
                             />
                         </div>
                         <div className={styles.gridItem2}>
-                            <h2>
-                                Thanks for your order{" "}
-                                {session.customer_details?.name}!
-                            </h2>
+                            <h2>Thank you for the order</h2>
                             <p>
                                 You will receive a confirmation email with the
                                 details of your order.
