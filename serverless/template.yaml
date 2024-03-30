@@ -56,7 +56,7 @@ Resources:
         Properties:
             Name: !Sub ${AWS::StackName}-EventBus
 
-    EventBusRuleCheckoutSessionCompleted:
+    StripeCheckoutSessionCompletedRule:
         Type: AWS::Events::Rule
         Properties:
             EventBusName: !Ref EventBus
@@ -73,7 +73,7 @@ Resources:
                 - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
                   Id: ProdigiCreateOrderQueueTarget
 
-    EventBusRuleOrderShipped:
+    ProdigiOrderShippedRule:
         Type: AWS::Events::Rule
         Properties:
             EventBusName: !Ref EventBus
