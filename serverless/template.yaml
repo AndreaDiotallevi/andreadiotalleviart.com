@@ -107,6 +107,7 @@ Resources:
         Properties:
             QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
             VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
                 deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
                 maxReceiveCount: 3
@@ -135,6 +136,7 @@ Resources:
         Properties:
             QueueName: !Sub ${AWS::StackName}-CreateOrderQueue
             VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
                 deadLetterTargetArn: !GetAtt CreateOrderDLQ.Arn
                 maxReceiveCount: 3
@@ -163,6 +165,7 @@ Resources:
         Properties:
             QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailQueue
             VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
                 deadLetterTargetArn: !GetAtt SendOrderShippedEmailDLQ.Arn
                 maxReceiveCount: 3
@@ -277,8 +280,9 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
-                            <h2>Thanks for your order {{name}}!</h2>
-                            <p>As soon as your package is on its way, you will receive a delivery confirmation from me by email.</p>
+                            <h2>Dear {{name}},</h2>
+                            <p>Thank you so much for your order.</p>
+                            <p>As soon as the package is on its way, you will receive a shipping confirmation email.</p>
                             <h3>Delivery address</h3>
                             <div>
                                 {{name}}<br>
@@ -307,7 +311,7 @@ Resources:
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Your Andrea Diotallevi Art Order"
+                SubjectPart: "Thank you for your order"
 
     SendOrderShippedEmailTemplate:
         Type: AWS::SES::Template
@@ -317,10 +321,14 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
-                            <p>Ciao</p>
+                            <h2>Dear {{name}},</h2>
+                            <p>Your order is on its way!</p>
+                            <p>Track it <a href="{{trackingUrl}}">here</a>.</p>
+                            <h3>With love, Andrea</h3>
+                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Your Order Has Been Shipped"
+                SubjectPart: "Your order has been shipped"
 
     # FUNCTIONS
     ApiGateway:
