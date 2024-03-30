@@ -12,7 +12,7 @@ export const createCheckoutSession = async (
 
     try {
         const response = await fetch(
-            process.env.GATSBY_API_URL + `/create-checkout-session`,
+            process.env.GATSBY_API_URL + `/stripe-create-checkout-session`,
             {
                 method: "POST",
                 headers: {
@@ -47,7 +47,7 @@ export const retrieveCheckoutSession = async (params: {
     try {
         const response = await fetch(
             process.env.GATSBY_API_URL +
-                `/retrieve-checkout-session/${params.sessionId}`,
+                `/stripe-retrieve-checkout-session/${params.sessionId}`,
             {
                 method: "GET",
                 headers: {

@@ -68,10 +68,10 @@ Resources:
                 detail-type:
                     - checkout.session.completed
             Targets:
-                - Arn: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
-                  Id: CheckoutSessionCompletedSendEmailQueueTarget
-                - Arn: !GetAtt CreateOrderQueue.Arn
-                  Id: CreateOrderQueueTarget
+                - Arn: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
+                  Id: StripeCheckoutSessionCompletedSendEmailQueueTarget
+                - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
+                  Id: ProdigiCreateOrderQueueTarget
 
     EventBusRuleOrderShipped:
         Type: AWS::Events::Rule
@@ -89,7 +89,7 @@ Resources:
                   Id: SendOrderShippedEmailQueueTarget
 
     # QUEUES
-    EventBusToCheckoutSessionCompletedSendEmailQueuePolicy:
+    StripeCheckoutSessionCompletedSendEmailQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
             PolicyDocument:
@@ -98,27 +98,27 @@ Resources:
                       Principal:
                           Service: events.amazonaws.com
                       Action: sqs:SendMessage
-                      Resource: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+                      Resource: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
             Queues:
-                - Ref: CheckoutSessionCompletedSendEmailQueue
+                - Ref: StripeCheckoutSessionCompletedSendEmailQueue
 
-    CheckoutSessionCompletedSendEmailQueue:
+    StripeCheckoutSessionCompletedSendEmailQueue:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailQueue
+            QueueName: !Sub ${AWS::StackName}-StripeCheckoutSessionCompletedSendEmailQueue
             VisibilityTimeout: 100
             ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
-                deadLetterTargetArn: !GetAtt CheckoutSessionCompletedSendEmailDLQ.Arn
+                deadLetterTargetArn: !GetAtt StripeCheckoutSessionCompletedSendEmailDLQ.Arn
                 maxReceiveCount: 3
 
-    CheckoutSessionCompletedSendEmailDLQ:
+    StripeCheckoutSessionCompletedSendEmailDLQ:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-CheckoutSessionCompletedSendEmailDLQ
+            QueueName: !Sub ${AWS::StackName}-StripeCheckoutSessionCompletedSendEmailDLQ
             MessageRetentionPeriod: 1209600
 
-    EventBusToCreateOrderQueuePolicy:
+    ProdigiCreateOrderQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
             PolicyDocument:
@@ -127,27 +127,27 @@ Resources:
                       Principal:
                           Service: events.amazonaws.com
                       Action: sqs:SendMessage
-                      Resource: !GetAtt CreateOrderQueue.Arn
+                      Resource: !GetAtt ProdigiCreateOrderQueue.Arn
             Queues:
-                - Ref: CreateOrderQueue
+                - Ref: ProdigiCreateOrderQueue
 
-    CreateOrderQueue:
+    ProdigiCreateOrderQueue:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-CreateOrderQueue
+            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderQueue
             VisibilityTimeout: 100
             ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
-                deadLetterTargetArn: !GetAtt CreateOrderDLQ.Arn
+                deadLetterTargetArn: !GetAtt ProdigiCreateOrderDLQ.Arn
                 maxReceiveCount: 3
 
-    CreateOrderDLQ:
+    ProdigiCreateOrderDLQ:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-CreateOrderDLQ
+            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderDLQ
             MessageRetentionPeriod: 1209600
 
-    EventBusToSendOrderShippedEmailQueuePolicy:
+    SendOrderShippedEmailQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
             PolicyDocument:
@@ -177,17 +177,17 @@ Resources:
             MessageRetentionPeriod: 1209600
 
     # TOPICS
-    CheckoutSessionCompletedSendEmailTopic:
+    StripeCheckoutSessionCompletedSendEmailTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: CheckoutSessionCompletedSendEmailTopic
-            TopicName: CheckoutSessionCompletedSendEmailTopic
+            DisplayName: StripeCheckoutSessionCompletedSendEmailTopic
+            TopicName: StripeCheckoutSessionCompletedSendEmailTopic
 
-    CreateOrderTopic:
+    ProdigiCreateOrderTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: CreateOrderTopic
-            TopicName: CreateOrderTopic
+            DisplayName: ProdigiCreateOrderTopic
+            TopicName: ProdigiCreateOrderTopic
 
     SendOrderShippedEmailTopic:
         Type: AWS::SNS::Topic
@@ -195,18 +195,18 @@ Resources:
             DisplayName: SendOrderShippedEmailTopic
             TopicName: SendOrderShippedEmailTopic
 
-    CheckoutSessionCompletedSendEmailTopicSubscription:
+    StripeCheckoutSessionCompletedSendEmailTopicSubscription:
         Type: AWS::SNS::Subscription
         Properties:
             Protocol: email
-            TopicArn: !Ref CheckoutSessionCompletedSendEmailTopic
+            TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
-    CreateOrderTopicSubscription:
+    ProdigiCreateOrderTopicSubscription:
         Type: AWS::SNS::Subscription
         Properties:
             Protocol: email
-            TopicArn: !Ref CreateOrderTopic
+            TopicArn: !Ref ProdigiCreateOrderTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
     SendOrderShippedEmailTopicSubscription:
@@ -217,41 +217,41 @@ Resources:
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
     # ALARMS
-    CheckoutSessionCompletedSendEmailAlarm:
+    StripeCheckoutSessionCompletedSendEmailAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
-            AlarmName: CheckoutSessionCompletedSendEmailAlarm
+            AlarmName: StripeCheckoutSessionCompletedSendEmailAlarm
             AlarmDescription: "There was an error while sending the confirmation email after checkout session completed."
             Namespace: AWS/SQS
             MetricName: ApproximateNumberOfMessagesVisible
             Dimensions:
                 - Name: QueueName
-                  Value: !GetAtt CheckoutSessionCompletedSendEmailDLQ.QueueName
+                  Value: !GetAtt StripeCheckoutSessionCompletedSendEmailDLQ.QueueName
             Statistic: Sum
             Period: 300
             EvaluationPeriods: 1
             Threshold: 1
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
-                - !Ref CheckoutSessionCompletedSendEmailTopic
+                - !Ref StripeCheckoutSessionCompletedSendEmailTopic
 
-    CreateOrderAlarm:
+    ProdigiCreateOrderAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
-            AlarmName: CreateOrderAlarm
+            AlarmName: ProdigiCreateOrderAlarm
             AlarmDescription: "There was an error while creating an order with Prodigi."
             Namespace: AWS/SQS
             MetricName: ApproximateNumberOfMessagesVisible
             Dimensions:
                 - Name: QueueName
-                  Value: !GetAtt CreateOrderDLQ.QueueName
+                  Value: !GetAtt ProdigiCreateOrderDLQ.QueueName
             Statistic: Sum
             Period: 300
             EvaluationPeriods: 1
             Threshold: 1
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
-                - !Ref CreateOrderTopic
+                - !Ref ProdigiCreateOrderTopic
 
     SendOrderShippedEmailAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -342,17 +342,17 @@ Resources:
                 AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
                 AllowOrigin: "'*'"
 
-    CreateCheckoutSessionFunction:
+    StripeCreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-CreateCheckoutSession
-            Handler: src/handlers/createCheckoutSession.handler
+            FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
+            Handler: src/handlers/stripeCreateCheckoutSession.handler
             Events:
                 Root:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /create-checkout-session
+                        Path: /stripe-create-checkout-session
                         Method: POST
             Policies:
                 - Statement:
@@ -367,19 +367,19 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/createCheckoutSession.ts
+                    - src/handlers/stripeCreateCheckoutSession.ts
 
-    RetrieveCheckoutSessionFunction:
+    StripeRetrieveCheckoutSessionFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-RetrieveCheckoutSession
-            Handler: src/handlers/retrieveCheckoutSession.handler
+            FunctionName: !Sub ${AWS::StackName}-StripeRetrieveCheckoutSession
+            Handler: src/handlers/stripeRetrieveCheckoutSession.handler
             Events:
                 Root:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /retrieve-checkout-session/{sessionId}
+                        Path: /stripe-retrieve-checkout-session/{sessionId}
                         Method: GET
             Policies:
                 - Statement:
@@ -394,7 +394,7 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/retrieveCheckoutSession.ts
+                    - src/handlers/stripeRetrieveCheckoutSession.ts
 
     SendCheckoutSessionCompletedEmailFunction:
         Type: AWS::Serverless::Function
@@ -405,7 +405,7 @@ Resources:
                 MySQSEvent:
                     Type: SQS
                     Properties:
-                        Queue: !GetAtt CheckoutSessionCompletedSendEmailQueue.Arn
+                        Queue: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
                         BatchSize: 5
             Policies:
                 - Statement:
@@ -473,11 +473,11 @@ Resources:
                 EntryPoints:
                     - src/handlers/sendOrderShippedEmail.ts
 
-    StripeWebhookFunction:
+    StripeHandleWebhooksFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-StripeWebhook
-            Handler: src/handlers/stripeWebhook.handler
+            FunctionName: !Sub ${AWS::StackName}-StripeHandleWebhooks
+            Handler: src/handlers/stripeHandleWebhooks.handler
             Environment:
                 Variables:
                     EVENT_BUS_NAME: !Ref EventBus
@@ -486,7 +486,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /stripe-webhook
+                        Path: /stripe-handle-webhooks
                         Method: POST
             Policies:
                 - Statement:
@@ -509,13 +509,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/stripeWebhook.ts
+                    - src/handlers/stripeHandleWebhooks.ts
 
-    ProdigiWebhookFunction:
+    ProdigiHandleWebhooksFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-ProdigiWebhook
-            Handler: src/handlers/prodigiWebhook.handler
+            FunctionName: !Sub ${AWS::StackName}-ProdigiHandleWebhooks
+            Handler: src/handlers/prodigiHandleWebhooks.handler
             Environment:
                 Variables:
                     EVENT_BUS_NAME: !Ref EventBus
@@ -524,7 +524,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /prodigi-webhook
+                        Path: /prodigi-handle-webhooks
                         Method: POST
             Policies:
                 - Statement:
@@ -539,42 +539,18 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/prodigiWebhook.ts
+                    - src/handlers/prodigiHandleWebhooks.ts
 
-    CreatePresignedUrlFunction:
+    ProdigiCreateOrderFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-CreatePresignedUrl
-            Handler: src/handlers/createPresignedUrl.handler
-            Environment:
-                Variables:
-                    BUCKET: !Ref Bucket
-            Policies:
-                - Statement:
-                      - Sid: getObject
-                        Effect: Allow
-                        Action:
-                            - s3:GetObject
-                        Resource:
-                            - !Sub arn:aws:s3:::${Bucket}/*
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/handlers/createPresignedUrl.ts
-
-    CreateOrderFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-CreateOrder
-            Handler: src/handlers/createOrder.handler
+            FunctionName: !Sub ${AWS::StackName}-ProdigiCreateOrder
+            Handler: src/handlers/prodigiCreateOrder.handler
             Events:
                 MySQSEvent:
                     Type: SQS
                     Properties:
-                        Queue: !GetAtt CreateOrderQueue.Arn
+                        Queue: !GetAtt ProdigiCreateOrderQueue.Arn
                         BatchSize: 5
             Environment:
                 Variables:
@@ -600,4 +576,4 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/createOrder.ts
+                    - src/handlers/prodigiCreateOrder.ts
