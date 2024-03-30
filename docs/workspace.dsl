@@ -10,13 +10,13 @@ workspace {
             eventBus = container "Event bus" "" "Event Bridge" "Queue"
             sendEmailQueue = container "Send email queue" "" "SQS" "Queue"
             sendEmailLambda = container "Send email function" "" "Lambda"
-            fulfilOrderQueue = container "Fulfil order queue" "" "" "Queue"
-            fulfilOrderLambda = container "Fulfil order function" "" "Lambda"
+            prodigiCreateOrderQueue = container "Prodigi create order queue" "" "" "Queue"
+            prodigiCreateOrderLambda = container "Prodigi create order lambda" "" "Lambda"
 
             eventBus -> sendEmailQueue "Sends filtered events to"
             sendEmailQueue -> sendEmailLambda "Sends filtered events to"
-            eventBus -> fulfilOrderQueue "Sends events to"
-            fulfilOrderQueue -> fulfilOrderLambda "Sends events to"
+            eventBus -> prodigiCreateOrderQueue "Sends events to"
+            prodigiCreateOrderQueue -> prodigiCreateOrderLambda "Sends events to"
         }
 
         user -> gatsby "Buys prints via"
@@ -24,7 +24,7 @@ workspace {
         gatsby -> stripe "Confirms session payment via"
         stripe -> eventBus "Sends events to" "Webhooks"
         sendEmailLambda -> user "Sends emails to"
-        fulfilOrderLambda -> prodigi "Fulfils orders via"
+        prodigiCreateOrderLambda -> prodigi "Fulfils orders via"
         prodigi -> eventBus "Sends events to" "Webhooks"
     }
 
