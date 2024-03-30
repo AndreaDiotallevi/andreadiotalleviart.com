@@ -438,12 +438,6 @@ Resources:
             FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
             Handler: src/handlers/sendOrderShippedEmail.handler
             Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /send-order-shipped-email-function
-                        Method: POST
                 MySQSEvent:
                     Type: SQS
                     Properties:
