@@ -151,7 +151,7 @@ export const createOrder = async ({
             name: "PRODIGI_API_KEY",
         })
 
-        const url = `${process.env.PRODIGI_URL}/v4.0/Orders/`
+        const url = `${process.env.PRODIGI_API_URL}/v4.0/Orders/`
 
         const requestBody = {
             merchantReference: "TBC",
