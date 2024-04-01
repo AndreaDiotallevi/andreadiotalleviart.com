@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { PageProps } from "gatsby"
 import {
     EmbeddedCheckoutProvider,
@@ -21,14 +21,12 @@ const stripePromise = loadStripe(
     process.env.GATSBY_STRIPE_PUBLISHABLE_KEY || ""
 )
 
-const CheckoutForm = ({ location }: PageProps<DataProps>) => {
+const Checkout = ({ location }: PageProps<DataProps>) => {
     const params = new URLSearchParams(location.search)
     const clientSecret = params.get("clientSecret")
-    const [loading, setLoading] = useState(false)
 
     return (
         <Layout
-            loading={loading}
             seo={{
                 title: `Checkout | Andrea Diotallevi`,
                 description: "Checkout",
@@ -56,4 +54,4 @@ const CheckoutForm = ({ location }: PageProps<DataProps>) => {
     )
 }
 
-export default CheckoutForm
+export default Checkout
