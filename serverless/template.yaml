@@ -271,9 +271,9 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
-                            <h2>Dear {{name}},</h2>
-                            <p>Thank you so much for your order.</p>
-                            <p>As soon as the package is on its way, you will receive a shipping confirmation email.</p>
+                            <h3>Dear {{name}},</h3>
+                            <p>Thank you for your order.</p>
+                            <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Delivery address</h3>
                             <div>
                                 {{name}}<br>
@@ -283,16 +283,13 @@ Resources:
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
-                            <h3>Your items</h3>
+                            <h3>Items</h3>
                             <div>
-                                {{productName}}<br>
-                                {{productDescription}}<br>
-                                Quantity: {{itemQuantity}}<br><br>
+                                {{productName}} - {{productDescription}}<br><br>
                                 <img src="{{productImageSource}}" alt="{{productName}}" width="120">
                             </div>
                             <h3>Payment summary</h3>
                             <div>
-                                Payment method: {{paymentMethod}}<br>
                                 Subtotal: {{amountSubtotal}}<br>
                                 Shipping fee: Free<br>
                                 Discounts: {{amountDiscount}}<br>
