@@ -3,7 +3,6 @@ import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
-import Loader from "../components/loader"
 import Layout from "../templates/layout"
 import { Print } from "../models/prints"
 
@@ -43,7 +42,7 @@ const Success = ({
                 title: "Order Confirmation | Andrea Diotallevi",
                 description:
                     "You will receive a confirmation email with the details of your order.",
-                tags: ["Thanks For Your Order"],
+                tags: ["Thanks You For Your Order"],
             }}
         >
             {session ? (
@@ -65,7 +64,7 @@ const Success = ({
                             />
                         </div>
                         <div className={styles.gridItem2}>
-                            <h2>Thank you for the order!</h2>
+                            <h2>Thank you for your order</h2>
                             <p>
                                 You will receive a confirmation email with the
                                 details of your order.
@@ -86,30 +85,32 @@ const Success = ({
                                 , {session.shipping_details?.address?.city},{" "}
                                 {session.shipping_details?.address?.country}
                             </p>
-                            <h2>Your items</h2>
+                            <h2>Items</h2>
                             {session.line_items?.data.map(item => (
                                 <div key={item.id}>
                                     <p>
-                                        {item.description}
-                                        <br></br>
-                                        Quantity: {item.quantity}
+                                        {item.price?.product.name} -{" "}
+                                        {item.price?.product.description}
                                     </p>
                                 </div>
                             ))}
-                            <h2>Payment Summary</h2>
+                            <h2>Payment summary</h2>
                             <p>
-                                Subtotal:{" "}
+                                Subtotal: £
                                 {((session.amount_subtotal || 0) / 100).toFixed(
                                     2
                                 )}
                                 <br></br>
                                 Shipping fee: Free<br></br>
+                                Discounts: £
+                                {(
+                                    (session.total_details?.amount_discount ||
+                                        0) / 100
+                                ).toFixed(2)}
+                                <br></br>
                                 Total: £
                                 {((session.amount_total || 0) / 100).toFixed(2)}
                             </p>
-                            <h2 style={{ marginBottom: 24 }}>
-                                With love, Andrea
-                            </h2>
                             <Link to="/shop" className={styles.button}>
                                 Discover More
                             </Link>
