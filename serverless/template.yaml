@@ -207,6 +207,36 @@ Resources:
             TopicArn: !Ref SendOrderShippedEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
+    EmailBounceTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: EmailBounceTopic
+            TopicName: EmailBounceTopic
+
+    EmailBounceTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref EmailBounceTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+
+    SESConfigurationSet:
+        Type: AWS::SES::ConfigurationSet
+        Properties:
+            Name: SESConfigurationSet
+
+    SESConfigurationSetEventDestination:
+        Type: AWS::SES::ConfigurationSetEventDestination
+        Properties:
+            ConfigurationSetName: !Ref SESConfigurationSet
+            EventDestination:
+                Enabled: true
+                MatchingEventTypes:
+                    - bounce
+                Name: EmailBounceDestination
+                SnsDestination:
+                    TopicARN: !Ref EmailBounceTopic
+
     # ALARMS
     StripeCheckoutSessionCompletedSendEmailAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -274,6 +304,11 @@ Resources:
                             <h3>Dear {{name}},</h3>
                             <p>Thank you for your order.</p>
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
+                            <h3>Items</h3>
+                            <div>
+                                {{productName}} - {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                            </div>
                             <h3>Delivery address</h3>
                             <div>
                                 {{name}}<br>
@@ -282,11 +317,6 @@ Resources:
                                     {{addressLine2}}<br>
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
-                            </div>
-                            <h3>Items</h3>
-                            <div>
-                                {{productName}} - {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
                             </div>
                             <h3>Payment summary</h3>
                             <div>
@@ -309,9 +339,29 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
-                            <h2>Dear {{name}},</h2>
-                            <p>Your order is on its way!</p>
-                            <p>Track it <a href="{{trackingUrl}}">here</a>.</p>
+                            <h3>Dear {{name}},</h3>
+                            <p>Your order has been shipped and is now on its way to you!</p>
+                            <h3>Shipment details</h3>
+                            <div>
+                                Carrier name: {{carrierName}}<br>
+                                Carrier service: {{carrierService}}<br>
+                                Tracking number: {{trackingNumber}}<br>
+                                Tracking link: <a href="{{trackingUrl}}">here</a>
+                            </div>
+                            <h3>Items</h3>
+                            <div>
+                                {{productName}} - {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                            </div>
+                            <h3>Delivery address</h3>
+                            <div>
+                                {{name}}<br>
+                                {{addressLine1}}<br>
+                                {{#if addressLine2}}
+                                    {{addressLine2}}<br>
+                                {{/if}}
+                                {{postcode}}, {{town}}, {{country}}
+                            </div>
                             <h3>With love, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>

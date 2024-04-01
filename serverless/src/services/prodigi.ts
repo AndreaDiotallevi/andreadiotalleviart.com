@@ -126,22 +126,20 @@ export type ProdigiEvent = {
 }
 
 export const createOrder = async ({
-    customerDetails,
-    shippingDetails,
-    lineItems,
+    session,
 }: {
-    customerDetails: Stripe.Checkout.Session["customer_details"]
-    shippingDetails: Stripe.Checkout.Session["shipping_details"]
-    lineItems: Stripe.Checkout.Session["line_items"]
+    session: Stripe.Checkout.Session
 }) => {
     try {
-        if (!shippingDetails?.address) {
+        const { shipping_details, customer_details, line_items, id } = session
+
+        if (!shipping_details?.address) {
             throw new Error("No shipping details")
         }
-        if (!customerDetails) {
+        if (!customer_details) {
             throw new Error("No customer details")
         }
-        if (!lineItems) {
+        if (!line_items) {
             throw new Error("No line items")
         }
 
@@ -154,21 +152,21 @@ export const createOrder = async ({
         const url = `${process.env.PRODIGI_API_URL}/v4.0/Orders/`
 
         const requestBody = {
-            merchantReference: "TBC",
+            merchantReference: id,
             shippingMethod: "Standard",
             recipient: {
                 address: {
-                    line1: shippingDetails.address.line1,
-                    line2: shippingDetails.address.line2 || null,
-                    postalOrZipCode: shippingDetails.address.postal_code,
-                    countryCode: shippingDetails.address.country,
-                    townOrCity: shippingDetails.address.city,
-                    stateOrCounty: shippingDetails.address.state || null, // Empty string breaks it
+                    line1: shipping_details.address.line1,
+                    line2: shipping_details.address.line2 || null,
+                    postalOrZipCode: shipping_details.address.postal_code,
+                    countryCode: shipping_details.address.country,
+                    townOrCity: shipping_details.address.city,
+                    stateOrCounty: shipping_details.address.state || null, // Empty string breaks it
                 },
-                name: customerDetails.name + "7",
+                name: customer_details.name + "7",
             },
-            items: lineItems.data.map(item => ({
-                merchantReference: "TBC",
+            items: line_items.data.map(item => ({
+                merchantReference: item.id,
                 sku: "GLOBAL-HPR-A3", // Hahnemühle Photo Rag, 29.7x42 cm / 11.7x16.5" (A3)
                 copies: item.quantity,
                 sizing: "fillPrintArea",

@@ -10,7 +10,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
         for (const record of event.Records) {
             const body = JSON.parse(record.body)
             const event = body.detail as Stripe.CheckoutSessionCompletedEvent
-            console.log(event)
+            console.log(JSON.stringify(event))
 
             const sessionId = event.data.object.id
             const { session } = await retrieveCheckoutSession({ sessionId })

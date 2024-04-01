@@ -14,11 +14,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
             console.log(JSON.stringify(session))
 
-            await createOrder({
-                customerDetails: session.customer_details,
-                shippingDetails: session.shipping_details,
-                lineItems: session.line_items,
-            })
+            await createOrder({ session })
         }
     } catch (error) {
         console.error(error)
