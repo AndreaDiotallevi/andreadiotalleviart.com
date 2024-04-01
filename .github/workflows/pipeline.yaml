@@ -17,8 +17,8 @@ env:
     PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
     SAM_TEMPLATE: template.yaml
     STAGING_STACK_NAME: andreadiotalleviart
-    STAGING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::064333731935:role/aws-sam-cli-managed-staging-PipelineExecutionRole-1W1TPFLBMMU3
-    STAGING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::064333731935:role/aws-sam-cli-managed-stagi-CloudFormationExecutionR-1SYTPNO18CA10
+    STAGING_PIPELINE_EXECUTION_ROLE: ${{ secrets.STAGING_PIPELINE_EXECUTION_ROLE }}
+    STAGING_CLOUDFORMATION_EXECUTION_ROLE: ${{ secrets.STAGING_CLOUDFORMATION_EXECUTION_ROLE }}
     STAGING_ARTIFACTS_BUCKET: aws-sam-cli-managed-staging-pipel-artifactsbucket-1571mu0d2n3o
     # If there are functions with "Image" PackageType in your template,
     # uncomment the line below and add "--image-repository ${STAGING_IMAGE_REPOSITORY}" to
@@ -26,8 +26,8 @@ env:
     # STAGING_IMAGE_REPOSITORY = '0123456789.dkr.ecr.region.amazonaws.com/repository-name'
     STAGING_REGION: eu-west-2
     PROD_STACK_NAME: andreadiotalleviart
-    PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::562413347228:role/aws-sam-cli-managed-producti-PipelineExecutionRole-VKLQ0FRWJPF3
-    PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::562413347228:role/aws-sam-cli-managed-produ-CloudFormationExecutionR-RYK43HSG313I
+    PROD_PIPELINE_EXECUTION_ROLE: ${{ secrets.PROD_PIPELINE_EXECUTION_ROLE }}
+    PROD_CLOUDFORMATION_EXECUTION_ROLE: ${{ secrets.PROD_CLOUDFORMATION_EXECUTION_ROLE }}
     PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-production-pi-artifactsbucket-3vlqavdhqvej
     # If there are functions with "Image" PackageType in your template,
     # uncomment the line below and add "--image-repository ${PROD_IMAGE_REPOSITORY}" to
