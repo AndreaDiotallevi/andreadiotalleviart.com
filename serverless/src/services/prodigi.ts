@@ -163,7 +163,7 @@ export const createOrder = async ({
                     townOrCity: shipping_details.address.city,
                     stateOrCounty: shipping_details.address.state || null, // Empty string breaks it
                 },
-                name: customer_details.name + "7",
+                name: customer_details.name,
             },
             items: line_items.data.map(item => ({
                 merchantReference: item.id,
