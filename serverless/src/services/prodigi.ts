@@ -152,6 +152,7 @@ export const createOrder = async ({
         const url = `${process.env.PRODIGI_API_URL}/v4.0/Orders/`
 
         const requestBody = {
+            idempotencyKey: id,
             merchantReference: id,
             shippingMethod: "Standard",
             recipient: {
