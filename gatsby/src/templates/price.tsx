@@ -4,22 +4,22 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
-import { Print } from "../models/prints"
 
 import * as styles from "./showcase.module.scss"
 import { createCheckoutSession } from "../api"
 
 type DataProps = {
     stripePrice: StripePrice
-    printsJson: Print
 }
 
 const PricePage = ({
-    data: { stripePrice, printsJson },
+    data: { stripePrice },
     location,
 }: PageProps<DataProps>) => {
     const [clientSecret, setClientSecret] = useState<string | null>(null)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
+
+    const images = [stripePrice.mockup, stripePrice.print]
 
     useEffect(() => {
         const createSession = async () => {
@@ -68,28 +68,22 @@ const PricePage = ({
                         <div
                             className={styles.mainImage}
                             onClick={() =>
-                                setSliderShowIndex(
-                                    (slideShowIndex + 1) %
-                                        printsJson.images.length
-                                )
+                                setSliderShowIndex((slideShowIndex + 1) % 2)
                             }
                         >
                             <GatsbyImage
                                 onClick={() =>
-                                    setSliderShowIndex(
-                                        (slideShowIndex + 1) %
-                                            printsJson.images.length
-                                    )
+                                    setSliderShowIndex((slideShowIndex + 1) % 2)
                                 }
-                                alt={printsJson.images[slideShowIndex].id}
+                                alt={"image"}
                                 image={
-                                    printsJson.images[slideShowIndex]
-                                        .childImageSharp.gatsbyImageData
+                                    images[slideShowIndex].childImageSharp
+                                        .gatsbyImageData
                                 }
                             />
                         </div>
                         <ul className={styles.imageList}>
-                            {printsJson.images.map((image, index) => (
+                            {images.map((image, index) => (
                                 <li
                                     key={`image-${index}`}
                                     onClick={() => setSliderShowIndex(index)}
@@ -100,7 +94,7 @@ const PricePage = ({
                                     }`}
                                 >
                                     <GatsbyImage
-                                        alt={printsJson.images[index].id}
+                                        alt={"image"}
                                         image={
                                             image.childImageSharp
                                                 .gatsbyImageData
@@ -112,33 +106,24 @@ const PricePage = ({
                     </div>
                     <div className={styles.gridItem2}>
                         <h2>Description</h2>
+                        <p>{stripePrice.product.description}</p>
                         <p>
-                            Fine art archival giclée print on Hahnemühle Photo
-                            Rag at 308gsm with subtle fibrous finish.
+                            Prints are only touched with paper-handling gloves,
+                            each is wrapped in paper before being placed in a
+                            shipping tube for delivery.
                         </p>
                         <p>
-                            Paper dimensions: 22 x 27.25 in (56 x 69.25 cm).
-                            <br></br>Image dimensions: 21 x 26.25 in (35.25 x
-                            66.75 cm).
+                            All prints come with a white border for framing.
+                            Framing not included.
                         </p>
-                        <p style={{ marginBottom: 48 }}>
-                            Print purchases are posted with a certificate of
-                            authenticity that includes the artist’s signature,
-                            edition number, size and paper stock.
-                        </p>
-                        <h2>Shipping</h2>
                         <p>
-                            The prints are sold unframed and packaged flat
-                            between cardboard for protection.<br></br>All
-                            shipping costs included.
+                            Shipping can take up to 4 days. All costs included.
                         </p>
-                        <p style={{ marginBottom: 48 }}>
-                            UK shipping can take 2-3 weeks to arrive.
-                            International shipping take up to 4 weeks to arrive.
-                            Read the full shipping and returns details here.
-                        </p>
+                        {/* <p style={{ color: "red", fontWeight: 700 }}>
+                            ONLINE SHOP COMING SOON
+                        </p> */}
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
-                        <p>Apply promotions at checkout.</p>
+                        <p>Apply promotion codes at checkout.</p>
                         <Link
                             to={
                                 clientSecret
@@ -162,9 +147,6 @@ export const query = graphql`
     query($slug: String!) {
         stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
             ...StripePriceFragment
-        }
-        printsJson(slug: { eq: $slug }) {
-            ...PrintFragment
         }
     }
 `

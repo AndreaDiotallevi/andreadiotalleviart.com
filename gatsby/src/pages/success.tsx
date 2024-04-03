@@ -4,20 +4,20 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
 import Layout from "../templates/layout"
-import { Print } from "../models/prints"
 
 import { retrieveCheckoutSession } from "../api"
 
 import * as styles from "./success.module.scss"
+import { StripePrice } from "../models/stripe"
 
 type DataProps = {
-    allPrintsJson: {
-        edges: [{ node: Print }]
+    allStripePrice: {
+        edges: [{ node: StripePrice }]
     }
 }
 
 const Success = ({
-    data: { allPrintsJson },
+    data: { allStripePrice },
     location,
 }: PageProps<DataProps>) => {
     const [session, setSession] = useState<Stripe.Checkout.Session | null>(null)
@@ -52,9 +52,9 @@ const Success = ({
                         <div>
                             <GatsbyImage
                                 image={
-                                    allPrintsJson.edges.filter(
+                                    allStripePrice.edges.filter(
                                         edge =>
-                                            edge.node.slug ===
+                                            edge.node.product.metadata.slug ===
                                             session.line_items?.data[0].price
                                                 ?.product.metadata.slug
                                     )[0].node.images[0].childImageSharp
@@ -128,10 +128,12 @@ export default Success
 
 export const query = graphql`
     {
-        allPrintsJson {
+        allStripePrice(
+            filter: { active: { eq: true }, product: { active: { eq: true } } }
+        ) {
             edges {
                 node {
-                    ...PrintFragment
+                    ...StripePriceFragment
                 }
             }
         }

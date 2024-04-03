@@ -5,7 +5,6 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
-import { Print } from "../models/prints"
 
 import * as styles from "./shop.module.scss"
 
@@ -13,14 +12,9 @@ type DataProps = {
     allStripePrice: {
         edges: [{ node: StripePrice }]
     }
-    allPrintsJson: {
-        edges: [{ node: Print }]
-    }
 }
 
-const Shop = ({
-    data: { allStripePrice, allPrintsJson },
-}: PageProps<DataProps>) => {
+const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     const getStripePrice = (slug: string) => {
         return allStripePrice.edges.filter(
             edge => edge.node.product.metadata.slug === slug
@@ -50,22 +44,28 @@ const Shop = ({
             <div className={styles.container}>
                 <h1 className={styles.h1}>Prints</h1>
                 <div className={styles.grid}>
-                    {allPrintsJson.edges.map(({ node }) => (
-                        <li key={node.slug} className={styles.gridItem}>
-                            <Link to={`/shop/${node.slug}`}>
+                    {allStripePrice.edges.map(({ node }) => (
+                        <li
+                            key={node.product.metadata.slug}
+                            className={styles.gridItem}
+                        >
+                            <Link
+                                to={`/shop/prints/${node.product.metadata.slug}`}
+                            >
                                 <GatsbyImage
-                                    alt={node.images[0].id}
+                                    alt="image"
                                     image={
-                                        node.images[0].childImageSharp
+                                        node.mockup.childImageSharp
                                             .gatsbyImageData
                                     }
                                 />
-                                <h2>{node.name}</h2>
+                                <h2>{node.product.name}</h2>
                                 <p>
                                     £
                                     {(
-                                        getStripePrice(node.slug).node
-                                            .unit_amount / 100
+                                        getStripePrice(
+                                            node.product.metadata.slug
+                                        ).node.unit_amount / 100
                                     ).toFixed(2)}
                                 </p>
                             </Link>
@@ -87,13 +87,6 @@ export const query = graphql`
             edges {
                 node {
                     ...StripePriceFragment
-                }
-            }
-        }
-        allPrintsJson {
-            edges {
-                node {
-                    ...PrintFragment
                 }
             }
         }
