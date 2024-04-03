@@ -6,14 +6,24 @@ export type StripePrice = {
     active: boolean
     currency: string
     unit_amount: number
+    print: {
+        childImageSharp: {
+            gatsbyImageData: IGatsbyImageData
+        }
+    }
+    mockup: {
+        childImageSharp: {
+            gatsbyImageData: IGatsbyImageData
+        }
+    }
     product: {
         id: string
         name: string
         description: string
         metadata: {
-            slug: string
-            medium: string
-            dimensions: string
+            category: "prints"
+            slug: "marble-lake" | "flames"
+            size: "a2" | "a3"
         }
         localFiles: [
             {
@@ -34,11 +44,33 @@ export const query = graphql`
         active
         currency
         unit_amount
+        print {
+            childImageSharp {
+                gatsbyImageData(
+                    width: 660
+                    quality: 99
+                    layout: CONSTRAINED
+                    placeholder: BLURRED
+                )
+            }
+        }
+        mockup {
+            childImageSharp {
+                gatsbyImageData(
+                    width: 660
+                    quality: 99
+                    layout: CONSTRAINED
+                    placeholder: BLURRED
+                )
+            }
+        }
         product {
             id
             name
             description
             metadata {
+                category
+                size
                 slug
             }
             localFiles {

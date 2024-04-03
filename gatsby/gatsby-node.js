@@ -1,7 +1,28 @@
 const path = require("path")
+const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
-module.exports.onCreateNode = ({ node, actions }) => {
-    const { createNodeField } = actions
+require("dotenv").config({
+    path: `.env.${process.env.NODE_ENV}`,
+})
+
+module.exports.createSchemaCustomization = ({ actions }) => {
+    const { createTypes } = actions
+
+    createTypes(`
+        type StripePrice implements Node {
+            print: File @link(from: "fields.print")
+            mockup: File @link(from: "fields.mockup")
+        }
+  `)
+}
+
+module.exports.onCreateNode = async ({
+    node,
+    actions,
+    createNodeId,
+    getCache,
+}) => {
+    const { createNode, createNodeField } = actions
 
     if (node.internal.type === "MarkdownRemark") {
         const slug = path.basename(node.fileAbsolutePath, ".md")
@@ -10,6 +31,28 @@ module.exports.onCreateNode = ({ node, actions }) => {
             node,
             name: "slug",
             value: slug,
+        })
+    }
+
+    if (node.internal.type === "StripePrice" && node.product?.metadata?.slug) {
+        ;["print", "mockup"].forEach(async name => {
+            const fileNode = await createRemoteFileNode({
+                url: `${process.env.S3_BUCKET_DOMAIN}/${
+                    node.product.metadata.slug
+                }_${name.toUpperCase()}.png`,
+                parentNodeId: node.id,
+                createNode,
+                createNodeId,
+                getCache,
+            })
+
+            if (fileNode) {
+                createNodeField({
+                    node,
+                    name,
+                    value: fileNode.id,
+                })
+            }
         })
     }
 }
@@ -41,6 +84,8 @@ module.exports.createPages = async ({ graphql, actions }) => {
                 edges {
                     node {
                         metadata {
+                            category
+                            size
                             slug
                         }
                     }
@@ -62,7 +107,7 @@ module.exports.createPages = async ({ graphql, actions }) => {
     res.data.allStripeProduct.edges.forEach(edge => {
         createPage({
             component: priceTemplate,
-            path: `/shop/${edge.node.metadata.slug}`,
+            path: `/shop/${edge.node.metadata.category}/${edge.node.metadata.slug}`,
             context: {
                 slug: edge.node.metadata.slug,
             },
