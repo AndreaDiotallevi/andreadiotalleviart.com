@@ -13,6 +13,10 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
             console.log(JSON.stringify(event))
 
+            if (!event.data.order.recipient.email) {
+                throw new Error("No customer email")
+            }
+
             const {
                 session: { line_items },
             } = await retrieveCheckoutSession({
@@ -28,14 +32,11 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             const emailSource = await getParameterValue<string>({
                 name: "EMAIL_SOURCE",
             })
-            const emailDestination = await getParameterValue<string>({
-                name: "EMAIL_DESTINATION",
-            })
 
             await sendEmail({
                 Source: emailSource,
                 Destination: {
-                    ToAddresses: [emailDestination],
+                    ToAddresses: [event.data.order.recipient.email],
                 },
                 Template: "SendOrderShippedEmailTemplate",
                 TemplateData: JSON.stringify({

@@ -19,11 +19,12 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 throw new Error("No session")
             }
 
+            if (!session.customer_details?.email) {
+                throw new Error("No customer email")
+            }
+
             const emailSource = await getParameterValue<string>({
                 name: "EMAIL_SOURCE",
-            })
-            const emailDestination = await getParameterValue<string>({
-                name: "EMAIL_DESTINATION",
             })
 
             if (!session) {
@@ -33,7 +34,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             await sendEmail({
                 Source: emailSource,
                 Destination: {
-                    ToAddresses: [emailDestination],
+                    ToAddresses: [session.customer_details.email],
                 },
                 Template: "CheckoutSessionCompletedEmailTemplate",
                 TemplateData: JSON.stringify({
