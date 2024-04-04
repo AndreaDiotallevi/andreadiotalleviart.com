@@ -154,7 +154,7 @@ export const createOrder = async ({
         const requestBody = {
             idempotencyKey: id,
             merchantReference: id,
-            shippingMethod: "Standard",
+            shippingMethod: "Express",
             recipient: {
                 address: {
                     line1: shipping_details.address.line1,

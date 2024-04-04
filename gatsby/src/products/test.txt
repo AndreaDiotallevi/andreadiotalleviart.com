@@ -1,0 +1,35 @@
+Flames - Canvas - A3    | flames-canvas-a3
+Flames - Print - A2     | flames-print-a2
+Flames - Print - A3     | flames-print-a3
+Flames - T Shirt - L
+Flames - T Shirt - M
+
+Marble Lake - Print - A3
+Marble Lake - Print - A2
+
+http://localhost:8000/shop/prints/articles?sort=ASC&page=2
+
+http://localhost:8000/shop/prints?name=flames&size=a3
+
+http://localhost:8000/shop/prints/flames-a2
+http://localhost:8000/shop/prints/flames-a3
+http://localhost:8000/shop/prints?size=a3
+
+http://localhost:8000/shop/canvases/flames-a3
+
+Hahnemühle photo rag
+
+hahnemuhle-photo-rag
+
+/shop/prints/flames-hahnemuhle-photo-rag-a2
+
+name: Flames
+slug: flames-a2
+size: A2 or A3
+
+/shop/prints/flames
+/shop/canvases/flames
+/shop/t-shirts/flames
+
+With query params like size and paper.
+

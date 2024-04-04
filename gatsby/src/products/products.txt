@@ -1,0 +1,12 @@
+{
+    "name": "Flames",
+    "active": true,
+    "description": "TBC",
+    "metadata": {
+        "slug": "flames"
+    },
+    "default_price_data": {
+        "currency": "GBP",
+        "unit_amount": 100
+    }
+}
