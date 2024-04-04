@@ -57,7 +57,7 @@ const Success = ({
                                             edge.node.product.metadata.slug ===
                                             session.line_items?.data[0].price
                                                 ?.product.metadata.slug
-                                    )[0].node.images[0].childImageSharp
+                                    )[0].node.mockup.childImageSharp
                                         .gatsbyImageData
                                 }
                                 alt="Profile image"
