@@ -165,6 +165,7 @@ export const createOrder = async ({
                     stateOrCounty: shipping_details.address.state || null, // Empty string breaks it
                 },
                 name: customer_details.name,
+                email: customer_details.email,
             },
             items: line_items.data.map(item => ({
                 merchantReference: item.id,
