@@ -1,8 +1,6 @@
 import Stripe from "stripe"
 import { getParameterValue } from "./ssm"
 
-const fileName = "flames-A3.png"
-
 type OrderStage = "Draft" | "InProgress" | "Complete"
 type OrderItemStatus = "NotYetDownloaded" | "Ok"
 type ProgressStatus = "NotStarted" | "InProgress" | "Complete"
@@ -149,6 +147,18 @@ export const createOrder = async ({
             name: "PRODIGI_API_KEY",
         })
 
+        if (!prodigiApiKey) {
+            throw new Error("No Prodigi API key")
+        }
+
+        const imagesDomain = await getParameterValue<string>({
+            name: "IMAGES_DOMAIN",
+        })
+
+        if (!imagesDomain) {
+            throw new Error("No images domain")
+        }
+
         const url = `${process.env.PRODIGI_API_URL}/v4.0/Orders/`
 
         const requestBody = {
@@ -175,7 +185,7 @@ export const createOrder = async ({
                 assets: [
                     {
                         printArea: "Default",
-                        url: `https://${process.env.BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`,
+                        url: `${imagesDomain}/${item.price?.product.metadata.slug}_PRINT.png`,
                     },
                 ],
             })),
@@ -196,6 +206,7 @@ export const createOrder = async ({
         const response = await fetch(url, options)
 
         if (!response.ok) {
+            console.error(response.body)
             throw new Error("Failed to create order")
         }
     } catch (error) {
