@@ -16,7 +16,7 @@ const routes: RouteType[] = [
     //     baseUrl: "/",
     //     pageTitle: "Generative Artist and Creative Coder",
     // },
-    { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
+    // { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
     { menuName: "Contact", baseUrl: "/contact", pageTitle: "About Me" },
 ]
 
