@@ -1,0 +1,54 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 48px 0;
+}
+
+.h1 {
+    position: fixed;
+    top: 128px;
+    writing-mode: vertical-rl;
+    font-size: 32px;
+    font-weight: 700;
+
+    @media (max-width: 691.99px) {
+        font-size: 24px;
+        top: 128px;
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 100px;
+    margin: 0 16px;
+    max-width: 1400px;
+
+    @media (max-width: 691.99px) {
+        grid-gap: 48px;
+    }
+}
+
+.gridItem {
+    list-style: none;
+
+    h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 8px;
+        margin-bottom: 4px;
+
+        @media (max-width: 691.99px) {
+            font-size: 18px;
+        }
+    }
+
+    p {
+        font-size: 16px;
+
+        @media (max-width: 691.99px) {
+            font-size: 14px;
+        }
+    }
+}

@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+
+[default.global.parameters]
+stack_name = "andreadiotalleviart"
+region = "eu-west-2"
+
+[default.sync.parameters]
+profile = "default"
+
+[default.logs.parameters]
+profile = "default"

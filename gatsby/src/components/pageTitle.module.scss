@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80px;
+
+    h1 {
+        text-align: center;
+        width: 100%;
+        margin: 0 16px;
+    }
+
+    @media (max-width: 691.99px) {
+        justify-content: flex-start;
+        min-height: 24px;
+    }
+
+    &.isHome {
+        justify-content: center;
+        background-color: rgb(56, 68, 76);
+        min-height: 120px;
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 400;
+        }
+    }
+}

@@ -1,0 +1,573 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for andreadiotalleviart.com
+
+Globals:
+    Function:
+        CodeUri: ./
+        Timeout: 100
+        Runtime: nodejs20.x
+        MemorySize: 1024
+        Tracing: Active
+        Architectures:
+            - x86_64
+
+Parameters:
+    Environment:
+        Type: String
+        Default: sandbox
+        AllowedValues: [sandbox, staging, production]
+
+Resources:
+    # BUCKETS
+    Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Sub ${AWS::StackName}-${Environment}
+            PublicAccessBlockConfiguration:
+                BlockPublicPolicy: false
+
+    BucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref Bucket
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal: "*"
+                      Action:
+                          - "s3:GetObject"
+                      Resource:
+                          - !Sub "arn:aws:s3:::${Bucket}/*"
+
+    ## EVENTS
+    EventBus:
+        Type: AWS::Events::EventBus
+        Properties:
+            Name: !Sub ${AWS::StackName}-EventBus
+
+    StripeCheckoutSessionCompletedRule:
+        Type: AWS::Events::Rule
+        Properties:
+            EventBusName: "{{resolve:ssm:STRIPE_EVENT_BUS_NAME}}"
+            EventPattern:
+                account:
+                    - !Sub ${AWS::AccountId}
+                source:
+                    - "{{resolve:ssm:STRIPE_EVENT_BUS_NAME}}"
+                detail-type:
+                    - checkout.session.completed
+            Targets:
+                - Arn: !GetAtt SendOrderConfirmationEmailQueue.Arn
+                  Id: SendOrderConfirmationEmailQueueTarget
+                - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
+                  Id: ProdigiCreateOrderQueueTarget
+
+    ProdigiOrderShippedRule:
+        Type: AWS::Events::Rule
+        Properties:
+            EventBusName: !Ref EventBus
+            EventPattern:
+                account:
+                    - !Sub ${AWS::AccountId}
+                source:
+                    - prodigi
+                detail-type:
+                    - com.prodigi.order.shipments.shipment#Complete
+            Targets:
+                - Arn: !GetAtt SendOrderShippedEmailQueue.Arn
+                  Id: SendOrderShippedEmailQueueTarget
+
+    # QUEUES
+    SendOrderConfirmationEmailQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt SendOrderConfirmationEmailQueue.Arn
+            Queues:
+                - Ref: SendOrderConfirmationEmailQueue
+
+    SendOrderConfirmationEmailQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailQueue
+            VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt SendOrderConfirmationEmailDLQ.Arn
+                maxReceiveCount: 3
+
+    SendOrderConfirmationEmailDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailDLQ
+            MessageRetentionPeriod: 1209600
+
+    ProdigiCreateOrderQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt ProdigiCreateOrderQueue.Arn
+            Queues:
+                - Ref: ProdigiCreateOrderQueue
+
+    ProdigiCreateOrderQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderQueue
+            VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt ProdigiCreateOrderDLQ.Arn
+                maxReceiveCount: 3
+
+    ProdigiCreateOrderDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderDLQ
+            MessageRetentionPeriod: 1209600
+
+    SendOrderShippedEmailQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt SendOrderShippedEmailQueue.Arn
+            Queues:
+                - Ref: SendOrderShippedEmailQueue
+
+    SendOrderShippedEmailQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailQueue
+            VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt SendOrderShippedEmailDLQ.Arn
+                maxReceiveCount: 3
+
+    SendOrderShippedEmailDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
+            MessageRetentionPeriod: 1209600
+
+    ProdigiHandleWebhooksDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-ProdigiHandleWebhooksDLQ
+            MessageRetentionPeriod: 1209600
+
+    # TOPICS
+    SendOrderConfirmationEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: SendOrderConfirmationEmailTopic
+            TopicName: SendOrderConfirmationEmailTopic
+
+    SendOrderConfirmationEmailTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref SendOrderConfirmationEmailTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    ProdigiCreateOrderTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: ProdigiCreateOrderTopic
+            TopicName: ProdigiCreateOrderTopic
+
+    ProdigiCreateOrderTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref ProdigiCreateOrderTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    SendOrderShippedEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: SendOrderShippedEmailTopic
+            TopicName: SendOrderShippedEmailTopic
+
+    SendOrderShippedEmailTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref SendOrderShippedEmailTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    EmailBounceTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: EmailBounceTopic
+            TopicName: EmailBounceTopic
+
+    EmailBounceTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref EmailBounceTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    ProdigiHandleWebhooksTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: ProdigiHandleWebhooksTopic
+            TopicName: ProdigiHandleWebhooksTopic
+
+    ProdigiHandleWebhooksTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref ProdigiHandleWebhooksTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    # ALARMS
+    SendOrderConfirmationEmailAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: SendOrderConfirmationEmailAlarm
+            AlarmDescription: "There was an error while sending the confirmation email after checkout session completed."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt SendOrderConfirmationEmailDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref SendOrderConfirmationEmailTopic
+
+    ProdigiCreateOrderAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: ProdigiCreateOrderAlarm
+            AlarmDescription: "There was an error while creating an order with Prodigi."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt ProdigiCreateOrderDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref ProdigiCreateOrderTopic
+
+    SendOrderShippedEmailAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: SendOrderShippedEmailAlarm
+            AlarmDescription: "There was an error while sending the email after order shipped."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt SendOrderShippedEmailDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref SendOrderShippedEmailTopic
+
+    # EMAIL TEMPLATES
+    OrderConfirmationEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: OrderConfirmationEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <h3>Dear {{name}},</h3>
+                            <p>Thank you for your order.</p>
+                            <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
+                            <h3>Items</h3>
+                            <div>
+                                {{productName}} - {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                            </div>
+                            <h3>Delivery address</h3>
+                            <div>
+                                {{name}}<br>
+                                {{addressLine1}}<br>
+                                {{#if addressLine2}}
+                                    {{addressLine2}}<br>
+                                {{/if}}
+                                {{postcode}}, {{town}}, {{country}}
+                            </div>
+                            <h3>Payment summary</h3>
+                            <div>
+                                Subtotal: {{amountSubtotal}}<br>
+                                Shipping fee: Free<br>
+                                Discounts: {{amountDiscount}}<br>
+                                Total: {{amountTotal}}
+                            </div>
+                            <h3>With love, Andrea</h3>
+                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
+                        </body>
+                    </html>
+                SubjectPart: "Thank you for your order"
+
+    OrderShippedEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: OrderShippedEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <h3>Dear {{name}},</h3>
+                            <p>Your order has been shipped and is now on its way to you!</p>
+                            <h3>Shipment details</h3>
+                            <div>
+                                Carrier name: {{carrierName}}<br>
+                                Carrier service: {{carrierService}}<br>
+                                Tracking number: {{trackingNumber}}<br>
+                                Tracking link: <a href="{{trackingUrl}}">here</a>
+                            </div>
+                            <h3>Items</h3>
+                            <div>
+                                {{productName}} - {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                            </div>
+                            <h3>Delivery address</h3>
+                            <div>
+                                {{name}}<br>
+                                {{addressLine1}}<br>
+                                {{#if addressLine2}}
+                                    {{addressLine2}}<br>
+                                {{/if}}
+                                {{postcode}}, {{town}}, {{country}}
+                            </div>
+                            <h3>With love, Andrea</h3>
+                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
+                        </body>
+                    </html>
+                SubjectPart: "Your order has been shipped"
+
+    # FUNCTIONS
+    ApiGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: Prod
+            Auth:
+                ApiKeyRequired: false
+            Cors:
+                AllowMethods: "'*'"
+                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
+                AllowOrigin: "'*'"
+
+    StripeCreateCheckoutSessionFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
+            Handler: src/handlers/stripeCreateCheckoutSession.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /stripe-create-checkout-session
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/stripeCreateCheckoutSession.ts
+
+    StripeRetrieveCheckoutSessionFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeRetrieveCheckoutSession
+            Handler: src/handlers/stripeRetrieveCheckoutSession.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /stripe-retrieve-checkout-session/{sessionId}
+                        Method: GET
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/stripeRetrieveCheckoutSession.ts
+
+    SendOrderConfirmationEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendOrderConfirmationEmail
+            Handler: src/handlers/sendOrderConfirmationEmail.handler
+            Events:
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt SendOrderConfirmationEmailQueue.Arn
+                        BatchSize: 5
+            Policies:
+                - Statement:
+                      - Sid: SendOrderConfirmationEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendEmail
+                            - ses:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendOrderConfirmationEmail.ts
+
+    SendOrderShippedEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
+            Handler: src/handlers/sendOrderShippedEmail.handler
+            Events:
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt SendOrderShippedEmailQueue.Arn
+                        BatchSize: 5
+            Policies:
+                - Statement:
+                      - Sid: sendOrderShippedEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendEmail
+                            - ses:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendOrderShippedEmail.ts
+
+    ProdigiHandleWebhooksFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-ProdigiHandleWebhooks
+            Handler: src/handlers/prodigiHandleWebhooks.handler
+            Environment:
+                Variables:
+                    EVENT_BUS_NAME: !Ref EventBus
+            Events:
+                ProdigiWebhook:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /prodigi-handle-webhooks
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: putEvents
+                        Effect: Allow
+                        Action:
+                            - events:PutEvents
+                        Resource: !GetAtt EventBus.Arn
+            DeadLetterQueue:
+                Type: SQS
+                TargetArn: !GetAtt ProdigiHandleWebhooksDLQ.Arn
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/prodigiHandleWebhooks.ts
+
+    ProdigiCreateOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-ProdigiCreateOrder
+            Handler: src/handlers/prodigiCreateOrder.handler
+            Events:
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt ProdigiCreateOrderQueue.Arn
+                        BatchSize: 5
+            Environment:
+                Variables:
+                    BUCKET: !Ref Bucket
+                    PRODIGI_API_URL: "{{resolve:ssm:PRODIGI_API_URL}}"
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/IMAGES_DOMAIN
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PRODIGI_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/prodigiCreateOrder.ts
