@@ -167,24 +167,18 @@ Resources:
             QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
             MessageRetentionPeriod: 1209600
 
+    ProdigiHandleWebhooksDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-ProdigiHandleWebhooksDLQ
+            MessageRetentionPeriod: 1209600
+
     # TOPICS
     StripeCheckoutSessionCompletedSendEmailTopic:
         Type: AWS::SNS::Topic
         Properties:
             DisplayName: StripeCheckoutSessionCompletedSendEmailTopic
             TopicName: StripeCheckoutSessionCompletedSendEmailTopic
-
-    ProdigiCreateOrderTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: ProdigiCreateOrderTopic
-            TopicName: ProdigiCreateOrderTopic
-
-    SendOrderShippedEmailTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: SendOrderShippedEmailTopic
-            TopicName: SendOrderShippedEmailTopic
 
     StripeCheckoutSessionCompletedSendEmailTopicSubscription:
         Type: AWS::SNS::Subscription
@@ -193,12 +187,24 @@ Resources:
             TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
+    ProdigiCreateOrderTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: ProdigiCreateOrderTopic
+            TopicName: ProdigiCreateOrderTopic
+
     ProdigiCreateOrderTopicSubscription:
         Type: AWS::SNS::Subscription
         Properties:
             Protocol: email
             TopicArn: !Ref ProdigiCreateOrderTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+
+    SendOrderShippedEmailTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: SendOrderShippedEmailTopic
+            TopicName: SendOrderShippedEmailTopic
 
     SendOrderShippedEmailTopicSubscription:
         Type: AWS::SNS::Subscription
@@ -220,22 +226,18 @@ Resources:
             TopicArn: !Ref EmailBounceTopic
             Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
-    SESConfigurationSet:
-        Type: AWS::SES::ConfigurationSet
+    ProdigiHandleWebhooksTopic:
+        Type: AWS::SNS::Topic
         Properties:
-            Name: SESConfigurationSet
+            DisplayName: ProdigiHandleWebhooksTopic
+            TopicName: ProdigiHandleWebhooksTopic
 
-    SESConfigurationSetEventDestination:
-        Type: AWS::SES::ConfigurationSetEventDestination
+    ProdigiHandleWebhooksTopicSubscription:
+        Type: AWS::SNS::Subscription
         Properties:
-            ConfigurationSetName: !Ref SESConfigurationSet
-            EventDestination:
-                Enabled: true
-                MatchingEventTypes:
-                    - bounce
-                Name: EmailBounceDestination
-                SnsDestination:
-                    TopicARN: !Ref EmailBounceTopic
+            Protocol: email
+            TopicArn: !Ref ProdigiHandleWebhooksTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
 
     # ALARMS
     StripeCheckoutSessionCompletedSendEmailAlarm:
@@ -526,6 +528,9 @@ Resources:
                         Action:
                             - events:PutEvents
                         Resource: !GetAtt EventBus.Arn
+            DeadLetterQueue:
+                Type: SQS
+                TargetArn: !GetAtt ProdigiHandleWebhooksDLQ.Arn
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -556,6 +561,7 @@ Resources:
                         Action:
                             - ssm:GetParameter
                         Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/IMAGES_DOMAIN
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PRODIGI_API_KEY
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
