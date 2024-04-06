@@ -345,6 +345,7 @@ Resources:
                             <p>Your order has been shipped and is now on its way to you!</p>
                             <h3>Shipment details</h3>
                             <div>
+                                Carrier name: {{carrierName}}<br>
                                 Carrier service: {{carrierService}}<br>
                                 Tracking number: {{trackingNumber}}<br>
                                 Tracking link: <a href="{{trackingUrl}}">here</a>
