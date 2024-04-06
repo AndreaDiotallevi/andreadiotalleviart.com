@@ -180,12 +180,12 @@ Resources:
             DisplayName: StripeCheckoutSessionCompletedSendEmailTopic
             TopicName: StripeCheckoutSessionCompletedSendEmailTopic
 
-    StripeCheckoutSessionCompletedSendEmailTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+    # StripeCheckoutSessionCompletedSendEmailTopicSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: email
+    #         TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
+    #         Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     ProdigiCreateOrderTopic:
         Type: AWS::SNS::Topic
@@ -193,12 +193,12 @@ Resources:
             DisplayName: ProdigiCreateOrderTopic
             TopicName: ProdigiCreateOrderTopic
 
-    ProdigiCreateOrderTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref ProdigiCreateOrderTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+    # ProdigiCreateOrderTopicSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: email
+    #         TopicArn: !Ref ProdigiCreateOrderTopic
+    #         Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     SendOrderShippedEmailTopic:
         Type: AWS::SNS::Topic
@@ -206,12 +206,12 @@ Resources:
             DisplayName: SendOrderShippedEmailTopic
             TopicName: SendOrderShippedEmailTopic
 
-    SendOrderShippedEmailTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref SendOrderShippedEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+    # SendOrderShippedEmailTopicSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: email
+    #         TopicArn: !Ref SendOrderShippedEmailTopic
+    #         Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     EmailBounceTopic:
         Type: AWS::SNS::Topic
@@ -219,12 +219,12 @@ Resources:
             DisplayName: EmailBounceTopic
             TopicName: EmailBounceTopic
 
-    EmailBounceTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref EmailBounceTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+    # EmailBounceTopicSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: email
+    #         TopicArn: !Ref EmailBounceTopic
+    #         Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     ProdigiHandleWebhooksTopic:
         Type: AWS::SNS::Topic
@@ -232,12 +232,12 @@ Resources:
             DisplayName: ProdigiHandleWebhooksTopic
             TopicName: ProdigiHandleWebhooksTopic
 
-    ProdigiHandleWebhooksTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref ProdigiHandleWebhooksTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+    # ProdigiHandleWebhooksTopicSubscription:
+    #     Type: AWS::SNS::Subscription
+    #     Properties:
+    #         Protocol: email
+    #         TopicArn: !Ref ProdigiHandleWebhooksTopic
+    #         Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     # ALARMS
     StripeCheckoutSessionCompletedSendEmailAlarm:
