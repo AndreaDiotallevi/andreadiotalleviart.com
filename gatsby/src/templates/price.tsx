@@ -120,10 +120,10 @@ const PricePage = ({
                             You should receive your order within 24-48 hours.
                             All costs included.
                         </p>
-                        <p style={{ color: "red", fontWeight: 700 }}>
+                        {/* <p style={{ color: "red", fontWeight: 700 }}>
                             BUY BUTTON COMING SOON!
-                        </p>
-                        {/* <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
+                        </p> */}
+                        <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
                         <Link
                             to={
@@ -134,7 +134,7 @@ const PricePage = ({
                             className={styles.button}
                         >
                             Buy Now
-                        </Link> */}
+                        </Link>
                     </div>
                 </div>
             </div>
