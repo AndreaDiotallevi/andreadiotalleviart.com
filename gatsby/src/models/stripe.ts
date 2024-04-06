@@ -6,7 +6,7 @@ export type StripePrice = {
     active: boolean
     currency: string
     unit_amount: number
-    print: {
+    artwork: {
         childImageSharp: {
             gatsbyImageData: IGatsbyImageData
         }
@@ -44,7 +44,7 @@ export const query = graphql`
         active
         currency
         unit_amount
-        print {
+        artwork {
             childImageSharp {
                 gatsbyImageData(
                     width: 660

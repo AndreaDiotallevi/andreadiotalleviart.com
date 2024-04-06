@@ -10,7 +10,7 @@ module.exports.createSchemaCustomization = ({ actions }) => {
 
     createTypes(`
         type StripePrice implements Node {
-            print: File @link(from: "fields.print")
+            artwork: File @link(from: "fields.artwork")
             mockup: File @link(from: "fields.mockup")
         }
   `)
@@ -35,9 +35,9 @@ module.exports.onCreateNode = async ({
     }
 
     if (node.internal.type === "StripePrice" && node.product?.metadata?.slug) {
-        ;["print", "mockup"].forEach(async name => {
+        ;["artwork", "mockup"].forEach(async name => {
             const fileNode = await createRemoteFileNode({
-                url: `${process.env.S3_BUCKET_DOMAIN}/${
+                url: `${process.env.IMAGES_DOMAIN}/${
                     node.product.metadata.slug
                 }_${name.toUpperCase()}.png`,
                 parentNodeId: node.id,
