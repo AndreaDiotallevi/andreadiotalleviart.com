@@ -30,7 +30,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             } = event
 
             const emailSource = await getParameterValue<string>({
-                name: "EMAIL_SOURCE",
+                name: "EMAIL_ORDERS",
             })
 
             await sendEmail({

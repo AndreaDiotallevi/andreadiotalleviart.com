@@ -24,7 +24,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             }
 
             const emailSource = await getParameterValue<string>({
-                name: "EMAIL_SOURCE",
+                name: "EMAIL_ORDERS",
             })
 
             if (!session) {

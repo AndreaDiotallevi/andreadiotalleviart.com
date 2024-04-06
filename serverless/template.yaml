@@ -185,7 +185,7 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     ProdigiCreateOrderTopic:
         Type: AWS::SNS::Topic
@@ -198,7 +198,7 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref ProdigiCreateOrderTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     SendOrderShippedEmailTopic:
         Type: AWS::SNS::Topic
@@ -211,7 +211,7 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref SendOrderShippedEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     EmailBounceTopic:
         Type: AWS::SNS::Topic
@@ -224,7 +224,7 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref EmailBounceTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     ProdigiHandleWebhooksTopic:
         Type: AWS::SNS::Topic
@@ -237,7 +237,7 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref ProdigiHandleWebhooksTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SOURCE}}"
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     # ALARMS
     StripeCheckoutSessionCompletedSendEmailAlarm:
@@ -461,7 +461,7 @@ Resources:
                         Action:
                             - ssm:GetParameter
                         Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SOURCE
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
@@ -496,7 +496,7 @@ Resources:
                         Action:
                             - ssm:GetParameter
                         Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SOURCE
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
