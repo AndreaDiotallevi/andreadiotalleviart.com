@@ -36,7 +36,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 Destination: {
                     ToAddresses: [session.customer_details.email],
                 },
-                Template: "CheckoutSessionCompletedEmailTemplate",
+                Template: "OrderConfirmationEmailTemplate",
                 TemplateData: JSON.stringify({
                     name: session.customer_details?.name || "",
                     addressLine1:

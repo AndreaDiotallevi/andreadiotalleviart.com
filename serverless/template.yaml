@@ -59,8 +59,8 @@ Resources:
                 detail-type:
                     - checkout.session.completed
             Targets:
-                - Arn: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
-                  Id: StripeCheckoutSessionCompletedSendEmailQueueTarget
+                - Arn: !GetAtt SendOrderConfirmationEmailQueue.Arn
+                  Id: SendOrderConfirmationEmailQueueTarget
                 - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
                   Id: ProdigiCreateOrderQueueTarget
 
@@ -80,7 +80,7 @@ Resources:
                   Id: SendOrderShippedEmailQueueTarget
 
     # QUEUES
-    StripeCheckoutSessionCompletedSendEmailQueuePolicy:
+    SendOrderConfirmationEmailQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
             PolicyDocument:
@@ -89,24 +89,24 @@ Resources:
                       Principal:
                           Service: events.amazonaws.com
                       Action: sqs:SendMessage
-                      Resource: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
+                      Resource: !GetAtt SendOrderConfirmationEmailQueue.Arn
             Queues:
-                - Ref: StripeCheckoutSessionCompletedSendEmailQueue
+                - Ref: SendOrderConfirmationEmailQueue
 
-    StripeCheckoutSessionCompletedSendEmailQueue:
+    SendOrderConfirmationEmailQueue:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-StripeCheckoutSessionCompletedSendEmailQueue
+            QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailQueue
             VisibilityTimeout: 100
             ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
-                deadLetterTargetArn: !GetAtt StripeCheckoutSessionCompletedSendEmailDLQ.Arn
+                deadLetterTargetArn: !GetAtt SendOrderConfirmationEmailDLQ.Arn
                 maxReceiveCount: 3
 
-    StripeCheckoutSessionCompletedSendEmailDLQ:
+    SendOrderConfirmationEmailDLQ:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-StripeCheckoutSessionCompletedSendEmailDLQ
+            QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailDLQ
             MessageRetentionPeriod: 1209600
 
     ProdigiCreateOrderQueuePolicy:
@@ -174,17 +174,17 @@ Resources:
             MessageRetentionPeriod: 1209600
 
     # TOPICS
-    StripeCheckoutSessionCompletedSendEmailTopic:
+    SendOrderConfirmationEmailTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: StripeCheckoutSessionCompletedSendEmailTopic
-            TopicName: StripeCheckoutSessionCompletedSendEmailTopic
+            DisplayName: SendOrderConfirmationEmailTopic
+            TopicName: SendOrderConfirmationEmailTopic
 
-    StripeCheckoutSessionCompletedSendEmailTopicSubscription:
+    SendOrderConfirmationEmailTopicSubscription:
         Type: AWS::SNS::Subscription
         Properties:
             Protocol: email
-            TopicArn: !Ref StripeCheckoutSessionCompletedSendEmailTopic
+            TopicArn: !Ref SendOrderConfirmationEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     ProdigiCreateOrderTopic:
@@ -240,23 +240,23 @@ Resources:
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     # ALARMS
-    StripeCheckoutSessionCompletedSendEmailAlarm:
+    SendOrderConfirmationEmailAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
-            AlarmName: StripeCheckoutSessionCompletedSendEmailAlarm
+            AlarmName: SendOrderConfirmationEmailAlarm
             AlarmDescription: "There was an error while sending the confirmation email after checkout session completed."
             Namespace: AWS/SQS
             MetricName: ApproximateNumberOfMessagesVisible
             Dimensions:
                 - Name: QueueName
-                  Value: !GetAtt StripeCheckoutSessionCompletedSendEmailDLQ.QueueName
+                  Value: !GetAtt SendOrderConfirmationEmailDLQ.QueueName
             Statistic: Sum
             Period: 300
             EvaluationPeriods: 1
             Threshold: 1
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
-                - !Ref StripeCheckoutSessionCompletedSendEmailTopic
+                - !Ref SendOrderConfirmationEmailTopic
 
     ProdigiCreateOrderAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -295,11 +295,11 @@ Resources:
                 - !Ref SendOrderShippedEmailTopic
 
     # EMAIL TEMPLATES
-    CheckoutSessionCompletedEmailTemplate:
+    OrderConfirmationEmailTemplate:
         Type: AWS::SES::Template
         Properties:
             Template:
-                TemplateName: CheckoutSessionCompletedEmailTemplate
+                TemplateName: OrderConfirmationEmailTemplate
                 HtmlPart: !Sub |
                     <html>
                         <body>
@@ -333,11 +333,11 @@ Resources:
                     </html>
                 SubjectPart: "Thank you for your order"
 
-    SendOrderShippedEmailTemplate:
+    OrderShippedEmailTemplate:
         Type: AWS::SES::Template
         Properties:
             Template:
-                TemplateName: SendOrderShippedEmailTemplate
+                TemplateName: OrderShippedEmailTemplate
                 HtmlPart: !Sub |
                     <html>
                         <body>
@@ -436,20 +436,20 @@ Resources:
                 EntryPoints:
                     - src/handlers/stripeRetrieveCheckoutSession.ts
 
-    SendCheckoutSessionCompletedEmailFunction:
+    SendOrderConfirmationEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-SendCheckoutSessionCompletedEmail
-            Handler: src/handlers/sendCheckoutSessionCompletedEmail.handler
+            FunctionName: !Sub ${AWS::StackName}-SendOrderConfirmationEmail
+            Handler: src/handlers/sendOrderConfirmationEmail.handler
             Events:
                 MySQSEvent:
                     Type: SQS
                     Properties:
-                        Queue: !GetAtt StripeCheckoutSessionCompletedSendEmailQueue.Arn
+                        Queue: !GetAtt SendOrderConfirmationEmailQueue.Arn
                         BatchSize: 5
             Policies:
                 - Statement:
-                      - Sid: sendCheckoutSessionCompletedEmail
+                      - Sid: SendOrderConfirmationEmail
                         Effect: Allow
                         Action:
                             - ses:SendEmail
@@ -469,7 +469,7 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/handlers/sendCheckoutSessionCompletedEmail.ts
+                    - src/handlers/sendOrderConfirmationEmail.ts
 
     SendOrderShippedEmailFunction:
         Type: AWS::Serverless::Function
