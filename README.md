@@ -17,4 +17,4 @@ The application is deployed with Netlify at my custom domain [https://www.andrea
 
 ## Architecture
 
-![Architecture](./docs/context.svg)
+![Architecture](./docs/context-diagram.png)
