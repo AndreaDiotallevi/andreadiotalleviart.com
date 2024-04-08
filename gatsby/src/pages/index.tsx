@@ -10,8 +10,7 @@ const Home = () => {
     return (
         <Layout
             seo={{
-                title:
-                    "Andrea Diotallevi | Generative Artist and Creative Coder",
+                title: "Andrea Diotallevi | Generative Artist and Creative Coder",
                 description:
                     "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist",
                 tags: [
@@ -29,6 +28,7 @@ const Home = () => {
                         display: "flex",
                         flexDirection: "column",
                         width: "100%",
+                        backgroundColor: "#38444c", // RGB (56, 68, 76)
                     }}
                 >
                     <PageTitle
