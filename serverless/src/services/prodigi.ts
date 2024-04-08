@@ -145,6 +145,7 @@ export const createOrder = async ({
 
         const prodigiApiKey = await getParameterValue<string>({
             name: "PRODIGI_API_KEY",
+            withDecryption: true,
         })
 
         if (!prodigiApiKey) {
