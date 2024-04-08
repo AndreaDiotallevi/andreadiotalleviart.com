@@ -56,7 +56,7 @@ module.exports = {
         {
             resolve: `gatsby-plugin-google-gtag`,
             options: {
-                trackingIds: [process.env.GA4_TRACKING_ID],
+                trackingIds: [process.env.GA4_TRACKING_ID || "placeholder"],
                 pluginConfig: {
                     head: true,
                 },
