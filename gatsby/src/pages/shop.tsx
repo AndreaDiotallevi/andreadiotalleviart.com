@@ -6,6 +6,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
 
+import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
 
 type DataProps = {
@@ -17,30 +18,12 @@ type DataProps = {
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     const getStripePrice = (slug: string) => {
         return allStripePrice.edges.filter(
-            edge => edge.node.product.metadata.slug === slug
+            edge => edge.node.product.metadata.slug === slug,
         )[0]
     }
 
     return (
-        <Layout
-            seo={{
-                title: "Shop | Andrea Diotallevi",
-                description:
-                    "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist",
-                tags: [
-                    "Andrea Diotallevi",
-                    "Andrea Diotallevi Art",
-                    "Generative Art",
-                    "Album Covers",
-                    "NFTs",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Prints</h1>
                 <div className={styles.grid}>
@@ -64,7 +47,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                     £
                                     {(
                                         getStripePrice(
-                                            node.product.metadata.slug
+                                            node.product.metadata.slug,
                                         ).node.unit_amount / 100
                                     ).toFixed(2)}
                                 </p>
@@ -92,3 +75,23 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => (
+    <Seo
+        title="Shop | Andrea Diotallevi Art"
+        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+        tags={[
+            "Andrea Diotallevi",
+            "Andrea Diotallevi Art",
+            "Generative Art",
+            "Album Covers",
+            "NFTs",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+        isMenuOpen={false}
+    />
+)

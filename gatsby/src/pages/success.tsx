@@ -6,6 +6,7 @@ import Stripe from "stripe"
 import Layout from "../templates/layout"
 
 import { retrieveCheckoutSession } from "../api"
+import Seo from "../components/seo"
 
 import * as styles from "./success.module.scss"
 import { StripePrice } from "../models/stripe"
@@ -36,15 +37,7 @@ const Success = ({
     }, [sessionId])
 
     return (
-        <Layout
-            loading={session === null}
-            seo={{
-                title: "Order Confirmation | Andrea Diotallevi",
-                description:
-                    "You will receive a confirmation email with the details of your order.",
-                tags: ["Thanks You For Your Order"],
-            }}
-        >
+        <Layout loading={session === null}>
             {session ? (
                 <div className={styles.container}>
                     <h1 className={styles.h1}>Order Confirmation</h1>
@@ -56,7 +49,7 @@ const Success = ({
                                         edge =>
                                             edge.node.product.metadata.slug ===
                                             session.line_items?.data[0].price
-                                                ?.product.metadata.slug
+                                                ?.product.metadata.slug,
                                     )[0].node.mockup.childImageSharp
                                         .gatsbyImageData
                                 }
@@ -98,7 +91,7 @@ const Success = ({
                             <p>
                                 Subtotal: £
                                 {((session.amount_subtotal || 0) / 100).toFixed(
-                                    2
+                                    2,
                                 )}
                                 <br></br>
                                 Shipping fee: Free<br></br>
@@ -139,3 +132,12 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => (
+    <Seo
+        title="Order Confirmation | Andrea Diotallevi Art"
+        description="You will receive a confirmation email with the details of your order."
+        tags={["Thanks You For Your Order"]}
+        isMenuOpen={false}
+    />
+)

@@ -3,6 +3,7 @@ import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
+import Seo from "../components/seo"
 
 import * as styles from "./contact.module.scss"
 
@@ -16,14 +17,7 @@ type DataProps = {
 
 const Contact = ({ data: { file } }: PageProps<DataProps>) => {
     return (
-        <Layout
-            seo={{
-                title: "Contact | Andrea Diotallevi",
-                description:
-                    "Get in touch if you are interested in working together",
-                tags: ["Contact", "About"],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Contact</h1>
                 <div className={styles.grid}>
@@ -72,3 +66,12 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => (
+    <Seo
+        title="Contact | Andrea Diotallevi Art"
+        description="Get in touch if you are interested in working together"
+        tags={["Contact", "About"]}
+        isMenuOpen={false}
+    />
+)

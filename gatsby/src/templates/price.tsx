@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
+import Seo from "../components/seo"
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
 
@@ -37,21 +38,7 @@ const PricePage = ({
     }, [])
 
     return (
-        <Layout
-            seo={{
-                title: `${stripePrice.product.name} | Andrea Diotallevi`,
-                description: stripePrice.product.description,
-                tags: [
-                    stripePrice.product.name,
-                    "Generative Art",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>{stripePrice.product.name}</h1>
                 <div className={styles.linksContainer}>
@@ -142,9 +129,29 @@ const PricePage = ({
 export default PricePage
 
 export const query = graphql`
-    query($slug: String!) {
+    query ($slug: String!) {
         stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
             ...StripePriceFragment
         }
     }
 `
+
+export const Head = ({
+    data: { stripePrice },
+    location,
+}: PageProps<DataProps>) => (
+    <Seo
+        title={`${stripePrice.product.name} | Andrea Diotallevi Art`}
+        description={stripePrice.product.description}
+        tags={[
+            stripePrice.product.name,
+            "Generative Art",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+        isMenuOpen={false}
+    />
+)

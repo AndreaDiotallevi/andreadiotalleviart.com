@@ -6,6 +6,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import { Artwork } from "../models/artworks"
 
+import Seo from "../components/seo"
 import * as styles from "./portfolio.module.scss"
 
 type DataProps = {
@@ -16,25 +17,7 @@ type DataProps = {
 
 const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
-        <Layout
-            seo={{
-                title: "Portfolio | Andrea Diotallevi",
-                description:
-                    "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist",
-                tags: [
-                    "Andrea Diotallevi",
-                    "Andrea Diotallevi Art",
-                    "Generative Art",
-                    "Album Covers",
-                    "NFTs",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Generative Art</h1>
                 <div className={styles.grid}>
@@ -71,3 +54,23 @@ export const query = graphql`
         }
     }
 `
+
+export const Head = () => (
+    <Seo
+        title="Portfolio | Andrea Diotallevi Art"
+        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+        tags={[
+            "Andrea Diotallevi",
+            "Andrea Diotallevi Art",
+            "Generative Art",
+            "Album Covers",
+            "NFTs",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+        isMenuOpen={false}
+    />
+)
