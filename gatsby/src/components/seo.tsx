@@ -1,5 +1,4 @@
 import React from "react"
-import { Helmet } from "react-helmet"
 import { useLocation } from "@reach/router"
 import { useStaticQuery, graphql } from "gatsby"
 
@@ -33,13 +32,7 @@ const SEO = (props: DataProps) => {
     }
 
     return (
-        <Helmet
-            bodyAttributes={isMenuOpen ? { class: "overflow-hidden" } : {}}
-            title={seo.title}
-            htmlAttributes={{
-                lang: "en",
-            }}
-        >
+        <>
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />
@@ -65,7 +58,7 @@ const SEO = (props: DataProps) => {
                 name="google-site-verification"
                 content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
             />
-        </Helmet>
+        </>
     )
 }
 
