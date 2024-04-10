@@ -8,11 +8,10 @@ type DataProps = {
     image?: string
     article?: boolean
     tags: string[]
-    isMenuOpen: boolean
 }
 
 const SEO = (props: DataProps) => {
-    const { title, description, image, article, tags, isMenuOpen } = props
+    const { title, description, image, article, tags } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -33,6 +32,7 @@ const SEO = (props: DataProps) => {
 
     return (
         <>
+            <html lang="en" />
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />

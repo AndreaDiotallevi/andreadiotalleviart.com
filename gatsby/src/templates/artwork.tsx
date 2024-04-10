@@ -113,6 +113,5 @@ export const Head = ({ data: { artworksJson } }: PageProps<DataProps>) => (
             "Print",
             "Giclee",
         ]}
-        isMenuOpen={false}
     />
 )

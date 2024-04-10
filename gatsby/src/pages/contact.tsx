@@ -72,6 +72,5 @@ export const Head = () => (
         title="Contact | Andrea Diotallevi Art"
         description="Get in touch if you are interested in working together"
         tags={["Contact", "About"]}
-        isMenuOpen={false}
     />
 )

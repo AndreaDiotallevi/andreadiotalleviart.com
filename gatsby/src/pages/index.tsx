@@ -43,6 +43,5 @@ export const Head = () => (
             "Album Covers",
             "NFTs",
         ]}
-        isMenuOpen={false}
     />
 )

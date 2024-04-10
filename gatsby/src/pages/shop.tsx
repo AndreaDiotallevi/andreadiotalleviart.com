@@ -92,6 +92,5 @@ export const Head = () => (
             "Print",
             "Giclee",
         ]}
-        isMenuOpen={false}
     />
 )

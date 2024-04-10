@@ -138,6 +138,5 @@ export const Head = () => (
         title="Order Confirmation | Andrea Diotallevi Art"
         description="You will receive a confirmation email with the details of your order."
         tags={["Thanks You For Your Order"]}
-        isMenuOpen={false}
     />
 )

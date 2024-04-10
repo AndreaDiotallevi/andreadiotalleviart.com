@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Location } from "@reach/router"
 
 import Loader from "../components/loader"
@@ -15,6 +15,18 @@ type DataProps = {
 
 const Layout = ({ children, loading = false }: DataProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.classList.add("overflow-hidden")
+        } else {
+            document.body.classList.remove("overflow-hidden")
+        }
+
+        return () => {
+            document.body.classList.remove("overflow-hidden")
+        }
+    }, [isMenuOpen])
 
     return (
         <Location>
