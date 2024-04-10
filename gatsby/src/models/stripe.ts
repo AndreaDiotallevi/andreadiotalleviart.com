@@ -14,6 +14,9 @@ export type StripePrice = {
     mockup: {
         childImageSharp: {
             gatsbyImageData: IGatsbyImageData
+            fixed: {
+                src: string
+            }
         }
     }
     product: {
@@ -33,7 +36,7 @@ export type StripePrice = {
                         src: string
                     }
                 }
-            }
+            },
         ]
     }
 }
@@ -62,6 +65,9 @@ export const query = graphql`
                     layout: CONSTRAINED
                     placeholder: BLURRED
                 )
+                fixed {
+                    src
+                }
             }
         }
         product {

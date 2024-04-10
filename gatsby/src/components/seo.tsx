@@ -33,6 +33,7 @@ const SEO = (props: DataProps) => {
     return (
         <>
             <html lang="en" />
+            <title>{seo.title}</title>
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />

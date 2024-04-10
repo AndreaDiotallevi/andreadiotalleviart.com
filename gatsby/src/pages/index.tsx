@@ -1,4 +1,5 @@
 import React from "react"
+import { PageProps, graphql } from "gatsby"
 
 import Layout from "../templates/layout"
 import Moonlight from "../components/moonlight"
@@ -6,6 +7,16 @@ import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 
 import "../styles/index.scss"
+
+type DataProps = {
+    file: {
+        childImageSharp: {
+            fixed: {
+                src: string
+            }
+        }
+    }
+}
 
 const Home = () => {
     return (
@@ -32,10 +43,11 @@ const Home = () => {
 
 export default Home
 
-export const Head = () => (
+export const Head = ({ data: { file } }: PageProps<DataProps>) => (
     <Seo
         title="Andrea Diotallevi | Generative Artist and Creative Coder"
-        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist"
+        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
+        image={file.childImageSharp.fixed.src}
         tags={[
             "Andrea Diotallevi",
             "Andrea Diotallevi Art",
@@ -45,3 +57,15 @@ export const Head = () => (
         ]}
     />
 )
+
+export const query = graphql`
+    {
+        file(relativePath: { eq: "assets/moonlight.png" }) {
+            childImageSharp {
+                fixed {
+                    src
+                }
+            }
+        }
+    }
+`
