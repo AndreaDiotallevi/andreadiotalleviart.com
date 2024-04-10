@@ -138,9 +138,10 @@ export const query = graphql`
 
 export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${stripePrice.product.name} | Andrea Diotallevi`}
+        title={`${stripePrice.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
         description={stripePrice.product.description}
         image={stripePrice.mockup.childImageSharp.fixed.src}
+        type="product"
         tags={[
             stripePrice.product.name,
             "Generative Art",
