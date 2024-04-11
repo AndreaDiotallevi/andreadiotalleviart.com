@@ -13,7 +13,6 @@ module.exports = {
         twitterUsername: "@adiotalleviart",
     },
     plugins: [
-        "gatsby-plugin-react-helmet",
         "gatsby-plugin-sass",
         {
             resolve: "gatsby-source-filesystem",
@@ -56,7 +55,7 @@ module.exports = {
         {
             resolve: `gatsby-plugin-google-gtag`,
             options: {
-                trackingIds: [process.env.GA4_TRACKING_ID],
+                trackingIds: [process.env.GA4_TRACKING_ID || "placeholder"],
                 pluginConfig: {
                     head: true,
                 },

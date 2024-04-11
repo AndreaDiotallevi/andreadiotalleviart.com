@@ -8,7 +8,10 @@ const sesClient = new SESClient({ region: process.env.AWS_REGION })
 
 export const sendEmail = async (input: SendTemplatedEmailCommandInput) => {
     try {
-        const sendEmailCommand = new SendTemplatedEmailCommand(input)
+        const sendEmailCommand = new SendTemplatedEmailCommand({
+            ...input,
+            Source: `Andrea Diotallevi Art <${input.Source}>`,
+        })
 
         return await sesClient.send(sendEmailCommand)
     } catch (error) {

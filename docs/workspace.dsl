@@ -8,23 +8,18 @@ workspace {
         serverless = softwareSystem "Serverless backend" {
             apiGateway = container "API" "" "API Gateway"
             eventBus = container "Event bus" "" "Event Bridge" "Queue"
-            sendEmailQueue = container "Send email queue" "" "SQS" "Queue"
-            sendEmailLambda = container "Send email function" "" "Lambda"
-            prodigiCreateOrderQueue = container "Prodigi create order queue" "" "" "Queue"
-            prodigiCreateOrderLambda = container "Prodigi create order lambda" "" "Lambda"
+            sqsLambdaPatterns = container "SQS + Lambda patterns" "" "SQS + Lambda" "Queue"
 
-            eventBus -> sendEmailQueue "Sends filtered events to"
-            sendEmailQueue -> sendEmailLambda "Sends filtered events to"
-            eventBus -> prodigiCreateOrderQueue "Sends events to"
-            prodigiCreateOrderQueue -> prodigiCreateOrderLambda "Sends events to"
+            eventBus -> sqsLambdaPatterns "Sends filtered events to" "AWS Rules"
         }
 
         user -> gatsby "Buys prints via"
-        gatsby -> apiGateway "Creates a stripe session via"
-        gatsby -> stripe "Confirms session payment via"
+        apiGateway -> stripe "Calls" "HTTP"
+        gatsby -> apiGateway "Creates Stripe checkout session via" "HTTP"
+        gatsby -> stripe "Confirms Stripe checkout session payment via" "HTTPS"
         stripe -> eventBus "Sends events to" "Webhooks"
-        sendEmailLambda -> user "Sends emails to"
-        prodigiCreateOrderLambda -> prodigi "Fulfils orders via"
+        sqsLambdaPatterns -> user "Sends emails to" "AWS SES"
+        sqsLambdaPatterns -> prodigi "Fulfils orders via" "HTTP"
         prodigi -> eventBus "Sends events to" "Webhooks"
     }
 

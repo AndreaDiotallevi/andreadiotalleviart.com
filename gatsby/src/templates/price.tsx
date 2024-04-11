@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
+import Seo from "../components/seo"
 import Layout from "./layout"
 import { StripePrice } from "../models/stripe"
 
@@ -37,21 +38,7 @@ const PricePage = ({
     }, [])
 
     return (
-        <Layout
-            seo={{
-                title: `${stripePrice.product.name} | Andrea Diotallevi`,
-                description: stripePrice.product.description,
-                tags: [
-                    stripePrice.product.name,
-                    "Generative Art",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>{stripePrice.product.name}</h1>
                 <div className={styles.linksContainer}>
@@ -120,10 +107,7 @@ const PricePage = ({
                             You should receive your order within 24-48 hours.
                             All costs included.
                         </p>
-                        <p style={{ color: "red", fontWeight: 700 }}>
-                            BUY BUTTON COMING SOON!
-                        </p>
-                        {/* <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
+                        <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
                         <Link
                             to={
@@ -134,7 +118,7 @@ const PricePage = ({
                             className={styles.button}
                         >
                             Buy Now
-                        </Link> */}
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -145,9 +129,27 @@ const PricePage = ({
 export default PricePage
 
 export const query = graphql`
-    query($slug: String!) {
+    query ($slug: String!) {
         stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
             ...StripePriceFragment
         }
     }
 `
+
+export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
+    <Seo
+        title={`${stripePrice.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        description={stripePrice.product.description}
+        image={stripePrice.mockup.childImageSharp.original.src}
+        type="product"
+        tags={[
+            stripePrice.product.name,
+            "Generative Art",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+    />
+)

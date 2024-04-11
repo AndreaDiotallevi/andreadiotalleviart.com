@@ -4,11 +4,14 @@ const ssmClient = new SSMClient({ region: process.env.AWS_REGION })
 
 export const getParameterValue = async <T>({
     name,
+    withDecryption = false,
 }: {
     name: string
+    withDecryption?: boolean
 }): Promise<T> => {
     const getParameterCommand = new GetParameterCommand({
         Name: name,
+        WithDecryption: withDecryption,
     })
 
     const { Parameter } = await ssmClient.send(getParameterCommand)

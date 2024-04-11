@@ -10,6 +10,7 @@ export const createCheckoutSession = async (
 ) => {
     const stripeSecretKey = await getParameterValue<string>({
         name: "STRIPE_SECRET_KEY",
+        withDecryption: true,
     })
 
     const stripe = new Stripe(stripeSecretKey, {
@@ -44,6 +45,7 @@ export const retrieveCheckoutSession = async (params: {
 }) => {
     const stripeSecretKey = await getParameterValue<string>({
         name: "STRIPE_SECRET_KEY",
+        withDecryption: true,
     })
 
     const stripe = new Stripe(stripeSecretKey, {

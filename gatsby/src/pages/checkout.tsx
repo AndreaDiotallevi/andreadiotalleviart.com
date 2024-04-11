@@ -8,17 +8,16 @@ import { loadStripe } from "@stripe/stripe-js"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
-import { Print } from "../models/prints"
 
 import * as styles from "./checkout.module.scss"
+import Seo from "../components/seo"
 
 type DataProps = {
     stripePrice: StripePrice
-    printsJson: Print
 }
 
 const stripePromise = loadStripe(
-    process.env.GATSBY_STRIPE_PUBLISHABLE_KEY || ""
+    process.env.GATSBY_STRIPE_PUBLISHABLE_KEY || "",
 )
 
 const Checkout = ({ location }: PageProps<DataProps>) => {
@@ -26,20 +25,7 @@ const Checkout = ({ location }: PageProps<DataProps>) => {
     const clientSecret = params.get("clientSecret")
 
     return (
-        <Layout
-            seo={{
-                title: `Checkout | Andrea Diotallevi`,
-                description: "Checkout",
-                tags: [
-                    "Generative Art",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div id="checkout" className={styles.container}>
                 {clientSecret && (
                     <EmbeddedCheckoutProvider
@@ -55,3 +41,18 @@ const Checkout = ({ location }: PageProps<DataProps>) => {
 }
 
 export default Checkout
+
+export const Head = () => (
+    <Seo
+        title="Checkout | Andrea Diotallevi"
+        description="Complete your purchase quickly and securely with Stripe. Our streamlined checkout process is safe and easy, ensuring your details are protected."
+        tags={[
+            "Generative Art",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+    />
+)

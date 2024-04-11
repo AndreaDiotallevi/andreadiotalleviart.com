@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { graphql, PageProps, Link } from "gatsby"
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
+import { GatsbyImage } from "gatsby-plugin-image"
 
+import Seo from "../components/seo"
 import Layout from "./layout"
 import { Artwork } from "../models/artworks"
 
@@ -15,21 +16,7 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
     const [slideShowIndex, setSliderShowIndex] = useState(0)
 
     return (
-        <Layout
-            seo={{
-                title: `${artworksJson.name} | Andrea Diotallevi`,
-                description: artworksJson.description,
-                tags: [
-                    artworksJson.name,
-                    "Generative Art",
-                    "p5.js",
-                    "Processing",
-                    "Procedural",
-                    "Print",
-                    "Giclee",
-                ],
-            }}
-        >
+        <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>{artworksJson.name}</h1>
                 <div className={styles.linksContainer}>
@@ -55,7 +42,7 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                             onClick={() =>
                                 setSliderShowIndex(
                                     (slideShowIndex + 1) %
-                                        artworksJson.images.length
+                                        artworksJson.images.length,
                                 )
                             }
                         >
@@ -106,9 +93,26 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
 export default ArtworkPage
 
 export const query = graphql`
-    query($slug: String!) {
+    query ($slug: String!) {
         artworksJson(slug: { eq: $slug }) {
             ...ArtworkFragment
         }
     }
 `
+
+export const Head = ({ data: { artworksJson } }: PageProps<DataProps>) => (
+    <Seo
+        title={`${artworksJson.name} | Andrea Diotallevi`}
+        description={artworksJson.description}
+        image={artworksJson.images[0].childImageSharp.original.src}
+        tags={[
+            artworksJson.name,
+            "Generative Art",
+            "p5.js",
+            "Processing",
+            "Procedural",
+            "Print",
+            "Giclee",
+        ]}
+    />
+)
