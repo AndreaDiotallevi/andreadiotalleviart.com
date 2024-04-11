@@ -11,7 +11,7 @@ export type Artwork = {
             id: string
             childImageSharp: {
                 gatsbyImageData: IGatsbyImageData
-                fixed: {
+                original: {
                     src: string
                 }
             }
@@ -34,7 +34,7 @@ export const query = graphql`
                     layout: CONSTRAINED
                     placeholder: BLURRED
                 )
-                fixed {
+                original {
                     src
                 }
             }

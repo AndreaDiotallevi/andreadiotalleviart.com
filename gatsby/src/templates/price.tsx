@@ -140,7 +140,7 @@ export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
     <Seo
         title={`${stripePrice.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
         description={stripePrice.product.description}
-        image={stripePrice.mockup.childImageSharp.fixed.src}
+        image={stripePrice.mockup.childImageSharp.original.src}
         type="product"
         tags={[
             stripePrice.product.name,

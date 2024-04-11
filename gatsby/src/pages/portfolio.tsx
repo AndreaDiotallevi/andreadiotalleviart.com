@@ -60,7 +60,7 @@ export const Head = ({ data: { allArtworksJson } }: PageProps<DataProps>) => (
         title="Portfolio | Andrea Diotallevi"
         description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
         image={
-            allArtworksJson.edges[0].node.images[0].childImageSharp.fixed.src
+            allArtworksJson.edges[0].node.images[0].childImageSharp.original.src
         }
         tags={[
             "Andrea Diotallevi",

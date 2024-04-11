@@ -11,7 +11,7 @@ type DataProps = {
     file: {
         childImageSharp: {
             gatsbyImageData: IGatsbyImageData
-            fixed: {
+            original: {
                 src: string
             }
         }
@@ -65,7 +65,7 @@ export const query = graphql`
                     layout: CONSTRAINED
                     placeholder: BLURRED
                 )
-                fixed {
+                original {
                     src
                 }
             }
@@ -77,7 +77,7 @@ export const Head = ({ data: { file } }: PageProps<DataProps>) => (
     <Seo
         title="Contact | Andrea Diotallevi"
         description="Get in touch if you are interested in working together."
-        image={file.childImageSharp.fixed.src}
+        image={file.childImageSharp.original.src}
         tags={["Contact", "About"]}
     />
 )

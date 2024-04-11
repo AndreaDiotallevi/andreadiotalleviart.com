@@ -11,7 +11,7 @@ import "../styles/index.scss"
 type DataProps = {
     file: {
         childImageSharp: {
-            fixed: {
+            original: {
                 src: string
             }
         }
@@ -47,7 +47,7 @@ export const Head = ({ data: { file } }: PageProps<DataProps>) => (
     <Seo
         title="Andrea Diotallevi | Generative Artist and Creative Coder"
         description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
-        image={file.childImageSharp.fixed.src}
+        image={file.childImageSharp.original.src}
         tags={[
             "Andrea Diotallevi",
             "Andrea Diotallevi Art",
@@ -62,7 +62,7 @@ export const query = graphql`
     {
         file(relativePath: { eq: "assets/moonlight.png" }) {
             childImageSharp {
-                fixed {
+                original {
                     src
                 }
             }

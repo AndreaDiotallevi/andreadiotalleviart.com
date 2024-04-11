@@ -104,7 +104,7 @@ export const Head = ({ data: { artworksJson } }: PageProps<DataProps>) => (
     <Seo
         title={`${artworksJson.name} | Andrea Diotallevi`}
         description={artworksJson.description}
-        image={artworksJson.images[0].childImageSharp.fixed.src}
+        image={artworksJson.images[0].childImageSharp.original.src}
         tags={[
             artworksJson.name,
             "Generative Art",
