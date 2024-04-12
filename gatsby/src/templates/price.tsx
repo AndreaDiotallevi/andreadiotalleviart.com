@@ -105,7 +105,7 @@ const PricePage = ({
                         </p>
                         <p>
                             You should receive your order within 24-48 hours.
-                            All costs included.
+                            Shipping costs included.
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
