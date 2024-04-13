@@ -6,9 +6,12 @@
     "@aws-sdk/client-ssm": "^3.496.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",
     "esbuild": "^0.19.11",
+    "sharp": "^0.33.3",
     "stripe": "^14.11.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.131"
+    "@types/aws-lambda": "^8.10.131",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
   }
 }
