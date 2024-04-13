@@ -11,6 +11,7 @@ on:
             - "staging"
         paths:
             - "serverless/**"
+            - .github/workflows/pipeline.yaml
 
 env:
     PIPELINE_USER_ACCESS_KEY_ID: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
