@@ -34,12 +34,15 @@ module.exports.onCreateNode = async ({
         })
     }
 
+    const externalImages = [
+        { key: "artwork", value: "_WEB_WITHOUT_BORDER.png" },
+        { key: "mockup", value: "_WEB_MOCKUP.png" },
+    ]
+
     if (node.internal.type === "StripePrice" && node.product?.metadata?.slug) {
-        ;["artwork", "mockup"].forEach(async name => {
+        externalImages.forEach(async ({ key, value }) => {
             const fileNode = await createRemoteFileNode({
-                url: `${process.env.IMAGES_DOMAIN}/${
-                    node.product.metadata.slug
-                }_${name.toUpperCase()}.png`,
+                url: `${process.env.IMAGES_DOMAIN}/prints/${node.product.metadata.slug}${value}`,
                 parentNodeId: node.id,
                 createNode,
                 createNodeId,
@@ -49,7 +52,7 @@ module.exports.onCreateNode = async ({
             if (fileNode) {
                 createNodeField({
                     node,
-                    name,
+                    name: key,
                     value: fileNode.id,
                 })
             }
