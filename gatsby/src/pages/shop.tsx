@@ -78,7 +78,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title="Shop | Andrea Diotallevi"
+        title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
         description="Discover the beauty of generative art with our high-quality fine art prints. Each piece uniquely combines technology and creativity, perfect for discerning collectors."
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         tags={[
