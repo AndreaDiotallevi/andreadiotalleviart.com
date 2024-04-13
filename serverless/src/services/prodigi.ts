@@ -186,7 +186,7 @@ export const createOrder = async ({
                 assets: [
                     {
                         printArea: "Default",
-                        url: `${imagesDomain}/${item.price?.product.metadata.slug}_PRINT.png`,
+                        url: `${imagesDomain}/prints/${item.price?.product.metadata.slug}_PRODUCTION_WITH_BORDER.png`,
                     },
                 ],
             })),

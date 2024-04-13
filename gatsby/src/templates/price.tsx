@@ -105,7 +105,7 @@ const PricePage = ({
                         </p>
                         <p>
                             You should receive your order within 24-48 hours.
-                            All costs included.
+                            Shipping costs included.
                         </p>
                         <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
@@ -138,7 +138,7 @@ export const query = graphql`
 
 export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${stripePrice.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        title={`${stripePrice.product.name} | Giclée Fine Art Print | Andrea Diotallevi`}
         description={stripePrice.product.description}
         image={stripePrice.mockup.childImageSharp.original.src}
         type="product"
