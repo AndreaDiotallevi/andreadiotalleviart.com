@@ -146,7 +146,7 @@ jobs:
             - uses: aws-actions/setup-sam@v2
               with:
                   use-installer: true
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v4
               with:
                   name: packaged-staging.yaml
 
@@ -193,7 +193,7 @@ jobs:
             - uses: aws-actions/setup-sam@v2
               with:
                   use-installer: true
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v4
               with:
                   name: packaged-prod.yaml
 
