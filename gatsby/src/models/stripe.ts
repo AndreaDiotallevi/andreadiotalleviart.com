@@ -29,7 +29,11 @@ export type StripePrice = {
         metadata: {
             category: "prints"
             slug: "marble-lake" | "flames"
-            size: "a2" | "a3"
+            size:
+                | "A1 (594 x 841 mm)"
+                | "A2 (420 x 594 mm)"
+                | "A3 (297 x 420 mm)"
+            prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
         }
         localFiles: [
             {
@@ -81,6 +85,7 @@ export const query = graphql`
                 category
                 size
                 slug
+                prodigiSku
             }
             localFiles {
                 childImageSharp {
