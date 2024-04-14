@@ -8,10 +8,11 @@ type DataProps = {
     image?: string
     tags: string[]
     type?: "website" | "product"
+    amount?: string
 }
 
 const SEO = (props: DataProps) => {
-    const { title, description, image, type = "website", tags } = props
+    const { title, description, image, type = "website", tags, amount } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -42,6 +43,26 @@ const SEO = (props: DataProps) => {
             <meta property="og:title" content={seo.title} />
             <meta property="og:description" content={seo.description} />
             <meta property="og:image" content={seo.image} />
+            <meta property="og:site_name" content="Andrea Diotallevi Art" />
+            <meta property="og:locale" content="en_GB" />
+            {amount ? (
+                <meta property="og:price:amount" content={amount} />
+            ) : null}
+            {amount ? (
+                <meta property="og:price:currency" content="GBP" />
+            ) : null}
+            {amount ? (
+                <meta
+                    property="og:availability"
+                    content="available for order"
+                />
+            ) : null}
+            {amount ? (
+                <meta property="product:condition" content="new" />
+            ) : null}
+            {amount ? (
+                <meta property="product:category" content="500044" /> // Home & Garden > Decor > Artwork > Posters, Prints, & Visual Artwork
+            ) : null}
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:creator" content={twitterUsername} />
             <meta name="twitter:title" content={seo.title} />
@@ -70,3 +91,5 @@ const query = graphql`
         }
     }
 `
+
+// https://developers.facebook.com/docs/marketing-api/catalog/reference#og-tags

@@ -192,5 +192,6 @@ export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
             "Print",
             "Giclee",
         ]}
+        amount={(allStripePrice.edges[0].node.unit_amount / 100).toFixed(2)}
     />
 )
