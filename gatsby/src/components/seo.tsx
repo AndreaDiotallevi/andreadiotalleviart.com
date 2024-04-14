@@ -38,6 +38,7 @@ const SEO = (props: DataProps) => {
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />
+            <link rel="canonical" href={seo.url}></link>
             <meta property="og:url" content={seo.url} />
             <meta property="og:type" content={type} />
             <meta property="og:title" content={seo.title} />
