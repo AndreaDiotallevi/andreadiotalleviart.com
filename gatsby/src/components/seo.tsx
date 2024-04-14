@@ -15,16 +15,6 @@ const SEO = (props: DataProps) => {
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
-    const removeTrailingSlash = (str: string): string => {
-        const length = str.length
-
-        if (str[length - 1] === "/") {
-            return str.slice(0, length - 1)
-        }
-
-        return str
-    }
-
     const {
         defaultTitle,
         defaultDescription,
@@ -47,7 +37,7 @@ const SEO = (props: DataProps) => {
             <meta name="description" content={seo.description} />
             <meta name="keywords" content={tags.join(", ")} />
             <meta name="image" content={seo.image} />
-            <meta property="og:url" content={removeTrailingSlash(seo.url)} />
+            <meta property="og:url" content={seo.url} />
             <meta property="og:type" content={type} />
             <meta property="og:title" content={seo.title} />
             <meta property="og:description" content={seo.description} />
