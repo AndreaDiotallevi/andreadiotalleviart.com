@@ -179,7 +179,10 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${allStripePrice.edges[0].node.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        title={`${allStripePrice.edges[0].node.product.metadata.slug
+            .split("-")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")} | Giclée Fine Art Prints | Andrea Diotallevi`}
         description={allStripePrice.edges[0].node.product.description}
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"
