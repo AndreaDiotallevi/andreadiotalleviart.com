@@ -11,46 +11,52 @@ import * as styles from "./shop.module.scss"
 
 type DataProps = {
     allStripePrice: {
-        edges: [{ node: StripePrice }]
+        group: {
+            edges: [{ node: StripePrice }]
+        }[]
     }
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
-    const getStripePrice = (slug: string) => {
-        return allStripePrice.edges.filter(
-            edge => edge.node.product.metadata.slug === slug,
-        )[0]
-    }
-
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Prints</h1>
+                <h1 className={styles.h1}>Giclée Fine Art Prints</h1>
                 <div className={styles.grid}>
-                    {allStripePrice.edges.map(({ node }) => (
+                    {allStripePrice.group.map(group => (
                         <li
-                            key={node.product.metadata.slug}
+                            key={group.edges[0].node.product.metadata.slug}
                             className={styles.gridItem}
                         >
                             <Link
-                                to={`/shop/prints/${node.product.metadata.slug}`}
+                                to={`/shop/prints/${group.edges[0].node.product.metadata.slug}`}
                             >
                                 <GatsbyImage
                                     alt="image"
                                     image={
-                                        node.mockup.childImageSharp
-                                            .gatsbyImageData
+                                        group.edges[0].node.mockup
+                                            .childImageSharp.gatsbyImageData
                                     }
                                 />
-                                <h2>{node.product.name}</h2>
+                                <h2>
+                                    {group.edges[0].node.product.metadata.slug
+                                        .split("-")
+                                        .map(
+                                            word =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1),
+                                        )
+                                        .join(" ")}
+                                </h2>
                                 <p>
-                                    £
+                                    {group.edges.length > 1 ? "from " : ""}£
                                     {(
-                                        getStripePrice(
-                                            node.product.metadata.slug,
-                                        ).node.unit_amount / 100
+                                        group.edges[0].node.unit_amount / 100
                                     ).toFixed(2)}
                                 </p>
+                                {/* <p className={styles.note}>
+                                    available in A3, A2 and A1
+                                </p> */}
                             </Link>
                         </li>
                     ))}
@@ -66,10 +72,13 @@ export const query = graphql`
     {
         allStripePrice(
             filter: { active: { eq: true }, product: { active: { eq: true } } }
+            sort: { product: { metadata: { size: DESC } } }
         ) {
-            edges {
-                node {
-                    ...StripePriceFragment
+            group(field: { product: { metadata: { slug: SELECT } } }) {
+                edges {
+                    node {
+                        ...StripePriceFragment
+                    }
                 }
             }
         }
@@ -78,9 +87,12 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title="Shop | Andrea Diotallevi"
+        title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
         description="Discover the beauty of generative art with our high-quality fine art prints. Each piece uniquely combines technology and creativity, perfect for discerning collectors."
-        image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
+        image={
+            allStripePrice.group[0].edges[0].node.mockup.childImageSharp
+                .original.src
+        }
         tags={[
             "Andrea Diotallevi",
             "Andrea Diotallevi Art",

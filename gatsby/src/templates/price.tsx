@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { graphql, PageProps, Link } from "gatsby"
+import React, { useState } from "react"
+import { graphql, PageProps, Link, navigate } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
 import Seo from "../components/seo"
@@ -10,37 +10,28 @@ import * as styles from "./showcase.module.scss"
 import { createCheckoutSession } from "../api"
 
 type DataProps = {
-    stripePrice: StripePrice
+    allStripePrice: { edges: [{ node: StripePrice }] }
 }
 
 const PricePage = ({
-    data: { stripePrice },
+    data: { allStripePrice },
     location,
 }: PageProps<DataProps>) => {
-    const [clientSecret, setClientSecret] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
+    const [selectedPriceId, setSelectedPriceId] = useState(
+        allStripePrice.edges[0].node.id,
+    )
+    const selectedPrice = allStripePrice.edges.filter(
+        edge => edge.node.id === selectedPriceId,
+    )[0].node
 
-    const images = [stripePrice.mockup, stripePrice.artwork]
-
-    useEffect(() => {
-        const createSession = async () => {
-            const data = await createCheckoutSession({
-                line_items: [{ price: stripePrice.id, quantity: 1 }],
-                success_url: location.origin,
-            })
-
-            if (!data) return
-
-            setClientSecret(data.session.client_secret)
-        }
-
-        createSession()
-    }, [])
+    const images = [selectedPrice.mockup, selectedPrice.artwork]
 
     return (
-        <Layout>
+        <Layout loading={loading}>
             <div className={styles.container}>
-                <h1 className={styles.h1}>{stripePrice.product.name}</h1>
+                <h1 className={styles.h1}>{selectedPrice.product.name}</h1>
                 <div className={styles.linksContainer}>
                     <div />
                     <Link to="/shop" className={styles.backButtonContainer}>
@@ -93,7 +84,7 @@ const PricePage = ({
                     </div>
                     <div className={styles.gridItem2}>
                         <h2>Description</h2>
-                        <p>{stripePrice.product.description}</p>
+                        <p>{selectedPrice.product.description}</p>
                         <p>
                             Prints are only touched with paper-handling gloves,
                             each is wrapped in paper before being placed in a
@@ -104,21 +95,61 @@ const PricePage = ({
                             Framing not included.
                         </p>
                         <p>
-                            You should receive your order within 24-48 hours.
-                            Shipping costs included.
+                            Free express shipping, delivered within 24-48 hours.
                         </p>
-                        <h2>£{(stripePrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
-                        <Link
-                            to={
-                                clientSecret
-                                    ? `/checkout?clientSecret=${clientSecret}`
-                                    : ""
-                            }
+                        <h2>£{(selectedPrice.unit_amount / 100).toFixed(2)}</h2>
+                        {allStripePrice.edges.length > 1 ? (
+                            <select
+                                className={styles.select}
+                                onChange={event => {
+                                    event.preventDefault()
+                                    setSelectedPriceId(event.target.value)
+                                }}
+                            >
+                                {allStripePrice.edges.map(edge => (
+                                    <option
+                                        key={edge.node.id}
+                                        value={edge.node.id}
+                                    >
+                                        {edge.node.product.metadata.size} - £
+                                        {(edge.node.unit_amount / 100).toFixed(
+                                            2,
+                                        )}
+                                        {/* A3 297 x 420 mm (11.7 x 16.5 inches) -
+                                    £110,00 */}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : null}
+                        <div
+                            role="link"
                             className={styles.button}
+                            onClick={async () => {
+                                setLoading(true)
+                                const data = await createCheckoutSession({
+                                    line_items: [
+                                        {
+                                            price: selectedPrice.id,
+                                            quantity: 1,
+                                        },
+                                    ],
+                                    success_url: location.origin,
+                                })
+
+                                if (!data) {
+                                    console.error("Session failed to create")
+                                    setLoading(false)
+                                    return
+                                }
+
+                                navigate(
+                                    `/checkout?clientSecret=${data.session.client_secret}`,
+                                )
+                            }}
                         >
                             Buy Now
-                        </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,20 +161,30 @@ export default PricePage
 
 export const query = graphql`
     query ($slug: String!) {
-        stripePrice(product: { metadata: { slug: { eq: $slug } } }) {
-            ...StripePriceFragment
+        allStripePrice(
+            filter: {
+                active: { eq: true }
+                product: { metadata: { slug: { eq: $slug } } }
+            }
+            sort: { product: { metadata: { size: DESC } } }
+        ) {
+            edges {
+                node {
+                    ...StripePriceFragment
+                }
+            }
         }
     }
 `
 
-export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
+export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${stripePrice.product.name} | Giclée Fine Art Print | Andrea Diotallevi`}
-        description={stripePrice.product.description}
-        image={stripePrice.mockup.childImageSharp.original.src}
+        title={`${allStripePrice.edges[0].node.product.name} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        description={allStripePrice.edges[0].node.product.description}
+        image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"
         tags={[
-            stripePrice.product.name,
+            allStripePrice.edges[0].node.product.name,
             "Generative Art",
             "p5.js",
             "Processing",
@@ -151,5 +192,6 @@ export const Head = ({ data: { stripePrice } }: PageProps<DataProps>) => (
             "Print",
             "Giclee",
         ]}
+        amount={(allStripePrice.edges[0].node.unit_amount / 100).toFixed(2)}
     />
 )

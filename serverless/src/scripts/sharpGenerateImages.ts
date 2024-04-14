@@ -28,10 +28,10 @@ export const handler = async () => {
         `./${name}_WEB_WITH_BORDER.png`
     )
 
-    await createThumbnail(
-        `./${name}_WEB_MOCKUP.png`,
-        `./${name}_WEB_THUMBNAIL.jpg`
-    )
+    // await createThumbnail(
+    //     `./${name}_WEB_MOCKUP.png`,
+    //     `./${name}_WEB_THUMBNAIL.jpg`
+    // )
 }
 
 handler()
