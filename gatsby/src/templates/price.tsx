@@ -135,7 +135,7 @@ const PricePage = ({
                                             quantity: 1,
                                         },
                                     ],
-                                    success_url: location.origin,
+                                    success_url: `${location.origin}/shop/checkout/success`,
                                 })
 
                                 if (!data) {
@@ -145,7 +145,7 @@ const PricePage = ({
                                 }
 
                                 navigate(
-                                    `/checkout?clientSecret=${data.session.client_secret}`,
+                                    `/shop/checkout?clientSecret=${data.session.client_secret}`,
                                 )
                             }}
                         >

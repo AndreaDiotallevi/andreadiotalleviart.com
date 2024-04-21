@@ -3,13 +3,13 @@ import { graphql, PageProps, Link } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
-import Layout from "../templates/layout"
+import Layout from "../../../templates/layout"
 
-import { retrieveCheckoutSession } from "../api"
-import Seo from "../components/seo"
+import { retrieveCheckoutSession } from "../../../api"
+import Seo from "../../../components/seo"
 
 import * as styles from "./success.module.scss"
-import { StripePrice } from "../models/stripe"
+import { StripePrice } from "../../../models/stripe"
 
 type DataProps = {
     allStripePrice: {
