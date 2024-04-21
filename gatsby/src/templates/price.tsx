@@ -20,12 +20,14 @@ const PricePage = ({
 }: PageProps<DataProps>) => {
     const [loading, setLoading] = useState(false)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
-    const [selectedPriceId, setSelectedPriceId] = useState(
-        allStripePrice.edges[0].node.id,
-    )
-    const selectedPrice = allStripePrice.edges.filter(
-        edge => edge.node.id === selectedPriceId,
-    )[0].node
+
+    const params = new URLSearchParams(location.search)
+    const size = params.get("size")
+
+    const selectedPrice =
+        allStripePrice.edges.filter(price =>
+            price.node.product.metadata.size.startsWith(size || ""),
+        )[0]?.node || allStripePrice.edges[0].node
 
     const images = [selectedPrice.mockup, selectedPrice.artwork]
 
@@ -105,20 +107,23 @@ const PricePage = ({
                                 className={styles.select}
                                 onChange={event => {
                                     event.preventDefault()
-                                    setSelectedPriceId(event.target.value)
+                                    navigate(
+                                        `?size=${event.target.value.split(" ")[0]}`,
+                                    )
                                 }}
+                                defaultValue={
+                                    selectedPrice.product.metadata.size
+                                }
                             >
                                 {allStripePrice.edges.map(edge => (
                                     <option
                                         key={edge.node.id}
-                                        value={edge.node.id}
+                                        value={edge.node.product.metadata.size}
                                     >
                                         {edge.node.product.metadata.size} - £
                                         {(edge.node.unit_amount / 100).toFixed(
                                             2,
                                         )}
-                                        {/* A3 297 x 420 mm (11.7 x 16.5 inches) -
-                                    £110,00 */}
                                     </option>
                                 ))}
                             </select>
