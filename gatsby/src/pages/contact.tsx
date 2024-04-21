@@ -63,7 +63,7 @@ export const query = graphql`
                     width: 660
                     quality: 99
                     layout: CONSTRAINED
-                    placeholder: BLURRED
+                    placeholder: DOMINANT_COLOR
                 )
                 original {
                     src
