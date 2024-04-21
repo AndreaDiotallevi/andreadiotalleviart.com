@@ -2,13 +2,18 @@ import React, { useState } from "react"
 import { graphql, PageProps, Link, navigate } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
-import Seo from "../components/seo"
 import Layout from "./layout"
+
+import Button from "../components/button" // Needs to be below Layout
+import Seo from "../components/seo"
+
 import { StripePrice } from "../models/stripe"
+
 import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
 
-import * as styles from "./showcase.module.scss"
 import { createCheckoutSession } from "../api"
+
+import * as styles from "./showcase.module.scss"
 
 type DataProps = {
     allStripePrice: { edges: [{ node: StripePrice }] }
@@ -132,9 +137,8 @@ const PricePage = ({
                                 ))}
                             </select>
                         ) : null}
-                        <div
+                        <Button
                             role="link"
-                            className={styles.button}
                             onClick={async () => {
                                 setLoading(true)
                                 const data = await createCheckoutSession({
@@ -159,7 +163,7 @@ const PricePage = ({
                             }}
                         >
                             Continue to checkout
-                        </div>
+                        </Button>
                     </div>
                 </div>
             </div>
