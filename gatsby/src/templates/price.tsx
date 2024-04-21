@@ -34,7 +34,11 @@ const PricePage = ({
     return (
         <Layout loading={loading}>
             <div className={styles.container}>
-                <h1 className={styles.h1}>{selectedPrice.product.name}</h1>
+                <h1 className={styles.h1}>
+                    {getProductNameFromSlug(
+                        selectedPrice.product.metadata.slug,
+                    )}
+                </h1>
                 <div className={styles.linksContainer}>
                     <div />
                     <Link to="/shop" className={styles.backButtonContainer}>

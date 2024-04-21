@@ -22,7 +22,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Giclée Fine Art Prints</h1>
+                <h1 className={styles.h1}>Prints</h1>
                 <div className={styles.grid}>
                     {allStripePrice.group.map(group => (
                         <li
