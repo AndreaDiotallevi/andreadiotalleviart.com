@@ -1,11 +1,16 @@
-import React from "react"
+import React, { useState } from "react"
 import { graphql, PageProps } from "gatsby"
 import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
+
+import Button from "../components/button"
+import InputField from "../components/inputField"
 import Seo from "../components/seo"
+import TextArea from "../components/textArea"
 
 import * as styles from "./contact.module.scss"
+import { sendContactPageEmail } from "../api"
 
 type DataProps = {
     file: {
@@ -19,6 +24,45 @@ type DataProps = {
 }
 
 const Contact = ({ data: { file } }: PageProps<DataProps>) => {
+    const [loading, setLoading] = useState(false)
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [subject, setSubject] = useState("")
+    const [message, setMessage] = useState("")
+
+    const [error, setError] = useState("")
+
+    const [success, setSuccess] = useState(false)
+
+    const validate = () => {
+        if (!name) {
+            setError("Please enter a name.")
+            return false
+        }
+
+        if (
+            !email.match(
+                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            )
+        ) {
+            setError("Please enter a valid email.")
+            return false
+        }
+
+        if (!subject) {
+            setError("Please enter a subject.")
+            return false
+        }
+
+        if (!message) {
+            setError("Please enter a message.")
+            return false
+        }
+
+        setError("")
+        return true
+    }
+
     return (
         <Layout>
             <div className={styles.container}>
@@ -31,21 +75,54 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                         />
                     </div>
                     <div className={styles.gridItem2}>
-                        <p>
-                            My name is Andrea Diotallevi. I am a generative
-                            artist and creative coder based in London.
-                        </p>
-                        <p>
-                            As a pianist and former architect, I am fascinated
-                            by the intersection between art and technology and I
-                            am in constant exploration of generative art
-                            concepts.
-                        </p>
-                        <p>
-                            For each new work, I design a custom algorithm
-                            capable of generating a sequence of unique, but
-                            aesthetically related images.
-                        </p>
+                        <InputField
+                            value={name}
+                            name="name"
+                            label="Name"
+                            onChange={value => setName(value)}
+                        />
+                        <InputField
+                            value={email}
+                            name="email"
+                            label="Email"
+                            onChange={value => setEmail(value)}
+                        />
+                        <InputField
+                            value={subject}
+                            name="subject"
+                            label="Subject"
+                            onChange={value => setSubject(value)}
+                        />
+                        <TextArea
+                            value={message}
+                            name="message"
+                            label="Message"
+                            onChange={value => setMessage(value)}
+                        />
+                        {error ? <p className={styles.error}>{error}</p> : null}
+                        {success ? (
+                            <p className={styles.success}>Message sent!</p>
+                        ) : null}
+                        <Button
+                            onClick={async () => {
+                                setSuccess(false)
+                                setLoading(true)
+
+                                if (validate()) {
+                                    await sendContactPageEmail({
+                                        name,
+                                        email,
+                                        subject,
+                                        message,
+                                    })
+                                    setSuccess(true)
+                                }
+                                setLoading(false)
+                            }}
+                            loading={loading}
+                        >
+                            Send message
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -57,7 +134,7 @@ export default Contact
 
 export const query = graphql`
     {
-        file(relativePath: { eq: "assets/profile-photo.jpg" }) {
+        file(relativePath: { eq: "assets/portrait.jpg" }) {
             childImageSharp {
                 gatsbyImageData(
                     width: 660
@@ -78,6 +155,6 @@ export const Head = ({ data: { file } }: PageProps<DataProps>) => (
         title="Contact | Andrea Diotallevi"
         description="Get in touch if you are interested in working together."
         image={file.childImageSharp.original.src}
-        tags={["Contact", "About"]}
+        tags={["Contact"]}
     />
 )
