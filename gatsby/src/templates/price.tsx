@@ -149,7 +149,7 @@ const PricePage = ({
                                 )
                             }}
                         >
-                            Buy Now
+                            Continue to checkout
                         </div>
                     </div>
                 </div>
