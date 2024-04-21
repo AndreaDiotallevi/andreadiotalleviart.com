@@ -4,7 +4,7 @@ export const createCheckoutSession = async (
     params: Pick<
         Stripe.Checkout.SessionCreateParams,
         "line_items" | "success_url"
-    >
+    >,
 ) => {
     if (!process.env.GATSBY_API_KEY) {
         throw new Error("The api key is undefined.")
@@ -20,7 +20,7 @@ export const createCheckoutSession = async (
                     "X-Api-Key": process.env.GATSBY_API_KEY,
                 },
                 body: JSON.stringify(params),
-            }
+            },
         )
 
         if (response.ok) {
@@ -54,7 +54,7 @@ export const retrieveCheckoutSession = async (params: {
                     "Content-Type": "application/json",
                     "X-Api-Key": process.env.GATSBY_API_KEY,
                 },
-            }
+            },
         )
 
         if (response.ok) {
@@ -65,7 +65,43 @@ export const retrieveCheckoutSession = async (params: {
         } else {
             console.error(
                 "Failed to retrieve checkout session: ",
-                response.statusText
+                response.statusText,
+            )
+            return null
+        }
+    } catch (error) {
+        console.error("Error during request: ", error)
+        return null
+    }
+}
+
+export const sendContactPageEmail = async (params: {
+    name: string
+    email: string
+    subject: string
+    message: string
+}) => {
+    try {
+        const response = await fetch(
+            process.env.GATSBY_API_URL + `/send-contact-page-email`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(params),
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as {
+                session: Stripe.Checkout.Session
+            }
+            return data.session
+        } else {
+            console.error(
+                "Failed to send contact page email: ",
+                response.statusText,
             )
             return null
         }
