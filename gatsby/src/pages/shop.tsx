@@ -5,6 +5,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
+import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
 
 import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
@@ -39,14 +40,10 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                     }
                                 />
                                 <h2>
-                                    {group.edges[0].node.product.metadata.slug
-                                        .split("-")
-                                        .map(
-                                            word =>
-                                                word.charAt(0).toUpperCase() +
-                                                word.slice(1),
-                                        )
-                                        .join(" ")}
+                                    {getProductNameFromSlug(
+                                        group.edges[0].node.product.metadata
+                                            .slug,
+                                    )}
                                 </h2>
                                 <p>
                                     {group.edges.length > 1 ? "from " : ""}£
