@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { graphql, PageProps, Link } from "gatsby"
+import { graphql, PageProps, navigate } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 import Stripe from "stripe"
 
-import Layout from "../templates/layout"
+import Layout from "../../../templates/layout"
 
-import { retrieveCheckoutSession } from "../api"
-import Seo from "../components/seo"
+import Button from "../../../components/button"
+import Seo from "../../../components/seo"
+
+import { StripePrice } from "../../../models/stripe"
+
+import { retrieveCheckoutSession } from "../../../api"
 
 import * as styles from "./success.module.scss"
-import { StripePrice } from "../models/stripe"
 
 type DataProps = {
     allStripePrice: {
@@ -104,9 +107,12 @@ const Success = ({
                                 Total: £
                                 {((session.amount_total || 0) / 100).toFixed(2)}
                             </p>
-                            <Link to="/shop" className={styles.button}>
+                            <Button
+                                role="link"
+                                onClick={() => navigate("/shop")}
+                            >
                                 Discover More
-                            </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>

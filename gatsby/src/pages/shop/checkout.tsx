@@ -6,11 +6,11 @@ import {
 } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 
-import Layout from "../templates/layout"
-import { StripePrice } from "../models/stripe"
+import Layout from "../../templates/layout"
+import { StripePrice } from "../../models/stripe"
 
 import * as styles from "./checkout.module.scss"
-import Seo from "../components/seo"
+import Seo from "../../components/seo"
 
 type DataProps = {
     stripePrice: StripePrice

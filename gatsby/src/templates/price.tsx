@@ -2,12 +2,18 @@ import React, { useState } from "react"
 import { graphql, PageProps, Link, navigate } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
 
-import Seo from "../components/seo"
 import Layout from "./layout"
+
+import Button from "../components/button" // Needs to be below Layout
+import Seo from "../components/seo"
+
 import { StripePrice } from "../models/stripe"
 
-import * as styles from "./showcase.module.scss"
+import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
+
 import { createCheckoutSession } from "../api"
+
+import * as styles from "./showcase.module.scss"
 
 type DataProps = {
     allStripePrice: { edges: [{ node: StripePrice }] }
@@ -19,19 +25,25 @@ const PricePage = ({
 }: PageProps<DataProps>) => {
     const [loading, setLoading] = useState(false)
     const [slideShowIndex, setSliderShowIndex] = useState(0)
-    const [selectedPriceId, setSelectedPriceId] = useState(
-        allStripePrice.edges[0].node.id,
-    )
-    const selectedPrice = allStripePrice.edges.filter(
-        edge => edge.node.id === selectedPriceId,
-    )[0].node
+
+    const params = new URLSearchParams(location.search)
+    const size = params.get("size")
+
+    const selectedPrice =
+        allStripePrice.edges.filter(price =>
+            price.node.product.metadata.size.startsWith(size || ""),
+        )[0]?.node || allStripePrice.edges[0].node
 
     const images = [selectedPrice.mockup, selectedPrice.artwork]
 
     return (
         <Layout loading={loading}>
             <div className={styles.container}>
-                <h1 className={styles.h1}>{selectedPrice.product.name}</h1>
+                <h1 className={styles.h1}>
+                    {getProductNameFromSlug(
+                        selectedPrice.product.metadata.slug,
+                    )}
+                </h1>
                 <div className={styles.linksContainer}>
                     <div />
                     <Link to="/shop" className={styles.backButtonContainer}>
@@ -104,27 +116,29 @@ const PricePage = ({
                                 className={styles.select}
                                 onChange={event => {
                                     event.preventDefault()
-                                    setSelectedPriceId(event.target.value)
+                                    navigate(
+                                        `?size=${event.target.value.split(" ")[0]}`,
+                                    )
                                 }}
+                                defaultValue={
+                                    selectedPrice.product.metadata.size
+                                }
                             >
                                 {allStripePrice.edges.map(edge => (
                                     <option
                                         key={edge.node.id}
-                                        value={edge.node.id}
+                                        value={edge.node.product.metadata.size}
                                     >
                                         {edge.node.product.metadata.size} - £
                                         {(edge.node.unit_amount / 100).toFixed(
                                             2,
                                         )}
-                                        {/* A3 297 x 420 mm (11.7 x 16.5 inches) -
-                                    £110,00 */}
                                     </option>
                                 ))}
                             </select>
                         ) : null}
-                        <div
+                        <Button
                             role="link"
-                            className={styles.button}
                             onClick={async () => {
                                 setLoading(true)
                                 const data = await createCheckoutSession({
@@ -134,7 +148,7 @@ const PricePage = ({
                                             quantity: 1,
                                         },
                                     ],
-                                    success_url: location.origin,
+                                    success_url: `${location.origin}/shop/checkout/success`,
                                 })
 
                                 if (!data) {
@@ -144,12 +158,12 @@ const PricePage = ({
                                 }
 
                                 navigate(
-                                    `/checkout?clientSecret=${data.session.client_secret}`,
+                                    `/shop/checkout?clientSecret=${data.session.client_secret}`,
                                 )
                             }}
                         >
-                            Buy Now
-                        </div>
+                            Continue to checkout
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -179,10 +193,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${allStripePrice.edges[0].node.product.metadata.slug
-            .split("-")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ")} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        title={`${getProductNameFromSlug(allStripePrice.edges[0].node.product.metadata.slug)} | Giclée Fine Art Prints | Andrea Diotallevi`}
         description={allStripePrice.edges[0].node.product.description}
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"

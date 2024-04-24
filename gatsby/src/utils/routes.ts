@@ -17,7 +17,8 @@ const routes: RouteType[] = [
     //     pageTitle: "Generative Artist and Creative Coder",
     // },
     // { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
-    { menuName: "Contact", baseUrl: "/contact", pageTitle: "About Me" },
+    { menuName: "About", baseUrl: "/about", pageTitle: "About" },
+    { menuName: "Contact", baseUrl: "/contact", pageTitle: "Contact" },
 ]
 
 export default routes

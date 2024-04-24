@@ -370,6 +370,20 @@ Resources:
                     </html>
                 SubjectPart: "Your order has been shipped"
 
+    ContactPageEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: ContactPageEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <h3>Message from {{name}} ({{email}})</h3>
+                            <p>{{message}}</p>
+                        </body>
+                    </html>
+                SubjectPart: "{{subject}}"
+
     # FUNCTIONS
     ApiGateway:
         Type: AWS::Serverless::Api
@@ -505,6 +519,41 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/sendOrderShippedEmail.ts
+
+    SendContactPageEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendContactPageEmail
+            Handler: src/handlers/sendContactPageEmail.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /send-contact-page-email
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: sendContactPageEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendEmail
+                            - ses:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SUPPORT
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/sendContactPageEmail.ts
 
     ProdigiHandleWebhooksFunction:
         Type: AWS::Serverless::Function

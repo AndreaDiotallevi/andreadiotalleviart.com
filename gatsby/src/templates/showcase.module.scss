@@ -139,26 +139,6 @@
     }
 }
 
-.button {
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-    background-color: white;
-    background-color: rgb(68, 68, 68);
-    color: white;
-    box-shadow: none;
-    font-size: 18px;
-    padding: 13px 0;
-    width: 100%;
-    border: none;
-    font-weight: 700;
-
-    &:hover {
-        transition: 0.3s;
-        background-color: rgb(100, 100, 100);
-    }
-}
-
 .select {
     color: rgb(68, 68, 68);
     border-color: rgb(68, 68, 68);
