@@ -24,7 +24,7 @@ const TextArea = ({
                 name={name}
                 onChange={event => onChange(event.target.value)}
             />
-            {error ? <p className={styles.error}>{error}</p> : null}
+            {/* {error ? <p className={styles.error}>{error}</p> : null} */}
         </div>
     )
 }
