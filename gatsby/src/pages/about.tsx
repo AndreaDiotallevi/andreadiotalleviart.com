@@ -76,7 +76,7 @@ export const query = graphql`
 export const Head = ({ data: { file } }: PageProps<DataProps>) => (
     <Seo
         title="About | Andrea Diotallevi"
-        description="Get in touch if you are interested in working together."
+        description="Get to know Andrea Diotallevi."
         image={file.childImageSharp.original.src}
         tags={["About"]}
     />
