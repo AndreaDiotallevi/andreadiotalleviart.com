@@ -1,8 +1,11 @@
-require("dotenv").config({
+import type { GatsbyConfig } from "gatsby"
+import dotenv from "dotenv"
+
+dotenv.config({
     path: `.env.${process.env.NODE_ENV}`,
 })
 
-module.exports = {
+const config: GatsbyConfig = {
     siteMetadata: {
         title: "Andrea Diotallevi | Generative Artist and Creative Coder",
         author: "Andrea Diotallevi",
@@ -72,3 +75,5 @@ module.exports = {
         },
     ],
 }
+
+export default config

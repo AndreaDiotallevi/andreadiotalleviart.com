@@ -1,8 +1,9 @@
 import path from "path"
+import dotenv from "dotenv"
 import { createRemoteFileNode } from "gatsby-source-filesystem"
 import type { GatsbyNode } from "gatsby"
 
-require("dotenv").config({
+dotenv.config({
     path: `.env.${process.env.NODE_ENV}`,
 })
 
