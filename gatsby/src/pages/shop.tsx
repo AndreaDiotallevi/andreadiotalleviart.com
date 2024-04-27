@@ -47,7 +47,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                     )}
                                 </h2>
                                 <p>
-                                    {group.edges.length > 1 ? "from " : ""}£
+                                    {group.edges.length > 1 ? "From " : ""}£
                                     {(
                                         group.edges.sort(
                                             (a, b) =>
@@ -57,7 +57,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                     ).toFixed(2)}
                                 </p>
                                 <p>
-                                    Available in{" "}
+                                    Sizes:{" "}
                                     {formatArrayItems(
                                         group.edges
                                             // .sort((a, b) =>
