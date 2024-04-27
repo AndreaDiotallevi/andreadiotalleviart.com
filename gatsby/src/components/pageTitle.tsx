@@ -3,12 +3,12 @@ import React from "react"
 import * as pageTitleStyles from "./pageTitle.module.scss"
 
 type DataProps = {
-    isHome: boolean
+    isHome?: boolean
     text: string
 }
 
 const PageTitle = (props: DataProps) => {
-    const { isHome, text } = props
+    const { isHome = false, text } = props
 
     return (
         <div

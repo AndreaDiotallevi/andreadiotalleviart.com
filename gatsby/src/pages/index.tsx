@@ -31,7 +31,7 @@ const Home = () => {
                     }}
                 >
                     <PageTitle
-                        isHome={true}
+                        isHome
                         text="Generative Artist & Creative Coder"
                     />
                     <Moonlight />

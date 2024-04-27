@@ -129,7 +129,7 @@ const PricePage = ({
                             The print comes with a white border for framing.
                             Frame not included.
                         </p>
-                        <h2>Hahnemühle photo rag at 308gsm</h2>
+                        <h2>Hahnemühle photo rag 308gsm</h2>
                         <p>
                             A heavy-duty, vegan certified matte paper made of
                             100% cotton rag with a natural white tone and

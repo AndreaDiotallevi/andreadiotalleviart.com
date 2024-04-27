@@ -8,6 +8,7 @@ import { StripePrice } from "../models/stripe"
 import { formatArrayItems } from "../utils/formatArrayItems"
 import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
 
+import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
 
@@ -23,7 +24,8 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Prints</h1>
+                <PageTitle text="High quality giclée generative art prints, on Hahnemühle photo rag 308gsm paper, delived in less than 4 days" />
+                <p className={styles.h1}>Shop</p>
                 <div className={styles.grid}>
                     {allStripePrice.group.map(group => (
                         <li

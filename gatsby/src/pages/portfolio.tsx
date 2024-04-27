@@ -6,6 +6,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import { Artwork } from "../models/artworks"
 
+import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 import * as styles from "./portfolio.module.scss"
 
@@ -19,7 +20,8 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Generative Art</h1>
+                <PageTitle text="My generative art experimentations on fractals, image processing, Perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms" />
+                <p className={styles.h1}>Generative Art</p>
                 <div className={styles.grid}>
                     {allArtworksJson.edges.map(({ node }) => (
                         <li key={node.slug} className={styles.gridItem}>
