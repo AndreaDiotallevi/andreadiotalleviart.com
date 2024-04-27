@@ -68,9 +68,8 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                             // )
                                             .map(
                                                 edge =>
-                                                    edge.node.product.metadata.size.split(
-                                                        " ",
-                                                    )[0],
+                                                    edge.node.product.metadata
+                                                        .size,
                                             ),
                                     )}
                                 </p>
