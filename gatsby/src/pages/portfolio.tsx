@@ -20,7 +20,7 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Artworks</h1>
+                <h1 className={styles.h1}>Portfolio</h1>
                 <PageTitle p="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human and computer" />
                 <div className={styles.grid}>
                     {allArtworksJson.edges.map(({ node }) => (

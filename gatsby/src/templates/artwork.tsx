@@ -24,7 +24,7 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                         className={styles.backButtonContainer}
                     >
                         <div className={styles.backButtonIcon} />
-                        <p className={styles.linkText}>Back to Art</p>
+                        <p className={styles.linkText}>Back to Portfolio</p>
                     </Link>
                     {/* <Link to="/shop" className={styles.nextButtonContainer}>
                         <p className={styles.linkText}>Shop</p>
