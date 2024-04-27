@@ -6,31 +6,25 @@
 }
 
 .h1 {
-    position: fixed;
-    top: 128px;
-    writing-mode: vertical-rl;
-    font-size: 32px;
+    font-size: 48px;
     font-weight: 700;
+    margin-bottom: 16px;
 
     @media (max-width: 691.99px) {
-        font-size: 24px;
-        margin: 0 16px;
-        margin-bottom: 8px;
-        left: 0;
+        font-size: 36px;
     }
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 100px;
+    grid-gap: 48px;
     margin: 0 16px;
     max-width: 1400px;
 
     @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
         grid-gap: 24px;
-        padding-left: 46px;
     }
 }
 

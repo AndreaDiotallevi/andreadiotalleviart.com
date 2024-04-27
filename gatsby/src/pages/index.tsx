@@ -30,10 +30,7 @@ const Home = () => {
                         backgroundColor: "#38444c", // RGB (56, 68, 76)
                     }}
                 >
-                    <PageTitle
-                        isHome={true}
-                        text="Generative Artist & Creative Coder"
-                    />
+                    <PageTitle isHome h1="Generative Artist & Creative Coder" />
                     <Moonlight />
                 </div>
             </React.Fragment>

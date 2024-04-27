@@ -29,10 +29,7 @@ export type StripePrice = {
         metadata: {
             category: "prints"
             slug: "marble-lake" | "flames"
-            size:
-                | "A1 (594 x 841 mm)"
-                | "A2 (420 x 594 mm)"
-                | "A3 (297 x 420 mm)"
+            size: "A1" | "A2" | "A3"
             prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
         }
         localFiles: [

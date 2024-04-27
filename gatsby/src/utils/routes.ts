@@ -6,7 +6,7 @@ export type RouteType = {
 
 const routes: RouteType[] = [
     {
-        menuName: "Art",
+        menuName: "Portfolio",
         baseUrl: "/portfolio",
         pageTitle: "Generative Artist and Creative Coder",
     },

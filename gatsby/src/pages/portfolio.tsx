@@ -6,6 +6,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import Layout from "../templates/layout"
 import { Artwork } from "../models/artworks"
 
+import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 import * as styles from "./portfolio.module.scss"
 
@@ -19,7 +20,8 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Generative Art</h1>
+                <h1 className={styles.h1}>Portfolio</h1>
+                <PageTitle p="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human and computer" />
                 <div className={styles.grid}>
                     {allArtworksJson.edges.map(({ node }) => (
                         <li key={node.slug} className={styles.gridItem}>
@@ -58,7 +60,7 @@ export const query = graphql`
 export const Head = ({ data: { allArtworksJson } }: PageProps<DataProps>) => (
     <Seo
         title="Portfolio | Andrea Diotallevi"
-        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
+        description="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human and computer."
         image={
             allArtworksJson.edges[0].node.images[0].childImageSharp.original.src
         }

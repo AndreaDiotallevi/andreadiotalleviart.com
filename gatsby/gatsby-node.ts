@@ -1,22 +1,25 @@
-const path = require("path")
-const { createRemoteFileNode } = require("gatsby-source-filesystem")
+import path from "path"
+import dotenv from "dotenv"
+import { createRemoteFileNode } from "gatsby-source-filesystem"
+import type { GatsbyNode } from "gatsby"
 
-require("dotenv").config({
+dotenv.config({
     path: `.env.${process.env.NODE_ENV}`,
 })
 
-module.exports.createSchemaCustomization = ({ actions }) => {
-    const { createTypes } = actions
+export const createSchemaCustomization: GatsbyNode["createSchemaCustomization"] =
+    ({ actions }) => {
+        const { createTypes } = actions
 
-    createTypes(`
+        createTypes(`
         type StripePrice implements Node {
             artwork: File @link(from: "fields.artwork")
             mockup: File @link(from: "fields.mockup")
         }
   `)
-}
+    }
 
-module.exports.onCreateNode = async ({
+export const onCreateNode: GatsbyNode["onCreateNode"] = async ({
     node,
     actions,
     createNodeId,
@@ -60,12 +63,20 @@ module.exports.onCreateNode = async ({
     }
 }
 
-module.exports.createPages = async ({ graphql, actions }) => {
+export const createPages: GatsbyNode["createPages"] = async ({
+    graphql,
+    actions,
+}) => {
     const { createPage } = actions
     const artworkTemplate = path.resolve("./src/templates/artwork.tsx")
     const priceTemplate = path.resolve("./src/templates/price.tsx")
 
-    const res = await graphql(`
+    const res = await graphql<{
+        allArtworksJson: { edges: { node: { slug: string } }[] }
+        allStripeProduct: {
+            edges: { node: { metadata: { category: string; slug: string } } }[]
+        }
+    }>(`
         query {
             allMarkdownRemark {
                 edges {
@@ -96,6 +107,8 @@ module.exports.createPages = async ({ graphql, actions }) => {
             }
         }
     `)
+
+    if (!res.data) throw new Error("Error")
 
     res.data.allArtworksJson.edges.forEach(edge => {
         createPage({

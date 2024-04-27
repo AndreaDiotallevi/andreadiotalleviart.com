@@ -3,29 +3,33 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-height: 80px;
+    min-height: 120px;
 
-    h1 {
+    h1,
+    p {
         text-align: center;
         width: 100%;
         margin: 0 16px;
-    }
-
-    @media (max-width: 691.99px) {
-        justify-content: flex-start;
-        min-height: 24px;
+        max-width: 600px;
+        font-size: 16px;
+        // font-weight: 700;
     }
 
     &.isHome {
-        justify-content: center;
         background-color: rgb(56, 68, 76);
-        min-height: 120px;
 
-        h1 {
-            text-align: center;
+        h1,
+        p {
             color: white;
-            font-size: 18px;
-            font-weight: 400;
         }
+    }
+
+    @media (max-width: 691.99px) {
+        h1,
+        p {
+            font-size: 14px;
+        }
+
+        // min-height: 24px;
     }
 }

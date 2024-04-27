@@ -43,7 +43,6 @@ const Success = ({
         <Layout loading={session === null}>
             {session ? (
                 <div className={styles.container}>
-                    <h1 className={styles.h1}>Order Confirmation</h1>
                     <div className={styles.grid}>
                         <div>
                             <GatsbyImage
@@ -60,7 +59,9 @@ const Success = ({
                             />
                         </div>
                         <div className={styles.gridItem2}>
-                            <h2>Thank you for your order</h2>
+                            <h1 className={styles.h1}>
+                                Thank you for your order!
+                            </h1>
                             <p>
                                 You will receive a confirmation email with the
                                 details of your order.

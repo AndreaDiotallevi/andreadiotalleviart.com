@@ -10,23 +10,18 @@
 }
 
 .h1 {
-    position: fixed;
-    top: 128px;
-    writing-mode: vertical-rl;
-    font-size: 32px;
+    font-size: 48px;
     font-weight: 700;
+    margin-bottom: 16px;
 
     @media (max-width: 691.99px) {
-        font-size: 24px;
-        margin: 0 16px;
-        margin-bottom: 8px;
-        left: 0;
+        font-size: 36px;
     }
 }
 
 .linksContainer {
-    display: grid;
-    grid-template-columns: 62px 1fr 16px;
+    display: flex;
+    justify-content: flex-start;
     width: 100%;
 
     .linkText {
@@ -48,7 +43,7 @@
             align-items: center;
             width: 100%;
             height: 24px;
-            padding: 12px 0;
+            padding: 12px 18px;
         }
     }
 }
@@ -92,14 +87,13 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 100px;
+    grid-gap: 48px;
     margin: 0 16px;
     max-width: 1400px;
 
     @media (max-width: 691.99px) {
         grid-template-columns: repeat(1, 1fr);
         grid-gap: 24px;
-        padding-left: 46px;
     }
 }
 
@@ -139,36 +133,13 @@
     }
 }
 
-.select {
-    color: rgb(68, 68, 68);
-    border-color: rgb(68, 68, 68);
-    border-radius: 0;
-    margin-bottom: 24px;
-    height: 49px;
-    padding: 8px;
-    width: 100%; /* Make the select element fill the width of its container */
-    max-width: 100%; /* Ensure the select doesn't exceed its container's width */
-    overflow: hidden; /* Hide any overflowing text */
-    text-overflow: ellipsis; /* Show ellipsis (...) for truncated text */
-    white-space: nowrap; /* Prevent wrapping of text */
-    font-size: 16px;
-
-    &:focus {
-        outline: none;
-    }
-
-    @media (max-width: 691.99px) {
-        font-size: 14px;
-    }
-}
-
 .gridItem2 {
     display: flex;
     flex-direction: column;
 
     h2 {
         font-size: 24px;
-        margin-bottom: 24px;
+        margin-bottom: 4px;
         font-weight: 700;
 
         @media (max-width: 691.99px) {
