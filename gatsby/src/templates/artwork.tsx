@@ -18,7 +18,6 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>{artworksJson.name}</h1>
                 <div className={styles.linksContainer}>
                     <div />
                     <Link
@@ -81,7 +80,7 @@ const ArtworkPage = ({ data: { artworksJson } }: PageProps<DataProps>) => {
                         ) : null}
                     </div>
                     <div className={styles.gridItem2}>
-                        <h2>Description</h2>
+                        <h1 className={styles.h1}>{artworksJson.name}</h1>
                         <p>{artworksJson.description}</p>
                     </div>
                 </div>
