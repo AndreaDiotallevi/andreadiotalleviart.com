@@ -50,13 +50,10 @@ const PricePage = ({
         <Layout>
             <div className={styles.container}>
                 <div className={styles.linksContainer}>
-                    <div />
                     <Link to="/shop" className={styles.backButtonContainer}>
                         <div className={styles.backButtonIcon} />
                         <p className={styles.linkText}>Back to Shop</p>
                     </Link>
-                    <div />
-                    <div />
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.gridItem1}>
