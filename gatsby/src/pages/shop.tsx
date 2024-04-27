@@ -24,7 +24,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <PageTitle text="High quality giclée generative art prints, on Hahnemühle photo rag 308gsm paper, delived in less than 4 days" />
+                <PageTitle text="Archival quality giclée generative art prints, on heavy-duty vegan certified Hahnemühle photo rag 308gsm matte paper, delived in less than 48 hours" />
                 <p className={styles.h1}>Shop</p>
                 <div className={styles.grid}>
                     {allStripePrice.group.map(group => (

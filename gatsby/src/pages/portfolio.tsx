@@ -20,7 +20,7 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <PageTitle text="My generative art experimentations on fractals, image processing, Perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms" />
+                <PageTitle text="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms" />
                 <p className={styles.h1}>Generative Art</p>
                 <div className={styles.grid}>
                     {allArtworksJson.edges.map(({ node }) => (
