@@ -22,7 +22,6 @@ const About = ({ data: { file } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>About</h1>
                 <div className={styles.grid}>
                     <div>
                         <GatsbyImage
@@ -31,6 +30,7 @@ const About = ({ data: { file } }: PageProps<DataProps>) => {
                         />
                     </div>
                     <div className={styles.gridItem2}>
+                        <h1 className={styles.h1}>About</h1>
                         <p>
                             My name is Andrea Diotallevi. I am a generative
                             artist and creative coder based in London.

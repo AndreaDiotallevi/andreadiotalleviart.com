@@ -66,7 +66,6 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.h1}>Contact</h1>
                 <div className={styles.grid}>
                     <div>
                         <GatsbyImage
@@ -75,6 +74,7 @@ const Contact = ({ data: { file } }: PageProps<DataProps>) => {
                         />
                     </div>
                     <div className={styles.gridItem2}>
+                        <h1 className={styles.h1}>Contact</h1>
                         <InputField
                             value={name}
                             name="name"
