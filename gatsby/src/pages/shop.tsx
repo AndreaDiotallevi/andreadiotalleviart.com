@@ -5,6 +5,7 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
+import { formatArrayItems } from "../utils/formatArrayItems"
 import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
 
 import Seo from "../components/seo"
@@ -48,12 +49,31 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                 <p>
                                     {group.edges.length > 1 ? "from " : ""}£
                                     {(
-                                        group.edges[0].node.unit_amount / 100
+                                        group.edges.sort(
+                                            (a, b) =>
+                                                a.node.unit_amount -
+                                                b.node.unit_amount,
+                                        )[0].node.unit_amount / 100
                                     ).toFixed(2)}
                                 </p>
-                                {/* <p className={styles.note}>
-                                    available in A3, A2 and A1
-                                </p> */}
+                                <p>
+                                    Available in{" "}
+                                    {formatArrayItems(
+                                        group.edges
+                                            // .sort((a, b) =>
+                                            //     a.node.product.metadata.size.localeCompare(
+                                            //         b.node.product.metadata
+                                            //             .size,
+                                            //     ),
+                                            // )
+                                            .map(
+                                                edge =>
+                                                    edge.node.product.metadata.size.split(
+                                                        " ",
+                                                    )[0],
+                                            ),
+                                    )}
+                                </p>
                             </Link>
                         </li>
                     ))}
