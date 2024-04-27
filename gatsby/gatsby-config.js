@@ -12,7 +12,7 @@ module.exports = {
         image: "/moonlight.png",
         twitterUsername: "@adiotalleviart",
     },
-    // trailingSlash: "never",
+    trailingSlash: "never",
     plugins: [
         "gatsby-plugin-sass",
         {
