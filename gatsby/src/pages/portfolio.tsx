@@ -20,8 +20,8 @@ const Portfolio = ({ data: { allArtworksJson } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
-                <PageTitle text="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms" />
-                <p className={styles.h1}>Generative Art</p>
+                <h1 className={styles.h1}>Generative Art</h1>
+                <PageTitle p="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms" />
                 <div className={styles.grid}>
                     {allArtworksJson.edges.map(({ node }) => (
                         <li key={node.slug} className={styles.gridItem}>
@@ -60,7 +60,7 @@ export const query = graphql`
 export const Head = ({ data: { allArtworksJson } }: PageProps<DataProps>) => (
     <Seo
         title="Portfolio | Andrea Diotallevi"
-        description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
+        description="Generative art experimentations on fractals, image processing, perlin noise and line art as a dynamic dialogue between human creativity and computer algorithms."
         image={
             allArtworksJson.edges[0].node.images[0].childImageSharp.original.src
         }
