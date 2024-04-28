@@ -119,7 +119,7 @@ const PricePage = ({
                             defaultValue={selectedPrice.product.metadata.size}
                         />
                         <p>
-                            The print comes with a white border for framing.
+                            {/* The print comes with a white border for framing. */}
                             Frame not included.
                         </p>
                         <h2>Hahnemühle photo rag 308gsm</h2>
