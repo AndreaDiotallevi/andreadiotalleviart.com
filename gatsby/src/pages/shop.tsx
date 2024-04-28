@@ -25,7 +25,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
         <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Shop</h1>
-                <PageTitle p="Archival quality giclée generative art prints, on heavy-duty vegan certified Hahnemühle photo rag 308gsm matte paper, delived in less than 48 hours" />
+                <PageTitle p="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days" />
                 <div className={styles.grid}>
                     {allStripePrice.group.map(group => (
                         <li
@@ -106,7 +106,7 @@ export const query = graphql`
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
         title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
-        description="Archival quality giclée generative art prints, on heavy-duty vegan certified Hahnemühle photo rag 308gsm matte paper, delived in less than 48 hours."
+        description="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days."
         image={
             allStripePrice.group[0].edges[0].node.mockup.childImageSharp
                 .original.src
