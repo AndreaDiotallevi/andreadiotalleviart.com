@@ -169,8 +169,9 @@ export const createOrder = async ({
             recipient: {
                 address: {
                     line1: shipping_details.address.line1,
-                    line2: shipping_details.address.line2 || null,
-                    postalOrZipCode: shipping_details.address.postal_code,
+                    line2: shipping_details.address.line2 || null, // Empty string breaks it,
+                    postalOrZipCode:
+                        shipping_details.address.postal_code || null, // Empty string breaks it,
                     countryCode: shipping_details.address.country,
                     townOrCity: shipping_details.address.city,
                     stateOrCounty: shipping_details.address.state || null, // Empty string breaks it
@@ -208,6 +209,8 @@ export const createOrder = async ({
 
         if (!response.ok) {
             console.error(response.body)
+            console.log(JSON.stringify(response.status))
+            console.log(JSON.stringify(response.statusText))
             throw new Error("Failed to create order")
         }
     } catch (error) {
