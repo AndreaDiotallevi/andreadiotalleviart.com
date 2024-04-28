@@ -8,16 +8,16 @@ import { GatsbyBrowser } from "gatsby"
 export const shouldUpdateScroll: GatsbyBrowser["shouldUpdateScroll"] = ({
     prevRouterProps,
     routerProps,
-    getSavedScrollPosition,
+    // getSavedScrollPosition,
 }) => {
     if (prevRouterProps?.location?.pathname === routerProps.location.pathname) {
         return false
     }
 
-    const currentPosition = getSavedScrollPosition(routerProps.location)
+    // const currentPosition = getSavedScrollPosition(routerProps.location)
     // const queriedPosition = getSavedScrollPosition({ pathname: `/random` })
 
-    window.scrollTo(...(currentPosition || [0, 0]))
+    // window.scrollTo(...(currentPosition || [0, 0]))
 
-    return false
+    return true
 }
