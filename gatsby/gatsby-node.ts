@@ -39,7 +39,7 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = async ({
 
     const externalImages = [
         { key: "artwork", value: "_WEB_WITHOUT_BORDER.png" },
-        { key: "mockup", value: "_WEB_MOCKUP.png" },
+        { key: "mockup", value: "_WEB_MOCKUP_WITHOUT_BORDER.png" },
     ]
 
     if (node.internal.type === "StripePrice" && node.product?.metadata?.slug) {

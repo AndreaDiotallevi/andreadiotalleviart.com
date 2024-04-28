@@ -1,6 +1,7 @@
 import sharp from "sharp"
 
 export const addBorder = async (imagePath: string, outputPath: string) => {
+    console.log("Adding border...")
     const image = sharp(imagePath)
     const metadata = await image.metadata()
 
@@ -56,6 +57,7 @@ export const cropToVerticalA3Ratio = async (
     imagePath: string,
     outputPath: string
 ) => {
+    console.log("Cropping to vertical A3 ratio...")
     const image = sharp(imagePath)
     const metadata = await image.metadata()
 
@@ -85,6 +87,7 @@ export const createThumbnail = async (
     imagePath: string,
     outputPath: string
 ) => {
+    console.log("Creating thumbnail...")
     const targetWidth = 400 // Set target width for the thumbnail
     const quality = 90 // Set a default high-quality compression
 
