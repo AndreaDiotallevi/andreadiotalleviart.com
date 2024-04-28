@@ -5,8 +5,6 @@ import { GatsbyImage } from "gatsby-plugin-image"
 
 import Layout from "../templates/layout"
 import { StripePrice } from "../models/stripe"
-import { formatArrayItems } from "../utils/formatArrayItems"
-import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
 
 import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
@@ -43,10 +41,10 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                     }
                                 />
                                 <h2>
-                                    {getProductNameFromSlug(
+                                    {
                                         group.edges[0].node.product.metadata
-                                            .slug,
-                                    )}
+                                            .displayName
+                                    }
                                 </h2>
                                 <p>
                                     {group.edges.length > 1 ? "From " : ""}£
@@ -60,20 +58,12 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
                                 </p>
                                 <p>
                                     Sizes:{" "}
-                                    {formatArrayItems(
-                                        group.edges
-                                            // .sort((a, b) =>
-                                            //     a.node.product.metadata.size.localeCompare(
-                                            //         b.node.product.metadata
-                                            //             .size,
-                                            //     ),
-                                            // )
-                                            .map(
-                                                edge =>
-                                                    edge.node.product.metadata
-                                                        .size,
-                                            ),
-                                    )}
+                                    {group.edges
+                                        .map(
+                                            edge =>
+                                                edge.node.product.metadata.size,
+                                        )
+                                        .join(", ")}
                                 </p>
                             </Link>
                         </li>

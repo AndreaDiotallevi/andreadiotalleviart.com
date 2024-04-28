@@ -9,8 +9,6 @@ import Seo from "../components/seo"
 
 import { StripePrice } from "../models/stripe"
 
-import { getProductNameFromSlug } from "../utils/getProductNameFromSlug"
-
 import { createCheckoutSession } from "../api"
 
 import * as styles from "./showcase.module.scss"
@@ -98,9 +96,7 @@ const PricePage = ({
                     </div>
                     <div className={styles.gridItem2}>
                         <h1 className={styles.h1}>
-                            {getProductNameFromSlug(
-                                selectedPrice.product.metadata.slug,
-                            )}
+                            {selectedPrice.product.metadata.displayName}
                         </h1>
                         <h2>Choose paper size</h2>
                         <InputSelect
@@ -206,7 +202,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${getProductNameFromSlug(allStripePrice.edges[0].node.product.metadata.slug)} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        title={`${allStripePrice.edges[0].node.product.metadata.displayName} | Giclée Fine Art Prints | Andrea Diotallevi`}
         description={allStripePrice.edges[0].node.product.description}
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"

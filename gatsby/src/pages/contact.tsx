@@ -137,7 +137,7 @@ export const query = graphql`
         file(relativePath: { eq: "assets/portrait.jpg" }) {
             childImageSharp {
                 gatsbyImageData(
-                    width: 660
+                    width: 2000
                     quality: 99
                     layout: CONSTRAINED
                     placeholder: BLURRED
