@@ -120,7 +120,8 @@ const PricePage = ({
                         />
                         <p>
                             {/* The print comes with a white border for framing. */}
-                            Frame not included.
+                            Printed full bleed with no border. Frame not
+                            included.
                         </p>
                         <h2>Hahnemühle photo rag 308gsm</h2>
                         <p>
