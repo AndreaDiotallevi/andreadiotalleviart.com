@@ -11,63 +11,78 @@ import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
 
 type DataProps = {
-    allStripePrice: {
+    portaitPrints: {
+        group: {
+            edges: [{ node: StripePrice }]
+        }[]
+    }
+    landscapePrints: {
         group: {
             edges: [{ node: StripePrice }]
         }[]
     }
 }
 
-const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
+const Shop = ({
+    data: { portaitPrints, landscapePrints },
+}: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Shop</h1>
                 <PageTitle p="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days" />
                 <div className={styles.grid}>
-                    {allStripePrice.group.map(group => (
-                        <li
-                            key={group.edges[0].node.product.metadata.slug}
-                            className={styles.gridItem}
-                        >
-                            <Link
-                                to={`/shop/prints/${group.edges[0].node.product.metadata.slug}`}
+                    {portaitPrints.group
+                        .concat(landscapePrints.group)
+                        .sort(
+                            (a, b) =>
+                                a.edges[0].node.product.metadata.displayOrder -
+                                b.edges[0].node.product.metadata.displayOrder,
+                        )
+                        .map(group => (
+                            <li
+                                key={group.edges[0].node.product.metadata.slug}
+                                className={`${styles.gridItem} ${group.edges[0].node.product.metadata.orientation === "landscape" ? styles.fullWidth : ""}`}
                             >
-                                <GatsbyImage
-                                    alt="image"
-                                    image={
-                                        group.edges[0].node.mockup
-                                            .childImageSharp.gatsbyImageData
-                                    }
-                                />
-                                <h2>
-                                    {
-                                        group.edges[0].node.product.metadata
-                                            .displayName
-                                    }
-                                </h2>
-                                <p>
-                                    {group.edges.length > 1 ? "From " : ""}£
-                                    {(
-                                        group.edges.sort(
-                                            (a, b) =>
-                                                a.node.unit_amount -
-                                                b.node.unit_amount,
-                                        )[0].node.unit_amount / 100
-                                    ).toFixed(2)}
-                                </p>
-                                <p>
-                                    Sizes:{" "}
-                                    {group.edges
-                                        .map(
-                                            edge =>
-                                                edge.node.product.metadata.size,
-                                        )
-                                        .join(", ")}
-                                </p>
-                            </Link>
-                        </li>
-                    ))}
+                                <Link
+                                    to={`/shop/prints/${group.edges[0].node.product.metadata.slug}`}
+                                >
+                                    <GatsbyImage
+                                        alt="image"
+                                        image={
+                                            group.edges[0].node.mockup
+                                                .childImageSharp.gatsbyImageData
+                                        }
+                                    />
+                                    <h2>
+                                        {
+                                            group.edges[0].node.product.metadata
+                                                .displayName
+                                        }
+                                    </h2>
+                                    <p>
+                                        {group.edges.length > 1 ? "From " : ""}£
+                                        {(
+                                            group.edges.sort(
+                                                (a, b) =>
+                                                    a.node.unit_amount -
+                                                    b.node.unit_amount,
+                                            )[0].node.unit_amount / 100
+                                        ).toFixed(2)}
+                                    </p>
+                                    <p>
+                                        Sizes:{" "}
+                                        {group.edges
+                                            .map(
+                                                edge =>
+                                                    edge.node.product.metadata
+                                                        .size,
+                                            )
+                                            .join(", ")}
+                                    </p>
+                                </Link>
+                            </li>
+                        ))}
                 </div>
             </div>
         </Layout>
@@ -78,8 +93,32 @@ export default Shop
 
 export const query = graphql`
     {
-        allStripePrice(
-            filter: { active: { eq: true }, product: { active: { eq: true } } }
+        portaitPrints: allStripePrice(
+            filter: {
+                active: { eq: true }
+                product: {
+                    active: { eq: true }
+                    metadata: { orientation: { eq: "portrait" } }
+                }
+            }
+            sort: { product: { metadata: { size: DESC } } }
+        ) {
+            group(field: { product: { metadata: { slug: SELECT } } }) {
+                edges {
+                    node {
+                        ...StripePriceFragment
+                    }
+                }
+            }
+        }
+        landscapePrints: allStripePrice(
+            filter: {
+                active: { eq: true }
+                product: {
+                    active: { eq: true }
+                    metadata: { orientation: { eq: "landscape" } }
+                }
+            }
             sort: { product: { metadata: { size: DESC } } }
         ) {
             group(field: { product: { metadata: { slug: SELECT } } }) {
@@ -93,13 +132,13 @@ export const query = graphql`
     }
 `
 
-export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
+export const Head = ({ data: { portaitPrints } }: PageProps<DataProps>) => (
     <Seo
         title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
         description="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days."
         image={
-            allStripePrice.group[0].edges[0].node.mockup.childImageSharp
-                .original.src
+            portaitPrints.group[0].edges[0].node.mockup.childImageSharp.original
+                .src
         }
         tags={[
             "Andrea Diotallevi",
