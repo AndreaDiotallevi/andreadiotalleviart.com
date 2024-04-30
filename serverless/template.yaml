@@ -310,7 +310,7 @@ Resources:
                             <div>
                                 {{productDisplayName}}<br>
                                 {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" width="120">
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
                             <div>
@@ -328,7 +328,8 @@ Resources:
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
                             </div>
-                            <h3>With love, Andrea</h3>
+                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
+                            <h3>With warmth, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
@@ -343,7 +344,7 @@ Resources:
                     <html>
                         <body>
                             <h3>Dear {{name}},</h3>
-                            <p>Your order has been shipped and is now on its way to you!</p>
+                            <p>Your order has been shipped and is now on its way!</p>
                             <h3>Shipment details</h3>
                             <div>
                                 Carrier name: {{carrierName}}<br>
@@ -355,7 +356,7 @@ Resources:
                             <div>
                                 {{productDisplayName}}<br>
                                 {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" width="120">
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
                             <div>
@@ -366,7 +367,8 @@ Resources:
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
-                            <h3>With love, Andrea</h3>
+                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
+                            <h3>With warmth, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
