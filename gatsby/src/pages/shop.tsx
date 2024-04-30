@@ -11,29 +11,21 @@ import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
 
 type DataProps = {
-    portaitPrints: {
-        group: {
-            edges: [{ node: StripePrice }]
-        }[]
-    }
-    landscapePrints: {
+    allStripePrice: {
         group: {
             edges: [{ node: StripePrice }]
         }[]
     }
 }
 
-const Shop = ({
-    data: { portaitPrints, landscapePrints },
-}: PageProps<DataProps>) => {
+const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
     return (
         <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Shop</h1>
                 <PageTitle p="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days" />
                 <div className={styles.grid}>
-                    {portaitPrints.group
-                        .concat(landscapePrints.group)
+                    {allStripePrice.group
                         .sort(
                             (a, b) =>
                                 a.edges[0].node.product.metadata.displayOrder -
@@ -63,11 +55,8 @@ const Shop = ({
                                     <p>
                                         {group.edges.length > 1 ? "From " : ""}£
                                         {(
-                                            group.edges.sort(
-                                                (a, b) =>
-                                                    a.node.unit_amount -
-                                                    b.node.unit_amount,
-                                            )[0].node.unit_amount / 100
+                                            group.edges[0].node.unit_amount /
+                                            100
                                         ).toFixed(2)}
                                     </p>
                                     <p>
@@ -93,32 +82,8 @@ export default Shop
 
 export const query = graphql`
     {
-        portaitPrints: allStripePrice(
-            filter: {
-                active: { eq: true }
-                product: {
-                    active: { eq: true }
-                    metadata: { orientation: { eq: "portrait" } }
-                }
-            }
-            sort: { product: { metadata: { size: DESC } } }
-        ) {
-            group(field: { product: { metadata: { slug: SELECT } } }) {
-                edges {
-                    node {
-                        ...StripePriceFragment
-                    }
-                }
-            }
-        }
-        landscapePrints: allStripePrice(
-            filter: {
-                active: { eq: true }
-                product: {
-                    active: { eq: true }
-                    metadata: { orientation: { eq: "landscape" } }
-                }
-            }
+        allStripePrice(
+            filter: { active: { eq: true }, product: { active: { eq: true } } }
             sort: { product: { metadata: { size: DESC } } }
         ) {
             group(field: { product: { metadata: { slug: SELECT } } }) {
@@ -132,13 +97,13 @@ export const query = graphql`
     }
 `
 
-export const Head = ({ data: { portaitPrints } }: PageProps<DataProps>) => (
+export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
         title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
         description="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days."
         image={
-            portaitPrints.group[0].edges[0].node.mockup.childImageSharp.original
-                .src
+            allStripePrice.group[0].edges[0].node.mockup.childImageSharp
+                .original.src
         }
         tags={[
             "Andrea Diotallevi",
