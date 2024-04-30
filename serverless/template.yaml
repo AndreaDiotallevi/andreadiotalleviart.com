@@ -308,8 +308,9 @@ Resources:
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Items</h3>
                             <div>
-                                {{productName}} - {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                                {{productDisplayName}}<br>
+                                {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" width="120">
                             </div>
                             <h3>Delivery address</h3>
                             <div>
@@ -352,8 +353,9 @@ Resources:
                             </div>
                             <h3>Items</h3>
                             <div>
-                                {{productName}} - {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                                {{productDisplayName}}<br>
+                                {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" width="120">
                             </div>
                             <h3>Delivery address</h3>
                             <div>

@@ -1,4 +1,5 @@
 import { SQSEvent } from "aws-lambda"
+import Stripe from "stripe"
 
 import { sendEmail } from "../services/ses"
 import { getParameterValue } from "../services/ssm"
@@ -22,6 +23,8 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             } = await retrieveCheckoutSession({
                 sessionId: event.data.order.merchantReference,
             })
+
+            const product = line_items?.data[0].price?.product as Stripe.Product
 
             const {
                 data: {
@@ -50,11 +53,9 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     postcode: recipient.address.postalOrZipCode || "",
                     town: recipient.address.townOrCity || "",
                     country: recipient.address.stateOrCounty || "",
-                    productName: line_items?.data[0].price?.product.name || "",
-                    productDescription:
-                        line_items?.data[0].price?.product.description || "",
-                    productImageSource:
-                        line_items?.data[0].price?.product?.images[0] || "",
+                    productDisplayName: product.metadata.displayName || "",
+                    productDescription: product.description || "",
+                    productImageSource: product.images[0] || "",
                 }),
             })
         }
