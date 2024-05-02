@@ -34,6 +34,7 @@ export type StripePrice = {
             displayName: string
             orientation: "portrait" | "landscape"
             displayOrder: number
+            sku: string
         }
     }
 }
@@ -82,6 +83,7 @@ export const query = graphql`
                 displayName
                 orientation
                 displayOrder
+                sku
             }
         }
     }
