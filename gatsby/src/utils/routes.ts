@@ -5,6 +5,9 @@ export type RouteType = {
 }
 
 const routes: RouteType[] = [
+    // { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
+    { menuName: "About", baseUrl: "/about", pageTitle: "About" },
+    { menuName: "Contact", baseUrl: "/contact", pageTitle: "Contact" },
     {
         menuName: "Portfolio",
         baseUrl: "/portfolio",
@@ -16,9 +19,6 @@ const routes: RouteType[] = [
     //     baseUrl: "/",
     //     pageTitle: "Generative Artist and Creative Coder",
     // },
-    // { menuName: "Shop", baseUrl: "/shop", pageTitle: "Shop" },
-    { menuName: "About", baseUrl: "/about", pageTitle: "About" },
-    { menuName: "Contact", baseUrl: "/contact", pageTitle: "Contact" },
 ]
 
 export default routes

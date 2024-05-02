@@ -105,7 +105,7 @@ export const createThumbnail = async (
 }
 
 export const createWebImage = async (imagePath: string, outputPath: string) => {
-    const targetWidth = 1000 // Set target width for the thumbnail
+    const targetWidth = 1400 // Set target width for the thumbnail
 
     // Resize the image and convert to JPEG
     await sharp(imagePath)

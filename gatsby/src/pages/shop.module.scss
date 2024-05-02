@@ -6,11 +6,12 @@
 }
 
 .h1 {
-    position: fixed;
+    // position: fixed;
     top: 200px;
-    writing-mode: vertical-rl;
+    // writing-mode: vertical-rl;
     font-size: 48px;
     font-weight: 700;
+    // text-transform: lowercase;
 
     @media (max-width: 691.99px) {
         font-size: 24px;
@@ -54,6 +55,6 @@
     }
 }
 
-// .note {
-//     font-size: 12px;
-// }
+.fullWidth {
+    grid-column: 1 / span 2; /* Span full width */
+}

@@ -1,13 +1,9 @@
 import Stripe from "stripe"
 
 import { getParameterValue } from "./ssm"
+import { products } from "../data/stripe"
 
-export const createCheckoutSession = async (
-    params: Pick<
-        Stripe.Checkout.SessionCreateParams,
-        "line_items" | "success_url"
-    >
-) => {
+const initialiseStripeClient = async () => {
     const stripeSecretKey = await getParameterValue<string>({
         name: "STRIPE_SECRET_KEY",
         withDecryption: true,
@@ -17,9 +13,20 @@ export const createCheckoutSession = async (
         apiVersion: "2023-10-16",
     })
 
-    const { line_items, success_url } = params
+    return stripe
+}
 
+export const createCheckoutSession = async (
+    params: Pick<
+        Stripe.Checkout.SessionCreateParams,
+        "line_items" | "success_url"
+    >
+) => {
     try {
+        const stripe = await initialiseStripeClient()
+
+        const { line_items, success_url } = params
+
         const session = await stripe.checkout.sessions.create({
             ui_mode: "embedded",
             mode: "payment",
@@ -43,18 +50,11 @@ export const createCheckoutSession = async (
 export const retrieveCheckoutSession = async (params: {
     sessionId: string
 }) => {
-    const stripeSecretKey = await getParameterValue<string>({
-        name: "STRIPE_SECRET_KEY",
-        withDecryption: true,
-    })
-
-    const stripe = new Stripe(stripeSecretKey, {
-        apiVersion: "2023-10-16",
-    })
-
-    const { sessionId } = params
-
     try {
+        const stripe = await initialiseStripeClient()
+
+        const { sessionId } = params
+
         const session = await stripe.checkout.sessions.retrieve(sessionId, {
             expand: ["line_items", "line_items.data.price.product", "customer"],
         })
@@ -62,6 +62,41 @@ export const retrieveCheckoutSession = async (params: {
         return {
             session,
         }
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+export const stripeSynchroniseProducts = async () => {
+    try {
+        const stripe = await initialiseStripeClient()
+
+        const stripeProducts = await stripe.products.list()
+
+        for (const product of products) {
+            const { name } = product
+
+            const payload = {
+                name: product.name,
+                description: product.description,
+                metadata: product.metadata,
+            }
+
+            // const stripeProduct = stripeProducts.data.find(
+            //     p => p.metadata.sku === sku
+            // )
+
+            const stripeProduct = stripeProducts.data.find(p => p.name === name)
+
+            if (stripeProduct) {
+                await stripe.products.update(stripeProduct.id, payload)
+            } else {
+                // await stripe.products.create(payload)
+            }
+        }
+
+        console.log("Products synchronized successfully!")
     } catch (error) {
         console.error(error)
         throw error
@@ -308,3 +343,17 @@ const countriesArray: Stripe.Checkout.SessionCreateParams.ShippingAddressCollect
         "ZW",
         "ZZ",
     ]
+
+// const products: Array<
+//     Pick<Stripe.Product, "name" | "description"> & {
+//         metadata: {
+//             category: "prints"
+//             slug: "marble-lake" | "flames" | "moonlight-2" | "new-york"
+//             size: "A1" | "A2" | "A3"
+//             prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
+//             displayName: string
+//             orientation: "portrait" | "landscape"
+//             displayOrder: string
+//         }
+//     }
+// > = [

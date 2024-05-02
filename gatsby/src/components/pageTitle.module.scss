@@ -25,11 +25,11 @@
     }
 
     @media (max-width: 691.99px) {
+        min-height: 80px;
+
         h1,
         p {
             font-size: 14px;
         }
-
-        // min-height: 24px;
     }
 }

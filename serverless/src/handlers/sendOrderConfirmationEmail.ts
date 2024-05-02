@@ -48,8 +48,9 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     town: session.shipping_details?.address?.city || "",
                     country: session.shipping_details?.address?.country || "",
                     paymentMethod: "Card",
-                    productName:
-                        session.line_items?.data[0].price?.product.name || "",
+                    productDisplayName:
+                        session.line_items?.data[0].price?.product.metadata
+                            .displayName || "",
                     productDescription:
                         session.line_items?.data[0].price?.product
                             .description || "",

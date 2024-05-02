@@ -308,8 +308,9 @@ Resources:
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Items</h3>
                             <div>
-                                {{productName}} - {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                                {{productDisplayName}}<br>
+                                {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
                             <div>
@@ -327,7 +328,8 @@ Resources:
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
                             </div>
-                            <h3>With love, Andrea</h3>
+                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
+                            <h3>With warmth, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
@@ -342,7 +344,7 @@ Resources:
                     <html>
                         <body>
                             <h3>Dear {{name}},</h3>
-                            <p>Your order has been shipped and is now on its way to you!</p>
+                            <p>Your order has been shipped and is now on its way!</p>
                             <h3>Shipment details</h3>
                             <div>
                                 Carrier name: {{carrierName}}<br>
@@ -352,8 +354,9 @@ Resources:
                             </div>
                             <h3>Items</h3>
                             <div>
-                                {{productName}} - {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productName}}" width="120">
+                                {{productDisplayName}}<br>
+                                {{productDescription}}<br><br>
+                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
                             <div>
@@ -364,7 +367,8 @@ Resources:
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
-                            <h3>With love, Andrea</h3>
+                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
+                            <h3>With warmth, Andrea</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
@@ -449,6 +453,33 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/stripeRetrieveCheckoutSession.ts
+
+    StripeSynchroniseProductsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeSynchroniseProducts
+            Handler: src/handlers/stripeSynchroniseProducts.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /stripe-synchronise-products
+                        Method: POST
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/stripeSynchroniseProducts.ts
 
     SendOrderConfirmationEmailFunction:
         Type: AWS::Serverless::Function

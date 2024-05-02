@@ -28,10 +28,13 @@ export type StripePrice = {
         description: string
         metadata: {
             category: "prints"
-            slug: "marble-lake" | "flames" | "moonlight-2"
+            slug: "marble-lake" | "flames" | "moonlight-2" | "new-york"
             size: "A1" | "A2" | "A3"
             prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
             displayName: string
+            orientation: "portrait" | "landscape"
+            displayOrder: number
+            sku: string
         }
     }
 }
@@ -45,7 +48,7 @@ export const query = graphql`
         artwork {
             childImageSharp {
                 gatsbyImageData(
-                    width: 1000
+                    width: 1400
                     quality: 99
                     layout: CONSTRAINED
                     placeholder: BLURRED
@@ -78,6 +81,9 @@ export const query = graphql`
                 slug
                 prodigiSku
                 displayName
+                orientation
+                displayOrder
+                sku
             }
         }
     }
