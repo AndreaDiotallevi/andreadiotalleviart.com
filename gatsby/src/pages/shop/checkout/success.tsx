@@ -39,7 +39,7 @@ const Success = ({
             setSession(session)
 
             const discount =
-                session.total_details?.breakdown?.discounts[0].discount
+                session.total_details?.breakdown?.discounts[0]?.discount
 
             const gtagEventData: Gtag.EventParams = {
                 transaction_id: sessionId,
