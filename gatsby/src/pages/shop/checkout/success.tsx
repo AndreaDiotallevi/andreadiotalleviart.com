@@ -142,7 +142,7 @@ export const query = graphql`
 
 export const Head = () => (
     <Seo
-        title="Order Confirmation | Andrea Diotallevi Art"
+        title="Checkout Success | Andrea Diotallevi Art"
         description="Thank you for your purchase! Your order has been successfully placed. Check your email for order details and shipping information."
         tags={["Thanks You For Your Order"]}
     />
