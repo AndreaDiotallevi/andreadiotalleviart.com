@@ -15,7 +15,7 @@ export const handler = async (
         success_url,
     })
 
-    console.log(JSON.stringify(event))
+    console.log(JSON.stringify(session))
 
     return {
         statusCode: 200,
