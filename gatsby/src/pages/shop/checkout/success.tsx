@@ -59,9 +59,10 @@ const Success = ({
                     quantity: item.quantity ?? 1,
                 })),
             }
-            console.log(gtagEventData)
 
-            window.gtag("event", "purchase", gtagEventData)
+            if ("gtag" in window) {
+                window.gtag("event", "purchase", gtagEventData)
+            }
         }
 
         fetchSession()
