@@ -98,7 +98,7 @@ export const query = graphql`
 
 export const Head = ({ data: { artworksJson } }: PageProps<DataProps>) => (
     <Seo
-        title={`${artworksJson.name} | Andrea Diotallevi`}
+        title={`${artworksJson.name} | Andrea Diotallevi Art`}
         description={artworksJson.description}
         image={artworksJson.images[0].childImageSharp.original.src}
         tags={[

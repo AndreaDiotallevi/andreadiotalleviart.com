@@ -99,7 +99,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title="Shop | Giclée Fine Art Prints | Andrea Diotallevi"
+        title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
         description="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in less than 4 days."
         image={
             allStripePrice.group[0].edges[0].node.mockup.childImageSharp

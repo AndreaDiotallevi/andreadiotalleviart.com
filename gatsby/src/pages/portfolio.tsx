@@ -59,7 +59,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allArtworksJson } }: PageProps<DataProps>) => (
     <Seo
-        title="Portfolio | Andrea Diotallevi"
+        title="Portfolio | Andrea Diotallevi Art"
         description="Experimentations with generative art patterns and algorithms as a dynamic dialogue between human creativity and computer efficiency."
         image={
             allArtworksJson.edges[0].node.images[0].childImageSharp.original.src
