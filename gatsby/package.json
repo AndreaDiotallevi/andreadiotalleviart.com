@@ -6,6 +6,7 @@
 	"license": "0BSD",
 	"scripts": {
 		"build": "gatsby build",
+		"build:dev": "env-cmd -f .env.development gatsby build",
 		"develop": "env-cmd -f .env.development gatsby develop",
 		"format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
 		"start": "npm run develop",
@@ -26,6 +27,7 @@
 		"gatsby-plugin-image": "^3.13.1",
 		"gatsby-plugin-sass": "^6.13.1",
 		"gatsby-plugin-sharp": "^5.13.1",
+		"gatsby-plugin-sitemap": "^6.13.1",
 		"gatsby-remark-images": "^7.13.1",
 		"gatsby-remark-prismjs": "^7.13.1",
 		"gatsby-remark-relative-images": "^2.0.2",
