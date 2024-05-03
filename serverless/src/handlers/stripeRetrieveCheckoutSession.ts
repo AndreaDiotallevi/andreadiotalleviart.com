@@ -9,6 +9,8 @@ export const handler = async (
 
     const { session } = await retrieveCheckoutSession({ sessionId })
 
+    console.log(JSON.stringify(session))
+
     return {
         statusCode: 200,
         body: JSON.stringify({ session }),
