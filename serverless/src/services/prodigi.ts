@@ -180,8 +180,8 @@ export const createOrder = async ({
                 email: customer_details.email,
             },
             items: line_items.data.map(item => ({
-                merchantReference: item.id,
-                sku: item.price?.product.metadata.prodigiSku, // "GLOBAL-HPR-A3", // Hahnemühle Photo Rag, 29.7x42 cm / 11.7x16.5" (A3)
+                merchantReference: item.price?.product.metadata.sku,
+                sku: item.price?.product.metadata.prodigiSku,
                 copies: item.quantity,
                 sizing: "fillPrintArea",
                 assets: [
