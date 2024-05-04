@@ -115,7 +115,11 @@ const Success = ({
                             {session.line_items?.data.map(item => (
                                 <div key={item.id}>
                                     <p>
-                                        {item.price?.product.name} -{" "}
+                                        {
+                                            item.price?.product.metadata
+                                                .displayName
+                                        }
+                                        <br></br>
                                         {item.price?.product.description}
                                     </p>
                                 </div>

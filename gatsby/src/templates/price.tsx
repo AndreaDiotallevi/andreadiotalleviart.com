@@ -98,7 +98,7 @@ const PricePage = ({
                         <h1 className={styles.h1}>
                             {selectedPrice.product.metadata.displayName}
                         </h1>
-                        <h2>Choose paper size</h2>
+                        <h2>Select paper size</h2>
                         <InputSelect
                             name="size"
                             onChange={event => {
@@ -118,11 +118,7 @@ const PricePage = ({
                             }))}
                             defaultValue={selectedPrice.product.metadata.size}
                         />
-                        <p>
-                            {/* The print comes with a white border for framing. */}
-                            Printed full bleed with no border. Frame not
-                            included.
-                        </p>
+                        <p>The image is printed full bleed with no border.</p>
                         <h2>Hahnemühle photo rag 308gsm</h2>
                         <p>
                             A heavy-duty, vegan certified matte paper made of
