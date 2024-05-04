@@ -33,9 +33,8 @@ export const createCheckoutSession = async (
             return_url: `${success_url}?session_id={CHECKOUT_SESSION_ID}`,
             line_items,
             allow_promotion_codes: true,
-            shipping_address_collection: {
-                allowed_countries: countriesArray,
-            },
+            invoice_creation: { enabled: true },
+            shipping_address_collection: { allowed_countries: countriesArray },
         })
 
         return {
@@ -60,6 +59,8 @@ export const retrieveCheckoutSession = async (params: {
                 "line_items",
                 "line_items.data.price.product",
                 "customer",
+                "invoice",
+                "invoice.charge",
                 "total_details.breakdown.discounts", // https://docs.stripe.com/api/checkout/sessions/object#checkout_session_object-total_details-breakdown-discounts-discount
             ],
         })
@@ -348,17 +349,3 @@ const countriesArray: Stripe.Checkout.SessionCreateParams.ShippingAddressCollect
         "ZW",
         "ZZ",
     ]
-
-// const products: Array<
-//     Pick<Stripe.Product, "name" | "description"> & {
-//         metadata: {
-//             category: "prints"
-//             slug: "marble-lake" | "flames" | "moonlight-2" | "new-york"
-//             size: "A1" | "A2" | "A3"
-//             prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
-//             displayName: string
-//             orientation: "portrait" | "landscape"
-//             displayOrder: string
-//         }
-//     }
-// > = [

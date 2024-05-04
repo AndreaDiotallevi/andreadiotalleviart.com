@@ -12,8 +12,13 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             const event = body.detail as Stripe.CheckoutSessionCompletedEvent
             console.log(JSON.stringify(event))
 
+            const emailSource = await getParameterValue<string>({
+                name: "EMAIL_ORDERS",
+            })
+
             const sessionId = event.data.object.id
             const { session } = await retrieveCheckoutSession({ sessionId })
+            console.log(JSON.stringify(session))
 
             if (!session) {
                 throw new Error("No session")
@@ -23,13 +28,31 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 throw new Error("No customer email")
             }
 
-            const emailSource = await getParameterValue<string>({
-                name: "EMAIL_ORDERS",
-            })
-
             if (!session) {
                 throw new Error("No session")
             }
+
+            const address = session.shipping_details?.address
+
+            if (!address) {
+                throw new Error("No shipping address")
+            }
+
+            const product = session.line_items?.data[0].price?.product as
+                | Stripe.Product
+                | undefined
+
+            if (!product) {
+                throw new Error("No product")
+            }
+
+            const invoice = session.invoice as Stripe.Invoice | null
+
+            if (!invoice) {
+                throw new Error("No invoice")
+            }
+
+            const charge = invoice.charge as Stripe.Charge | null
 
             await sendEmail({
                 Source: emailSource,
@@ -39,21 +62,15 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 Template: "OrderConfirmationEmailTemplate",
                 TemplateData: JSON.stringify({
                     name: session.customer_details?.name || "",
-                    addressLine1:
-                        session.shipping_details?.address?.line1 || "",
-                    addressLine2:
-                        session.shipping_details?.address?.line2 || "",
-                    postcode:
-                        session.shipping_details?.address?.postal_code || "",
-                    town: session.shipping_details?.address?.city || "",
-                    country: session.shipping_details?.address?.country || "",
+                    addressLine1: address.line1 || "",
+                    addressLine2: address.line2 || "",
+                    postcode: address.postal_code || "",
+                    town: address.city || "",
+                    country: address.country || "",
                     paymentMethod: "Card",
-                    productDisplayName:
-                        session.line_items?.data[0].price?.product.metadata
-                            .displayName || "",
-                    productDescription:
-                        session.line_items?.data[0].price?.product
-                            .description || "",
+                    productDisplayName: product.metadata.displayName || "",
+                    productDescription: product.description || "",
+                    productImageSource: product.images[0] || "",
                     itemQuantity: session.line_items?.data[0].quantity || "",
                     amountSubtotal:
                         `£${((session.amount_subtotal || 0) / 100).toFixed(
@@ -66,9 +83,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     amountTotal:
                         `£${((session.amount_total || 0) / 100).toFixed(2)}` ||
                         "",
-                    productImageSource:
-                        session.line_items?.data[0].price?.product?.images[0] ||
-                        "",
+                    receiptPdf: charge?.receipt_url?.replace("?", "/pdf?"),
                 }),
             })
         }
