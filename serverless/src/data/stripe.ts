@@ -30,12 +30,12 @@ export const products = [
         },
     },
     {
-        name: "Moonlight Variation 2 - A2 Giclée Fine Art Print",
+        name: "Moonlight 2 - A2 Giclée Fine Art Print",
         description:
             "A2 420 x 594 mm (16.5 x 23.4 inches) fine art print on Hahnemühle Photo Rag at 308gsm with subtle fibrous finish.",
         metadata: {
             category: "prints",
-            displayName: "Moonlight Variation 2",
+            displayName: "Moonlight 2",
             displayOrder: "4",
             orientation: "portrait",
             prodigiSku: "GLOBAL-HPR-A2",
@@ -45,12 +45,12 @@ export const products = [
         },
     },
     {
-        name: "Moonlight Variation 2 - A3 Giclée Fine Art Print",
+        name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
             "A3 297 x 420 mm (11.7 x 16.5 inches) fine art print on Hahnemühle Photo Rag at 308gsm with subtle fibrous finish.",
         metadata: {
             category: "prints",
-            displayName: "Moonlight Variation 2",
+            displayName: "Moonlight 2",
             displayOrder: "4",
             orientation: "portrait",
             prodigiSku: "GLOBAL-HPR-A3",
