@@ -16,12 +16,10 @@ const initialiseStripeClient = async () => {
     return stripe
 }
 
-export const createCheckoutSession = async (
-    params: Pick<
-        Stripe.Checkout.SessionCreateParams,
-        "line_items" | "success_url"
-    >
-) => {
+export const createCheckoutSession = async (params: {
+    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    success_url: string
+}) => {
     try {
         const stripe = await initialiseStripeClient()
 

@@ -1,11 +1,9 @@
 import Stripe from "stripe"
 
-export const createCheckoutSession = async (
-    params: Pick<
-        Stripe.Checkout.SessionCreateParams,
-        "line_items" | "success_url"
-    >,
-) => {
+export const createCheckoutSession = async (params: {
+    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    success_url: string
+}) => {
     if (!process.env.GATSBY_API_KEY) {
         throw new Error("The api key is undefined.")
     }
