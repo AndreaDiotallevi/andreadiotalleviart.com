@@ -353,8 +353,12 @@ Resources:
                             <div>
                                 Carrier name: {{carrierName}}<br>
                                 Carrier service: {{carrierService}}<br>
-                                Tracking number: {{trackingNumber}}<br>
-                                Tracking link: <a href="{{trackingUrl}}">here</a>
+                                {{#if trackingNumber}}
+                                    Tracking number: {{trackingNumber}}<br>
+                                {{/if}}
+                                {{#if trackingUrl}}
+                                    Tracking link: <a href="{{trackingUrl}}">here</a>
+                                {{/if}}
                             </div>
                             <h3>Items</h3>
                             <div>
