@@ -135,10 +135,12 @@ const PricePage = ({
                             giclée printing achieves archival quality, creating
                             prints that last well over 100 years.
                         </p>
-                        <h2>Free express shipping</h2>
+                        <h2>Free international shipping</h2>
                         <p>
-                            Prints are delivered within 24-48 hours in a
-                            cardboard tube with recycled plastic ends.
+                            The print is packaged in a cardboard tube with
+                            recycled plastic ends and delivered within 2 days to
+                            the UK, 5 days to Europe, Australia & US and 10 days
+                            to the rest of the world.
                         </p>
                         <h2>£{(selectedPrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
