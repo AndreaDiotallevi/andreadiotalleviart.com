@@ -106,16 +106,14 @@ export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
                 .original.src
         }
         tags={[
-            "Andrea Diotallevi",
-            "Andrea Diotallevi Art",
             "Generative Art",
-            "Album Covers",
-            "NFTs",
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
+            "Fine Art",
             "Giclee",
+            "Hahnemühle photo rag",
         ]}
     />
 )

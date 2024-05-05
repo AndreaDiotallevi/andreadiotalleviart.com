@@ -51,6 +51,7 @@ export const Head = ({ data: { file } }: PageProps<DataProps>) => (
             "Generative Art",
             "Album Covers",
             "NFTs",
+            "Giclee Fine Art Prints",
         ]}
     />
 )

@@ -216,8 +216,10 @@ export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
+            "Fine Art",
             "Giclee",
+            "Hahnemühle photo rag",
         ]}
         amount={(allStripePrice.edges[0].node.unit_amount / 100).toFixed(2)}
     />

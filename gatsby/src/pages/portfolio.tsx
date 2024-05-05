@@ -65,16 +65,11 @@ export const Head = ({ data: { allArtworksJson } }: PageProps<DataProps>) => (
             allArtworksJson.edges[0].node.images[0].childImageSharp.original.src
         }
         tags={[
-            "Andrea Diotallevi",
-            "Andrea Diotallevi Art",
             "Generative Art",
             "Album Covers",
-            "NFTs",
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
-            "Giclee",
         ]}
     />
 )

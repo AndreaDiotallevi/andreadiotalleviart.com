@@ -51,8 +51,11 @@ export const Head = () => (
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
+            "Fine Art",
             "Giclee",
+            "Hahnemühle photo rag",
+            "Stripe",
         ]}
     />
 )

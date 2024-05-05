@@ -107,7 +107,7 @@ export const Head = ({ data: { artworksJson } }: PageProps<DataProps>) => (
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
             "Giclee",
         ]}
     />
