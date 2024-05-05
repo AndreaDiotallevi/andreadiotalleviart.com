@@ -35,6 +35,7 @@ export const createCheckoutSession = async (
             allow_promotion_codes: true,
             invoice_creation: { enabled: true },
             shipping_address_collection: { allowed_countries: countriesArray },
+            shipping_options: [],
         })
 
         return {
