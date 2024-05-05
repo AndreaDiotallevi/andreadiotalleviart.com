@@ -80,22 +80,20 @@ export const stripeSynchroniseProducts = async () => {
         const stripeProducts = await stripe.products.list()
 
         for (const product of products) {
-            const { name } = product
-
             const payload = {
                 name: product.name,
                 description: product.description,
                 metadata: product.metadata,
             }
 
-            // const stripeProduct = stripeProducts.data.find(
-            //     p => p.metadata.sku === sku
-            // )
-
-            const stripeProduct = stripeProducts.data.find(p => p.name === name)
+            const stripeProduct = stripeProducts.data.find(
+                stripeProduct =>
+                    stripeProduct.metadata.sku === product.metadata.sku
+            )
 
             if (stripeProduct) {
                 await stripe.products.update(stripeProduct.id, payload)
+                console.log(`Product ${product.metadata.sku} updated.`)
             } else {
                 // await stripe.products.create(payload)
             }
