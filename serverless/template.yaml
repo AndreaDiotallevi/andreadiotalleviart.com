@@ -327,12 +327,11 @@ Resources:
                                 Shipping fee: Free<br>
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
-                                {{#if receiptPdf}}
-                                    <br>
-                                    Receipt PDF: <a href="{{receiptPdf}}">here</a>
-                                {{/if}}
                             </div>
-                            <p>For any questions, reply to this email.</p>
+                            {{#if receiptPdf}}
+                                <p>You can download your receipt <a href="{{receiptPdf}}">here</a>.</p>
+                            {{/if}}
+                            <p>For any questions regarding your order, please reply to this email.</p>
                             <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
@@ -375,7 +374,7 @@ Resources:
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
-                            <p>For any questions, reply to this email.</p>
+                            <p>For any questions regarding your order, please reply to this email.</p>
                             <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
