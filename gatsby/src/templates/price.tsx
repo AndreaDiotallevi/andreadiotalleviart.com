@@ -10,6 +10,7 @@ import Seo from "../components/seo"
 import { StripePrice } from "../models/stripe"
 
 import { createCheckoutSession } from "../api"
+import { sendGA4BeginCheckoutEvent } from "../services/ga4"
 
 import * as styles from "./showcase.module.scss"
 import InputSelect from "../components/inputSelect"
@@ -164,6 +165,10 @@ const PricePage = ({
                                     setLoading(false)
                                     return
                                 }
+
+                                sendGA4BeginCheckoutEvent({
+                                    session: data.session,
+                                })
 
                                 navigate(
                                     `/shop/checkout?clientSecret=${data.session.client_secret}`,
