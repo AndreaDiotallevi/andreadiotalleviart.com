@@ -23,7 +23,7 @@ const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
         <Layout>
             <div className={styles.container}>
                 <h1 className={styles.h1}>Shop</h1>
-                <PageTitle p="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in a cardboard tube with recycled plastic ends" />
+                <PageTitle p="Archival quality giclée generative art prints, on vegan certified Hahnemühle photo rag 308gsm matte paper, delivered in recycled packaging" />
                 <div className={styles.grid}>
                     {allStripePrice.group
                         .sort(
