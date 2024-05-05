@@ -11,6 +11,7 @@ import Seo from "../../../components/seo"
 import { StripePrice } from "../../../models/stripe"
 
 import { retrieveCheckoutSession } from "../../../api"
+import { sendGA4PurchaseEvent } from "../../../services/ga4"
 
 import * as styles from "./success.module.scss"
 
@@ -33,7 +34,11 @@ const Success = ({
             if (!sessionId) return
 
             const session = await retrieveCheckoutSession({ sessionId })
+
+            if (!session) return
+
             setSession(session)
+            sendGA4PurchaseEvent({ session })
         }
 
         fetchSession()
@@ -86,7 +91,11 @@ const Success = ({
                             {session.line_items?.data.map(item => (
                                 <div key={item.id}>
                                     <p>
-                                        {item.price?.product.name} -{" "}
+                                        {
+                                            item.price?.product.metadata
+                                                .displayName
+                                        }
+                                        <br></br>
                                         {item.price?.product.description}
                                     </p>
                                 </div>
@@ -142,8 +151,7 @@ export const query = graphql`
 
 export const Head = () => (
     <Seo
-        title="Order Confirmation | Andrea Diotallevi"
+        title="Checkout Success | Andrea Diotallevi Art"
         description="Thank you for your purchase! Your order has been successfully placed. Check your email for order details and shipping information."
-        tags={["Thanks You For Your Order"]}
     />
 )

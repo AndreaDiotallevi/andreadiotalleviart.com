@@ -10,10 +10,20 @@ export const handler = async (
         event.body as string
     ) as Stripe.Checkout.SessionCreateParams
 
+    if (!line_items) {
+        throw new Error("No line items")
+    }
+
+    if (!success_url) {
+        throw new Error("No success url")
+    }
+
     const { session } = await createCheckoutSession({
         line_items,
         success_url,
     })
+
+    console.log(JSON.stringify(session))
 
     return {
         statusCode: 200,

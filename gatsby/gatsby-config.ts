@@ -11,12 +11,21 @@ const config: GatsbyConfig = {
         author: "Andrea Diotallevi",
         description:
             "The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist.",
-        url: "https://www.andreadiotalleviart.com",
+        siteUrl: "https://www.andreadiotalleviart.com",
         image: "/moonlight.png",
         twitterUsername: "@adiotalleviart",
     },
     trailingSlash: "never",
     plugins: [
+        {
+            resolve: "gatsby-plugin-sitemap",
+            options: {
+                excludes: ["/shop/checkout", "/shop/checkout/success"],
+                serialize: (page: { path: string }) => {
+                    return { url: page.path }
+                },
+            },
+        },
         "gatsby-plugin-sass",
         {
             resolve: "gatsby-source-filesystem",
@@ -59,7 +68,7 @@ const config: GatsbyConfig = {
         {
             resolve: `gatsby-plugin-google-gtag`,
             options: {
-                trackingIds: [process.env.GA4_TRACKING_ID || "placeholder"],
+                trackingIds: [process.env.GA4_TRACKING_ID],
                 pluginConfig: {
                     head: true,
                 },

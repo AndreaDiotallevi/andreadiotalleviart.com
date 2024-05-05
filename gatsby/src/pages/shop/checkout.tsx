@@ -44,15 +44,18 @@ export default Checkout
 
 export const Head = () => (
     <Seo
-        title="Checkout | Andrea Diotallevi"
+        title="Checkout | Andrea Diotallevi Art"
         description="Complete your purchase quickly and securely with Stripe. Our streamlined checkout process is safe and easy, ensuring your details are protected."
         tags={[
             "Generative Art",
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
+            "Fine Art",
             "Giclee",
+            "Hahnemühle photo rag",
+            "Stripe",
         ]}
     />
 )

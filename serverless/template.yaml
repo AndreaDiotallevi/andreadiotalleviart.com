@@ -328,8 +328,11 @@ Resources:
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
                             </div>
-                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
-                            <h3>With warmth, Andrea</h3>
+                            {{#if receiptPdf}}
+                                <p>You can download your receipt <a href="{{receiptPdf}}">here</a>.</p>
+                            {{/if}}
+                            <p>For any questions regarding your order, you can reply to this email.</p>
+                            <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
@@ -349,8 +352,12 @@ Resources:
                             <div>
                                 Carrier name: {{carrierName}}<br>
                                 Carrier service: {{carrierService}}<br>
-                                Tracking number: {{trackingNumber}}<br>
-                                Tracking link: <a href="{{trackingUrl}}">here</a>
+                                {{#if trackingNumber}}
+                                    Tracking number: {{trackingNumber}}<br>
+                                {{/if}}
+                                {{#if trackingUrl}}
+                                    Tracking link: <a href="{{trackingUrl}}">here</a>
+                                {{/if}}
                             </div>
                             <h3>Items</h3>
                             <div>
@@ -367,8 +374,8 @@ Resources:
                                 {{/if}}
                                 {{postcode}}, {{town}}, {{country}}
                             </div>
-                            <p>Should you have any questions or need further assistance, simply reply to this email.</p>
-                            <h3>With warmth, Andrea</h3>
+                            <p>For any questions regarding your order, you can reply to this email.</p>
+                            <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>

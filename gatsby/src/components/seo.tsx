@@ -6,13 +6,20 @@ type DataProps = {
     title: string
     description: string
     image?: string
-    tags: string[]
+    tags?: string[]
     type?: "website" | "product"
     amount?: string
 }
 
 const SEO = (props: DataProps) => {
-    const { title, description, image, type = "website", tags, amount } = props
+    const {
+        title,
+        description,
+        image,
+        type = "website",
+        tags = [],
+        amount,
+    } = props
     const { pathname } = useLocation()
     const { site } = useStaticQuery(query)
 
@@ -86,7 +93,7 @@ const query = graphql`
             siteMetadata {
                 defaultTitle: title
                 defaultDescription: description
-                siteUrl: url
+                siteUrl
                 defaultImage: image
                 twitterUsername
             }

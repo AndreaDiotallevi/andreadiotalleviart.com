@@ -16,12 +16,10 @@ const initialiseStripeClient = async () => {
     return stripe
 }
 
-export const createCheckoutSession = async (
-    params: Pick<
-        Stripe.Checkout.SessionCreateParams,
-        "line_items" | "success_url"
-    >
-) => {
+export const createCheckoutSession = async (params: {
+    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    success_url: string
+}) => {
     try {
         const stripe = await initialiseStripeClient()
 
@@ -33,9 +31,9 @@ export const createCheckoutSession = async (
             return_url: `${success_url}?session_id={CHECKOUT_SESSION_ID}`,
             line_items,
             allow_promotion_codes: true,
-            shipping_address_collection: {
-                allowed_countries: countriesArray,
-            },
+            invoice_creation: { enabled: true },
+            shipping_address_collection: { allowed_countries: countriesArray },
+            shipping_options: [],
         })
 
         return {
@@ -56,7 +54,14 @@ export const retrieveCheckoutSession = async (params: {
         const { sessionId } = params
 
         const session = await stripe.checkout.sessions.retrieve(sessionId, {
-            expand: ["line_items", "line_items.data.price.product", "customer"],
+            expand: [
+                "line_items",
+                "line_items.data.price.product",
+                "customer",
+                "invoice",
+                "invoice.charge",
+                "total_details.breakdown.discounts", // https://docs.stripe.com/api/checkout/sessions/object#checkout_session_object-total_details-breakdown-discounts-discount
+            ],
         })
 
         return {
@@ -75,22 +80,20 @@ export const stripeSynchroniseProducts = async () => {
         const stripeProducts = await stripe.products.list()
 
         for (const product of products) {
-            const { name } = product
-
             const payload = {
                 name: product.name,
                 description: product.description,
                 metadata: product.metadata,
             }
 
-            // const stripeProduct = stripeProducts.data.find(
-            //     p => p.metadata.sku === sku
-            // )
-
-            const stripeProduct = stripeProducts.data.find(p => p.name === name)
+            const stripeProduct = stripeProducts.data.find(
+                stripeProduct =>
+                    stripeProduct.metadata.sku === product.metadata.sku
+            )
 
             if (stripeProduct) {
                 await stripe.products.update(stripeProduct.id, payload)
+                console.log(`Product ${product.metadata.sku} updated.`)
             } else {
                 // await stripe.products.create(payload)
             }
@@ -343,17 +346,3 @@ const countriesArray: Stripe.Checkout.SessionCreateParams.ShippingAddressCollect
         "ZW",
         "ZZ",
     ]
-
-// const products: Array<
-//     Pick<Stripe.Product, "name" | "description"> & {
-//         metadata: {
-//             category: "prints"
-//             slug: "marble-lake" | "flames" | "moonlight-2" | "new-york"
-//             size: "A1" | "A2" | "A3"
-//             prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
-//             displayName: string
-//             orientation: "portrait" | "landscape"
-//             displayOrder: string
-//         }
-//     }
-// > = [

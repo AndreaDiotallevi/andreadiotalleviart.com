@@ -162,10 +162,33 @@ export const createOrder = async ({
 
         const url = `${process.env.PRODIGI_API_URL}/v4.0/Orders/`
 
+        enum ProdigiShippingMethod {
+            Budget = "Budget",
+            Standard = "Standard",
+            Express = "Express",
+            Overnight = "Overnight",
+        }
+
+        const countryToShippingMethod: Partial<
+            Record<
+                Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry,
+                ProdigiShippingMethod
+            >
+        > = {
+            GB: ProdigiShippingMethod.Express, // 2 days
+            US: ProdigiShippingMethod.Budget,
+            IT: ProdigiShippingMethod.Standard, // 5 days
+            GR: ProdigiShippingMethod.Standard, // 6 days
+        }
+
+        const destinationCountryCode = shipping_details.address.country || ""
+
         const requestBody = {
             idempotencyKey: id,
             merchantReference: id,
-            shippingMethod: "Express",
+            shippingMethod:
+                countryToShippingMethod[destinationCountryCode] ||
+                ProdigiShippingMethod.Standard,
             recipient: {
                 address: {
                     line1: shipping_details.address.line1,
@@ -180,8 +203,8 @@ export const createOrder = async ({
                 email: customer_details.email,
             },
             items: line_items.data.map(item => ({
-                merchantReference: item.id,
-                sku: item.price?.product.metadata.prodigiSku, // "GLOBAL-HPR-A3", // Hahnemühle Photo Rag, 29.7x42 cm / 11.7x16.5" (A3)
+                merchantReference: item.price?.product.metadata.sku,
+                sku: item.price?.product.metadata.prodigiSku,
                 copies: item.quantity,
                 sizing: "fillPrintArea",
                 assets: [

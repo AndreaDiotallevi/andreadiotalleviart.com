@@ -30,11 +30,11 @@ const sketch: Sketch = p5 => {
         p5.draw()
     }
 
-    p5.windowResized = () => {
-        p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
-        t = 0
-        p5.draw()
-    }
+    // p5.windowResized = () => {
+    //     p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
+    //     t = 0
+    //     p5.draw()
+    // }
 }
 
 const Moonlight = () => {

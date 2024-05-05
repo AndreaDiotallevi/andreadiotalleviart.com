@@ -10,6 +10,7 @@ import Seo from "../components/seo"
 import { StripePrice } from "../models/stripe"
 
 import { createCheckoutSession } from "../api"
+import { sendGA4BeginCheckoutEvent } from "../services/ga4"
 
 import * as styles from "./showcase.module.scss"
 import InputSelect from "../components/inputSelect"
@@ -98,7 +99,7 @@ const PricePage = ({
                         <h1 className={styles.h1}>
                             {selectedPrice.product.metadata.displayName}
                         </h1>
-                        <h2>Choose paper size</h2>
+                        <h2>Select paper size</h2>
                         <InputSelect
                             name="size"
                             onChange={event => {
@@ -118,11 +119,7 @@ const PricePage = ({
                             }))}
                             defaultValue={selectedPrice.product.metadata.size}
                         />
-                        <p>
-                            {/* The print comes with a white border for framing. */}
-                            Printed full bleed with no border. Frame not
-                            included.
-                        </p>
+                        <p>The image is printed full bleed with no border.</p>
                         <h2>Hahnemühle photo rag 308gsm</h2>
                         <p>
                             A heavy-duty, vegan certified matte paper made of
@@ -139,10 +136,12 @@ const PricePage = ({
                             giclée printing achieves archival quality, creating
                             prints that last well over 100 years.
                         </p>
-                        <h2>Free express shipping</h2>
+                        <h2>Free international shipping</h2>
                         <p>
-                            Prints are delivered within 24-48 hours in a
-                            cardboard tube with recycled plastic ends.
+                            The print is packaged in a cardboard tube with
+                            recycled plastic ends and delivered within 2 days to
+                            the UK, 5 days to Europe, Australia & US and 10 days
+                            to the rest of the world.
                         </p>
                         <h2>£{(selectedPrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
@@ -166,6 +165,10 @@ const PricePage = ({
                                     setLoading(false)
                                     return
                                 }
+
+                                sendGA4BeginCheckoutEvent({
+                                    session: data.session,
+                                })
 
                                 navigate(
                                     `/shop/checkout?clientSecret=${data.session.client_secret}`,
@@ -203,7 +206,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${allStripePrice.edges[0].node.product.metadata.displayName} | Giclée Fine Art Prints | Andrea Diotallevi`}
+        title={`${allStripePrice.edges[0].node.product.metadata.displayName} | Giclée Fine Art Prints | Andrea Diotallevi Art`}
         description={allStripePrice.edges[0].node.product.description}
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"
@@ -213,8 +216,10 @@ export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
             "p5.js",
             "Processing",
             "Procedural",
-            "Print",
+            "Prints",
+            "Fine Art",
             "Giclee",
+            "Hahnemühle photo rag",
         ]}
         amount={(allStripePrice.edges[0].node.unit_amount / 100).toFixed(2)}
     />

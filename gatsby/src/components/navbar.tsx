@@ -19,7 +19,7 @@ const Navbar = (props: DataProps) => {
         <header className={`${styles.header} ${isHome ? styles.home : ""}`}>
             <div className={styles.headerContainer}>
                 <Link to="/">
-                    <h2 className={styles.logo}>AndreaDiotallevi</h2>
+                    <h2 className={styles.logo}>AndreaDiotalleviArt</h2>
                 </Link>
                 <ul className={styles.linksContainer}>
                     {routes.map(({ menuName, baseUrl }) => (
