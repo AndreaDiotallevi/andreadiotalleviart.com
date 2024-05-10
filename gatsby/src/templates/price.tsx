@@ -51,7 +51,7 @@ const PricePage = ({
                 <div className={styles.linksContainer}>
                     <Link to="/shop" className={styles.backButtonContainer}>
                         <div className={styles.backButtonIcon} />
-                        <p className={styles.linkText}>Back to Shop</p>
+                        <p className={styles.linkText}>Back to shop</p>
                     </Link>
                 </div>
                 <div className={styles.grid}>
