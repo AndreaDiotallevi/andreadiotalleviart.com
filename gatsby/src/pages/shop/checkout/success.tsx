@@ -83,8 +83,18 @@ const Success = ({
                                         <br></br>
                                     </>
                                 ) : null}
-                                {session.shipping_details?.address?.postal_code}
-                                , {session.shipping_details?.address?.city},{" "}
+                                {session.shipping_details?.address
+                                    ?.postal_code ? (
+                                    <>
+                                        {
+                                            session.shipping_details.address
+                                                .postal_code
+                                        }
+                                        <br></br>
+                                    </>
+                                ) : null}
+                                {session.shipping_details?.address?.city}
+                                <br></br>
                                 {session.shipping_details?.address?.country}
                             </p>
                             <h2>Items</h2>
@@ -94,8 +104,7 @@ const Success = ({
                                         {
                                             item.price?.product.metadata
                                                 .displayName
-                                        }
-                                        <br></br>
+                                        }{" "}
                                         {item.price?.product.description}
                                     </p>
                                 </div>
