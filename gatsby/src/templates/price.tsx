@@ -206,7 +206,7 @@ export const query = graphql`
 
 export const Head = ({ data: { allStripePrice } }: PageProps<DataProps>) => (
     <Seo
-        title={`${allStripePrice.edges[0].node.product.metadata.displayName} | Giclée Fine Art Prints | Andrea Diotallevi Art`}
+        title={`${allStripePrice.edges[0].node.product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
         description={allStripePrice.edges[0].node.product.description}
         image={allStripePrice.edges[0].node.mockup.childImageSharp.original.src}
         type="product"
