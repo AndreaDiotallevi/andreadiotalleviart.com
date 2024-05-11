@@ -6,16 +6,12 @@
 }
 
 .h1 {
-    // position: fixed;
     top: 200px;
-    // writing-mode: vertical-rl;
     font-size: 48px;
     font-weight: 700;
-    // text-transform: lowercase;
 
     @media (max-width: 691.99px) {
         font-size: 24px;
-        // top: 128px;
     }
 }
 
