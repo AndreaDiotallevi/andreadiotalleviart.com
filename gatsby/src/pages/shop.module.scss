@@ -52,5 +52,5 @@
 }
 
 .fullWidth {
-    grid-column: 1 / span 2; /* Span full width */
+    grid-column: span 2; /* Each item spans two columns */
 }
