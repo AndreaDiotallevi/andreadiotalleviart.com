@@ -192,9 +192,10 @@ export const createOrder = async ({
             recipient: {
                 address: {
                     line1: shipping_details.address.line1,
-                    line2: shipping_details.address.line2 || null, // Empty string breaks it,
+                    line2: shipping_details.address.line2 || null, // Empty string breaks it
                     postalOrZipCode:
-                        shipping_details.address.postal_code || null, // Empty string breaks it,
+                        shipping_details.address.postal_code ||
+                        "[NO POSTAL CODE]", // Empty string or null breaks it
                     countryCode: shipping_details.address.country,
                     townOrCity: shipping_details.address.city,
                     stateOrCounty: shipping_details.address.state || null, // Empty string breaks it

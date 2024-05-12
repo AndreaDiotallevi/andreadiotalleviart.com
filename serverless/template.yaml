@@ -308,8 +308,7 @@ Resources:
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Items</h3>
                             <div>
-                                {{productDisplayName}}<br>
-                                {{productDescription}}<br><br>
+                                {{productDisplayName}} {{productDescription}}<br><br>
                                 <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
@@ -319,7 +318,13 @@ Resources:
                                 {{#if addressLine2}}
                                     {{addressLine2}}<br>
                                 {{/if}}
-                                {{postcode}}, {{town}}, {{country}}
+                                {{#if postcode}}
+                                    {{postcode}}<br>
+                                {{/if}}
+                                {{#if town}}
+                                    {{town}}<br>
+                                {{/if}}
+                                {{country}}<br>
                             </div>
                             <h3>Payment summary</h3>
                             <div>
@@ -361,18 +366,23 @@ Resources:
                             </div>
                             <h3>Items</h3>
                             <div>
-                                {{productDisplayName}}<br>
-                                {{productDescription}}<br><br>
+                                {{productDisplayName}} {{productDescription}}<br><br>
                                 <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
-                            <div>
+                              <div>
                                 {{name}}<br>
                                 {{addressLine1}}<br>
                                 {{#if addressLine2}}
                                     {{addressLine2}}<br>
                                 {{/if}}
-                                {{postcode}}, {{town}}, {{country}}
+                                {{#if postcode}}
+                                    {{postcode}}<br>
+                                {{/if}}
+                                {{#if town}}
+                                    {{town}}<br>
+                                {{/if}}
+                                {{country}}<br>
                             </div>
                             <p>For any questions regarding your order, you can reply to this email.</p>
                             <h3>Thank you</h3>
