@@ -668,3 +668,26 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/prodigiCreateOrder.ts
+
+    TheprintspaceHandleWebhooksFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-TheprintspaceHandleWebhooks
+            Handler: src/handlers/theprintspaceHandleWebhooks.handler
+            Environment:
+                Variables:
+                    EVENT_BUS_NAME: !Ref EventBus
+            Events:
+                TheprintspaceWebhook:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /theprintspace-handle-webhooks
+                        Method: POST
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/theprintspaceHandleWebhooks.ts
