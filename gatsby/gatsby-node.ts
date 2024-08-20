@@ -120,13 +120,15 @@ export const createPages: GatsbyNode["createPages"] = async ({
         })
     })
 
-    res.data.allStripeProduct.edges.forEach(edge => {
-        createPage({
-            component: priceTemplate,
-            path: `/shop/${edge.node.metadata.category}/${edge.node.metadata.slug}`,
-            context: {
-                slug: edge.node.metadata.slug,
-            },
+    res.data.allStripeProduct.edges
+        .filter(edge => edge.node.metadata.slug)
+        .forEach(edge => {
+            createPage({
+                component: priceTemplate,
+                path: `/shop/${edge.node.metadata.category}/${edge.node.metadata.slug}`,
+                context: {
+                    slug: edge.node.metadata.slug,
+                },
+            })
         })
-    })
 }
