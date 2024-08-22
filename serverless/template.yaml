@@ -63,6 +63,8 @@ Resources:
                   Id: SendOrderConfirmationEmailQueueTarget
                 - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
                   Id: ProdigiCreateOrderQueueTarget
+                - Arn: !GetAtt TheprintspaceCreateOrderQueue.Arn
+                  Id: TheprintspaceCreateOrderQueueTarget
 
     ProdigiOrderShippedRule:
         Type: AWS::Events::Rule
@@ -136,6 +138,35 @@ Resources:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderDLQ
+            MessageRetentionPeriod: 1209600
+
+    TheprintspaceCreateOrderQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        Properties:
+            PolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: events.amazonaws.com
+                      Action: sqs:SendMessage
+                      Resource: !GetAtt TheprintspaceCreateOrderQueue.Arn
+            Queues:
+                - Ref: TheprintspaceCreateOrderQueue
+
+    TheprintspaceCreateOrderQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-TheprintspaceCreateOrderQueue
+            VisibilityTimeout: 100
+            ReceiveMessageWaitTimeSeconds: 20
+            RedrivePolicy:
+                deadLetterTargetArn: !GetAtt TheprintspaceCreateOrderDLQ.Arn
+                maxReceiveCount: 1
+
+    TheprintspaceCreateOrderDLQ:
+        Type: AWS::SQS::Queue
+        Properties:
+            QueueName: !Sub ${AWS::StackName}-TheprintspaceCreateOrderDLQ
             MessageRetentionPeriod: 1209600
 
     SendOrderShippedEmailQueuePolicy:
@@ -691,3 +722,35 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/handlers/theprintspaceHandleWebhooks.ts
+
+    TheprintspaceCreateOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-TheprintspaceCreateOrder
+            Handler: src/handlers/theprintspaceCreateOrder.handler
+            Events:
+                MySQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !GetAtt TheprintspaceCreateOrderQueue.Arn
+                        BatchSize: 5
+            Environment:
+                Variables:
+                    CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
+                    ENVIRONMENT: !Ref Environment
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/handlers/theprintspaceCreateOrder.ts
