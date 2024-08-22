@@ -1,94 +1,129 @@
 import Stripe from "stripe"
+
 import { getParameterValue } from "./ssm"
+
 import {
     getCountryIdFromCountryCode,
     getCountryNameFromCountryCode,
 } from "../data/theprintspace"
+
+import {
+    CreateConfirmedOrderResponse,
+    CreateEmbryonicOrderResponse,
+} from "../types/theprintspace"
 
 export const createEmbryonicOrder = async ({
     session,
 }: {
     session: Stripe.Checkout.Session
 }) => {
-    try {
-        const { shipping_details, customer_details, line_items, id } = session
+    const { shipping_details, customer_details, line_items, id } = session
 
-        if (!shipping_details?.address) {
-            throw new Error("No shipping details")
-        }
-        if (!shipping_details.address.country) {
-            throw new Error("No shipping address country")
-        }
-        if (!customer_details) {
-            throw new Error("No customer details")
-        }
-        if (!line_items) {
-            throw new Error("No line items")
-        }
+    const creativehubApiKey = await getParameterValue<string>({
+        name: "CREATIVEHUB_API_KEY",
+        withDecryption: true,
+    })
 
-        const creativehubApiKey = await getParameterValue<string>({
-            name: "CREATIVEHUB_API_KEY",
-            withDecryption: true,
-        })
+    if (!creativehubApiKey) {
+        throw new Error("No Creativehub API key")
+    }
 
-        if (!creativehubApiKey) {
-            throw new Error("No Creativehub API key")
-        }
-
-        const url = `${process.env.CREATIVEHUB_API_URL}/api/v1/orders/embryonic`
-
-        const requestBody = {
-            ExternalReference: "",
-            FirstName: customer_details.name,
-            LastName: "",
-            Email: customer_details.email,
-            MessageToLab: "",
-            ShippingAddress: {
-                FirstName: customer_details.name,
-                LastName: "",
-                Line1: shipping_details.address.line1,
-                Line2: shipping_details.address.line2,
-                Town: shipping_details.address.city,
-                County: shipping_details.address.state,
-                PostCode: shipping_details.address.postal_code,
-                CountryId: getCountryIdFromCountryCode(
-                    shipping_details.address.country
-                ),
-                CountryCode: shipping_details.address.country,
-                CountryName: getCountryNameFromCountryCode(
-                    shipping_details.address.country
-                ),
-                PhoneNumber: null,
-            },
-            OrderItems: line_items.data.map(item => ({
-                ProductId: 36026,
-                PrintOptionId: 4175,
-                Quantity: item.quantity,
-                ExternalReference: item.price?.product.metadata.sku,
-                ExternalSku: "",
-            })),
-        }
-
-        console.log(JSON.stringify(requestBody))
-
-        const options = {
+    const response = await fetch(
+        `${process.env.CREATIVEHUB_API_URL}/api/v1/orders/embryonic`,
+        {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `ApiKey ${creativehubApiKey}`,
             },
-            body: JSON.stringify(requestBody),
+            body: JSON.stringify({
+                ExternalReference: id,
+                FirstName: customer_details?.name,
+                LastName: "TEST",
+                Email: customer_details?.email,
+                MessageToLab: null,
+                ShippingAddress: {
+                    FirstName: customer_details?.name,
+                    LastName: "TEST",
+                    Line1: shipping_details?.address?.line1,
+                    Line2: shipping_details?.address?.line2,
+                    Town: shipping_details?.address?.city,
+                    County: shipping_details?.address?.state,
+                    PostCode: shipping_details?.address?.postal_code,
+                    CountryId: getCountryIdFromCountryCode(
+                        shipping_details?.address?.country || ""
+                    ),
+                    CountryCode: shipping_details?.address?.country,
+                    CountryName: getCountryNameFromCountryCode(
+                        shipping_details?.address?.country || ""
+                    ),
+                    PhoneNumber: null,
+                },
+                OrderItems: line_items?.data.map(item => ({
+                    ProductId: 36026,
+                    PrintOptionId: 4175,
+                    Quantity: item.quantity,
+                    ExternalReference: item.price?.product.metadata.sku,
+                    ExternalSku: "",
+                })),
+            }),
         }
+    )
 
-        const response = await fetch(url, options)
+    const data = (await response.json()) as CreateEmbryonicOrderResponse
+    console.log("CreateEmbryonicOrderResponse: ", JSON.stringify(data))
 
-        if (!response.ok) {
-            console.error(response.body)
-            console.log(response.status, response.statusText)
-            throw new Error("Failed to create order with theprintspace")
+    if (!response.ok) {
+        console.error(response)
+        throw new Error("Failed to create order with theprintspace")
+    }
+
+    return { orderId: data.Id, deliveryOptions: data.DeliveryOptions }
+}
+
+export const createConfirmedOrder = async ({
+    orderId,
+    deliveryOptions,
+}: {
+    orderId: number
+    deliveryOptions: CreateEmbryonicOrderResponse["DeliveryOptions"]
+}) => {
+    const creativehubApiKey = await getParameterValue<string>({
+        name: "CREATIVEHUB_API_KEY",
+        withDecryption: true,
+    })
+
+    if (!creativehubApiKey) {
+        throw new Error("No Creativehub API key")
+    }
+
+    const deliveryOption = deliveryOptions.reduce((min, option) =>
+        option.DeliveryChargeExcludingSalesTax <
+        min.DeliveryChargeExcludingSalesTax
+            ? option
+            : min
+    )
+
+    const response = await fetch(
+        `${process.env.CREATIVEHUB_API_URL}/api/v1/orders/confirmed`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `ApiKey ${creativehubApiKey}`,
+            },
+            body: JSON.stringify({
+                OrderId: orderId,
+                DeliveryOptionId: deliveryOption.Id,
+            }),
         }
-    } catch (error) {
-        console.error(error)
-        throw error
+    )
+
+    const data = (await response.json()) as CreateConfirmedOrderResponse
+    console.log("CreateConfirmedOrderResponse: ", JSON.stringify(data))
+
+    if (!response.ok) {
+        console.error(response)
+        throw new Error("Failed to create order with theprintspace")
     }
 }
