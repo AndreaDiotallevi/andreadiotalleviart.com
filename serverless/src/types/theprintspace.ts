@@ -12,7 +12,7 @@ type ShippingAddress = {
     PhoneNumber: string
 }
 
-type Product = {
+type TheprintspaceProduct = {
     Id: number
     FileName: string
     DisplayName: string
@@ -108,7 +108,7 @@ type OrderItem = {
     Quantity: number
     ExternalReference: string
     ExternalSku: string
-    Product: Product
+    Product: TheprintspaceProduct
     PrintOption: PrintOption
 }
 
@@ -157,4 +157,9 @@ export type CreateConfirmedOrderResponse = {
     OrderItems: OrderItem[]
     OrderState: string
     DateCreated: string
+}
+
+export type GetAllProductsResponse = {
+    Data: TheprintspaceProduct[]
+    Total: number
 }
