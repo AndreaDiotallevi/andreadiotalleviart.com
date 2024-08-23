@@ -61,8 +61,8 @@ Resources:
             Targets:
                 - Arn: !GetAtt SendOrderConfirmationEmailQueue.Arn
                   Id: SendOrderConfirmationEmailQueueTarget
-                - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
-                  Id: ProdigiCreateOrderQueueTarget
+                # - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
+                #   Id: ProdigiCreateOrderQueueTarget
                 - Arn: !GetAtt TheprintspaceCreateOrderQueue.Arn
                   Id: TheprintspaceCreateOrderQueueTarget
 
