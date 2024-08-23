@@ -44,6 +44,21 @@ const Success = ({
         fetchSession()
     }, [sessionId])
 
+    type Currency = "eur" | "gbp" | "usd"
+
+    const currencyToSymbol: Record<string, string> = {
+        eur: "€",
+        gbp: "£",
+        usd: "$",
+        chf: "₣", // Switzerland
+        nok: "kr", // Norway
+        dkk: "kr", // Denmark
+        sek: "kr", // Sweden
+    }
+
+    const currencySymbol =
+        currencyToSymbol[(session?.currency as Currency) || "gbp"]
+
     return (
         <Layout loading={session === null}>
             {session ? (
@@ -111,19 +126,19 @@ const Success = ({
                             ))}
                             <h2>Payment summary</h2>
                             <p>
-                                Subtotal: £
+                                Subtotal: {currencySymbol}
                                 {((session.amount_subtotal || 0) / 100).toFixed(
                                     2,
                                 )}
                                 <br></br>
                                 Shipping fee: Free<br></br>
-                                Discounts: £
+                                Discounts: {currencySymbol}
                                 {(
                                     (session.total_details?.amount_discount ||
                                         0) / 100
                                 ).toFixed(2)}
                                 <br></br>
-                                Total: £
+                                Total: {currencySymbol}
                                 {((session.amount_total || 0) / 100).toFixed(2)}
                             </p>
                             <Button
