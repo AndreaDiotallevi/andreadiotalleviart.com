@@ -270,6 +270,19 @@ Resources:
             TopicArn: !Ref ProdigiHandleWebhooksTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
+    TheprintspaceCreateOrderTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: TheprintspaceCreateOrderTopic
+            TopicName: TheprintspaceCreateOrderTopic
+
+    TheprintspaceCreateOrderTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref TheprintspaceCreateOrderTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
     # ALARMS
     SendOrderConfirmationEmailAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -324,6 +337,24 @@ Resources:
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
                 - !Ref SendOrderShippedEmailTopic
+
+    TheprintspaceCreateOrderAlarm:
+        Type: AWS::CloudWatch::Alarm
+        Properties:
+            AlarmName: TheprintspaceCreateOrderAlarm
+            AlarmDescription: "There was an error while creating an order with Theprintspace."
+            Namespace: AWS/SQS
+            MetricName: ApproximateNumberOfMessagesVisible
+            Dimensions:
+                - Name: QueueName
+                  Value: !GetAtt TheprintspaceCreateOrderDLQ.QueueName
+            Statistic: Sum
+            Period: 300
+            EvaluationPeriods: 1
+            Threshold: 1
+            ComparisonOperator: GreaterThanOrEqualToThreshold
+            AlarmActions:
+                - !Ref TheprintspaceCreateOrderTopic
 
     # EMAIL TEMPLATES
     OrderConfirmationEmailTemplate:
