@@ -1,7 +1,7 @@
 import Stripe from "stripe"
 
 import { getParameterValue } from "./ssm"
-import { products } from "../data/stripe"
+import { getProducts } from "../data/stripe"
 
 const initialiseStripeClient = async () => {
     const stripeSecretKey = await getParameterValue<string>({
@@ -78,6 +78,8 @@ export const stripeSynchroniseProducts = async () => {
         const stripe = await initialiseStripeClient()
 
         const stripeProducts = await stripe.products.list()
+
+        const products = await getProducts()
 
         for (const product of products) {
             const payload = {

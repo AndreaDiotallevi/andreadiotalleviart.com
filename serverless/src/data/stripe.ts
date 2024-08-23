@@ -1,4 +1,44 @@
-export const products = [
+import { getAllProducts } from "../services/theprintspace"
+import { ProductWithMetadata } from "../types/stripe"
+
+export const getProducts = async () => {
+    const theprintspaceProducts = await getAllProducts()
+
+    const getProductByFilename = (fileName: string) => {
+        const product = theprintspaceProducts.Data.find(
+            product => product.FileName === fileName
+        )
+
+        if (!product) {
+            throw new Error(
+                `No theprintspace product found for filename ${fileName}`
+            )
+        }
+
+        return product
+    }
+
+    return products.map(product => {
+        const theprintspaceProduct = getProductByFilename(
+            product.metadata.theprintspaceFilename
+        )
+
+        return {
+            ...product,
+            metadata: {
+                ...product.metadata,
+                theprintspaceProductId: theprintspaceProduct.Id,
+                theprintspacePrintOptionId:
+                    theprintspaceProduct.PrintOptions[0].Id,
+            },
+        }
+    })
+}
+
+const products: Pick<
+    ProductWithMetadata,
+    "name" | "description" | "metadata"
+>[] = [
     {
         name: "New York - A3 Giclée Fine Art Print",
         description:
@@ -12,6 +52,7 @@ export const products = [
             size: "A3",
             slug: "new-york",
             sku: "print-newYork-A3",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -27,6 +68,7 @@ export const products = [
             size: "A2",
             slug: "new-york",
             sku: "print-newYork-A2",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -42,6 +84,7 @@ export const products = [
             size: "A2",
             slug: "moonlight-2",
             sku: "print-moonlight2-A2",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -57,6 +100,7 @@ export const products = [
             size: "A3",
             slug: "moonlight-2",
             sku: "print-moonlight2-A3",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -72,6 +116,7 @@ export const products = [
             size: "A1",
             slug: "marble-lake",
             sku: "print-marbleLake-A1",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -87,6 +132,7 @@ export const products = [
             size: "A2",
             slug: "marble-lake",
             sku: "print-marbleLake-A2",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -102,6 +148,7 @@ export const products = [
             size: "A3",
             slug: "marble-lake",
             sku: "print-marbleLake-A3",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
     {
@@ -117,6 +164,7 @@ export const products = [
             size: "A3",
             slug: "flames",
             sku: "print-flames-A3",
+            theprintspaceFilename: "flames-A3-ok.png",
         },
     },
 ]

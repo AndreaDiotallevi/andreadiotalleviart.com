@@ -466,7 +466,8 @@ Resources:
                         Effect: Allow
                         Action:
                             - ssm:GetParameter
-                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -493,7 +494,8 @@ Resources:
                         Effect: Allow
                         Action:
                             - ssm:GetParameter
-                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -514,13 +516,18 @@ Resources:
                         RestApiId: !Ref ApiGateway
                         Path: /stripe-synchronise-products
                         Method: POST
+            Environment:
+                Variables:
+                    CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
             Policies:
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
                             - ssm:GetParameter
-                        Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
