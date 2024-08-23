@@ -34,7 +34,6 @@ const Success = ({
             if (!sessionId) return
 
             const session = await retrieveCheckoutSession({ sessionId })
-            console.log(session)
 
             if (!session) return
 
