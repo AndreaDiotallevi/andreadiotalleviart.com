@@ -360,7 +360,7 @@ Resources:
                             <h3>Payment summary</h3>
                             <div>
                                 Subtotal: {{amountSubtotal}}<br>
-                                Shipping fee: Free<br>
+                                Shipping: Free<br>
                                 Discounts: {{amountDiscount}}<br>
                                 Total: {{amountTotal}}
                             </div>
