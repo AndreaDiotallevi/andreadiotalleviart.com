@@ -84,6 +84,7 @@ export const stripeSynchroniseProducts = async () => {
         for (const product of products) {
             const payload = {
                 name: product.name,
+                active: product.active,
                 description: product.description,
                 metadata: product.metadata,
             }

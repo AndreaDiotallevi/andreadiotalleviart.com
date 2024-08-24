@@ -9,9 +9,8 @@ export type ProductMetadata = {
     size: string
     slug: string
     sku: string
-    theprintspaceFilename: string
-    theprintspaceProductId?: number
-    theprintspacePrintOptionId?: number
+    theprintspaceProductId?: string
+    theprintspacePrintOptionId?: string
 }
 
 export type ProductWithMetadata = Omit<Stripe.Product, "metadata"> & {

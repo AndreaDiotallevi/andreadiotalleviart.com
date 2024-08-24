@@ -38,12 +38,12 @@ export const createEmbryonicOrder = async ({
             body: JSON.stringify({
                 ExternalReference: id,
                 FirstName: customer_details?.name,
-                LastName: " ",
+                LastName: "/",
                 Email: customer_details?.email,
                 MessageToLab: null,
                 ShippingAddress: {
                     FirstName: customer_details?.name,
-                    LastName: " ",
+                    LastName: "/",
                     Line1: shipping_details?.address?.line1,
                     Line2: shipping_details?.address?.line2,
                     Town: shipping_details?.address?.city,
