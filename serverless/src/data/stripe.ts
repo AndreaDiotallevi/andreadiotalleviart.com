@@ -1,5 +1,49 @@
-export const products = [
+import { getAllProducts } from "../services/theprintspace"
+import { ProductWithMetadata } from "../types/stripe"
+
+type ProductInput = Pick<
+    ProductWithMetadata,
+    "name" | "description" | "metadata" | "active"
+>
+
+export const getProducts = async (): Promise<ProductInput[]> => {
+    const theprintspaceProducts = await getAllProducts()
+
+    const getProductByFilename = (fileName: string) => {
+        const product = theprintspaceProducts.Data.find(
+            product => product.FileName === fileName
+        )
+
+        return product
+    }
+
+    return products.map(product => {
+        const theprintspaceProduct = getProductByFilename(
+            product.metadata.sku + ".png"
+        )
+
+        if (product.active && !theprintspaceProduct) {
+            throw new Error(
+                `No theprintspace product found for sku ${product.metadata.sku}`
+            )
+        }
+
+        return {
+            ...product,
+            metadata: {
+                ...product.metadata,
+                theprintspaceProductId: String(theprintspaceProduct?.Id),
+                theprintspacePrintOptionId: String(
+                    theprintspaceProduct?.PrintOptions[0].Id
+                ),
+            },
+        }
+    })
+}
+
+const products: ProductInput[] = [
     {
+        active: false,
         name: "New York - A3 Giclée Fine Art Print",
         description:
             "A3 420 x 297 mm (16.5 x 11.7 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -15,6 +59,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "New York - A2 Giclée Fine Art Print",
         description:
             "A2 594 x 420 mm (23.4 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -30,6 +75,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "Moonlight 2 - A2 Giclée Fine Art Print",
         description:
             "A2 420 x 594 mm (16.5 x 23.4 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -45,6 +91,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
             "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -60,6 +107,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "Marble Lake - A1 Giclée Fine Art Print",
         description:
             "A1 594 x 841 mm (23.4 x 33.1 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -75,6 +123,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "Marble Lake - A2 Giclée Fine Art Print",
         description:
             "A2 420 x 594 mm (16.5 x 23.4 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -90,6 +139,7 @@ export const products = [
         },
     },
     {
+        active: false,
         name: "Marble Lake - A3 Giclée Fine Art Print",
         description:
             "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -105,6 +155,7 @@ export const products = [
         },
     },
     {
+        active: true,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
             "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",

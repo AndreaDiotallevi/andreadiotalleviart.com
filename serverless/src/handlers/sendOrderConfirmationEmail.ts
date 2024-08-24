@@ -54,6 +54,28 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
             const charge = invoice.charge as Stripe.Charge | null
 
+            type Currency =
+                | "eur"
+                | "gbp"
+                | "usd"
+                | "chf"
+                | "nok"
+                | "dkk"
+                | "sek"
+
+            const currencyToSymbol: Record<Currency, string> = {
+                eur: "€",
+                gbp: "£",
+                usd: "$",
+                chf: "₣", // Switzerland
+                nok: "kr", // Norway
+                dkk: "kr", // Denmark
+                sek: "kr", // Sweden
+            }
+
+            const currencySymbol =
+                currencyToSymbol[(session?.currency as Currency) || "gbp"]
+
             await sendEmail({
                 Source: emailSource,
                 Destination: {
@@ -73,16 +95,17 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     productImageSource: product.images[0] || "",
                     itemQuantity: session.line_items?.data[0].quantity || "",
                     amountSubtotal:
-                        `£${((session.amount_subtotal || 0) / 100).toFixed(
-                            2
-                        )}` || "",
+                        `${currencySymbol}${(
+                            (session.amount_subtotal || 0) / 100
+                        ).toFixed(2)}` || "",
                     amountDiscount:
-                        `£${(
+                        `${currencySymbol}${(
                             (session.total_details?.amount_discount || 0) / 100
                         ).toFixed(2)}` || "",
                     amountTotal:
-                        `£${((session.amount_total || 0) / 100).toFixed(2)}` ||
-                        "",
+                        `${currencySymbol}${(
+                            (session.amount_total || 0) / 100
+                        ).toFixed(2)}` || "",
                     receiptPdf: charge?.receipt_url?.replace("?", "/pdf?"),
                 }),
             })

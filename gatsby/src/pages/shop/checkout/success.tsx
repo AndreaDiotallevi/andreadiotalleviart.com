@@ -44,9 +44,9 @@ const Success = ({
         fetchSession()
     }, [sessionId])
 
-    type Currency = "eur" | "gbp" | "usd"
+    type Currency = "eur" | "gbp" | "usd" | "chf" | "nok" | "dkk" | "sek"
 
-    const currencyToSymbol: Record<string, string> = {
+    const currencyToSymbol: Record<Currency, string> = {
         eur: "€",
         gbp: "£",
         usd: "$",
@@ -131,7 +131,7 @@ const Success = ({
                                     2,
                                 )}
                                 <br></br>
-                                Shipping fee: Free<br></br>
+                                Shipping: Free<br></br>
                                 Discounts: {currencySymbol}
                                 {(
                                     (session.total_details?.amount_discount ||

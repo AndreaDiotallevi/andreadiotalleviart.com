@@ -13,5 +13,8 @@
     "@types/aws-lambda": "^8.10.131",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "type-watch":"tsc --noEmit --watch"
   }
 }
