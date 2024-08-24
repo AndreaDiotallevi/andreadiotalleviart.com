@@ -99,7 +99,7 @@ const PricePage = ({
                         <h1 className={styles.h1}>
                             {selectedPrice.product.metadata.displayName}
                         </h1>
-                        <h2>Select paper size</h2>
+                        <h2>Size</h2>
                         <InputSelect
                             name="size"
                             onChange={event => {
@@ -120,28 +120,51 @@ const PricePage = ({
                             defaultValue={selectedPrice.product.metadata.size}
                         />
                         <p>The image is printed full bleed with no border.</p>
-                        <h2>Hahnemühle photo rag 308gsm</h2>
+                        {/* <h2>Hahnemühle photo rag 308gsm</h2> */}
+                        <h2>100% cotton paper</h2>
                         <p>
-                            A heavy-duty, vegan certified matte paper made of
-                            100% cotton rag with a natural white tone and
-                            excellent black saturation. It has a soft texture
-                            with a lightly defined felt structure.
+                            The artwork is printed on a white cotton paper
+                            called Hahnemühle photo rag 308gsm. With its
+                            characteristic, wonderfully soft feel, it boasts a
+                            lightly defined felt structure, lending each artwork
+                            a three-dimensional appearance and impressive
+                            pictorial depth.
+                            {/* The white cotton artist's paper, with its
+                            characteristic, wonderfully soft feel, boasts a
+                            lightly defined felt structure, lending each artwork
+                            a three-dimensional appearance and impressive
+                            pictorial depth. A heavy-duty, vegan certified matte
+                            paper made of 100% cotton rag with a natural white
+                            tone and excellent black saturation. It has a soft
+                            texture with a lightly defined felt structure. */}
                         </p>
-                        <h2>Fine art giclée printing</h2>
+                        <h2>Premium print quality</h2>
                         <p>
-                            Giclée is a printing technique which involves
+                            The print is crafted using premium, pigment-based
+                            inks that are fade-resistant and can endure for up
+                            to 200 years. This technique, called Giclée, makes
+                            the print stand apart with its extremely high level
+                            of quality, longevity and value compared to a
+                            standard print.
+                            {/* Giclée is a printing technique which involves
                             spraying microscopic pigments onto high-quality
                             paper to reproduce artwork for print or display.
                             When used in conjunction with high-grade paper,
                             giclée printing achieves archival quality, creating
-                            prints that last well over 100 years.
+                            prints that last well over 100 years. */}
                         </p>
-                        <h2>Free international shipping</h2>
+                        <h2>Free shipping</h2>
                         <p>
-                            The print is packaged in a cardboard tube with
-                            recycled plastic ends and delivered within 2 days to
-                            the UK, 5 days to Europe, Australia & US and 10 days
-                            to the rest of the world.
+                            Shipping is handled by theprintspace in London
+                            through First Class Tracked Mail (typically 6-10
+                            days). This is an extremely more secure option than
+                            regular post for sending art prints.
+                        </p>
+                        <h2>No custom charges for UK-EU-USA orders</h2>
+                        <p>
+                            With production in the UK, USA & Germany,
+                            theprintspace guarantees no extra customs charges on
+                            UK-EU-USA orders.
                         </p>
                         <h2>£{(selectedPrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>
