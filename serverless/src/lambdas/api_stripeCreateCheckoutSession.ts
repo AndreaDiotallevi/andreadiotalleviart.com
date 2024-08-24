@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import Stripe from "stripe"
 
-import { createCheckoutSession } from "../services/stripe"
+import { createCheckoutSession } from "../actions/stripe_createCheckoutSession"
 
 export const handler = async (
     event: APIGatewayProxyEvent

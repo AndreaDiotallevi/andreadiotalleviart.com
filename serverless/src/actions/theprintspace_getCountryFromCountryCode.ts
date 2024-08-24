@@ -1,4 +1,14 @@
-export const countries = {
+export const getCountryFromCountryCode = (countryCode?: string | null) => {
+    const country = countries.Data.find(country => country.Code === countryCode)
+
+    if (!country) {
+        throw new Error(`No country with code ${countryCode}`)
+    }
+
+    return country
+}
+
+const countries = {
     Data: [
         {
             Id: 1,
@@ -1267,24 +1277,4 @@ export const countries = {
         },
     ],
     Total: 253,
-}
-
-export const getCountryIdFromCountryCode = (countryCode: string): number => {
-    const country = countries.Data.find(country => country.Code === countryCode)
-
-    if (!country) {
-        throw new Error(`No country with code ${countryCode}`)
-    }
-
-    return country.Id
-}
-
-export const getCountryNameFromCountryCode = (countryCode: string): string => {
-    const country = countries.Data.find(country => country.Code === countryCode)
-
-    if (!country) {
-        throw new Error(`No country with code ${countryCode}`)
-    }
-
-    return country.Name
 }

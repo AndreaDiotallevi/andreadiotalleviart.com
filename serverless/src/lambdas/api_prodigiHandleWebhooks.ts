@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent } from "aws-lambda"
-import { ProdigiEvent } from "../services/prodigi"
-import { putEvent } from "../services/events"
+
+import { putEvent } from "../actions/eventbridge_putEvent"
+
+import { ProdigiEvent } from "../types/prodigi"
 
 export const handler = async (event: APIGatewayProxyEvent) => {
     try {

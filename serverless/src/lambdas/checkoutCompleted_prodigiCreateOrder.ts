@@ -1,8 +1,8 @@
 import { SQSEvent } from "aws-lambda"
 import Stripe from "stripe"
 
-import { createOrder } from "../services/prodigi"
-import { retrieveCheckoutSession } from "../services/stripe"
+import { createOrder } from "../actions/prodigi_createOrder"
+import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
 
 export const handler = async (event: SQSEvent): Promise<void> => {
     try {

@@ -1,12 +1,45 @@
-import { getAllProducts } from "../services/theprintspace"
+import { initialiseClient } from "./stripe_initialiseClient"
+import { getAllProducts } from "./theprintspace_getAllProducts"
+
 import { ProductWithMetadata } from "../types/stripe"
 
-type ProductInput = Pick<
-    ProductWithMetadata,
-    "name" | "description" | "metadata" | "active"
->
+export const stripeSynchroniseProducts = async () => {
+    try {
+        const stripe = await initialiseClient()
 
-export const getProducts = async (): Promise<ProductInput[]> => {
+        const stripeProducts = await stripe.products.list()
+
+        const products = await getProducts()
+
+        for (const product of products) {
+            const payload = {
+                name: product.name,
+                active: product.active,
+                description: product.description,
+                metadata: product.metadata,
+            }
+
+            const stripeProduct = stripeProducts.data.find(
+                stripeProduct =>
+                    stripeProduct.metadata.sku === product.metadata.sku
+            )
+
+            if (stripeProduct) {
+                await stripe.products.update(stripeProduct.id, payload)
+                console.log(`Product ${product.metadata.sku} updated.`)
+            } else {
+                // await stripe.products.create(payload)
+            }
+        }
+
+        console.log("Products synchronized successfully!")
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
+
+const getProducts = async (): Promise<ProductInput[]> => {
     const theprintspaceProducts = await getAllProducts()
 
     const getProductByFilename = (fileName: string) => {
@@ -40,6 +73,11 @@ export const getProducts = async (): Promise<ProductInput[]> => {
         }
     })
 }
+
+type ProductInput = Pick<
+    ProductWithMetadata,
+    "name" | "description" | "metadata" | "active"
+>
 
 const products: ProductInput[] = [
     {

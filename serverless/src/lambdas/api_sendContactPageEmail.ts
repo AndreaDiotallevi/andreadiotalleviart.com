@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 
-import { sendEmail } from "../services/ses"
-import { getParameterValue } from "../services/ssm"
+import { getParameterValue } from "../actions/ssm_getParameterValue"
+import { sendEmail } from "../actions/ses_sendEmail"
 
 export const handler = async (
     event: APIGatewayProxyEvent

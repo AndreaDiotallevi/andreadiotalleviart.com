@@ -3,7 +3,8 @@ import {
     PutEventsCommand,
 } from "@aws-sdk/client-eventbridge"
 import Stripe from "stripe"
-import { ProdigiEvent } from "./prodigi"
+
+import { ProdigiEvent } from "../types/prodigi"
 
 const eventBridgeClient = new EventBridgeClient({
     region: process.env.AWS_REGION,
