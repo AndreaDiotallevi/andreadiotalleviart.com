@@ -78,6 +78,16 @@ jobs:
                     --no-fail-on-empty-changeset \
                     --role-arn ${STAGING_CLOUDFORMATION_EXECUTION_ROLE}
 
+            - name: Check if Stripe products have changed
+              run: |
+                  git diff --name-only HEAD^ HEAD | grep -q "./src/actions/stripe_synchroniseProducts.ts" && echo "STRIPE_PRODUCTS_HAVE_CHANGED=true" >> $GITHUB_ENV || echo "STRIPE_PRODUCTS_HAVE_CHANGED=false" >> $GITHUB_ENV
+
+            - name: Synchronise Stripe products and trigger Netlify build
+              if: env.STRIPE_PRODUCTS_HAVE_CHANGED == 'true'
+              run: |
+                  aws lambda invoke --function-name andreadiotalleviart-StripeSynchroniseProducts
+                  curl -X POST -d {} https://api.netlify.com/build_hooks/YOUR_NETLIFY_BUILD_HOOK
+
     build-and-package:
         if: github.ref == 'refs/heads/main'
         needs: [test]
@@ -171,16 +181,6 @@ jobs:
                     --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
                     --no-fail-on-empty-changeset \
                     --role-arn ${STAGING_CLOUDFORMATION_EXECUTION_ROLE}
-
-            - name: Check if Stripe products have changed
-              run: |
-                  git diff --name-only HEAD^ HEAD | grep -q "./src/actions/stripe_synchroniseProducts.ts" && echo "STRIPE_PRODUCTS_HAVE_CHANGED=true" >> $GITHUB_ENV || echo "STRIPE_PRODUCTS_HAVE_CHANGED=false" >> $GITHUB_ENV
-
-            - name: Synchronise Stripe products and trigger Netlify build
-              if: env.STRIPE_PRODUCTS_HAVE_CHANGED == 'true'
-              run: |
-                  aws lambda invoke --function-name andreadiotalleviart-StripeSynchroniseProducts
-                  curl -X POST -d {} https://api.netlify.com/build_hooks/YOUR_NETLIFY_BUILD_HOOK
 
     integration-test:
         if: github.ref == 'refs/heads/main'
