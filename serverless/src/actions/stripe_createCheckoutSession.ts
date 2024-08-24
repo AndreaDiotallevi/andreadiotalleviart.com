@@ -1,27 +1,13 @@
 import Stripe from "stripe"
 
-import { getParameterValue } from "./ssm"
-import { getProducts } from "../data/stripe"
-
-const initialiseStripeClient = async () => {
-    const stripeSecretKey = await getParameterValue<string>({
-        name: "STRIPE_SECRET_KEY",
-        withDecryption: true,
-    })
-
-    const stripe = new Stripe(stripeSecretKey, {
-        apiVersion: "2023-10-16",
-    })
-
-    return stripe
-}
+import { initialiseClient } from "./stripe_initialiseClient"
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
     success_url: string
 }) => {
     try {
-        const stripe = await initialiseStripeClient()
+        const stripe = await initialiseClient()
 
         const { line_items, success_url } = params
 
@@ -39,70 +25,6 @@ export const createCheckoutSession = async (params: {
         return {
             session,
         }
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
-}
-
-export const retrieveCheckoutSession = async (params: {
-    sessionId: string
-}) => {
-    try {
-        const stripe = await initialiseStripeClient()
-
-        const { sessionId } = params
-
-        const session = await stripe.checkout.sessions.retrieve(sessionId, {
-            expand: [
-                "line_items",
-                "line_items.data.price.product",
-                "customer",
-                "invoice",
-                "invoice.charge",
-                "total_details.breakdown.discounts", // https://docs.stripe.com/api/checkout/sessions/object#checkout_session_object-total_details-breakdown-discounts-discount
-            ],
-        })
-
-        return {
-            session,
-        }
-    } catch (error) {
-        console.error(error)
-        throw error
-    }
-}
-
-export const stripeSynchroniseProducts = async () => {
-    try {
-        const stripe = await initialiseStripeClient()
-
-        const stripeProducts = await stripe.products.list()
-
-        const products = await getProducts()
-
-        for (const product of products) {
-            const payload = {
-                name: product.name,
-                active: product.active,
-                description: product.description,
-                metadata: product.metadata,
-            }
-
-            const stripeProduct = stripeProducts.data.find(
-                stripeProduct =>
-                    stripeProduct.metadata.sku === product.metadata.sku
-            )
-
-            if (stripeProduct) {
-                await stripe.products.update(stripeProduct.id, payload)
-                console.log(`Product ${product.metadata.sku} updated.`)
-            } else {
-                // await stripe.products.create(payload)
-            }
-        }
-
-        console.log("Products synchronized successfully!")
     } catch (error) {
         console.error(error)
         throw error

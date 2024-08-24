@@ -1,11 +1,9 @@
 import { SQSHandler } from "aws-lambda"
 import Stripe from "stripe"
 
-import { retrieveCheckoutSession } from "../services/stripe"
-import {
-    createConfirmedOrder,
-    createEmbryonicOrder,
-} from "../services/theprintspace"
+import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
+import { createConfirmedOrder } from "../actions/theprintspace_createConfirmedOrder"
+import { createEmbryonicOrder } from "../actions/theprintspace_createEmbryonicOrder"
 
 export const handler: SQSHandler = async (event): Promise<void> => {
     for (const record of event.Records) {
