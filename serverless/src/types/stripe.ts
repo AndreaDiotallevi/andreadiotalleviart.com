@@ -5,7 +5,6 @@ export type ProductMetadata = {
     displayName: string
     displayOrder: string
     orientation: string
-    prodigiSku: string
     size: string
     slug: string
     sku: string

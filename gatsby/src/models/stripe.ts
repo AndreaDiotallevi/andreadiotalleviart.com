@@ -30,7 +30,6 @@ export type StripePrice = {
             category: "prints"
             slug: "marble-lake" | "flames" | "moonlight-2" | "new-york"
             size: "A1" | "A2" | "A3"
-            prodigiSku: "GLOBAL-HPR-A1" | "GLOBAL-HPR-A2" | "GLOBAL-HPR-A3"
             displayName: string
             orientation: "portrait" | "landscape"
             displayOrder: number
@@ -79,7 +78,6 @@ export const query = graphql`
                 category
                 size
                 slug
-                prodigiSku
                 displayName
                 orientation
                 displayOrder
