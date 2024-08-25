@@ -50,16 +50,21 @@ export const createEmbryonicOrder = async ({
                     PhoneNumber: null,
                 },
                 OrderItems: line_items?.data.map(item => {
-                    const product = item.price
-                        ?.product as unknown as ProductWithMetadata
+                    const {
+                        metadata: {
+                            sku,
+                            displayName,
+                            theprintspaceProductId,
+                            theprintspacePrintOptionId,
+                        },
+                    } = item.price?.product as unknown as ProductWithMetadata
 
                     return {
-                        ProductId: product.metadata.theprintspaceProductId,
-                        PrintOptionId:
-                            product.metadata.theprintspacePrintOptionId,
+                        ProductId: theprintspaceProductId,
+                        PrintOptionId: theprintspacePrintOptionId,
                         Quantity: item.quantity,
-                        ExternalReference: product.metadata.sku,
-                        ExternalSku: product.metadata.sku,
+                        ExternalReference: displayName,
+                        ExternalSku: sku,
                     }
                 }),
             }),
