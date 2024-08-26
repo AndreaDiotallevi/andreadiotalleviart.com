@@ -108,3 +108,25 @@ export const sendContactPageEmail = async (params: {
         return null
     }
 }
+
+export const getLocaleCurrency = async () => {
+    try {
+        const response = await fetch(
+            process.env.GATSBY_API_URL + `/get-locale-currency`,
+            {
+                method: "GET",
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as { currency: string }
+            return data.currency
+        } else {
+            console.error("Failed to get locale currency")
+            return "GBP"
+        }
+    } catch (error) {
+        console.error("Error during request: ", error)
+        return "GBP"
+    }
+}

@@ -380,7 +380,7 @@ Resources:
                 ApiKeyRequired: false
             Cors:
                 AllowMethods: "'*'"
-                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
+                AllowHeaders: "'Content-Type, Authorization, X-Api-Key, X-Forwarded-For'"
                 AllowOrigin: "'*'"
 
     StripeCreateCheckoutSessionFunction:
@@ -595,3 +595,23 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_theprintspaceCreateOrder.ts
+
+    GetLocaleCurrencyFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-GetLocaleCurrency
+            Handler: src/lambdas/api_getLocaleCurrency.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /get-locale-currency
+                        Method: GET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_getLocaleCurrency.ts
