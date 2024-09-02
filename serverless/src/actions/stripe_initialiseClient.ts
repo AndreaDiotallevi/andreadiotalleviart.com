@@ -1,6 +1,6 @@
 import Stripe from "stripe"
 
-import { getParameterValue } from "./ssm.getParameterValue"
+import { getParameterValue } from "./ssm_getParameterValue"
 
 export const initialiseClient = async () => {
     const stripeSecretKey = await getParameterValue<string>({

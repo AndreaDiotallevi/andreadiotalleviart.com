@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 
-import { getCurrencyForIp } from "../actions/freeipapi.getCurrencyForIp"
+import { getCurrencyForIp } from "../actions/freeipapi_getCurrencyForIp"
 
 export const handler = async (
     event: APIGatewayProxyEvent

@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 
-import { retrieveCheckoutSession } from "../actions/stripe.retrieveCheckoutSession"
+import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
 
 export const handler = async (
     event: APIGatewayProxyEvent

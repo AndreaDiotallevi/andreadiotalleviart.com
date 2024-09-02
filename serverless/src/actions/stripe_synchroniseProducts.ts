@@ -1,5 +1,5 @@
-import { initialiseClient } from "./stripe.initialiseClient"
-import { getAllProducts } from "./theprintspace.getAllProducts"
+import { initialiseClient } from "./stripe_initialiseClient"
+import { getAllProducts } from "./theprintspace_getAllProducts"
 
 import { ProductWithMetadata } from "../types/stripe"
 

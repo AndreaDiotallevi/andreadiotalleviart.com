@@ -1,10 +1,10 @@
 import Stripe from "stripe"
 
-import { getParameterValue } from "./ssm.getParameterValue"
+import { getParameterValue } from "./ssm_getParameterValue"
 
 import { ProductWithMetadata } from "../types/stripe"
 import { CreateEmbryonicOrderResponse } from "../types/theprintspace"
-import { getCountryFromCountryCode } from "./theprintspace.getCountryFromCountryCode"
+import { getCountryFromCountryCode } from "./theprintspace_getCountryFromCountryCode"
 
 export const createEmbryonicOrder = async ({
     session,

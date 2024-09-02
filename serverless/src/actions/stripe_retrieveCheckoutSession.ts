@@ -1,4 +1,4 @@
-import { initialiseClient } from "./stripe.initialiseClient"
+import { initialiseClient } from "./stripe_initialiseClient"
 
 export const retrieveCheckoutSession = async (params: {
     sessionId: string

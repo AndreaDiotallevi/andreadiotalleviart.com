@@ -1,9 +1,9 @@
 import { SQSEvent } from "aws-lambda"
 import Stripe from "stripe"
 
-import { sendEmail } from "../actions/ses.sendEmail"
-import { getParameterValue } from "../actions/ssm.getParameterValue"
-import { retrieveCheckoutSession } from "../actions/stripe.retrieveCheckoutSession"
+import { sendEmail } from "../actions/ses_sendEmail"
+import { getParameterValue } from "../actions/ssm_getParameterValue"
+import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
 
 export const handler = async (event: SQSEvent): Promise<void> => {
     try {
