@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult } from "aws-lambda"
 
-import { stripeSynchroniseProducts } from "../actions/stripe_synchroniseProducts"
+import { stripeSynchroniseProducts } from "../actions/stripe.synchroniseProducts"
 
 export const handler = async (): Promise<APIGatewayProxyResult> => {
     if (process.env.ENVIRONMENT !== "production") {

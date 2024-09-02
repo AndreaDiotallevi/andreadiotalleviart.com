@@ -387,7 +387,7 @@ Resources:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
-            Handler: src/lambdas/api_stripeCreateCheckoutSession.handler
+            Handler: src/lambdas/api.stripeCreateCheckoutSession.handler
             Events:
                 Root:
                     Type: Api
@@ -409,13 +409,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_stripeCreateCheckoutSession.ts
+                    - src/lambdas/api.stripeCreateCheckoutSession.ts
 
     StripeRetrieveCheckoutSessionFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeRetrieveCheckoutSession
-            Handler: src/lambdas/api_stripeRetrieveCheckoutSession.handler
+            Handler: src/lambdas/api.stripeRetrieveCheckoutSession.handler
             Events:
                 Root:
                     Type: Api
@@ -437,13 +437,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_stripeRetrieveCheckoutSession.ts
+                    - src/lambdas/api.stripeRetrieveCheckoutSession.ts
 
     StripeSynchroniseProductsFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeSynchroniseProducts
-            Handler: src/lambdas/api_stripeSynchroniseProducts.handler
+            Handler: src/lambdas/api.stripeSynchroniseProducts.handler
             Events:
                 Root:
                     Type: Api
@@ -469,13 +469,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_stripeSynchroniseProducts.ts
+                    - src/lambdas/api.stripeSynchroniseProducts.ts
 
     SendOrderConfirmationEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-SendOrderConfirmationEmail
-            Handler: src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.handler
+            Handler: src/lambdas/checkoutCompleted.sendOrderConfirmationEmail.handler
             Events:
                 MySQSEvent:
                     Type: SQS
@@ -504,13 +504,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.ts
+                    - src/lambdas/checkoutCompleted.sendOrderConfirmationEmail.ts
 
     SendContactPageEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-SendContactPageEmail
-            Handler: src/lambdas/api_sendContactPageEmail.handler
+            Handler: src/lambdas/api.sendContactPageEmail.handler
             Events:
                 Root:
                     Type: Api
@@ -539,13 +539,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_sendContactPageEmail.ts
+                    - src/lambdas/api.sendContactPageEmail.ts
 
     TheprintspaceHandleWebhooksFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-TheprintspaceHandleWebhooks
-            Handler: src/lambdas/api_theprintspaceHandleWebhooks.handler
+            Handler: src/lambdas/api.theprintspaceHandleWebhooks.handler
             Environment:
                 Variables:
                     EVENT_BUS_NAME: !Ref EventBus
@@ -562,13 +562,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_theprintspaceHandleWebhooks.ts
+                    - src/lambdas/api.theprintspaceHandleWebhooks.ts
 
     TheprintspaceCreateOrderFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-TheprintspaceCreateOrder
-            Handler: src/lambdas/checkoutCompleted_theprintspaceCreateOrder.handler
+            Handler: src/lambdas/checkoutCompleted.theprintspaceCreateOrder.handler
             Events:
                 MySQSEvent:
                     Type: SQS
@@ -594,13 +594,13 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/checkoutCompleted_theprintspaceCreateOrder.ts
+                    - src/lambdas/checkoutCompleted.theprintspaceCreateOrder.ts
 
     GetLocaleCurrencyFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-GetLocaleCurrency
-            Handler: src/lambdas/api_getLocaleCurrency.handler
+            Handler: src/lambdas/api.getLocaleCurrency.handler
             Events:
                 Root:
                     Type: Api
@@ -614,4 +614,4 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_getLocaleCurrency.ts
+                    - src/lambdas/api.getLocaleCurrency.ts

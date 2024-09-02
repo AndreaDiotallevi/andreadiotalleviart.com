@@ -1,6 +1,6 @@
 import Stripe from "stripe"
 
-import { initialiseClient } from "./stripe_initialiseClient"
+import { initialiseClient } from "./stripe.initialiseClient"
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]

@@ -1,4 +1,4 @@
-import { getParameterValue } from "./ssm_getParameterValue"
+import { getParameterValue } from "./ssm.getParameterValue"
 
 import { GetAllProductsResponse } from "../types/theprintspace"
 
