@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Link } from "gatsby"
 import { graphql, PageProps } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
@@ -9,6 +9,7 @@ import { StripePrice } from "../models/stripe"
 import PageTitle from "../components/pageTitle"
 import Seo from "../components/seo"
 import * as styles from "./shop.module.scss"
+import { getLocaleCurrency } from "../api"
 
 type DataProps = {
     allStripePrice: {
@@ -19,6 +20,11 @@ type DataProps = {
 }
 
 const Shop = ({ data: { allStripePrice } }: PageProps<DataProps>) => {
+    console.log(allStripePrice)
+    useEffect(() => {
+        getLocaleCurrency()
+    }, [])
+
     return (
         <Layout>
             <div className={styles.container}>
