@@ -1,5 +1,6 @@
 ---
 import GlobalStyles from "../components/GlobalStyles.astro"
+import NavigationLayout from "./NavigationLayout.astro"
 
 interface Props {
     title: string
@@ -78,6 +79,8 @@ const {
     </head>
     <body>
         <GlobalStyles />
-        <slot />
+        <NavigationLayout>
+            <slot />
+        </NavigationLayout>
     </body>
 </html>

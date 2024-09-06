@@ -1,5 +1,5 @@
 ---
-const { children } = Astro.props
+// const { children } = Astro.props
 ---
 
 <div class="flex flex-col min-h-screen">
@@ -20,7 +20,7 @@ const { children } = Astro.props
     </header>
 
     <main class="flex-grow">
-        {children}
+        <slot />
     </main>
 
     <footer class="bg-white mt-4">
