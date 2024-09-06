@@ -1,4 +1,6 @@
 ---
+import GlobalStyles from "../components/GlobalStyles.astro"
+
 interface Props {
     title: string
     description: string
@@ -27,6 +29,10 @@ const {
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&display=swap"
+        />
         <title>{title}</title>
 
         <meta name="keywords" content={tags.join(", ")} />
@@ -71,6 +77,7 @@ const {
         />
     </head>
     <body>
+        <GlobalStyles />
         <slot />
     </body>
 </html>
