@@ -1,0 +1,76 @@
+---
+interface Props {
+    title: string
+    description: string
+    image?: string
+    tags?: string[]
+    type?: "website" | "product"
+    amount?: string
+}
+
+const {
+    title,
+    description,
+    image = "",
+    tags = [],
+    type = "website",
+    amount,
+} = Astro.props
+
+// const siteUrl = "https://www.example.com"
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content={description} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+
+        <meta name="keywords" content={tags.join(", ")} />
+        <meta name="image" content={image} />
+        <!-- {amount && <link rel="canonical" href={seo.url} />} -->
+
+        <!-- Open Graph Meta Tags -->
+        <!-- <meta property="og:url" content={seo.url} /> -->
+        <meta property="og:type" content={type} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:site_name" content="Your Site Name" />
+        <meta property="og:locale" content="en_GB" />
+
+        {
+            type === "product" && (
+                <>
+                    <meta property="og:price:amount" content={amount} />
+                    <meta property="og:price:currency" content="GBP" />
+                    <meta
+                        property="og:availability"
+                        content="available for order"
+                    />
+                    <meta property="product:condition" content="new" />
+                    <meta property="product:category" content="500044" />
+                </>
+            )
+        }
+
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="@adiotalleviart" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+
+        <!-- Google Site Verification -->
+        <meta
+            name="google-site-verification"
+            content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
+        />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
