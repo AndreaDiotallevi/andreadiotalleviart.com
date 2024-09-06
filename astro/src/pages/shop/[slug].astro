@@ -1,0 +1,14 @@
+---
+import { getActivePrices } from "../../utils/stripe"
+
+export async function getStaticPaths() {
+    const prices = await getActivePrices()
+
+    return prices.map(price => ({
+        params: { slug: price.product.metadata.slug },
+        props: { price },
+    }))
+}
+---
+
+<div>OK</div>

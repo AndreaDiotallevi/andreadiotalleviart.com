@@ -6,12 +6,14 @@ const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY!, {
 })
 
 export async function getActivePrices() {
-    const prices = await stripe.prices.list({
+    const response = await stripe.prices.list({
         active: true,
-        expand: ["data.product"],
+        expand: ["data.product", "data.currency_options"],
     })
 
-    return prices.data as StripePrice[]
+    const allPrices = response.data as unknown as StripePrice[]
+
+    return allPrices.filter(price => price.product.active)
 }
 
 const stripePriceSchema = z.object({
@@ -22,8 +24,12 @@ const stripePriceSchema = z.object({
     unit_amount: z.number(),
     product: z.object({
         id: z.string(),
+        active: z.boolean(),
         name: z.string(),
         description: z.string(),
+        metadata: z.object({
+            slug: z.string(),
+        }),
     }),
 })
 
