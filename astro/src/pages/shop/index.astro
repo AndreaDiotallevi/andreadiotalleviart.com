@@ -1,9 +1,40 @@
 ---
 import { getActivePrices } from "../../utils/stripe"
+import BaseLayout from "../../layouts/BaseLayout.astro"
 
 const prices = await getActivePrices()
 ---
 
-<ul>
-    {prices.map(price => <li>{price.product.name}</li>)}
-</ul>
+<BaseLayout title="Shop" description="">
+    <div class="max-w-screen-lg mx-auto px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold">Shop</h1>
+            <p class="text-lg">
+                Browse our selection of generative art pieces.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {
+                prices.map(price => (
+                    <a
+                        href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                        class="flex flex-col items-center no-underline text-black hover:underline"
+                    >
+                        <img
+                            src={price.product.images[0]}
+                            alt={price.product.name}
+                            class="w-full h-auto object-contain"
+                        />
+                        <h2 class="text-xl font-semibold mt-4">
+                            {price.product.name}
+                        </h2>
+                        <p class="text-lg font-medium mt-2">
+                            {price.unit_amount / 100} USD
+                        </p>
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</BaseLayout>

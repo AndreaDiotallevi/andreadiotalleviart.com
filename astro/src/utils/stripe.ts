@@ -27,6 +27,7 @@ const stripePriceSchema = z.object({
         active: z.boolean(),
         name: z.string(),
         description: z.string(),
+        images: z.array(z.string()),
         metadata: z.object({
             slug: z.string(),
             category: z.string(),
