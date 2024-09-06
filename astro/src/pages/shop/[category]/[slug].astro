@@ -1,4 +1,5 @@
 ---
+import BaseLayout from "../../../layouts/BaseLayout.astro"
 import { getActivePrices } from "../../../utils/stripe"
 
 export async function getStaticPaths() {
@@ -12,6 +13,93 @@ export async function getStaticPaths() {
         props: { price },
     }))
 }
+
+const { price } = Astro.props
 ---
 
-<div>OK</div>
+<BaseLayout title={price.product.name} description="">
+    <div
+        class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
+    >
+        <!-- Left column: Image gallery -->
+        <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <!-- Main Image -->
+            <div class="mb-4">
+                <img
+                    src={price.product.images[0]}
+                    alt={price.product.name}
+                    class="w-full h-auto rounded-lg"
+                />
+            </div>
+            <!-- Thumbnails for all images -->
+            <div class="flex space-x-4 overflow-x-auto">
+                {
+                    price.product.images.map((img, index) => (
+                        <img
+                            src={img}
+                            alt={`Thumbnail ${index + 1}`}
+                            class="w-20 h-auto rounded-lg cursor-pointer"
+                        />
+                    ))
+                }
+            </div>
+        </div>
+
+        <!-- Right column: Product details -->
+        <div class="w-full md:w-1/2">
+            <!-- Product title -->
+            <h1 class="text-4xl font-bold mb-4">{price.product.name}</h1>
+
+            <!-- Select size -->
+            <div class="mb-4">
+                <label for="size" class="block text-lg font-medium mb-2"
+                    >Select Print Size</label
+                >
+                <select
+                    id="size"
+                    name="size"
+                    class="w-full px-3 py-2 border border-gray-800 rounded-md"
+                >
+                    {
+                        ["A3", "A4"].map(size => (
+                            <option value={size}>{size}</option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <!-- Paragraphs with headers -->
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">Product Details</h2>
+                    <p>Here are some details about the product...</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">
+                        Shipping Information
+                    </h2>
+                    <p>Details about shipping go here...</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">
+                        Returns & Refunds
+                    </h2>
+                    <p>Return and refund policy information goes here...</p>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">
+                        Care Instructions
+                    </h2>
+                    <p>How to care for the product goes here...</p>
+                </div>
+            </div>
+
+            <!-- Checkout button -->
+            <button
+                class="mt-6 px-6 py-3 text-white bg-black rounded-lg w-full hover:bg-gray-800"
+            >
+                Continue to checkout
+            </button>
+        </div>
+    </div>
+</BaseLayout>
