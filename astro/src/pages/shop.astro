@@ -1,0 +1,9 @@
+---
+import { getActivePrices } from "../utils/stripe"
+
+const prices = await getActivePrices()
+---
+
+<ul>
+    {prices.map(price => <li>{price.product.name}</li>)}
+</ul>
