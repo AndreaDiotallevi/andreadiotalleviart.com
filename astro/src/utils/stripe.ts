@@ -29,6 +29,7 @@ const stripePriceSchema = z.object({
         description: z.string(),
         metadata: z.object({
             slug: z.string(),
+            category: z.string(),
         }),
     }),
 })
