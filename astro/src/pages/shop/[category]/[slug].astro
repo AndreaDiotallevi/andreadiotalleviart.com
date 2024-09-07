@@ -23,9 +23,7 @@ const { price } = Astro.props
     <div
         class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
     >
-        <!-- Left column: Image gallery -->
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-            <!-- Main Image -->
             <div class="mb-4">
                 <img
                     src={price.product.images[0]}
@@ -33,7 +31,6 @@ const { price } = Astro.props
                     class="w-full h-auto rounded-lg"
                 />
             </div>
-            <!-- Thumbnails for all images -->
             <div class="flex space-x-4 overflow-x-auto">
                 {
                     price.product.images.map((img, index) => (
@@ -47,12 +44,9 @@ const { price } = Astro.props
             </div>
         </div>
 
-        <!-- Right column: Product details -->
         <div class="w-full md:w-1/2">
-            <!-- Product title -->
             <h1 class="text-4xl font-bold mb-4">{price.product.name}</h1>
 
-            <!-- Select size -->
             <div class="mb-4">
                 <label for="size" class="block text-lg font-medium mb-2"
                     >Select Print Size</label
@@ -70,7 +64,6 @@ const { price } = Astro.props
                 </select>
             </div>
 
-            <!-- Paragraphs with headers -->
             <div class="space-y-6">
                 <div>
                     <h2 class="text-xl font-semibold mb-2">Product Details</h2>
@@ -96,8 +89,9 @@ const { price } = Astro.props
                 </div>
             </div>
 
-            <!-- Checkout button -->
             <button
+                id="continue-to-checkout"
+                data-price-id={price.id}
                 class="mt-6 px-6 py-3 text-white bg-black rounded-lg w-full hover:bg-gray-800"
             >
                 Continue to checkout
@@ -105,3 +99,34 @@ const { price } = Astro.props
         </div>
     </div>
 </BaseLayout>
+
+<script>
+    import { createCheckoutSession } from "../../../utils/stripe"
+
+    const button = document.querySelector(
+        "#continue-to-checkout"
+    ) as HTMLElement
+
+    const priceId = button.dataset.priceId
+
+    button.addEventListener("click", async e => {
+        e.preventDefault()
+
+        const data = await createCheckoutSession({
+            line_items: [
+                {
+                    price: priceId,
+                    quantity: 1,
+                },
+            ],
+            success_url: `${window.location.origin}/shop/checkout/success`,
+        })
+
+        if (!data) {
+            console.error("Session failed to create")
+            return
+        }
+
+        window.location.href = `/shop/checkout?clientSecret=${data.session.client_secret}`
+    })
+</script>
