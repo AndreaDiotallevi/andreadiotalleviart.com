@@ -1,9 +1,12 @@
 ---
-import Layout from "../layouts/BaseLayout.astro"
-import Card from "../components/Card.astro"
+export const prerender = true
+
+import BaseLayout from "../layouts/BaseLayout.astro"
 ---
 
-<Layout title="Welcome to Astro.">
+<BaseLayout title="" description="">Home</BaseLayout>
+
+<!-- <Layout title="Welcome to Astro.">
     <main>
         <svg
             class="astro-a"
@@ -125,4 +128,4 @@ import Card from "../components/Card.astro"
         gap: 2rem;
         padding: 0;
     }
-</style>
+</style> -->
