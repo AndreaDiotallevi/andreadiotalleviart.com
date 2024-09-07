@@ -13,7 +13,9 @@ export async function getActivePrices() {
 
     const allPrices = response.data as unknown as StripePrice[]
 
-    return allPrices.filter(price => price.product.active)
+    return allPrices.filter(
+        price => price.product.active && price.product.metadata.slug,
+    )
 }
 
 // export async function getActiveProducts() {
