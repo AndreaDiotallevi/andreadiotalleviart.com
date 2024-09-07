@@ -1,6 +1,4 @@
 ---
-export const prerender = true
-
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import { getActivePrices } from "../../../utils/stripe"
 
@@ -122,11 +120,6 @@ const { price } = Astro.props
             success_url: `${window.location.origin}/shop/checkout/success`,
         })
 
-        if (!data) {
-            console.error("Session failed to create")
-            return
-        }
-
-        window.location.href = `/shop/checkout?clientSecret=${data.session.client_secret}`
+        window.location.href = `/shop/checkout?clientSecret=${data?.session.client_secret}`
     })
 </script>
