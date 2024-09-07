@@ -1,0 +1,28 @@
+---
+export const prerender = false
+
+import BaseLayout from "../../layouts/BaseLayout.astro"
+
+const clientSecret = Astro.url.searchParams.get("clientSecret")
+---
+
+<BaseLayout title="" description="">
+    <div id="checkout" data-client-secret={clientSecret}></div>
+</BaseLayout>
+
+<script>
+    import { loadStripe } from "@stripe/stripe-js"
+
+    const stripe = await loadStripe(
+        import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+    )
+
+    const checkoutDiv = document.querySelector("#checkout") as HTMLElement
+    const clientSecret = checkoutDiv.dataset.clientSecret
+
+    const checkout = await stripe?.initEmbeddedCheckout({
+        clientSecret,
+    })
+
+    checkout?.mount("#checkout")
+</script>

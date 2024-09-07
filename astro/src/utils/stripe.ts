@@ -36,3 +36,34 @@ const stripePriceSchema = z.object({
 })
 
 export type StripePrice = z.infer<typeof stripePriceSchema>
+
+export const createCheckoutSession = async (params: {
+    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    success_url: string
+}) => {
+    try {
+        const response = await fetch(
+            process.env.PUBLIC_API_URL + `/stripe-create-checkout-session`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Api-Key": process.env.PUBLIC_API_KEY!,
+                },
+                body: JSON.stringify(params),
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as {
+                session: Stripe.Checkout.Session
+            }
+            return data
+        } else {
+            throw new Error("Failed to create checkout session")
+        }
+    } catch (error) {
+        console.error("Error during request: ", error)
+        return null
+    }
+}
