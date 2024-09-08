@@ -6,9 +6,9 @@ const prices = await getActivePrices()
 ---
 
 <BaseLayout title="Shop" description="">
-    <div class="max-w-screen-lg mx-auto px-4">
+    <div class="max-w-screen-xl mx-auto px-4">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold">Shop</h1>
+            <h1 class="text-4xl font-bold mb-2">Shop</h1>
             <p class="text-lg">
                 Browse our selection of generative art pieces.
             </p>
@@ -19,18 +19,18 @@ const prices = await getActivePrices()
                 prices.map(price => (
                     <a
                         href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                        class="flex flex-col items-center no-underline text-black hover:underline"
+                        class="flex flex-col no-underline text-black hover:underline"
                     >
                         <img
                             src={price.product.images[0]}
                             alt={price.product.name}
                             class="w-full h-auto object-contain"
                         />
-                        <h2 class="text-xl font-semibold mt-4">
-                            {price.product.name}
+                        <h2 class="text-2xl font-semibold mt-4">
+                            {price.product.metadata.displayName}
                         </h2>
                         <p class="text-lg font-medium mt-2">
-                            {price.unit_amount / 100} USD
+                            £{(price.unit_amount / 100).toFixed(2)}
                         </p>
                     </a>
                 ))

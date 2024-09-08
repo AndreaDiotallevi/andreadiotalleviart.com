@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro"
-import { getActivePrices } from "../../../utils/stripe"
+import { getActivePrices, type StripePrice } from "../../../utils/stripe"
 
 export async function getStaticPaths() {
     const prices = await getActivePrices()
@@ -15,6 +15,15 @@ export async function getStaticPaths() {
 }
 
 const { price } = Astro.props
+
+const sizeToDescription: Record<
+    StripePrice["product"]["metadata"]["size"],
+    string
+> = {
+    A3: "A3 (297 x 420 mm)",
+    A2: "A2 (420 x 594 mm)",
+    A1: "A1 (594 x 841 mm)",
+}
 ---
 
 <BaseLayout title={price.product.name} description="">
@@ -43,48 +52,102 @@ const { price } = Astro.props
         </div>
 
         <div class="w-full md:w-1/2">
-            <h1 class="text-4xl font-bold mb-4">{price.product.name}</h1>
-
-            <div class="mb-4">
-                <label for="size" class="block text-lg font-medium mb-2"
-                    >Select Print Size</label
-                >
-                <select
-                    id="size"
-                    name="size"
-                    class="w-full px-3 py-2 border border-gray-800 rounded-md"
-                >
-                    {
-                        ["A3", "A4"].map(size => (
-                            <option value={size}>{size}</option>
-                        ))
-                    }
-                </select>
-            </div>
+            <h1 class="text-4xl font-bold mb-4">
+                {price.product.metadata.displayName}
+            </h1>
 
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-xl font-semibold mb-2">Product Details</h2>
+                    <h2 class="text-2xl font-semibold mb-2">Size</h2>
+                    <select
+                        id="size"
+                        name="size"
+                        class="w-full px-3 py-2 border border-gray-800 rounded-md mb-2"
+                    >
+                        {
+                            [price.product.metadata.size].map(size => (
+                                <option value={price.product.metadata.size}>
+                                    {`${
+                                        sizeToDescription[
+                                            price.product.metadata.size
+                                        ]
+                                    } - £${(price.unit_amount / 100).toFixed(2)}`}
+                                </option>
+                            ))
+                        }
+                    </select>
+                    <p>The image is printed full bleed with no border.</p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        100% cotton paper
+                    </h2>
+                    <p>
+                        The artwork is printed on a white cotton paper called
+                        Hahnemühle photo rag 308gsm. With its characteristic,
+                        wonderfully soft feel, it boasts a lightly defined felt
+                        structure, lending each artwork a three-dimensional
+                        appearance and impressive pictorial depth.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        Premium print quality
+                    </h2>
+                    <p>
+                        The print is crafted using premium, pigment-based inks
+                        that are fade-resistant and can endure for up to 200
+                        years. This technique, called Giclée, makes the print
+                        stand apart with its extremely high level of quality,
+                        longevity and value compared to a standard print.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Free shipping</h2>
+                    <p>
+                        Shipping is handled by theprintspace in London through
+                        First Class Tracked Mail (typically 6-10 days). This is
+                        an extremely more secure option than regular post for
+                        sending art prints.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        No custom charges for UK-EU-USA orders
+                    </h2>
+                    <p>
+                        With production in the UK, USA & Germany, theprintspace
+                        guarantees no extra customs charges on UK-EU-USA orders.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        £{(price.unit_amount / 100).toFixed(2)}
+                    </h2>
+                    <p>Apply promotion codes at checkout.</p>
+                </div>
+                <!-- <div>
+                    <h2 class="text-2xl font-semibold mb-2">Product Details</h2>
                     <p>Here are some details about the product...</p>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold mb-2">
+                    <h2 class="text-2xl font-semibold mb-2">
                         Shipping Information
                     </h2>
                     <p>Details about shipping go here...</p>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold mb-2">
+                    <h2 class="text-2xl font-semibold mb-2">
                         Returns & Refunds
                     </h2>
                     <p>Return and refund policy information goes here...</p>
                 </div>
                 <div>
-                    <h2 class="text-xl font-semibold mb-2">
+                    <h2 class="text-2xl font-semibold mb-2">
                         Care Instructions
                     </h2>
                     <p>How to care for the product goes here...</p>
-                </div>
+                </div> -->
             </div>
 
             <button

@@ -31,9 +31,15 @@ const stripePriceSchema = z.object({
         description: z.string(),
         images: z.array(z.string()),
         metadata: z.object({
-            slug: z.string(),
             category: z.string(),
+            displayName: z.string(),
+            displayOrder: z.string(),
+            orientation: z.string(),
             size: z.string(),
+            slug: z.string(),
+            sku: z.string(),
+            theprintspacePrintOptionId: z.string(),
+            theprintspaceProductId: z.string(),
         }),
     }),
 })
