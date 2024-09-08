@@ -26,7 +26,10 @@ const sizeToDescription: Record<
 }
 ---
 
-<BaseLayout title={price.product.name} description="">
+<BaseLayout
+    title={`${price.product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
+    description={price.product.description}
+>
     <div
         class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
     >

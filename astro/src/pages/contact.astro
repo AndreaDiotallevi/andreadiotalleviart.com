@@ -4,11 +4,13 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import ContactImage from "../images/contact-page-image.jpg"
 ---
 
-<BaseLayout title="Contact" description="">
+<BaseLayout
+    title="Contact | Andrea Diotallevi Art"
+    description="Get in touch if you are interested in working together."
+>
     <div
         class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
     >
-        <!-- Image on the left -->
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <Image
                 src={ContactImage}
@@ -17,7 +19,6 @@ import ContactImage from "../images/contact-page-image.jpg"
             />
         </div>
 
-        <!-- Form on the right -->
         <div class="w-full md:w-1/2">
             <h1 class="text-4xl font-bold mb-4">Contact</h1>
             <form class="space-y-4">

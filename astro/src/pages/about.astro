@@ -4,11 +4,13 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import ProfileImage from "../images/about-page-image.jpg"
 ---
 
-<BaseLayout title="About" description="">
+<BaseLayout
+    title="About | Andrea Diotallevi Art"
+    description="Get to know Andrea Diotallevi."
+>
     <div
         class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
     >
-        <!-- Image on the left -->
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <Image
                 src={ProfileImage}
@@ -17,7 +19,6 @@ import ProfileImage from "../images/about-page-image.jpg"
             />
         </div>
 
-        <!-- Text content on the right -->
         <div class="w-full md:w-1/2">
             <h1 class="text-4xl font-bold mb-4">About</h1>
             <p class="mb-4">
