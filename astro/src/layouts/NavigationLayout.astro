@@ -1,19 +1,35 @@
 ---
-// const { children } = Astro.props
+interface Props {
+    darkTheme?: boolean
+}
+
+const { darkTheme } = Astro.props
 ---
 
-<div class="flex flex-col min-h-screen">
-    <header class="bg-white">
+<div class="flex flex-col min-h-[100dvh]">
+    <header
+        class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"}`}
+    >
         <div
-            class="max-w-screen-xl mx-auto flex items-center justify-between p-4"
+            class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
         >
             <div class="text-2xl font-bold">
                 <a href="/">andrea</a>
             </div>
             <nav class="space-x-6">
-                <a href="/shop" class="text-lg hover:text-gray-700">Shop</a>
-                <a href="/about" class="text-lg hover:text-gray-700">About</a>
-                <a href="/contact" class="text-lg hover:text-gray-700"
+                <a
+                    href="/shop"
+                    class={`text-lg ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
+                    >Shop</a
+                >
+                <a
+                    href="/about"
+                    class={`text-lg ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
+                    >About</a
+                >
+                <a
+                    href="/contact"
+                    class={`text-lg ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                     >Contact</a
                 >
             </nav>
@@ -24,16 +40,18 @@
         <slot />
     </main>
 
-    <footer class="bg-white">
+    <footer
+        class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"}`}
+    >
         <div
-            class="max-w-screen-xl mx-auto flex items-center justify-between p-4"
+            class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
         >
             <p>© 2024, Andrea Diotallevi</p>
             <div class="flex space-x-4">
                 <a
                     href="https://github.com/AndreaDiotallevi/andreadiotalleviart.com"
                     target="_blank"
-                    class="w-12 h-12 flex items-center justify-center hover:text-gray-700"
+                    class={`w-12 h-12 flex items-center justify-center ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                     aria-label="GitHub"
                 >
                     <svg
@@ -50,7 +68,7 @@
                 <a
                     href="https://twitter.com/adiotalleviart"
                     target="_blank"
-                    class="w-12 h-12 flex items-center justify-center hover:text-gray-700"
+                    class={`w-12 h-12 flex items-center justify-center ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                     aria-label="Twitter"
                 >
                     <svg
@@ -67,7 +85,7 @@
                 <a
                     href="https://www.instagram.com/andreadiotalleviart"
                     target="_blank"
-                    class="w-12 h-12 flex items-center justify-center hover:text-gray-700"
+                    class={`w-12 h-12 flex items-center justify-center ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                     aria-label="Instagram"
                 >
                     <svg

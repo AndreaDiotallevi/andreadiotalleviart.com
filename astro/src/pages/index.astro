@@ -5,11 +5,14 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 <BaseLayout
     title="Andrea Diotallevi | Generative Artist and Creative Coder"
     description="The artwork of Andrea Diotallevi, a practising generative artist, creative coder, software engineer, architect and pianist."
+    darkTheme={true}
 >
-    <div class="flex justify-center items-center min-h-screen bg-[#38444c]">
+    <div
+        class="flex justify-center items-center min-h-[calc(100dvh-80px-80px)] bg-[#38444c]"
+    >
         <div id="sketch"></div>
-    </div></BaseLayout
->
+    </div>
+</BaseLayout>
 
 <script>
     import p5 from "p5"
