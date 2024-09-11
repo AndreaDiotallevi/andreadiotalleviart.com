@@ -50,10 +50,18 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 </BaseLayout>
 
 <script>
+    import { sendGA4PurchaseEvent } from "../../../utils/ga4"
     import { retrieveCheckoutSession } from "../../../utils/stripe"
 
     const params = new URLSearchParams(window.location.search)
     const sessionId = params.get("session_id") || ""
 
     const session = await retrieveCheckoutSession({ sessionId })
+
+    if (!session) {
+        console.error("Failed to retrieve session")
+        return
+    }
+
+    sendGA4PurchaseEvent({ session })
 </script>

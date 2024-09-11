@@ -21,6 +21,7 @@
     "typescript": "^5.5.4"
   },
   "devDependencies": {
+    "@types/gtag.js": "^0.0.20",
     "@types/p5": "^1.7.6"
   }
 }

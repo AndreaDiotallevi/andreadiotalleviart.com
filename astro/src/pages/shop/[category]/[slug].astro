@@ -168,6 +168,7 @@ const sizeToDescription: Record<
 </BaseLayout>
 
 <script>
+    import { sendGA4BeginCheckoutEvent } from "../../../utils/ga4"
     import { createCheckoutSession } from "../../../utils/stripe"
 
     const button = document.querySelector(
@@ -187,6 +188,15 @@ const sizeToDescription: Record<
                 },
             ],
             success_url: `${window.location.origin}/shop/checkout/success`,
+        })
+
+        if (!data) {
+            console.error("Failed to create session")
+            return
+        }
+
+        sendGA4BeginCheckoutEvent({
+            session: data.session,
         })
 
         window.location.href = `/shop/checkout?clientSecret=${data?.session.client_secret}`
