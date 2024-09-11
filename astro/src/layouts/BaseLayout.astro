@@ -2,6 +2,8 @@
 import GlobalStyles from "../components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
+const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
+
 interface Props {
     title: string
     description: string
@@ -50,7 +52,7 @@ const {
         <meta property="og:locale" content="en_GB" />
 
         {
-            type === "product" && (
+            type === "product" && amount ? (
                 <>
                     <meta property="og:price:amount" content={amount} />
                     <meta property="og:price:currency" content="GBP" />
@@ -61,7 +63,7 @@ const {
                     <meta property="product:condition" content="new" />
                     <meta property="product:category" content="500044" />
                 </>
-            )
+            ) : null
         }
 
         <!-- Twitter Card Meta Tags -->
@@ -76,6 +78,22 @@ const {
             name="google-site-verification"
             content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
         />
+        <!-- Google tag (gtag.js) -->
+        <script
+            is:inline
+            async
+            type="text/partytown"
+            src=`https://www.googletagmanager.com/gtag/js?id=${ga4TrackingID}`
+        ></script>
+        <script is:inline type="text/partytown" define:vars={{ ga4TrackingID }}>
+            window.dataLayer = window.dataLayer || []
+            function gtag() {
+                dataLayer.push(arguments)
+            }
+            gtag("js", new Date())
+
+            gtag("config", ga4TrackingID)
+        </script>
     </head>
     <body>
         <GlobalStyles />
