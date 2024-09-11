@@ -6,4 +6,7 @@ import tailwind from "@astrojs/tailwind"
 export default defineConfig({
     integrations: [tailwind()],
     output: "static",
+    prefetch: {
+        defaultStrategy: "viewport",
+    },
 })
