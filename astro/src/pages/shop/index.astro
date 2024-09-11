@@ -26,6 +26,7 @@ const prices = await getActivePrices()
                     <a
                         href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                         class="flex flex-col no-underline text-black hover:underline"
+                        data-astro-prefetch
                     >
                         <img
                             src={price.product.images[0]}
