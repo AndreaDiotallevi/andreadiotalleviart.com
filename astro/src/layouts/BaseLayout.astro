@@ -14,13 +14,11 @@ interface Props {
 const {
     title,
     description,
-    image = "",
+    image,
     tags = [],
     type = "website",
     amount,
 } = Astro.props
-
-// const siteUrl = "https://www.example.com"
 ---
 
 <!doctype html>
@@ -37,15 +35,15 @@ const {
         <title>{title}</title>
 
         <meta name="keywords" content={tags.join(", ")} />
-        <meta name="image" content={image} />
-        <!-- {amount && <link rel="canonical" href={seo.url} />} -->
+        {image ? <meta name="image" content={image} /> : null}
+        {amount && <link rel="canonical" href={Astro.url.href} />}
 
         <!-- Open Graph Meta Tags -->
-        <!-- <meta property="og:url" content={seo.url} /> -->
+        <meta property="og:url" content={Astro.url.href} />
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={image} />
+        {image ? <meta property="og:image" content={image} /> : null}
         <meta property="og:site_name" content="Your Site Name" />
         <meta property="og:locale" content="en_GB" />
 
@@ -69,7 +67,7 @@ const {
         <meta name="twitter:creator" content="@adiotalleviart" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={image} />
+        {image ? <meta name="twitter:image" content={image} /> : null}
 
         <!-- Google Site Verification -->
         <meta
