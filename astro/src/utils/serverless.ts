@@ -92,10 +92,8 @@ export const sendContactPageEmail = async (params: {
         )
 
         if (response.ok) {
-            const data = (await response.json()) as {
-                session: Stripe.Checkout.Session
-            }
-            return data.session
+            const data = (await response.json()) as string
+            return data
         } else {
             console.error(
                 "Failed to send contact page email: ",
