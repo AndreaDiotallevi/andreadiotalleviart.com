@@ -109,54 +109,69 @@ import ContactImage from "../images/contact-page-image.jpg"
                     </svg>
                     <span id="button-text" class="font-medium">Send</span>
                 </button>
+                <p
+                    id="error-message"
+                    style="color: rgb(198, 53, 53);"
+                    class="hidden"
+                >
+                    There was an error sending your message. Please try again.
+                </p>
+                <p
+                    id="success-message"
+                    style="color: rgb(33, 91, 33);"
+                    class="hidden"
+                >
+                    Message sent!
+                </p>
             </form>
         </div>
     </div>
 </BaseLayout>
 
 <script>
-    import { sendContactPageEmail } from "../utils/serverless"
-
     const form = document.querySelector("#contact-form") as HTMLFormElement
-
     const submitButton = document.querySelector(
         "#submit-button"
     ) as HTMLButtonElement
-
     const spinner = document.getElementById("loading-spinner") as HTMLElement
+    const errorMessage = document.getElementById(
+        "error-message"
+    ) as HTMLParagraphElement
+    const successMessage = document.getElementById(
+        "success-message"
+    ) as HTMLParagraphElement
 
-    form?.addEventListener("submit", async e => {
+    form.addEventListener("submit", async e => {
         e.preventDefault()
 
-        spinner?.classList.remove("hidden")
-
+        errorMessage.classList.add("hidden")
+        successMessage.classList.add("hidden")
+        spinner.classList.remove("hidden")
         submitButton.disabled = true
 
         const name = (document.getElementById("name") as HTMLInputElement).value
-
         const email = (document.getElementById("email") as HTMLInputElement)
             .value
-
         const subject = (document.getElementById("subject") as HTMLInputElement)
             .value
-
         const message = (document.getElementById("message") as HTMLInputElement)
             .value
 
         try {
-            const response = await sendContactPageEmail({
-                name,
-                email,
-                subject,
-                message,
-            })
+            await fetch(
+                import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, subject, message }),
+                }
+            )
 
-            console.log(response)
+            successMessage.classList.remove("hidden")
         } catch (error) {
-            console.error("Error:", error)
+            errorMessage.classList.remove("hidden")
         } finally {
             spinner.classList.add("hidden")
-
             submitButton.disabled = false
         }
     })

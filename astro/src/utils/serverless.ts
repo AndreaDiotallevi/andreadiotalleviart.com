@@ -73,40 +73,6 @@ export const retrieveCheckoutSession = async (params: {
     }
 }
 
-export const sendContactPageEmail = async (params: {
-    name: string
-    email: string
-    subject: string
-    message: string
-}) => {
-    try {
-        const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(params),
-            },
-        )
-
-        if (response.ok) {
-            const data = (await response.json()) as string
-            return data
-        } else {
-            console.error(
-                "Failed to send contact page email: ",
-                response.statusText,
-            )
-            return null
-        }
-    } catch (error) {
-        console.error("Error during request: ", error)
-        return null
-    }
-}
-
 export const getLocaleCurrency = async () => {
     try {
         const response = await fetch(
