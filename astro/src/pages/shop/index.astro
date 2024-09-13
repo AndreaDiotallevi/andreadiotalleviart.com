@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets"
 import { getActivePrices } from "../../utils/stripe"
 import BaseLayout from "../../layouts/BaseLayout.astro"
+import LocalisedPrice from "../../components/react/LocalisedPrice"
 
 const prices = await getActivePrices()
 ---
@@ -28,17 +30,17 @@ const prices = await getActivePrices()
                         class="flex flex-col no-underline text-black hover:underline"
                         data-astro-prefetch
                     >
-                        <img
-                            src={price.product.images[0]}
+                        <Image
+                            quality={100}
+                            inferSize={true}
                             alt={price.product.name}
+                            src={price.product.images[0]}
                             class="w-full h-auto object-contain"
                         />
                         <h2 class="text-2xl font-semibold mt-4">
                             {price.product.metadata.displayName}
                         </h2>
-                        <p class="text-lg font-medium mt-2">
-                            £{(price.unit_amount / 100).toFixed(2)}
-                        </p>
+                        <LocalisedPrice client:load price={price} />
                     </a>
                 ))
             }

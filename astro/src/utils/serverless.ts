@@ -1,65 +1,13 @@
 import Stripe from "stripe"
-import { z } from "zod"
-
-const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-06-20",
-})
-
-export async function getActivePrices() {
-    const response = await stripe.prices.list({
-        active: true,
-        expand: ["data.product", "data.currency_options"],
-    })
-
-    const allPrices = response.data as unknown as StripePrice[]
-
-    return allPrices.filter(
-        price => price.product.active && price.product.metadata.slug,
-    )
-}
-
-const CurrencySchema = z.enum(["gbp", "eur", "usd"])
-
-const stripePriceSchema = z.object({
-    id: z.string(),
-    object: z.literal("price"),
-    active: z.boolean(),
-    currency: z.string(),
-    unit_amount: z.number(),
-    product: z.object({
-        id: z.string(),
-        active: z.boolean(),
-        name: z.string(),
-        description: z.string(),
-        images: z.array(z.string()),
-        metadata: z.object({
-            category: z.string(),
-            displayName: z.string(),
-            displayOrder: z.string(),
-            orientation: z.string(),
-            size: z.string(),
-            slug: z.string(),
-            sku: z.string(),
-            theprintspacePrintOptionId: z.string(),
-            theprintspaceProductId: z.string(),
-        }),
-    }),
-    currency_options: z.record(
-        CurrencySchema,
-        z.object({
-            unit_amount: z.number(),
-            unit_amount_decimal: z.string(),
-        }),
-    ),
-})
-
-export type Currency = z.infer<typeof CurrencySchema>
-export type StripePrice = z.infer<typeof stripePriceSchema>
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
     success_url: string
 }) => {
+    if (!import.meta.env.PUBLIC_API_KEY) {
+        throw new Error("The api key is undefined.")
+    }
+
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL + `/stripe-create-checkout-session`,
@@ -122,5 +70,63 @@ export const retrieveCheckoutSession = async (params: {
     } catch (error) {
         console.error("Error during request: ", error)
         return null
+    }
+}
+
+export const sendContactPageEmail = async (params: {
+    name: string
+    email: string
+    subject: string
+    message: string
+}) => {
+    try {
+        const response = await fetch(
+            import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(params),
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as {
+                session: Stripe.Checkout.Session
+            }
+            return data.session
+        } else {
+            console.error(
+                "Failed to send contact page email: ",
+                response.statusText,
+            )
+            return null
+        }
+    } catch (error) {
+        console.error("Error during request: ", error)
+        return null
+    }
+}
+
+export const getLocaleCurrency = async () => {
+    try {
+        const response = await fetch(
+            import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
+            {
+                method: "GET",
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as { currency: string }
+            return data.currency
+        } else {
+            console.error("Failed to get locale currency")
+            return "GBP"
+        }
+    } catch (error) {
+        console.error("Error during request: ", error)
+        return "GBP"
     }
 }

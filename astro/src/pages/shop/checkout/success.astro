@@ -57,10 +57,10 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
     const sessionId = params.get("session_id") || ""
 
     const session = await retrieveCheckoutSession({ sessionId })
+    console.log(session)
 
     if (!session) {
-        console.error("Failed to retrieve session")
-        return
+        throw new Error("Failed to retrieve session")
     }
 
     sendGA4PurchaseEvent({ session })
