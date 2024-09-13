@@ -22,7 +22,7 @@ import ContactImage from "../images/contact-page-image.jpg"
 
         <div class="w-full md:w-1/2">
             <h1 class="text-4xl font-bold mb-4">Contact</h1>
-            <form class="space-y-4">
+            <form id="contact-form" class="space-y-4">
                 <div>
                     <label for="name" class="block text-lg font-medium mb-1"
                         >Name:</label
@@ -92,3 +92,33 @@ import ContactImage from "../images/contact-page-image.jpg"
         </div>
     </div>
 </BaseLayout>
+
+<script>
+    import { sendContactPageEmail } from "../utils/serverless"
+
+    const form = document.querySelector("#contact-form")
+
+    form?.addEventListener("submit", async e => {
+        e.preventDefault()
+
+        const name = (document.getElementById("name") as HTMLInputElement).value
+
+        const email = (document.getElementById("email") as HTMLInputElement)
+            .value
+
+        const subject = (document.getElementById("subject") as HTMLInputElement)
+            .value
+
+        const message = (document.getElementById("message") as HTMLInputElement)
+            .value
+
+        const response = await sendContactPageEmail({
+            name,
+            email,
+            subject,
+            message,
+        })
+
+        console.log(response)
+    })
+</script>
