@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets"
 import BaseLayout from "../../../layouts/BaseLayout.astro"
+import Button from "../../../components/Button.astro"
 import { getActivePrices, type StripePrice } from "../../../utils/stripe"
 
 export async function getStaticPaths() {
@@ -159,51 +160,78 @@ const sizeToDescription: Record<
                     </h2>
                     <p>How to care for the product goes here...</p>
                 </div> -->
+                <Button
+                    id="submit-button"
+                    buttonText="Continue to checkout"
+                    errorMessage="There was an error creating your session. Please try again."
+                />
             </div>
-
-            <button
-                type="submit"
-                id="continue-to-checkout"
-                class="mt-6 px-6 py-3 text-white bg-black rounded-lg w-full hover:bg-gray-800"
-            >
-                Continue to checkout
-            </button>
         </form>
     </div>
 </BaseLayout>
 
 <script>
+    import type Stripe from "stripe"
     import { sendGA4BeginCheckoutEvent } from "../../../utils/ga4"
-    import { createCheckoutSession } from "../../../utils/stripe"
 
     const form = document.querySelector("#form") as HTMLFormElement
 
+    const button = document.querySelector("#submit-button") as HTMLButtonElement
+
+    const spinner = document.getElementById("loading-spinner") as HTMLElement
+
+    const errorMessage = document.getElementById(
+        "error-message"
+    ) as HTMLParagraphElement
+
     form.addEventListener("submit", async e => {
         e.preventDefault()
+
+        button.disabled = true
+        spinner.classList.remove("hidden")
+        errorMessage.classList.add("hidden")
 
         const priceId = (
             document.getElementById("price-id") as HTMLInputElement
         ).value
 
-        const data = await createCheckoutSession({
-            line_items: [
+        try {
+            const response = await fetch(
+                import.meta.env.PUBLIC_API_URL +
+                    `/stripe-create-checkout-session`,
                 {
-                    price: priceId,
-                    quantity: 1,
-                },
-            ],
-            success_url: `${window.location.origin}/shop/checkout/success`,
-        })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
+                    },
+                    body: JSON.stringify({
+                        line_items: [
+                            {
+                                price: priceId,
+                                quantity: 1,
+                            },
+                        ],
+                        success_url: `${window.location.origin}/shop/checkout/success`,
+                    }),
+                }
+            )
 
-        if (!data) {
-            console.error("Failed to create session")
-            return
+            const data = (await response.json()) as {
+                session: Stripe.Checkout.Session
+            }
+
+            sendGA4BeginCheckoutEvent({
+                session: data.session,
+            })
+
+            window.location.href = `/shop/checkout?clientSecret=${data?.session.client_secret}`
+        } catch (error) {
+            console.error(error)
+            errorMessage.classList.remove("hidden")
+        } finally {
+            spinner.classList.add("hidden")
+            button.disabled = false
         }
-
-        sendGA4BeginCheckoutEvent({
-            session: data.session,
-        })
-
-        window.location.href = `/shop/checkout?clientSecret=${data?.session.client_secret}`
     })
 </script>

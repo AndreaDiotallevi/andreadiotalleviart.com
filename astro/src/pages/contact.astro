@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets"
 import BaseLayout from "../layouts/BaseLayout.astro"
+import Button from "../components/Button.astro"
 import ContactImage from "../images/contact-page-image.jpg"
 ---
 
@@ -22,7 +23,7 @@ import ContactImage from "../images/contact-page-image.jpg"
 
         <div class="w-full md:w-1/2">
             <h1 class="text-4xl font-bold mb-4">Contact</h1>
-            <form id="contact-form" class="space-y-4">
+            <form id="form" class="space-y-4">
                 <div>
                     <label for="name" class="block text-lg font-medium mb-1"
                         >Name:</label
@@ -82,61 +83,28 @@ import ContactImage from "../images/contact-page-image.jpg"
                         required></textarea>
                 </div>
 
-                <button
-                    type="submit"
+                <Button
                     id="submit-button"
-                    class="flex items-center justify-center w-full rounded-lg bg-black px-4 py-3 text-white hover:bg-gray-800"
-                >
-                    <svg
-                        id="loading-spinner"
-                        class="mr-3 h-5 w-5 animate-spin text-white hidden"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"></circle>
-                        <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                    </svg>
-                    <span id="button-text" class="font-medium">Send</span>
-                </button>
-                <p
-                    id="error-message"
-                    style="color: rgb(198, 53, 53);"
-                    class="hidden"
-                >
-                    There was an error sending your message. Please try again.
-                </p>
-                <p
-                    id="success-message"
-                    style="color: rgb(33, 91, 33);"
-                    class="hidden"
-                >
-                    Message sent!
-                </p>
+                    buttonText="Send message"
+                    errorMessage="There was an error sending your message. Please try again."
+                    successMessage="Message sent!"
+                />
             </form>
         </div>
     </div>
 </BaseLayout>
 
 <script>
-    const form = document.querySelector("#contact-form") as HTMLFormElement
-    const submitButton = document.querySelector(
-        "#submit-button"
-    ) as HTMLButtonElement
+    const form = document.querySelector("#form") as HTMLFormElement
+
+    const button = document.querySelector("#submit-button") as HTMLButtonElement
+
     const spinner = document.getElementById("loading-spinner") as HTMLElement
+
     const errorMessage = document.getElementById(
         "error-message"
     ) as HTMLParagraphElement
+
     const successMessage = document.getElementById(
         "success-message"
     ) as HTMLParagraphElement
@@ -144,10 +112,10 @@ import ContactImage from "../images/contact-page-image.jpg"
     form.addEventListener("submit", async e => {
         e.preventDefault()
 
+        button.disabled = true
+        spinner.classList.remove("hidden")
         errorMessage.classList.add("hidden")
         successMessage.classList.add("hidden")
-        spinner.classList.remove("hidden")
-        submitButton.disabled = true
 
         const name = (document.getElementById("name") as HTMLInputElement).value
         const email = (document.getElementById("email") as HTMLInputElement)
@@ -169,10 +137,11 @@ import ContactImage from "../images/contact-page-image.jpg"
 
             successMessage.classList.remove("hidden")
         } catch (error) {
+            console.error(error)
             errorMessage.classList.remove("hidden")
         } finally {
             spinner.classList.add("hidden")
-            submitButton.disabled = false
+            button.disabled = false
         }
     })
 </script>
