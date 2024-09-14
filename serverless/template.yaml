@@ -454,6 +454,7 @@ Resources:
             Environment:
                 Variables:
                     CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
+                    IMAGES_DOMAIN: "{{resolve:ssm:IMAGES_DOMAIN}}"
             Policies:
                 - Statement:
                       - Sid: readParameterStore

@@ -21,6 +21,10 @@ export default defineConfig({
         defaultStrategy: "viewport",
     },
     image: {
-        domains: ["astro.build", "https://files.stripe.com"],
+        domains: [
+            "astro.build",
+            "https://files.stripe.com",
+            import.meta.env.IMAGES_DOMAIN,
+        ],
     },
 })

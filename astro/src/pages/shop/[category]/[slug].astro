@@ -38,9 +38,10 @@ const sizeToDescription: Record<
     <div
         class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto"
     >
-        <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-            <div class="mb-4">
+        <div class="w-full md:w-1/2 mb-16 md:mb-0 md:mr-8">
+            <div class="mb-5">
                 <Image
+                    id="main-image"
                     quality={100}
                     inferSize={true}
                     src={price.product.images[0]}
@@ -48,15 +49,16 @@ const sizeToDescription: Record<
                     class="w-full h-auto rounded-lg"
                 />
             </div>
-            <div class="flex space-x-4 overflow-x-auto">
+            <div class="grid grid-cols-4 gap-4">
                 {
                     price.product.images.map((img, index) => (
                         <Image
+                            id={`thumbnail-${index}`}
+                            src={img}
                             quality={100}
                             inferSize={true}
-                            src={img}
                             alt={`Thumbnail ${index + 1}`}
-                            class="w-20 h-auto rounded-lg cursor-pointer"
+                            class={`w-full h-auto cursor-pointer p-0.5 border border-white border-dashed`}
                         />
                     ))
                 }
@@ -74,7 +76,7 @@ const sizeToDescription: Record<
                     <select
                         id="price-id"
                         name="price-id"
-                        class="w-full px-3 py-2 border border-gray-800 rounded-md mb-2"
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
                         {
                             [price.product.metadata.size].map(size => (
@@ -233,5 +235,26 @@ const sizeToDescription: Record<
             spinner.classList.add("hidden")
             button.disabled = false
         }
+    })
+</script>
+
+<script>
+    const mainImage = document.getElementById("main-image") as HTMLImageElement
+    const thumbnails = document.querySelectorAll(
+        '[id^="thumbnail-"]'
+    ) as NodeListOf<HTMLImageElement>
+
+    let selectedThumbnail = thumbnails[0]
+    selectedThumbnail.classList.replace("border-white", "border-black")
+
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener("click", () => {
+            mainImage.src = thumbnail.src
+
+            selectedThumbnail.classList.replace("border-black", "border-white")
+
+            thumbnail.classList.replace("border-white", "border-black")
+            selectedThumbnail = thumbnail
+        })
     })
 </script>
