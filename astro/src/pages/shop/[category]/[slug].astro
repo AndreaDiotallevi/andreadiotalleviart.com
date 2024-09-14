@@ -2,6 +2,7 @@
 import { Image } from "astro:assets"
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Button from "../../../components/Button.astro"
+import LocalisedPrice from "../../../components/react/LocalisedPrice"
 import { getActivePrices, type StripePrice } from "../../../utils/stripe"
 
 export async function getStaticPaths() {
@@ -136,7 +137,7 @@ const sizeToDescription: Record<
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        £{(price.unit_amount / 100).toFixed(2)}
+                        <LocalisedPrice client:load price={price} />
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>

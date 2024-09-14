@@ -40,7 +40,9 @@ const prices = await getActivePrices()
                         <h2 class="text-2xl font-semibold mt-4">
                             {price.product.metadata.displayName}
                         </h2>
-                        <LocalisedPrice client:load price={price} />
+                        <p class="text-lg font-medium mt-2">
+                            <LocalisedPrice client:load price={price} />
+                        </p>
                     </a>
                 ))
             }

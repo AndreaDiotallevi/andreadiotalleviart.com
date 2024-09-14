@@ -44,13 +44,17 @@ const stripePriceSchema = z.object({
             theprintspaceProductId: z.string(),
         }),
     }),
-    currency_options: z.record(
-        CurrencySchema,
-        z.object({
-            unit_amount: z.number(),
-            unit_amount_decimal: z.string(),
-        }),
-    ),
+    currency_options: z
+        .record(
+            CurrencySchema,
+            z.object({
+                unit_amount: z.number(),
+                unit_amount_decimal: z.string(),
+            }),
+        )
+        .refine((obj): obj is Required<typeof obj> =>
+            CurrencySchema.options.every(key => obj[key] != null),
+        ),
 })
 
 export type Currency = z.infer<typeof CurrencySchema>
