@@ -3,7 +3,7 @@ import { Image } from "astro:assets"
 
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import Button from "../../../components/Button.astro"
-import LocalisedPrice from "../../../components/react/LocalisedPrice"
+import LocalisedPrice from "../../../components/LocalisedPrice.astro"
 
 import { getActivePrices, type StripePrice } from "../../../utils/stripe"
 import { formatCurrency } from "../../../utils/intl"
@@ -85,11 +85,11 @@ const sizeToDescription: Record<
                         {
                             [price.product.metadata.size].map(size => (
                                 <option value={price.id}>
-                                    {`${
+                                    {
                                         sizeToDescription[
                                             price.product.metadata.size
                                         ]
-                                    } - ${formatCurrency({ value: price.unit_amount, currency: "gbp" })}`}
+                                    }
                                 </option>
                             ))
                         }
@@ -140,7 +140,9 @@ const sizeToDescription: Record<
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        <LocalisedPrice client:load price={price} />
+                        <LocalisedPrice
+                            priceCurrencyOptions={price.currency_options}
+                        />
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>

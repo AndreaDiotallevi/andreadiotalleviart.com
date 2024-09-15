@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 import { getActivePrices } from "../../utils/stripe"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-import LocalisedPrice from "../../components/react/LocalisedPrice"
+import LocalisedPrice from "../../components/LocalisedPrice.astro"
 
 const prices = await getActivePrices()
 ---
@@ -41,7 +41,9 @@ const prices = await getActivePrices()
                             {price.product.metadata.displayName}
                         </h2>
                         <p class="text-lg font-medium mt-2">
-                            <LocalisedPrice client:load price={price} />
+                            <LocalisedPrice
+                                priceCurrencyOptions={price.currency_options}
+                            />
                         </p>
                     </a>
                 ))
