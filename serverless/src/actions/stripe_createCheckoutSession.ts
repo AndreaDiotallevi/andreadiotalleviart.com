@@ -5,11 +5,12 @@ import { initialiseClient } from "./stripe_initialiseClient"
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
     success_url: string
+    currency: string
 }) => {
     try {
         const stripe = await initialiseClient()
 
-        const { line_items, success_url } = params
+        const { line_items, success_url, currency } = params
 
         const session = await stripe.checkout.sessions.create({
             ui_mode: "embedded",
@@ -20,6 +21,7 @@ export const createCheckoutSession = async (params: {
             invoice_creation: { enabled: true },
             shipping_address_collection: { allowed_countries: countriesArray },
             shipping_options: [],
+            currency,
         })
 
         return {

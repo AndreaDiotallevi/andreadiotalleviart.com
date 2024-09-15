@@ -17,7 +17,7 @@ export const handler = async (
 
     return {
         statusCode: 200,
-        body: JSON.stringify({ currency }),
+        body: JSON.stringify({ currency: currency.toLowerCase() }),
         headers: {
             "Access-Control-Allow-Headers":
                 "Content-Type, X-Api-Key, X-Forwarded-For",

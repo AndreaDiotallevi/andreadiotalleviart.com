@@ -1,9 +1,11 @@
 import Stripe from "stripe"
+import type { Currency } from "./stripe"
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
     success_url: string
-}) => {
+    currency: Currency
+}): Promise<Stripe.Checkout.Session | null> => {
     if (!import.meta.env.PUBLIC_API_KEY) {
         throw new Error("The api key is undefined.")
     }
@@ -25,19 +27,23 @@ export const createCheckoutSession = async (params: {
             const data = (await response.json()) as {
                 session: Stripe.Checkout.Session
             }
-            return data
+            return data.session
         } else {
-            throw new Error("Failed to create checkout session")
+            console.error(
+                "Failed to create checkout session: ",
+                response.statusText,
+            )
+            return null
         }
     } catch (error) {
-        console.error("Error during request: ", error)
+        console.error(error)
         return null
     }
 }
 
 export const retrieveCheckoutSession = async (params: {
     sessionId: string
-}) => {
+}): Promise<Stripe.Checkout.Session | null> => {
     if (!import.meta.env.PUBLIC_API_KEY) {
         throw new Error("The api key is undefined.")
     }
@@ -68,12 +74,13 @@ export const retrieveCheckoutSession = async (params: {
             return null
         }
     } catch (error) {
-        console.error("Error during request: ", error)
+        console.error(error)
         return null
     }
 }
 
-export const getLocaleCurrency = async () => {
+export const getLocaleCurrency = async (): Promise<Currency> => {
+    // return "eur"
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
@@ -83,14 +90,17 @@ export const getLocaleCurrency = async () => {
         )
 
         if (response.ok) {
-            const data = (await response.json()) as { currency: string }
+            const data = (await response.json()) as { currency: Currency }
             return data.currency
         } else {
-            console.error("Failed to get locale currency")
-            return "GBP"
+            console.error(
+                "Failed to get locale currency: ",
+                response.statusText,
+            )
+            return "gbp"
         }
     } catch (error) {
-        console.error("Error during request: ", error)
-        return "GBP"
+        console.error(error)
+        return "gbp"
     }
 }

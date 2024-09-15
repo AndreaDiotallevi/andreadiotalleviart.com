@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import type { Currency, StripePrice } from "../../utils/stripe"
 import { getLocaleCurrency } from "../../utils/serverless"
+import { formatCurrency } from "../../utils/intl"
 
 interface Props {
     price: StripePrice
-}
-
-const currencyToSymbol: Record<Currency, string> = {
-    eur: "€",
-    gbp: "£",
-    usd: "$",
 }
 
 const LocalisedPrice = ({ price }: Props) => {
@@ -19,7 +14,7 @@ const LocalisedPrice = ({ price }: Props) => {
     useEffect(() => {
         const fetchLocaleCurrency = async () => {
             const currency = await getLocaleCurrency()
-            setCurrency(currency.toLowerCase() as Currency)
+            setCurrency(currency as Currency)
         }
 
         fetchLocaleCurrency()
@@ -39,7 +34,7 @@ const LocalisedPrice = ({ price }: Props) => {
                     cy="12"
                     r="10"
                     stroke="currentColor"
-                    stroke-width="4"
+                    strokeWidth="4"
                 ></circle>
                 <path
                     className="opacity-75"
@@ -49,7 +44,10 @@ const LocalisedPrice = ({ price }: Props) => {
             </svg>
         )
 
-    return `${currencyToSymbol[currency]}${(price.currency_options[currency].unit_amount / 100).toFixed(2)}`
+    return formatCurrency({
+        value: price.currency_options[currency].unit_amount,
+        currency,
+    })
 }
 
 export default LocalisedPrice
