@@ -1,7 +1,10 @@
 import { defineConfig } from "astro/config"
+import { loadEnv } from "vite"
 
 import partytown from "@astrojs/partytown"
 import tailwind from "@astrojs/tailwind"
+
+const { IMAGES_DOMAIN } = loadEnv(process.env.NODE_ENV, process.cwd(), "")
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,10 +21,6 @@ export default defineConfig({
         defaultStrategy: "viewport",
     },
     image: {
-        domains: [
-            "astro.build",
-            "https://files.stripe.com",
-            import.meta.env.IMAGES_DOMAIN,
-        ],
+        domains: ["astro.build", "https://files.stripe.com", IMAGES_DOMAIN],
     },
 })

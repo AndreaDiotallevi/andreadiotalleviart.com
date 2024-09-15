@@ -6,7 +6,6 @@ import Button from "../../../components/Button.astro"
 import LocalisedPrice from "../../../components/LocalisedPrice.astro"
 
 import { getActivePrices, type StripePrice } from "../../../utils/stripe"
-import { formatCurrency } from "../../../utils/intl"
 
 export async function getStaticPaths() {
     const prices = await getActivePrices()
