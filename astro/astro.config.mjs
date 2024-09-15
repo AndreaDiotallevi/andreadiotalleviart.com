@@ -8,6 +8,7 @@ const { IMAGES_DOMAIN } = loadEnv(process.env.NODE_ENV, process.cwd(), "")
 
 // https://astro.build/config
 export default defineConfig({
+    site: "https://www.andreadiotalleviart.com",
     integrations: [
         tailwind(),
         partytown({
