@@ -1,5 +1,6 @@
 ---
-import { Image } from "astro:assets"
+import { Picture } from "astro:assets"
+
 import { getActivePrices } from "@utils/stripe"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import LocalisedPrice from "@components/LocalisedPrice.astro"
@@ -30,7 +31,7 @@ const prices = await getActivePrices()
                         class="flex flex-col no-underline text-black hover:underline"
                         data-astro-prefetch
                     >
-                        <Image
+                        <Picture
                             quality={100}
                             inferSize={true}
                             alt={price.product.name}
