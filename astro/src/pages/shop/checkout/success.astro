@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
 ---
 
 <BaseLayout
@@ -30,10 +30,10 @@ import BaseLayout from "../../../layouts/BaseLayout.astro"
 </BaseLayout>
 
 <script>
-    import type { StripePrice } from "../../../utils/stripe"
-    import { retrieveCheckoutSession } from "../../../utils/serverless"
-    import { sendGA4PurchaseEvent } from "../../../utils/ga4"
-    import { formatCurrency } from "../../../utils/intl"
+    import type { StripePrice } from "@utils/stripe"
+    import { retrieveCheckoutSession } from "@utils/serverless"
+    import { sendGA4PurchaseEvent } from "@utils/ga4"
+    import { formatCurrency } from "@utils/intl"
 
     const params = new URLSearchParams(window.location.search)
     const sessionId = params.get("session_id") || ""

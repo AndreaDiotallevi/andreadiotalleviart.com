@@ -1,5 +1,5 @@
 ---
-import type { StripePrice } from "../utils/stripe"
+import type { StripePrice } from "@utils/stripe"
 
 interface Props {
     priceCurrencyOptions: StripePrice["currency_options"]
@@ -34,9 +34,9 @@ const { priceCurrencyOptions } = Astro.props
 </div>
 
 <script>
-    import { formatCurrency } from "../utils/intl"
-    import { getLocaleCurrency } from "../utils/serverless"
-    import type { StripePrice } from "../utils/stripe"
+    import { formatCurrency } from "@utils/intl"
+    import { getLocaleCurrency } from "@utils/serverless"
+    import type { StripePrice } from "@utils/stripe"
 
     const currency = await getLocaleCurrency()
 

@@ -1,8 +1,8 @@
 ---
 import { Image } from "astro:assets"
-import { getActivePrices } from "../../utils/stripe"
-import BaseLayout from "../../layouts/BaseLayout.astro"
-import LocalisedPrice from "../../components/LocalisedPrice.astro"
+import { getActivePrices } from "@utils/stripe"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import LocalisedPrice from "@components/LocalisedPrice.astro"
 
 const prices = await getActivePrices()
 ---

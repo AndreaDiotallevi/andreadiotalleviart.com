@@ -1,11 +1,11 @@
 ---
 import { Image } from "astro:assets"
 
-import BaseLayout from "../../../layouts/BaseLayout.astro"
-import Button from "../../../components/Button.astro"
-import LocalisedPrice from "../../../components/LocalisedPrice.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/Button.astro"
+import LocalisedPrice from "@components/LocalisedPrice.astro"
 
-import { getActivePrices, type StripePrice } from "../../../utils/stripe"
+import { getActivePrices, type StripePrice } from "@utils/stripe"
 
 export async function getStaticPaths() {
     const prices = await getActivePrices()
@@ -156,9 +156,9 @@ const sizeToDescription: Record<
 </BaseLayout>
 
 <script>
-    import { sendGA4BeginCheckoutEvent } from "../../../utils/ga4"
-    import { getLocaleCurrency } from "../../../utils/serverless"
-    import { createCheckoutSession } from "../../../utils/serverless"
+    import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
+    import { getLocaleCurrency } from "@utils/serverless"
+    import { createCheckoutSession } from "@utils/serverless"
 
     const form = document.querySelector("#form") as HTMLFormElement
 
