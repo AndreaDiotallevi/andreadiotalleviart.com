@@ -95,11 +95,9 @@ import ContactImage from "@assets/contact-page-image.jpg"
 </BaseLayout>
 
 <script>
-    const form = document.querySelector("#form") as HTMLFormElement
-
+    const form = document.querySelector("#form")!
     const button = document.querySelector("#submit-button") as HTMLButtonElement
-
-    const spinner = document.getElementById("loading-spinner") as HTMLElement
+    const spinner = document.getElementById("loading-spinner")!
 
     const errorMessage = document.getElementById(
         "error-message"

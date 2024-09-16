@@ -40,9 +40,7 @@ const { priceCurrencyOptions } = Astro.props
 
     const currency = await getLocaleCurrency()
 
-    const currencyElement = document.getElementById(
-        "currency-display"
-    ) as HTMLElement
+    const currencyElement = document.getElementById("currency-display")!
 
     const priceCurrencyOptions = JSON.parse(
         currencyElement.dataset.currencyOptions!

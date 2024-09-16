@@ -51,9 +51,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             return
         }
 
-        ;(
-            document.getElementById("checkout-content") as HTMLElement
-        ).innerHTML = `
+        document.getElementById("checkout-content")!.innerHTML = `
             <div class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto">
                 <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
                     <div class="mb-4">

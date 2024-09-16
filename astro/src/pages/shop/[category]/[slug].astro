@@ -161,10 +161,8 @@ const sizeToDescription: Record<
     import { createCheckoutSession } from "@utils/serverless"
 
     const form = document.querySelector("#form") as HTMLFormElement
-
     const button = document.querySelector("#submit-button") as HTMLButtonElement
-
-    const spinner = document.getElementById("loading-spinner") as HTMLElement
+    const spinner = document.getElementById("loading-spinner")!
 
     const errorMessage = document.getElementById(
         "error-message"
