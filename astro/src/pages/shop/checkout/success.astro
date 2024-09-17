@@ -6,9 +6,9 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     title="Checkout Success | Andrea Diotallevi Art"
     description="Thank you for your purchase! Your order has been successfully placed. Check your email for order details and shipping information."
 >
-    <div id="success-content" class="flex justify-center items-start mt-16">
+    <div id="success-content" class="flex justify-center items-start">
         <svg
-            class="animate-spin h-10 w-10 text-black"
+            class="animate-spin h-10 w-10 text-black mt-8"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -57,7 +57,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             }
 
             successContent.innerHTML = `
-            <div class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto">
                 <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
                     <div class="mb-4">
                         <img
