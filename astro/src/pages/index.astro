@@ -45,11 +45,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
         p5.mouseClicked = () => {
             p5.noiseSeed(p5.random(1000))
-            p5.background(56, 68, 76)
+            p5.background("#38444c") // (56, 68, 76)
             t = 0
             p5.draw()
         }
     }
 
-    new p5(sketch, document.getElementById("sketch"))
+    new p5(sketch, document.getElementById("sketch")!)
 </script>
