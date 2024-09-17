@@ -16,7 +16,25 @@ const { darkTheme } = Astro.props
             <div class="text-2xl font-semibold">
                 <a href="/">andreadiotalleviart</a>
             </div>
-            <nav class="space-x-6">
+            <!-- Hamburger icon -->
+            <button id="menu-toggle" class="md:hidden">
+                <svg
+                    class="w-11 h-11"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            <!-- Links for larger screens -->
+            <nav class="hidden md:flex space-x-6">
                 <a
                     href="/shop"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
@@ -35,6 +53,21 @@ const { darkTheme } = Astro.props
             </nav>
         </div>
     </header>
+
+    <!-- Fullscreen mobile menu -->
+    <div
+        id="mobile-menu"
+        class="fixed inset-0 bg-black text-white flex flex-col items-center pt-20 px-5 text-5xl hidden z-50"
+    >
+        <button
+            id="menu-close"
+            class="absolute top-[14px] right-[16px] text-white text-5xl h-11 w-11"
+            >&times;</button
+        >
+        <a href="/shop" class="mt-10 h-11">Shop</a>
+        <a href="/about" class="mt-10 h-11">About</a>
+        <a href="/contact" class="mt-10 h-11">Contact</a>
+    </div>
 
     <main class="flex-grow">
         <slot />
@@ -107,3 +140,20 @@ const { darkTheme } = Astro.props
         </div>
     </footer>
 </div>
+
+<!-- Script for menu functionality -->
+<script>
+    const menuToggle = document.getElementById("menu-toggle")!
+    const menuClose = document.getElementById("menu-close")!
+    const mobileMenu = document.getElementById("mobile-menu")!
+
+    menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.remove("hidden")
+        document.body.style.overflow = "hidden" // Disable scrolling
+    })
+
+    menuClose.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden")
+        document.body.style.overflow = "auto" // Enable scrolling
+    })
+</script>
