@@ -68,7 +68,7 @@ const sizeToDescription: Record<
             </div>
         </div>
 
-        <form id="form" class="w-full md:w-1/2">
+        <form id="price-form" class="w-full md:w-1/2">
             <h1 class="text-5xl font-bold mb-5">
                 {price.product.metadata.displayName}
             </h1>
@@ -160,72 +160,87 @@ const sizeToDescription: Record<
     import { getLocaleCurrency } from "@utils/serverless"
     import { createCheckoutSession } from "@utils/serverless"
 
-    const form = document.querySelector("#form") as HTMLFormElement
-    const button = document.querySelector("#submit-button") as HTMLButtonElement
-    const spinner = document.getElementById("loading-spinner")!
+    document.addEventListener("astro:page-load", async () => {
+        const priceForm = document.querySelector("#price-form")
 
-    const errorMessage = document.getElementById(
-        "error-message"
-    ) as HTMLParagraphElement
+        if (!priceForm) return
 
-    form.addEventListener("submit", async e => {
-        e.preventDefault()
+        const button = document.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
 
-        button.disabled = true
-        spinner.classList.remove("hidden")
-        errorMessage.classList.add("hidden")
+        const spinner = document.getElementById("loading-spinner")!
+        const errorMessage = document.getElementById("error-message")!
 
-        const priceId = (
-            document.getElementById("price-id") as HTMLInputElement
-        ).value
+        priceForm.addEventListener("submit", async e => {
+            e.preventDefault()
 
-        try {
-            const currency = await getLocaleCurrency()
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
 
-            const session = await createCheckoutSession({
-                line_items: [
-                    {
-                        price: priceId,
-                        quantity: 1,
-                    },
-                ],
-                success_url: `${window.location.origin}/shop/checkout/success`,
-                currency,
-            })
+            const priceId = (
+                document.getElementById("price-id") as HTMLInputElement
+            ).value
 
-            if (!session) {
-                console.error("Failed to create session")
-                return
+            try {
+                const currency = await getLocaleCurrency()
+
+                const session = await createCheckoutSession({
+                    line_items: [
+                        {
+                            price: priceId,
+                            quantity: 1,
+                        },
+                    ],
+                    success_url: `${window.location.origin}/shop/checkout/success`,
+                    currency,
+                })
+
+                if (!session) {
+                    console.error("Failed to create session")
+                    return
+                }
+
+                sendGA4BeginCheckoutEvent({ session })
+                window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
+            } catch (error) {
+                console.error(error)
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
             }
-
-            sendGA4BeginCheckoutEvent({ session })
-            window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
-        } catch (error) {
-            console.error(error)
-            errorMessage.classList.remove("hidden")
-            spinner.classList.add("hidden")
-            button.disabled = false
-        }
+        })
     })
 </script>
 
 <script>
-    const mainImage = document.getElementById("main-image") as HTMLImageElement
-    const thumbnails = document.querySelectorAll(
-        '[id^="thumbnail-"]'
-    ) as NodeListOf<HTMLImageElement>
+    document.addEventListener("astro:page-load", () => {
+        const mainImage = document.getElementById(
+            "main-image"
+        ) as HTMLImageElement
 
-    let selectedThumbnail = thumbnails[0]
-    selectedThumbnail.classList.replace("border-white", "border-black")
+        const thumbnails = document.querySelectorAll(
+            '[id^="thumbnail-"]'
+        ) as NodeListOf<HTMLImageElement>
 
-    thumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener("click", () => {
-            mainImage.src = thumbnail.src
+        if (!mainImage || !thumbnails) return
 
-            selectedThumbnail.classList.replace("border-black", "border-white")
+        let selectedThumbnail = thumbnails[0]
+        selectedThumbnail.classList.replace("border-white", "border-black")
 
-            thumbnail.classList.replace("border-white", "border-black")
-            selectedThumbnail = thumbnail
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener("click", () => {
+                mainImage.src = thumbnail.src
+
+                selectedThumbnail.classList.replace(
+                    "border-black",
+                    "border-white"
+                )
+
+                thumbnail.classList.replace("border-white", "border-black")
+                selectedThumbnail = thumbnail
+            })
         })
     })
 </script>

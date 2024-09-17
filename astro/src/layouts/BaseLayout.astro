@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from "astro:transitions"
+
 import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
@@ -94,6 +96,7 @@ const {
 
             gtag("config", ga4TrackingID)
         </script>
+        <ViewTransitions />
     </head>
     <body>
         <GlobalStyles />

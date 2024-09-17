@@ -38,16 +38,20 @@ const { priceCurrencyOptions } = Astro.props
     import { getLocaleCurrency } from "@utils/serverless"
     import type { StripePrice } from "@utils/stripe"
 
-    const currency = await getLocaleCurrency()
+    document.addEventListener("astro:page-load", async () => {
+        const currencyElement = document.getElementById("currency-display")
 
-    const currencyElement = document.getElementById("currency-display")!
+        if (!currencyElement) return
 
-    const priceCurrencyOptions = JSON.parse(
-        currencyElement.dataset.currencyOptions!
-    ) as StripePrice["currency_options"]
+        const currency = await getLocaleCurrency()
 
-    currencyElement.innerHTML = formatCurrency({
-        value: priceCurrencyOptions[currency].unit_amount,
-        currency,
+        const priceCurrencyOptions = JSON.parse(
+            currencyElement.dataset.currencyOptions!
+        ) as StripePrice["currency_options"]
+
+        currencyElement.innerHTML = formatCurrency({
+            value: priceCurrencyOptions[currency].unit_amount,
+            currency,
+        })
     })
 </script>

@@ -12,16 +12,22 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 <script>
     import { loadStripe } from "@stripe/stripe-js"
 
-    const stripe = await loadStripe(
-        import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
-    )
+    document.addEventListener("astro:page-load", async () => {
+        const checkoutElement = document.getElementById("checkout")
 
-    const params = new URLSearchParams(window.location.search)
-    const clientSecret = params.get("clientSecret") || ""
+        if (!checkoutElement) return
 
-    const checkout = await stripe?.initEmbeddedCheckout({
-        clientSecret,
+        const stripe = await loadStripe(
+            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+        )
+
+        const params = new URLSearchParams(window.location.search)
+        const clientSecret = params.get("clientSecret") || ""
+
+        const checkout = await stripe?.initEmbeddedCheckout({
+            clientSecret,
+        })
+
+        checkout?.mount(checkoutElement)
     })
-
-    checkout?.mount("#checkout")
 </script>

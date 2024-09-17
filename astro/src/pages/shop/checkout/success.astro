@@ -6,7 +6,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     title="Checkout Success | Andrea Diotallevi Art"
     description="Thank you for your purchase! Your order has been successfully placed. Check your email for order details and shipping information."
 >
-    <div id="checkout-content" class="flex justify-center items-start mt-16">
+    <div id="success-content" class="flex justify-center items-start mt-16">
         <svg
             class="animate-spin h-10 w-10 text-black"
             xmlns="http://www.w3.org/2000/svg"
@@ -35,79 +35,85 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     import { sendGA4PurchaseEvent } from "@utils/ga4"
     import { formatCurrency } from "@utils/intl"
 
-    const params = new URLSearchParams(window.location.search)
-    const sessionId = params.get("session_id") || ""
+    document.addEventListener("astro:page-load", async () => {
+        const params = new URLSearchParams(window.location.search)
+        const sessionId = params.get("session_id") || ""
 
-    async function fetchSession() {
-        const session = await retrieveCheckoutSession({ sessionId })
+        async function fetchSession() {
+            const successContent = document.getElementById("success-content")
 
-        const shippingDetails = session?.shipping_details
+            if (!successContent) return
 
-        const price = session?.line_items?.data[0]
-            .price as unknown as StripePrice
+            const session = await retrieveCheckoutSession({ sessionId })
 
-        if (!session || !shippingDetails || !price || !session.currency) {
-            console.error("Failed to retrieve session")
-            return
-        }
+            const shippingDetails = session?.shipping_details
 
-        document.getElementById("checkout-content")!.innerHTML = `
+            const price = session?.line_items?.data[0]
+                .price as unknown as StripePrice
+
+            if (!session || !shippingDetails || !price || !session.currency) {
+                console.error("Failed to retrieve session")
+                return
+            }
+
+            successContent.innerHTML = `
             <div class="flex flex-col md:flex-row items-center md:items-start p-4 max-w-screen-xl mx-auto">
                 <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
                     <div class="mb-4">
                         <img
-                            src="${price.product.images[0]}"
-                            alt="Product Image"
-                            class="w-full h-auto rounded-lg"
+                        src="${price.product.images[0]}"
+                        alt="Product Image"
+                        class="w-full h-auto rounded-lg"
                         />
-                    </div>
-                </div>
-
-                <div class="w-full md:w-1/2">
-                    <h1 class="text-5xl font-bold mb-5">Thanks for your order!</h1>
-                    <div class="space-y-6">
-                        <div>
-                            <p>You will receive a confirmation email with the details of your order.</p>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-semibold mb-2">Delivery address</h2>
-                            <p>${shippingDetails.name}</p>
-                            <p>${shippingDetails.address?.line1}</p>
-                            ${shippingDetails.address?.line2 ? `<p>${shippingDetails.address?.line2}</p>` : ""}
-                            <p>${shippingDetails.address?.postal_code}</p>
-                            <p>${shippingDetails.address?.city}</p>
-                            <p>${shippingDetails.address?.country}</p>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-semibold mb-2">Items</h2>
-                            <p>${price.product.metadata.displayName} - ${price.product.description}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-semibold mb-2">Payment summary</h2>
-                            <p>
-                                Subtotal: ${formatCurrency({ value: session.amount_subtotal!, currency: session.currency })}<br />
-                                Shipping: Free<br />
-                                Discounts: ${formatCurrency({ value: session.total_details?.amount_discount!, currency: session.currency })}<br />
-                                Total: ${formatCurrency({ value: session.amount_total!, currency: session.currency })}
-                            </p>
-                        </div>
-                    </div>
+                        
+                        <div class="w-full md:w-1/2">
+                            <h1 class="text-5xl font-bold mb-5">Thanks for your order!</h1>
+                            <div class="space-y-6">
+                                <div>
+                                    <p>You will receive a confirmation email with the details of your order.</p>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-semibold mb-2">Delivery address</h2>
+                                        <p>${shippingDetails.name}</p>
+                                        <p>${shippingDetails.address?.line1}</p>
+                                        ${shippingDetails.address?.line2 ? `<p>${shippingDetails.address?.line2}</p>` : ""}
+                                        <p>${shippingDetails.address?.postal_code}</p>
+                                        <p>${shippingDetails.address?.city}</p>
+                                        <p>${shippingDetails.address?.country}</p>
+                                        </div>
+                                        <div>
+                                            <h2 class="text-xl font-semibold mb-2">Items</h2>
+                                            <p>${price.product.metadata.displayName} - ${price.product.description}</p>
+                                            </div>
+                                            <div>
+                                                <h2 class="text-xl font-semibold mb-2">Payment summary</h2>
+                                                <p>
+                                                    Subtotal: ${formatCurrency({ value: session.amount_subtotal!, currency: session.currency })}<br />
+                                                    Shipping: Free<br />
+                                                    Discounts: ${formatCurrency({ value: session.total_details?.amount_discount!, currency: session.currency })}<br />
+                                                    Total: ${formatCurrency({ value: session.amount_total!, currency: session.currency })}
+                                                    </p>
+                                                    </div>
+                                                    </div>
+                                                    
+                                                    <!-- Button Section - Full width with 'block' and 'w-full' -->
+                                                    <div class="mt-6">
+                                                        <a
+                                                        href="/shop"
+                                                        class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold"
+                                                        >
+                                                        Discover more
+                                                        </a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        `
 
-                    <!-- Button Section - Full width with 'block' and 'w-full' -->
-                    <div class="mt-6">
-                        <a
-                            href="/shop"
-                            class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold"
-                        >
-                            Discover more
-                        </a>
-                    </div>
-                </div>
-            </div>
-        `
+            sendGA4PurchaseEvent({ session })
+        }
 
-        sendGA4PurchaseEvent({ session })
-    }
-
-    fetchSession()
+        fetchSession()
+    })
 </script>

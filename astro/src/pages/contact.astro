@@ -23,7 +23,7 @@ import ContactImage from "@assets/contact-page-image.jpg"
 
         <div class="w-full md:w-1/2">
             <h1 class="text-5xl font-bold mb-5">Contact</h1>
-            <form id="form" class="space-y-4">
+            <form id="contact-form" class="space-y-4">
                 <div>
                     <label for="name" class="block text-lg font-medium mb-1"
                         >Name:</label
@@ -95,50 +95,55 @@ import ContactImage from "@assets/contact-page-image.jpg"
 </BaseLayout>
 
 <script>
-    const form = document.querySelector("#form")!
-    const button = document.querySelector("#submit-button") as HTMLButtonElement
-    const spinner = document.getElementById("loading-spinner")!
+    document.addEventListener("astro:page-load", async () => {
+        const contactForm = document.querySelector("#contact-form")
 
-    const errorMessage = document.getElementById(
-        "error-message"
-    ) as HTMLParagraphElement
+        if (!contactForm) return
 
-    const successMessage = document.getElementById(
-        "success-message"
-    ) as HTMLParagraphElement
+        const button = document.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
 
-    form.addEventListener("submit", async e => {
-        e.preventDefault()
+        const spinner = document.getElementById("loading-spinner")!
+        const errorMessage = document.getElementById("error-message")!
+        const successMessage = document.getElementById("success-message")!
 
-        button.disabled = true
-        spinner.classList.remove("hidden")
-        errorMessage.classList.add("hidden")
-        successMessage.classList.add("hidden")
+        contactForm.addEventListener("submit", async e => {
+            e.preventDefault()
 
-        const name = (document.getElementById("name") as HTMLInputElement).value
-        const email = (document.getElementById("email") as HTMLInputElement)
-            .value
-        const subject = (document.getElementById("subject") as HTMLInputElement)
-            .value
-        const message = (document.getElementById("message") as HTMLInputElement)
-            .value
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
+            successMessage.classList.add("hidden")
 
-        try {
-            await fetch(
-                import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, email, subject, message }),
-                }
-            )
+            const name = (document.getElementById("name") as HTMLInputElement)
+                .value
+            const email = (document.getElementById("email") as HTMLInputElement)
+                .value
+            const subject = (
+                document.getElementById("subject") as HTMLInputElement
+            ).value
+            const message = (
+                document.getElementById("message") as HTMLInputElement
+            ).value
 
-            successMessage.classList.remove("hidden")
-        } catch (error) {
-            console.error(error)
-            errorMessage.classList.remove("hidden")
-            spinner.classList.add("hidden")
-            button.disabled = false
-        }
+            try {
+                await fetch(
+                    import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name, email, subject, message }),
+                    }
+                )
+
+                successMessage.classList.remove("hidden")
+            } catch (error) {
+                console.error(error)
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+            }
+        })
     })
 </script>
