@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets"
+import { Image } from "@unpic/astro"
 
 import { getActivePrices } from "@utils/stripe"
 import BaseLayout from "@layouts/BaseLayout.astro"
@@ -32,10 +32,11 @@ const prices = await getActivePrices()
                         data-astro-prefetch
                     >
                         <Image
-                            quality={100}
-                            inferSize={true}
                             alt={price.product.name}
                             src={price.product.images[0]}
+                            placeholder="lqip"
+                            width={1000}
+                            height={1414}
                             class="w-full h-auto object-contain"
                         />
                         <h2 class="text-2xl font-semibold mt-4">

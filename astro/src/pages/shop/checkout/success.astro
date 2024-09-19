@@ -1,4 +1,5 @@
 ---
+import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 ---
 
@@ -60,56 +61,58 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             <div class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto">
                 <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
                     <div class="mb-4">
-                        <img
-                        src="${price.product.images[0]}"
-                        alt="Product Image"
-                        class="w-full h-auto rounded-lg"
+                        <Image
+                            src="${price.product.images[0]}"
+                            alt="Product Image"
+                            class="w-full h-auto"
+                            placeholder="lqip"
+                            width={1000}
+                            height={1414}
                         />
-                        </div>
-                        </div>
+                    </div>
+                </div>
                         
-                        <div class="w-full md:w-1/2">
-                            <h1 class="text-5xl font-bold mb-5">Thanks for your order!</h1>
-                            <div class="space-y-6">
-                                <div>
-                                    <p>You will receive a confirmation email with the details of your order.</p>
-                                    </div>
-                                    <div>
-                                        <h2 class="text-xl font-semibold mb-2">Delivery address</h2>
-                                        <p>${shippingDetails.name}</p>
-                                        <p>${shippingDetails.address?.line1}</p>
-                                        ${shippingDetails.address?.line2 ? `<p>${shippingDetails.address?.line2}</p>` : ""}
-                                        <p>${shippingDetails.address?.postal_code}</p>
-                                        <p>${shippingDetails.address?.city}</p>
-                                        <p>${shippingDetails.address?.country}</p>
-                                        </div>
-                                        <div>
-                                            <h2 class="text-xl font-semibold mb-2">Items</h2>
-                                            <p>${price.product.metadata.displayName} - ${price.product.description}</p>
-                                            </div>
-                                            <div>
-                                                <h2 class="text-xl font-semibold mb-2">Payment summary</h2>
-                                                <p>
-                                                    Subtotal: ${formatCurrency({ value: session.amount_subtotal!, currency: session.currency })}<br />
-                                                    Shipping: Free<br />
-                                                    Discounts: ${formatCurrency({ value: session.total_details?.amount_discount!, currency: session.currency })}<br />
-                                                    Total: ${formatCurrency({ value: session.amount_total!, currency: session.currency })}
-                                                    </p>
-                                                    </div>
-                                                    </div>
-                                                    
-                                                    <!-- Button Section - Full width with 'block' and 'w-full' -->
-                                                    <div class="mt-6">
-                                                        <a
-                                                        href="/shop"
-                                                        class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold"
-                                                        >
-                                                        Discover more
-                                                        </a>
-                                                        </div>
-                                                        </div>
-                                                        </div>
-                                                        `
+                <div class="w-full md:w-1/2">
+                    <h1 class="text-5xl font-bold mb-5">Thanks for your order!</h1>
+                    <div class="space-y-6">
+                        <div>
+                            <p>You will receive a confirmation email with the details of your order.</p>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold mb-2">Delivery address</h2>
+                            <p>${shippingDetails.name}</p>
+                            <p>${shippingDetails.address?.line1}</p>
+                            ${shippingDetails.address?.line2 ? `<p>${shippingDetails.address?.line2}</p>` : ""}
+                            <p>${shippingDetails.address?.postal_code}</p>
+                            <p>${shippingDetails.address?.city}</p>
+                            <p>${shippingDetails.address?.country}</p>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold mb-2">Items</h2>
+                            <p>${price.product.metadata.displayName} - ${price.product.description}</p>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold mb-2">Payment summary</h2>
+                            <p>
+                                Subtotal: ${formatCurrency({ value: session.amount_subtotal!, currency: session.currency })}<br />
+                                Shipping: Free<br />
+                                Discounts: ${formatCurrency({ value: session.total_details?.amount_discount!, currency: session.currency })}<br />
+                                Total: ${formatCurrency({ value: session.amount_total!, currency: session.currency })}
+                            </p>
+                        </div>
+                    </div>
+                                            
+                    <div class="mt-6">
+                        <a
+                            href="/shop"
+                            class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold"
+                        >
+                            Discover more
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `
 
             sendGA4PurchaseEvent({ session })
         }

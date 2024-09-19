@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config"
+import { imageService } from "@unpic/astro/service"
 import { loadEnv } from "vite"
 
 import tailwind from "@astrojs/tailwind"
@@ -15,6 +16,7 @@ export default defineConfig({
         defaultStrategy: "viewport",
     },
     image: {
-        domains: ["https://files.stripe.com", imagesHostname],
+        domains: [imagesHostname],
+        service: imageService(),
     },
 })

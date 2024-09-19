@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets"
+import { Image } from "@unpic/astro"
 
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
@@ -42,15 +42,20 @@ const sizeToDescription: Record<
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-16 md:mb-0 md:mr-8">
-            <div class="mb-5">
-                <Image
-                    id="main-image"
-                    quality={100}
-                    inferSize={true}
-                    src={price.product.images[0]}
-                    alt={price.product.name}
-                    class="w-full h-auto rounded-lg"
-                />
+            <div class="mb-5 relative">
+                {
+                    price.product.images.map((src, index) => (
+                        <Image
+                            id={`main-image-${index}`}
+                            placeholder="lqip"
+                            width={1000}
+                            height={1414}
+                            src={price.product.images[index]}
+                            alt={price.product.name}
+                            class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                        />
+                    ))
+                }
             </div>
             <div class="grid grid-cols-4 gap-4">
                 {
@@ -58,8 +63,9 @@ const sizeToDescription: Record<
                         <Image
                             id={`thumbnail-${index}`}
                             src={img}
-                            quality={100}
-                            inferSize={true}
+                            placeholder="lqip"
+                            width={1000}
+                            height={1414}
                             alt={`Thumbnail ${index + 1}`}
                             class={`w-full h-auto cursor-pointer p-0.5 border border-white border-dashed`}
                         />
@@ -216,28 +222,28 @@ const sizeToDescription: Record<
 
 <script>
     document.addEventListener("astro:page-load", () => {
-        const mainImage = document.getElementById(
-            "main-image"
-        ) as HTMLImageElement
+        const mainImages = document.querySelectorAll('[id^="main-image-"]')
+        const thumbnails = document.querySelectorAll('[id^="thumbnail-"]')
 
-        const thumbnails = document.querySelectorAll(
-            '[id^="thumbnail-"]'
-        ) as NodeListOf<HTMLImageElement>
-
-        if (!mainImage || !thumbnails) return
+        if (!mainImages.length || !thumbnails.length) return
 
         let selectedThumbnail = thumbnails[0]
         selectedThumbnail.classList.replace("border-white", "border-black")
 
-        thumbnails.forEach(thumbnail => {
+        thumbnails.forEach((thumbnail, index) => {
             thumbnail.addEventListener("click", () => {
-                mainImage.src = thumbnail.src
+                mainImages.forEach((img, i) => {
+                    if (i === index) {
+                        img.classList.remove("absolute", "top-0", "opacity-0")
+                    } else {
+                        img.classList.add("absolute", "top-0", "opacity-0")
+                    }
+                })
 
                 selectedThumbnail.classList.replace(
                     "border-black",
                     "border-white"
                 )
-
                 thumbnail.classList.replace("border-white", "border-black")
                 selectedThumbnail = thumbnail
             })
