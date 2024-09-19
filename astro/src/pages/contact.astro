@@ -1,23 +1,36 @@
 ---
-import { Image } from "astro:assets"
+import { v2 as cloudinary } from "cloudinary"
+import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
-import ContactImage from "@assets/contact-page-image.jpg"
+
+cloudinary.config({
+    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+})
+
+const contactImageSrc = cloudinary.url("contact-page-image_dczqrw", {
+    transformation: {
+        quality: "auto",
+        format: "auto",
+    },
+})
 ---
 
 <BaseLayout
     title="Contact | Andrea Diotallevi Art"
     description="Get in touch if you are interested in working together."
-    image={ContactImage.src}
+    image={contactImageSrc}
 >
     <div
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <Image
-                src={ContactImage}
+                src={contactImageSrc}
                 alt="Contact Image"
                 class="w-full h-auto rounded-lg"
+                width={2000}
+                height={2000}
             />
         </div>
 

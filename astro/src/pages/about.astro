@@ -1,22 +1,35 @@
 ---
-import { Image } from "astro:assets"
+import { v2 as cloudinary } from "cloudinary"
+import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
-import ProfileImage from "@assets/about-page-image.jpg"
+
+cloudinary.config({
+    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+})
+
+const aboutImageSrc = cloudinary.url("about-page-image_bldpak", {
+    transformation: {
+        quality: "auto",
+        format: "auto",
+    },
+})
 ---
 
 <BaseLayout
     title="About | Andrea Diotallevi Art"
     description="Get to know Andrea Diotallevi."
-    image={ProfileImage.src}
+    image={aboutImageSrc}
 >
     <div
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <Image
-                src={ProfileImage}
+                src={aboutImageSrc}
                 alt="About Image"
-                class="w-full h-auto rounded-lg"
+                class="w-full h-auto"
+                width={640}
+                height={640}
             />
         </div>
 
