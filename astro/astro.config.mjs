@@ -17,6 +17,6 @@ export default defineConfig({
     },
     image: {
         domains: [imagesHostname],
-        service: imageService(),
+        service: imageService({ placeholder: "lqip" }),
     },
 })
