@@ -1,7 +1,12 @@
+import { v2 as cloudinary } from "cloudinary"
 import { initialiseClient } from "./stripe_initialiseClient"
 import { getAllProducts } from "./theprintspace_getAllProducts"
 
 import { ProductWithMetadata } from "../types/stripe"
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+})
 
 export const stripeSynchroniseProducts = async () => {
     try {
@@ -201,8 +206,20 @@ const products: ProductInput[] = [
             sku: "print-flames-A3",
         },
         images: [
-            `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_THUMBNAIL_WITHOUT_BORDER.jpg`,
-            `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_WITHOUT_BORDER.png`,
+            cloudinary.url("flames-mockup_gzj45v", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("flames-artwork_ioxny4", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            // `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_THUMBNAIL_WITHOUT_BORDER.jpg`,
+            // `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_WITHOUT_BORDER.png`,
         ],
     },
 ]
