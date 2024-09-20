@@ -3,9 +3,10 @@ import { Image } from "@unpic/astro"
 
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
-import LocalisedPrice from "@components/LocalisedPrice.astro"
 
 import { getActivePrices, type StripePrice } from "@utils/stripe"
+import { getLocalCurrency } from "@utils/currency"
+import { formatCurrency } from "@utils/intl"
 
 export async function getStaticPaths() {
     const prices = await getActivePrices()
@@ -29,6 +30,12 @@ const sizeToDescription: Record<
     A2: "A2 (420 x 594 mm)",
     A1: "A1 (594 x 841 mm)",
 }
+
+const {
+    geo: { country },
+} = Astro.locals.netlify.context
+
+const currency = getLocalCurrency(country?.name)
 ---
 
 <BaseLayout
@@ -72,7 +79,7 @@ const sizeToDescription: Record<
             </div>
         </div>
 
-        <form id="price-form" class="w-full md:w-1/2">
+        <form id="price-form" class="w-full md:w-1/2" data-currency={currency}>
             <h1 class="text-5xl font-bold mb-5">
                 {price.product.metadata.displayName}
             </h1>
@@ -83,6 +90,7 @@ const sizeToDescription: Record<
                     <select
                         id="price-id"
                         name="price-id"
+                        data-currency={currency}
                         class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
                         {
@@ -143,9 +151,13 @@ const sizeToDescription: Record<
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        <LocalisedPrice
-                            priceCurrencyOptions={price.currency_options}
-                        />
+                        {
+                            formatCurrency({
+                                value: price.currency_options[currency]
+                                    .unit_amount,
+                                currency,
+                            })
+                        }
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>
@@ -161,11 +173,11 @@ const sizeToDescription: Record<
 
 <script>
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
-    import { getLocaleCurrency } from "@utils/serverless"
     import { createCheckoutSession } from "@utils/serverless"
+    import type { Currency } from "@utils/stripe"
 
     document.addEventListener("astro:page-load", async () => {
-        const priceForm = document.querySelector("#price-form")
+        const priceForm = document.querySelector("#price-form") as HTMLElement
 
         if (!priceForm) return
 
@@ -188,8 +200,6 @@ const sizeToDescription: Record<
             ).value
 
             try {
-                const currency = await getLocaleCurrency()
-
                 const session = await createCheckoutSession({
                     line_items: [
                         {
@@ -198,7 +208,7 @@ const sizeToDescription: Record<
                         },
                     ],
                     success_url: `${window.location.origin}/shop/checkout/success`,
-                    currency,
+                    currency: priceForm.dataset.currency as Currency,
                 })
 
                 if (!session) {
