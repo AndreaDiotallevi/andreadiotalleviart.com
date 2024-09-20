@@ -1,30 +1,17 @@
 import { defineConfig } from "astro/config"
 import { imageService } from "@unpic/astro/service"
-import { loadEnv } from "vite"
 
 import tailwind from "@astrojs/tailwind"
 
 import netlify from "@astrojs/netlify"
 
-const { IMAGES_DOMAIN } = loadEnv(process.env.NODE_ENV, process.cwd(), "")
-const imagesHostname = IMAGES_DOMAIN.replace(/^https?:\/\//, "")
-
 // https://astro.build/config
 export default defineConfig({
-    site: "https://www.andreadiotalleviart.com",
-
-    integrations: [tailwind()],
-
     output: "hybrid",
-
-    prefetch: { defaultStrategy: "viewport" },
-
-    image: {
-        domains: [imagesHostname],
-        service: imageService({ placeholder: "lqip" }),
-    },
-
     adapter: netlify({}),
-
+    integrations: [tailwind()],
     experimental: { serverIslands: true },
+    prefetch: { defaultStrategy: "viewport" },
+    site: "https://www.andreadiotalleviart.com",
+    image: { service: imageService({ placeholder: "lqip" }) },
 })
