@@ -4,6 +4,8 @@ import { loadEnv } from "vite"
 
 import tailwind from "@astrojs/tailwind"
 
+import netlify from "@astrojs/netlify"
+
 const { IMAGES_DOMAIN } = loadEnv(process.env.NODE_ENV, process.cwd(), "")
 const imagesHostname = IMAGES_DOMAIN.replace(/^https?:\/\//, "")
 
@@ -11,12 +13,16 @@ const imagesHostname = IMAGES_DOMAIN.replace(/^https?:\/\//, "")
 export default defineConfig({
     site: "https://www.andreadiotalleviart.com",
     integrations: [tailwind()],
-    output: "static",
+    output: "hybrid",
+
     prefetch: {
         defaultStrategy: "viewport",
     },
+
     image: {
         domains: [imagesHostname],
         service: imageService({ placeholder: "lqip" }),
     },
+
+    adapter: netlify(),
 })

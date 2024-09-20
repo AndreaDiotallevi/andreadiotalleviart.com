@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",
+    "@astrojs/netlify": "^5.5.3",
     "@astrojs/tailwind": "^5.1.0",
     "@stripe/stripe-js": "^4.4.0",
     "@unpic/astro": "^0.0.47",
