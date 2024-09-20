@@ -8,8 +8,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     darkTheme={true}
 >
     <div
-        class="flex justify-center items-center min-h-[calc(100dvh-80px-80px)] bg-[#38444c]"
+        class="flex flex-col justify-center items-center min-h-[calc(100dvh-80px-80px)] bg-[#38444c]"
     >
+        <div class="flex justify-center items-center text-white h-[100px]">
+            Generative Artist & Creative Coder
+        </div>
         <div id="sketch"></div>
     </div>
 </BaseLayout>
@@ -26,7 +29,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             let t = 0
 
             p5.setup = () => {
-                p5.createCanvas(p5.windowWidth, p5.windowHeight - 300)
+                p5.createCanvas(p5.windowWidth, p5.windowHeight - 260)
                 p5.stroke(255, 25)
                 p5.noFill()
             }
