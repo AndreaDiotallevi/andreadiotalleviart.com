@@ -12,20 +12,19 @@ const imagesHostname = IMAGES_DOMAIN.replace(/^https?:\/\//, "")
 // https://astro.build/config
 export default defineConfig({
     site: "https://www.andreadiotalleviart.com",
+
     integrations: [tailwind()],
+
     output: "hybrid",
 
-    prefetch: {
-        defaultStrategy: "viewport",
-    },
+    prefetch: { defaultStrategy: "viewport" },
 
     image: {
         domains: [imagesHostname],
         service: imageService({ placeholder: "lqip" }),
     },
 
-    adapter: netlify(),
-    experimental: {
-        serverIslands: true,
-    },
+    adapter: netlify({}),
+
+    experimental: { serverIslands: true },
 })
