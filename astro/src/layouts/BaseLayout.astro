@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions"
 
+import type { Currency } from "@utils/stripe"
 import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
@@ -13,6 +14,7 @@ interface Props {
     tags?: string[]
     type?: "website" | "product"
     amount?: string
+    currency?: Currency
     darkTheme?: boolean
 }
 
@@ -23,6 +25,7 @@ const {
     tags = [],
     type = "website",
     amount,
+    currency = "gbp",
     darkTheme = false,
 } = Astro.props
 ---
@@ -57,7 +60,10 @@ const {
             type === "product" && amount ? (
                 <>
                     <meta property="og:price:amount" content={amount} />
-                    <meta property="og:price:currency" content="GBP" />
+                    <meta
+                        property="og:price:currency"
+                        content={currency.toUpperCase()}
+                    />
                     <meta
                         property="og:availability"
                         content="available for order"

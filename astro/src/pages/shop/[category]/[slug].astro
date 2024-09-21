@@ -44,6 +44,18 @@ const currency = getLocalCurrency(country?.name)
     image={price.product.images[0]}
     type="product"
     amount={(price.unit_amount / 100).toFixed(2)}
+    currency={currency}
+    tags={[
+        price.product.metadata.displayName,
+        "Generative Art",
+        "p5.js",
+        "Processing",
+        "Procedural",
+        "Prints",
+        "Fine Art",
+        "Giclee",
+        "Hahnemühle photo rag",
+    ]}
 >
     <div
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
