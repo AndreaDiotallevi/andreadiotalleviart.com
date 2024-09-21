@@ -32,7 +32,7 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
             </p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {
                 artworks.map(artwork => (
                     <a
@@ -47,9 +47,9 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
                             height={750}
                             class="w-full h-auto object-contain"
                         />
-                        <h2 class="text-2xl font-semibold mt-4">
+                        {/* <h2 class="text-2xl font-semibold mt-4">
                             {artwork.name}
-                        </h2>
+                        </h2> */}
                     </a>
                 ))
             }
