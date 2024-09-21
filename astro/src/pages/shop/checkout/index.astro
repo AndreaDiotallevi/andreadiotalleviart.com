@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+    title="Checkout | Andrea Diotallevi Art"
+    description="Complete your purchase quickly and securely with Stripe. Our streamlined checkout process is safe and easy, ensuring your details are protected."
+>
+    <div id="checkout" class="px-4 py-8"></div>
+</BaseLayout>
+
+<script>
+    import { loadStripe } from "@stripe/stripe-js"
+
+    document.addEventListener("astro:page-load", async () => {
+        const checkoutElement = document.getElementById("checkout")
+
+        if (!checkoutElement) return
+
+        const stripe = await loadStripe(
+            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+        )
+
+        const params = new URLSearchParams(window.location.search)
+        const clientSecret = params.get("clientSecret") || ""
+
+        const checkout = await stripe?.initEmbeddedCheckout({
+            clientSecret,
+        })
+
+        checkout?.mount(checkoutElement)
+    })
+</script>

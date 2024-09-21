@@ -61,25 +61,8 @@ Resources:
             Targets:
                 - Arn: !GetAtt SendOrderConfirmationEmailQueue.Arn
                   Id: SendOrderConfirmationEmailQueueTarget
-                # - Arn: !GetAtt ProdigiCreateOrderQueue.Arn
-                #   Id: ProdigiCreateOrderQueueTarget
                 - Arn: !GetAtt TheprintspaceCreateOrderQueue.Arn
                   Id: TheprintspaceCreateOrderQueueTarget
-
-    ProdigiOrderShippedRule:
-        Type: AWS::Events::Rule
-        Properties:
-            EventBusName: !Ref EventBus
-            EventPattern:
-                account:
-                    - !Sub ${AWS::AccountId}
-                source:
-                    - prodigi
-                detail-type:
-                    - com.prodigi.order.shipments.shipment#Complete
-            Targets:
-                - Arn: !GetAtt SendOrderShippedEmailQueue.Arn
-                  Id: SendOrderShippedEmailQueueTarget
 
     # QUEUES
     SendOrderConfirmationEmailQueuePolicy:
@@ -109,35 +92,6 @@ Resources:
         Type: AWS::SQS::Queue
         Properties:
             QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailDLQ
-            MessageRetentionPeriod: 1209600
-
-    ProdigiCreateOrderQueuePolicy:
-        Type: AWS::SQS::QueuePolicy
-        Properties:
-            PolicyDocument:
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service: events.amazonaws.com
-                      Action: sqs:SendMessage
-                      Resource: !GetAtt ProdigiCreateOrderQueue.Arn
-            Queues:
-                - Ref: ProdigiCreateOrderQueue
-
-    ProdigiCreateOrderQueue:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderQueue
-            VisibilityTimeout: 100
-            ReceiveMessageWaitTimeSeconds: 20
-            RedrivePolicy:
-                deadLetterTargetArn: !GetAtt ProdigiCreateOrderDLQ.Arn
-                maxReceiveCount: 3
-
-    ProdigiCreateOrderDLQ:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-ProdigiCreateOrderDLQ
             MessageRetentionPeriod: 1209600
 
     TheprintspaceCreateOrderQueuePolicy:
@@ -198,12 +152,6 @@ Resources:
             QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
             MessageRetentionPeriod: 1209600
 
-    ProdigiHandleWebhooksDLQ:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-ProdigiHandleWebhooksDLQ
-            MessageRetentionPeriod: 1209600
-
     # TOPICS
     SendOrderConfirmationEmailTopic:
         Type: AWS::SNS::Topic
@@ -216,19 +164,6 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref SendOrderConfirmationEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
-
-    ProdigiCreateOrderTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: ProdigiCreateOrderTopic
-            TopicName: ProdigiCreateOrderTopic
-
-    ProdigiCreateOrderTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref ProdigiCreateOrderTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     SendOrderShippedEmailTopic:
@@ -255,19 +190,6 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref EmailBounceTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
-
-    ProdigiHandleWebhooksTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: ProdigiHandleWebhooksTopic
-            TopicName: ProdigiHandleWebhooksTopic
-
-    ProdigiHandleWebhooksTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref ProdigiHandleWebhooksTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     TheprintspaceCreateOrderTopic:
@@ -301,24 +223,6 @@ Resources:
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
                 - !Ref SendOrderConfirmationEmailTopic
-
-    ProdigiCreateOrderAlarm:
-        Type: AWS::CloudWatch::Alarm
-        Properties:
-            AlarmName: ProdigiCreateOrderAlarm
-            AlarmDescription: "There was an error while creating an order with Prodigi."
-            Namespace: AWS/SQS
-            MetricName: ApproximateNumberOfMessagesVisible
-            Dimensions:
-                - Name: QueueName
-                  Value: !GetAtt ProdigiCreateOrderDLQ.QueueName
-            Statistic: Sum
-            Period: 300
-            EvaluationPeriods: 1
-            Threshold: 1
-            ComparisonOperator: GreaterThanOrEqualToThreshold
-            AlarmActions:
-                - !Ref ProdigiCreateOrderTopic
 
     SendOrderShippedEmailAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -366,7 +270,7 @@ Resources:
                     <html>
                         <body>
                             <h3>Dear {{name}},</h3>
-                            <p>Thank you for your order.</p>
+                            <p>Thanks for your order!</p>
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Items</h3>
                             <div>
@@ -398,12 +302,12 @@ Resources:
                             {{#if receiptPdf}}
                                 <p>You can download your receipt <a href="{{receiptPdf}}">here</a>.</p>
                             {{/if}}
-                            <p>For any questions regarding your order, you can reply to this email.</p>
+                            <p>For any questions regarding your order, just reply to this email.</p>
                             <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Thank you for your order"
+                SubjectPart: "Thanks for your order!"
 
     OrderShippedEmailTemplate:
         Type: AWS::SES::Template
@@ -476,7 +380,7 @@ Resources:
                 ApiKeyRequired: false
             Cors:
                 AllowMethods: "'*'"
-                AllowHeaders: "'Content-Type, Authorization, X-Api-Key'"
+                AllowHeaders: "'Content-Type, Authorization, X-Api-Key, X-Forwarded-For'"
                 AllowOrigin: "'*'"
 
     StripeCreateCheckoutSessionFunction:
@@ -549,7 +453,9 @@ Resources:
                         Method: POST
             Environment:
                 Variables:
+                    IMAGES_DOMAIN: "{{resolve:ssm:IMAGES_DOMAIN}}"
                     CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
+                    CLOUDINARY_CLOUD_NAME: "{{resolve:ssm:CLOUDINARY_CLOUD_NAME}}"
             Policies:
                 - Statement:
                       - Sid: readParameterStore
@@ -602,41 +508,6 @@ Resources:
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.ts
 
-    SendOrderShippedEmailFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
-            Handler: src/lambdas/orderShipped_sendOrderShippedEmail.handler
-            Events:
-                MySQSEvent:
-                    Type: SQS
-                    Properties:
-                        Queue: !GetAtt SendOrderShippedEmailQueue.Arn
-                        BatchSize: 5
-            Policies:
-                - Statement:
-                      - Sid: sendOrderShippedEmail
-                        Effect: Allow
-                        Action:
-                            - ses:SendEmail
-                            - ses:SendTemplatedEmail
-                        Resource: "*"
-                - Statement:
-                      - Sid: readParameterStore
-                        Effect: Allow
-                        Action:
-                            - ssm:GetParameter
-                        Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/orderShipped_sendOrderShippedEmail.ts
-
     SendContactPageEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -671,72 +542,6 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/api_sendContactPageEmail.ts
-
-    ProdigiHandleWebhooksFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-ProdigiHandleWebhooks
-            Handler: src/lambdas/api_prodigiHandleWebhooks.handler
-            Environment:
-                Variables:
-                    EVENT_BUS_NAME: !Ref EventBus
-            Events:
-                ProdigiWebhook:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /prodigi-handle-webhooks
-                        Method: POST
-            Policies:
-                - Statement:
-                      - Sid: putEvents
-                        Effect: Allow
-                        Action:
-                            - events:PutEvents
-                        Resource: !GetAtt EventBus.Arn
-            DeadLetterQueue:
-                Type: SQS
-                TargetArn: !GetAtt ProdigiHandleWebhooksDLQ.Arn
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/api_prodigiHandleWebhooks.ts
-
-    ProdigiCreateOrderFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-ProdigiCreateOrder
-            Handler: src/lambdas/checkoutCompleted_prodigiCreateOrder.handler
-            Events:
-                MySQSEvent:
-                    Type: SQS
-                    Properties:
-                        Queue: !GetAtt ProdigiCreateOrderQueue.Arn
-                        BatchSize: 5
-            Environment:
-                Variables:
-                    BUCKET: !Ref Bucket
-                    PRODIGI_API_URL: "{{resolve:ssm:PRODIGI_API_URL}}"
-            Policies:
-                - Statement:
-                      - Sid: readParameterStore
-                        Effect: Allow
-                        Action:
-                            - ssm:GetParameter
-                        Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/IMAGES_DOMAIN
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PRODIGI_API_KEY
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/checkoutCompleted_prodigiCreateOrder.ts
 
     TheprintspaceHandleWebhooksFunction:
         Type: AWS::Serverless::Function
@@ -792,3 +597,23 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_theprintspaceCreateOrder.ts
+
+    GetLocaleCurrencyFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-GetLocaleCurrency
+            Handler: src/lambdas/api_getLocaleCurrency.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /get-locale-currency
+                        Method: GET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_getLocaleCurrency.ts

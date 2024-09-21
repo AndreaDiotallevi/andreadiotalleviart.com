@@ -1,0 +1,114 @@
+---
+import { ViewTransitions } from "astro:transitions"
+
+import type { Currency } from "@utils/stripe"
+import GlobalStyles from "@components/GlobalStyles.astro"
+import NavigationLayout from "./NavigationLayout.astro"
+
+const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
+
+interface Props {
+    title: string
+    description: string
+    image?: string
+    tags?: string[]
+    type?: "website" | "product"
+    amount?: string
+    currency?: Currency
+    darkTheme?: boolean
+}
+
+const {
+    title,
+    description,
+    image,
+    tags = [],
+    type = "website",
+    amount,
+    currency = "gbp",
+    darkTheme = false,
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content={description} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&display=swap"
+        />
+        <title>{title}</title>
+
+        <meta name="keywords" content={tags.join(", ")} />
+        {image ? <meta name="image" content={image} /> : null}
+        {amount && <link rel="canonical" href={Astro.url.href} />}
+
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:url" content={Astro.url.href} />
+        <meta property="og:type" content={type} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        {image ? <meta property="og:image" content={image} /> : null}
+        <meta property="og:site_name" content="Your Site Name" />
+        <meta property="og:locale" content="en_GB" />
+
+        {
+            type === "product" && amount ? (
+                <>
+                    <meta property="og:price:amount" content={amount} />
+                    <meta
+                        property="og:price:currency"
+                        content={currency.toUpperCase()}
+                    />
+                    <meta
+                        property="og:availability"
+                        content="available for order"
+                    />
+                    <meta property="product:condition" content="new" />
+                    <meta property="product:category" content="500044" />
+                </>
+            ) : null
+        }
+
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="@adiotalleviart" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {image ? <meta name="twitter:image" content={image} /> : null}
+
+        <!-- Google Site Verification -->
+        <meta
+            name="google-site-verification"
+            content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
+        />
+        <!-- Google tag (gtag.js) -->
+        <script
+            is:inline
+            async
+            src=`https://www.googletagmanager.com/gtag/js?id=${ga4TrackingID}`
+        ></script>
+        <script is:inline define:vars={{ ga4TrackingID }}>
+            document.addEventListener("astro:page-load", () => {
+                window.dataLayer = window.dataLayer || []
+                function gtag() {
+                    dataLayer.push(arguments)
+                }
+                gtag("js", new Date())
+
+                gtag("config", ga4TrackingID)
+            })
+        </script>
+        <ViewTransitions />
+    </head>
+    <body>
+        <GlobalStyles />
+        <NavigationLayout darkTheme={darkTheme}>
+            <slot />
+        </NavigationLayout>
+    </body>
+</html>

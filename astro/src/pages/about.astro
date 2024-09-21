@@ -1,0 +1,46 @@
+---
+import { Image } from "@unpic/astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { transformImage } from "@utils/cloudinary"
+
+const aboutImageSrc = transformImage("about-page-image_bldpak")
+---
+
+<BaseLayout
+    title="About | Andrea Diotallevi Art"
+    description="Get to know Andrea Diotallevi."
+    image={aboutImageSrc}
+    tags={["About"]}
+>
+    <div
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
+    >
+        <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <Image
+                src={aboutImageSrc}
+                alt="About Image"
+                class="w-full h-auto"
+                width={640}
+                height={640}
+            />
+        </div>
+
+        <div class="w-full md:w-1/2">
+            <h1 class="text-5xl font-bold mb-5">About</h1>
+            <p class="mb-4">
+                My name is Andrea Diotallevi. I am a generative artist and
+                creative coder based in London.
+            </p>
+            <p class="mb-4">
+                As a pianist and former architect, I am fascinated by the
+                intersection between art and technology and I am in constant
+                exploration of generative art concepts.
+            </p>
+            <p>
+                For each new work, I design a custom algorithm capable of
+                generating a sequence of unique, but aesthetically related
+                images.
+            </p>
+        </div>
+    </div>
+</BaseLayout>

@@ -4,8 +4,6 @@ import {
 } from "@aws-sdk/client-eventbridge"
 import Stripe from "stripe"
 
-import { ProdigiEvent } from "../types/prodigi"
-
 const eventBridgeClient = new EventBridgeClient({
     region: process.env.AWS_REGION,
 })
@@ -15,9 +13,9 @@ export const putEvent = async ({
     detailType,
     event,
 }: {
-    source: "stripe" | "prodigi"
-    detailType: Stripe.Event["type"] | ProdigiEvent["type"]
-    event: Stripe.Event | ProdigiEvent
+    source: "stripe"
+    detailType: Stripe.Event["type"]
+    event: Stripe.Event
 }) => {
     try {
         const putEventsCommand = new PutEventsCommand({

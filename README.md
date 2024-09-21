@@ -13,8 +13,14 @@ The application is deployed with Netlify at my custom domain [https://www.andrea
 -   [Gatsby](https://www.gatsbyjs.com/): Static site generator.
 -   [React](https://reactjs.org/): JavaScript library to build the user interface.
 -   [Stripe](https://docs.stripe.com/payments/checkout?locale=en-GB): Payments platform.
--   [Prodigi](https://www.prodigi.com/print-api/): Global print on demand platform & print API.
+-   [The Print Space](https://www.theprintspace.co.uk/art-printing-api): Professional photo & art printing API.
 
 ## Architecture
 
+### C4 Context Diagram
+
 ![Architecture](./docs/context-diagram.png)
+
+### C4 Container Diagram
+
+![Architecture](./docs/container-diagram.png)

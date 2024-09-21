@@ -160,11 +160,11 @@ const PricePage = ({
                             days). This is an extremely more secure option than
                             regular post for sending art prints.
                         </p>
-                        <h2>No custom charges for UK-EU-USA orders</h2>
+                        <h2>No custom charges for UK-EU-US orders</h2>
                         <p>
                             With production in the UK, USA & Germany,
                             theprintspace guarantees no extra customs charges on
-                            UK-EU-USA orders.
+                            UK-EU-US orders.
                         </p>
                         <h2>£{(selectedPrice.unit_amount / 100).toFixed(2)}</h2>
                         <p>Apply promotion codes at checkout.</p>

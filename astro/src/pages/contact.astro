@@ -1,0 +1,154 @@
+---
+import { Image } from "@unpic/astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/Button.astro"
+import { transformImage } from "@utils/cloudinary"
+
+const contactImageSrc = transformImage("contact-page-image_dczqrw")
+---
+
+<BaseLayout
+    title="Contact | Andrea Diotallevi Art"
+    description="Get in touch if you are interested in working together."
+    image={contactImageSrc}
+    tags={["Contact"]}
+>
+    <div
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
+    >
+        <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <Image
+                src={contactImageSrc}
+                alt="Contact Image"
+                class="w-full h-auto rounded-lg"
+                width={2000}
+                height={2000}
+            />
+        </div>
+
+        <div class="w-full md:w-1/2">
+            <h1 class="text-5xl font-bold mb-5">Contact</h1>
+            <form id="contact-form" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-lg font-medium mb-1"
+                        >Name:</label
+                    >
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md"
+                        placeholder="Your Name"
+                        autocomplete="name"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="email" class="block text-lg font-medium mb-1"
+                        >Email:</label
+                    >
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md"
+                        placeholder="Your Email"
+                        autocomplete="email"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="subject" class="block text-lg font-medium mb-1"
+                        >Subject:</label
+                    >
+                    <input
+                        id="subject"
+                        name="subject"
+                        type="text"
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md"
+                        placeholder="Subject"
+                        autocomplete="subject"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="message" class="block text-lg font-medium mb-1"
+                        >Message:</label
+                    >
+                    <textarea
+                        id="message"
+                        name="message"
+                        class="w-full px-3 py-2 border border-gray-800 rounded-md"
+                        rows="6"
+                        placeholder="Your Message"
+                        autocomplete="message"
+                        required></textarea>
+                </div>
+
+                <Button
+                    id="submit-button"
+                    buttonText="Send message"
+                    errorMessage="There was an error sending your message. Please try again."
+                    successMessage="Message sent!"
+                />
+            </form>
+        </div>
+    </div>
+</BaseLayout>
+
+<script>
+    document.addEventListener("astro:page-load", async () => {
+        const contactForm = document.querySelector("#contact-form")
+
+        if (!contactForm) return
+
+        const button = document.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
+
+        const spinner = document.getElementById("loading-spinner")!
+        const errorMessage = document.getElementById("error-message")!
+        const successMessage = document.getElementById("success-message")!
+
+        contactForm.addEventListener("submit", async e => {
+            e.preventDefault()
+
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
+            successMessage.classList.add("hidden")
+
+            const name = (document.getElementById("name") as HTMLInputElement)
+                .value
+            const email = (document.getElementById("email") as HTMLInputElement)
+                .value
+            const subject = (
+                document.getElementById("subject") as HTMLInputElement
+            ).value
+            const message = (
+                document.getElementById("message") as HTMLInputElement
+            ).value
+
+            try {
+                await fetch(
+                    import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name, email, subject, message }),
+                    }
+                )
+
+                successMessage.classList.remove("hidden")
+            } catch (error) {
+                console.error(error)
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+            }
+        })
+    })
+</script>

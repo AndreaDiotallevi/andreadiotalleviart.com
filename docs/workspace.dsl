@@ -4,13 +4,13 @@ workspace {
         user = person "User" "A user of andreadiotalleviart.com"
         gatsby = softwareSystem "Gatsby frontend" "Static website"
         stripe = softwareSystem "Stripe" "Payments platform" "SaaS"
-        prodigi = softwareSystem "Prodigi" "Global print on demand platform & print API" "SaaS"
+        theprintspace = softwareSystem "The Print Space" "Professional art printing API" "SaaS"
         serverless = softwareSystem "Serverless backend" {
             apiGateway = container "API" "" "API Gateway"
             eventBus = container "Event bus" "" "Event Bridge" "Queue"
-            sqsLambdaPatterns = container "SQS + Lambda patterns" "" "SQS + Lambda" "Queue"
+            sqsLambda = container "SQS + lambda" "" "SQS + Lambda" "Queue"
 
-            eventBus -> sqsLambdaPatterns "Sends filtered events to" "AWS Rules"
+            eventBus -> sqsLambda "Sends filtered events to" "AWS Rules"
         }
 
         user -> gatsby "Buys prints via"
@@ -18,9 +18,9 @@ workspace {
         gatsby -> apiGateway "Creates Stripe checkout session via" "HTTP"
         gatsby -> stripe "Confirms Stripe checkout session payment via" "HTTPS"
         stripe -> eventBus "Sends events to" "Webhooks"
-        sqsLambdaPatterns -> user "Sends emails to" "AWS SES"
-        sqsLambdaPatterns -> prodigi "Fulfils orders via" "HTTP"
-        prodigi -> eventBus "Sends events to" "Webhooks"
+        sqsLambda -> user "Sends emails to" "AWS SES"
+        sqsLambda -> theprintspace "Fulfils orders via" "HTTP"
+        theprintspace -> eventBus "Sends events to" "Webhooks"
     }
 
     views {

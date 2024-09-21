@@ -1,0 +1,272 @@
+---
+import { Image } from "@unpic/astro"
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/Button.astro"
+
+import { getActivePrices, type StripePrice } from "@utils/stripe"
+import { getLocalCurrency } from "@utils/currency"
+import { formatCurrency } from "@utils/intl"
+
+export async function getStaticPaths() {
+    const prices = await getActivePrices()
+
+    return prices.map(price => ({
+        params: {
+            slug: price.product.metadata.slug,
+            category: price.product.metadata.category,
+        },
+        props: { price },
+    }))
+}
+
+const { price } = Astro.props
+
+const sizeToDescription: Record<
+    StripePrice["product"]["metadata"]["size"],
+    string
+> = {
+    A3: "A3 (297 x 420 mm)",
+    A2: "A2 (420 x 594 mm)",
+    A1: "A1 (594 x 841 mm)",
+}
+
+const {
+    geo: { country },
+} = Astro.locals.netlify.context
+
+const currency = getLocalCurrency(country?.name)
+---
+
+<BaseLayout
+    title={`${price.product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
+    description={price.product.description}
+    image={price.product.images[0]}
+    type="product"
+    amount={(price.unit_amount / 100).toFixed(2)}
+    currency={currency}
+    tags={[
+        price.product.metadata.displayName,
+        "Generative Art",
+        "p5.js",
+        "Processing",
+        "Procedural",
+        "Prints",
+        "Fine Art",
+        "Giclee",
+        "Hahnemühle photo rag",
+    ]}
+>
+    <div
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
+    >
+        <div class="w-full md:w-1/2 mb-16 md:mb-0 md:mr-8">
+            <div class="mb-5 relative">
+                {
+                    price.product.images.map((src, index) => (
+                        <Image
+                            id={`main-image-${index}`}
+                            width={1000}
+                            height={1414}
+                            src={price.product.images[index]}
+                            alt={price.product.name}
+                            class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                        />
+                    ))
+                }
+            </div>
+            <div class="grid grid-cols-4 gap-4">
+                {
+                    price.product.images.map((img, index) => (
+                        <Image
+                            id={`thumbnail-${index}`}
+                            src={img}
+                            width={1000}
+                            height={1414}
+                            alt={`Thumbnail ${index + 1}`}
+                            class={`w-full h-auto cursor-pointer border border-white border-dashed`}
+                        />
+                    ))
+                }
+            </div>
+        </div>
+
+        <form id="price-form" class="w-full md:w-1/2" data-currency={currency}>
+            <h1 class="text-5xl font-bold mb-5">
+                {price.product.metadata.displayName}
+            </h1>
+
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Size</h2>
+                    <select
+                        id="price-id"
+                        name="price-id"
+                        data-currency={currency}
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
+                    >
+                        {
+                            [price.product.metadata.size].map(size => (
+                                <option value={price.id}>
+                                    {
+                                        sizeToDescription[
+                                            price.product.metadata.size
+                                        ]
+                                    }
+                                </option>
+                            ))
+                        }
+                    </select>
+                    <p>The image is printed full bleed with no border.</p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        100% cotton paper
+                    </h2>
+                    <p>
+                        The artwork is printed on a white cotton paper called
+                        Hahnemühle photo rag 308gsm. With its characteristic,
+                        wonderfully soft feel, it boasts a lightly defined felt
+                        structure, lending each artwork a three-dimensional
+                        appearance and impressive pictorial depth.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        Premium print quality
+                    </h2>
+                    <p>
+                        The print is crafted using premium, pigment-based inks
+                        that are fade-resistant and can endure for up to 200
+                        years. This technique, called Giclée, makes the print
+                        stand apart with its extremely high level of quality,
+                        longevity and value compared to a standard print.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">Free shipping</h2>
+                    <p>
+                        Shipping is handled by theprintspace in London through
+                        First Class Tracked Mail (typically 6-10 days). This is
+                        an extremely more secure option than regular post for
+                        sending art prints.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        No custom charges for UK-EU-US orders
+                    </h2>
+                    <p>
+                        With production in the UK, USA & Germany, theprintspace
+                        guarantees no extra customs charges on UK-EU-US orders.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-2">
+                        {
+                            formatCurrency({
+                                value: price.currency_options[currency]
+                                    .unit_amount,
+                                currency,
+                            })
+                        }
+                    </h2>
+                    <p>Apply promotion codes at checkout.</p>
+                </div>
+                <Button
+                    id="submit-button"
+                    buttonText="Continue to checkout"
+                    errorMessage="There was an error creating your session. Please try again."
+                />
+            </div>
+        </form>
+    </div>
+</BaseLayout>
+
+<script>
+    import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
+    import { createCheckoutSession } from "@utils/serverless"
+    import type { Currency } from "@utils/stripe"
+
+    document.addEventListener("astro:page-load", async () => {
+        const priceForm = document.querySelector("#price-form") as HTMLElement
+
+        if (!priceForm) return
+
+        const button = document.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
+
+        const spinner = document.getElementById("loading-spinner")!
+        const errorMessage = document.getElementById("error-message")!
+
+        priceForm.addEventListener("submit", async e => {
+            e.preventDefault()
+
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
+
+            const priceId = (
+                document.getElementById("price-id") as HTMLInputElement
+            ).value
+
+            try {
+                const session = await createCheckoutSession({
+                    line_items: [
+                        {
+                            price: priceId,
+                            quantity: 1,
+                        },
+                    ],
+                    success_url: `${window.location.origin}/shop/checkout/success`,
+                    currency: priceForm.dataset.currency as Currency,
+                })
+
+                if (!session) {
+                    console.error("Failed to create session")
+                    return
+                }
+
+                sendGA4BeginCheckoutEvent({ session })
+                window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
+            } catch (error) {
+                console.error(error)
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+            }
+        })
+    })
+</script>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const mainImages = document.querySelectorAll('[id^="main-image-"]')
+        const thumbnails = document.querySelectorAll('[id^="thumbnail-"]')
+
+        if (!mainImages.length || !thumbnails.length) return
+
+        let selectedThumbnail = thumbnails[0]
+        selectedThumbnail.classList.replace("border-white", "border-black")
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener("click", () => {
+                mainImages.forEach((img, i) => {
+                    if (i === index) {
+                        img.classList.remove("absolute", "top-0", "opacity-0")
+                    } else {
+                        img.classList.add("absolute", "top-0", "opacity-0")
+                    }
+                })
+
+                selectedThumbnail.classList.replace(
+                    "border-black",
+                    "border-white"
+                )
+                thumbnail.classList.replace("border-white", "border-black")
+                selectedThumbnail = thumbnail
+            })
+        })
+    })
+</script>

@@ -4,6 +4,7 @@ import Stripe from "stripe"
 import { sendEmail } from "../actions/ses_sendEmail"
 import { getParameterValue } from "../actions/ssm_getParameterValue"
 import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
+import { formatCurrency } from "../actions/intl_formatCurrency"
 
 export const handler = async (event: SQSEvent): Promise<void> => {
     try {
@@ -28,8 +29,8 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 throw new Error("No customer email")
             }
 
-            if (!session) {
-                throw new Error("No session")
+            if (!session.currency) {
+                throw new Error("No currency")
             }
 
             const address = session.shipping_details?.address
@@ -54,28 +55,6 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
             const charge = invoice.charge as Stripe.Charge | null
 
-            type Currency =
-                | "eur"
-                | "gbp"
-                | "usd"
-                | "chf"
-                | "nok"
-                | "dkk"
-                | "sek"
-
-            const currencyToSymbol: Record<Currency, string> = {
-                eur: "€",
-                gbp: "£",
-                usd: "$",
-                chf: "₣", // Switzerland
-                nok: "kr", // Norway
-                dkk: "kr", // Denmark
-                sek: "kr", // Sweden
-            }
-
-            const currencySymbol =
-                currencyToSymbol[(session?.currency as Currency) || "gbp"]
-
             await sendEmail({
                 Source: emailSource,
                 Destination: {
@@ -94,18 +73,18 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     productDescription: product.description || "",
                     productImageSource: product.images[0] || "",
                     itemQuantity: session.line_items?.data[0].quantity || "",
-                    amountSubtotal:
-                        `${currencySymbol}${(
-                            (session.amount_subtotal || 0) / 100
-                        ).toFixed(2)}` || "",
-                    amountDiscount:
-                        `${currencySymbol}${(
-                            (session.total_details?.amount_discount || 0) / 100
-                        ).toFixed(2)}` || "",
-                    amountTotal:
-                        `${currencySymbol}${(
-                            (session.amount_total || 0) / 100
-                        ).toFixed(2)}` || "",
+                    amountSubtotal: formatCurrency({
+                        value: session.amount_subtotal!,
+                        currency: session.currency,
+                    }),
+                    amountDiscount: formatCurrency({
+                        value: session.total_details?.amount_discount!,
+                        currency: session.currency,
+                    }),
+                    amountTotal: formatCurrency({
+                        value: session.amount_total!,
+                        currency: session.currency,
+                    }),
                     receiptPdf: charge?.receipt_url?.replace("?", "/pdf?"),
                 }),
             })

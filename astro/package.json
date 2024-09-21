@@ -1,0 +1,29 @@
+{
+  "name": "astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/netlify": "^5.5.3",
+    "@astrojs/tailwind": "^5.1.0",
+    "@stripe/stripe-js": "^4.4.0",
+    "@unpic/astro": "^0.0.47",
+    "astro": "^4.15.3",
+    "cloudinary": "^2.5.0",
+    "p5": "^1.10.0",
+    "stripe": "^16.10.0",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/gtag.js": "^0.0.20",
+    "@types/p5": "^1.7.6"
+  }
+}
