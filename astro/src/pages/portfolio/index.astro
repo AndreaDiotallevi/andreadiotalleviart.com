@@ -1,25 +1,12 @@
 ---
-import { v2 as cloudinary } from "cloudinary"
 import { Image } from "@unpic/astro"
-import BaseLayout from "@layouts/BaseLayout.astro"
 import { getCollection } from "astro:content"
-
-cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
-    api_key: import.meta.env.CLOUDINARY_API_KEY,
-    api_secret: import.meta.env.CLOUDINARY_API_SECRET,
-})
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { transformImage } from "@utils/cloudinary"
 
 const artworks = (await getCollection("artworks")).map(artwork => ({
     ...artwork.data,
-    images: artwork.data.images.map(image =>
-        cloudinary.url(image, {
-            transformation: {
-                quality: "auto",
-                format: "auto",
-            },
-        })
-    ),
+    images: artwork.data.images.map(image => transformImage(image)),
 }))
 ---
 

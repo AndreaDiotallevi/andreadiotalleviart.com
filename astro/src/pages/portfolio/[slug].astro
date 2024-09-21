@@ -1,14 +1,8 @@
 ---
-import { v2 as cloudinary } from "cloudinary"
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { getCollection } from "astro:content"
-
-cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
-    api_key: import.meta.env.CLOUDINARY_API_KEY,
-    api_secret: import.meta.env.CLOUDINARY_API_SECRET,
-})
+import { transformImage } from "@utils/cloudinary"
 
 export async function getStaticPaths() {
     const artworks = await getCollection("artworks")
@@ -20,14 +14,7 @@ export async function getStaticPaths() {
         props: {
             artwork: {
                 ...artwork.data,
-                images: artwork.data.images.map(image =>
-                    cloudinary.url(image, {
-                        transformation: {
-                            quality: "auto",
-                            format: "auto",
-                        },
-                    })
-                ),
+                images: artwork.data.images.map(image => transformImage(image)),
             },
         },
     }))
@@ -69,7 +56,7 @@ const { artwork } = Astro.props
                                 width={750}
                                 height={750}
                                 alt={`Thumbnail ${index + 1}`}
-                                class={`w-full h-auto cursor-pointer p-0.5 border border-white border-dashed`}
+                                class={`w-full h-auto cursor-pointer border border-white border-dashed`}
                             />
                         ))}
                     </div>

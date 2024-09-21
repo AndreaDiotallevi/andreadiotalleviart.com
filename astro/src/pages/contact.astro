@@ -1,19 +1,10 @@
 ---
-import { v2 as cloudinary } from "cloudinary"
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
+import { transformImage } from "@utils/cloudinary"
 
-cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
-})
-
-const contactImageSrc = cloudinary.url("contact-page-image_dczqrw", {
-    transformation: {
-        quality: "auto",
-        format: "auto",
-    },
-})
+const contactImageSrc = transformImage("contact-page-image_dczqrw")
 ---
 
 <BaseLayout

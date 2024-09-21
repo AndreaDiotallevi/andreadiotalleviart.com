@@ -1,20 +1,9 @@
 ---
-import { v2 as cloudinary } from "cloudinary"
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import { transformImage } from "@utils/cloudinary"
 
-cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
-    api_key: import.meta.env.CLOUDINARY_API_KEY,
-    api_secret: import.meta.env.CLOUDINARY_API_SECRET,
-})
-
-const aboutImageSrc = cloudinary.url("about-page-image_bldpak", {
-    transformation: {
-        quality: "auto",
-        format: "auto",
-    },
-})
+const aboutImageSrc = transformImage("about-page-image_bldpak")
 ---
 
 <BaseLayout
