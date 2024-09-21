@@ -8,6 +8,7 @@ export const getAllProducts = async () => {
         withDecryption: true,
     })
 
+    console.log("Fetching products from Theprintspace...")
     const response = await fetch(
         `${process.env.CREATIVEHUB_API_URL}/api/v1/products/query`,
         {
@@ -18,11 +19,13 @@ export const getAllProducts = async () => {
             },
         }
     )
+    console.log(response)
 
     const data = (await response.json()) as GetAllProductsResponse
     console.log("GetAllProductsResponse: ", JSON.stringify(data))
 
     if (!response.ok) {
+        console.log("5555")
         console.error(response)
         throw new Error("Failed to get all products from theprintspace")
     }
