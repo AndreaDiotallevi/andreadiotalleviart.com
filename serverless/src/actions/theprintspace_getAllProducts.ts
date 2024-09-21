@@ -9,6 +9,8 @@ export const getAllProducts = async () => {
     })
 
     console.log("Fetching products from Theprintspace...")
+    console.log(process.env.CREATIVEHUB_API_URL)
+    console.log(`ApiKey ${creativehubApiKey}`)
     const response = await fetch(
         `${process.env.CREATIVEHUB_API_URL}/api/v1/products/query`,
         {
