@@ -12,9 +12,12 @@ export const stripeSynchroniseProducts = async () => {
     try {
         const stripe = await initialiseClient()
 
+        console.log("Fetching products from Stripe...")
         const stripeProducts = await stripe.products.list()
+        console.log(stripeProducts)
 
         const products = await getProducts()
+        console.log(products)
 
         for (const product of products) {
             const payload = {
@@ -24,6 +27,7 @@ export const stripeSynchroniseProducts = async () => {
                 metadata: product.metadata,
                 images: product.images,
             }
+            console.log("1111")
 
             const stripeProduct = stripeProducts.data.find(
                 stripeProduct =>
@@ -33,13 +37,16 @@ export const stripeSynchroniseProducts = async () => {
             if (stripeProduct) {
                 await stripe.products.update(stripeProduct.id, payload)
                 console.log(`Product ${product.metadata.sku} updated.`)
+                console.log("2222")
             } else {
+                console.log("3333")
                 // await stripe.products.create(payload)
             }
         }
 
         console.log("Products synchronized successfully!")
     } catch (error) {
+        console.log("4444")
         console.error(error)
         throw error
     }
