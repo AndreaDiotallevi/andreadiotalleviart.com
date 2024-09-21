@@ -50,6 +50,11 @@ const { darkTheme } = Astro.props
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                     data-astro-prefetch>contact</a
                 >
+                <a
+                    href="/portfolio"
+                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
+                    data-astro-prefetch>portfolio</a
+                >
             </nav>
         </div>
     </header>
@@ -67,6 +72,8 @@ const { darkTheme } = Astro.props
         <a href="/shop" class="mt-10 h-11" data-astro-prefetch>Shop</a>
         <a href="/about" class="mt-10 h-11" data-astro-prefetch>About</a>
         <a href="/contact" class="mt-10 h-11" data-astro-prefetch>Contact</a>
+        <a href="/portfolio" class="mt-10 h-11" data-astro-prefetch>Portfolio</a
+        >
     </div>
 
     <main class="flex-grow">

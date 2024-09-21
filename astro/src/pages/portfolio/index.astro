@@ -1,0 +1,64 @@
+---
+import { v2 as cloudinary } from "cloudinary"
+import { Image } from "@unpic/astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { getCollection } from "astro:content"
+
+cloudinary.config({
+    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+    api_key: import.meta.env.CLOUDINARY_API_KEY,
+    api_secret: import.meta.env.CLOUDINARY_API_SECRET,
+})
+
+const artworks = (await getCollection("artworks")).map(artwork => ({
+    ...artwork.data,
+    images: artwork.data.images.map(image =>
+        cloudinary.url(image, {
+            transformation: {
+                quality: "auto",
+                format: "auto",
+            },
+        })
+    ),
+}))
+---
+
+<BaseLayout
+    title="Portfolio | Andrea Diotallevi Art"
+    description="Experimentations with generative art patterns and algorithms as a dynamic dialogue between human creativity and computer efficiency."
+    image={artworks[0].images[0]}
+>
+    <div class="max-w-screen-xl mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-6">Portfolio</h1>
+            <p class="max-w-[600px] mx-auto">
+                Experimentations with generative art patterns and algorithms as
+                a dynamic dialogue between human creativity and computer
+                efficiency
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {
+                artworks.map(artwork => (
+                    <a
+                        href={`/portfolio/${artwork.slug}`}
+                        class="flex flex-col no-underline text-black hover:underline"
+                        data-astro-prefetch
+                    >
+                        <Image
+                            alt={artwork.name}
+                            src={artwork.images[0]}
+                            width={750}
+                            height={750}
+                            class="w-full h-auto object-contain"
+                        />
+                        <h2 class="text-2xl font-semibold mt-4">
+                            {artwork.name}
+                        </h2>
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</BaseLayout>

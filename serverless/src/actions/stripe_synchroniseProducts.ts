@@ -218,8 +218,6 @@ const products: ProductInput[] = [
                     format: "auto",
                 },
             }),
-            // `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_THUMBNAIL_WITHOUT_BORDER.jpg`,
-            // `${process.env.IMAGES_DOMAIN}/prints/flames_WEB_WITHOUT_BORDER.png`,
         ],
     },
 ]
