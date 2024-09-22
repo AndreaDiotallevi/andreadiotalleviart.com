@@ -1,3 +1,4 @@
+import Stripe from "stripe"
 import { v2 as cloudinary } from "cloudinary"
 import { initialiseClient } from "./stripe_initialiseClient"
 import { getAllProducts } from "./theprintspace_getAllProducts"
@@ -9,40 +10,63 @@ cloudinary.config({
 })
 
 export const stripeSynchroniseProducts = async () => {
-    try {
-        const stripe = await initialiseClient()
+    const stripe = await initialiseClient()
 
-        const stripeProducts = await stripe.products.list()
+    const stripeProducts = await stripe.products.list({
+        expand: ["data.default_price", "data.default_price.currency_options"],
+    })
 
-        const products = await getProducts()
+    const products = await getProducts()
 
-        for (const product of products) {
-            const payload = {
-                name: product.name,
-                active: product.active,
-                description: product.description,
-                metadata: product.metadata,
-                images: product.images,
-            }
-
-            const stripeProduct = stripeProducts.data.find(
-                stripeProduct =>
-                    stripeProduct.metadata.sku === product.metadata.sku
-            )
-
-            if (stripeProduct) {
-                await stripe.products.update(stripeProduct.id, payload)
-                console.log(`Product ${product.metadata.sku} updated.`)
-            } else {
-                // await stripe.products.create(payload)
-            }
+    for (const product of products) {
+        const payload = {
+            name: product.name,
+            active: product.active,
+            description: product.description,
+            metadata: product.metadata,
+            images: product.images,
         }
 
-        console.log("Products synchronized successfully!")
-    } catch (error) {
-        console.error(error)
-        throw error
+        const stripeProduct = stripeProducts.data.find(
+            stripeProduct => stripeProduct.metadata.sku === product.metadata.sku
+        )
+
+        if (stripeProduct) {
+            await stripe.products.update(stripeProduct.id, payload)
+
+            const defaultPrice = stripeProduct.default_price as Stripe.Price
+
+            if (
+                defaultPrice.currency_options?.gbp?.unit_amount !==
+                    product.currencyOptions.gbp ||
+                defaultPrice.currency_options?.eur?.unit_amount !==
+                    product.currencyOptions.eur ||
+                defaultPrice.currency_options?.usd?.unit_amount !==
+                    product.currencyOptions.usd
+            ) {
+                const newPrice = await stripe.prices.create({
+                    product: stripeProduct.id,
+                    currency: "gbp",
+                    unit_amount: product.currencyOptions.gbp,
+                    currency_options: {
+                        eur: { unit_amount: product.currencyOptions.eur },
+                        usd: { unit_amount: product.currencyOptions.usd },
+                    },
+                    active: true,
+                })
+
+                await stripe.products.update(stripeProduct.id, {
+                    default_price: newPrice.id,
+                })
+
+                await stripe.prices.update(defaultPrice.id, { active: false })
+            }
+        } else {
+            // await stripe.products.create(payload)
+        }
     }
+
+    console.log("Products synchronized successfully!")
 }
 
 const getProducts = async (): Promise<ProductInput[]> => {
@@ -83,7 +107,7 @@ const getProducts = async (): Promise<ProductInput[]> => {
 type ProductInput = Pick<
     ProductWithMetadata,
     "name" | "description" | "metadata" | "active" | "images"
->
+> & { currencyOptions: { gbp: number; eur: number; usd: number } }
 
 const products: ProductInput[] = [
     // {
@@ -219,5 +243,10 @@ const products: ProductInput[] = [
                 },
             }),
         ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
     },
 ]

@@ -8,6 +8,8 @@ export const getAllProducts = async () => {
         withDecryption: true,
     })
 
+    console.log("Fetching products from theprintspace...")
+
     const response = await fetch(
         `${process.env.CREATIVEHUB_API_URL}/api/v1/products/query`,
         {
