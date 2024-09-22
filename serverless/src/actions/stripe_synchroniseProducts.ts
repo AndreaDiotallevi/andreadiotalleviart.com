@@ -71,35 +71,35 @@ export const stripeSynchroniseProducts = async () => {
 }
 
 const getProducts = async (): Promise<ProductInput[]> => {
-    const theprintspaceProducts = await getAllProducts()
+    // const theprintspaceProducts = await getAllProducts()
 
-    const getProductByFilename = (fileName: string) => {
-        const product = theprintspaceProducts.Data.find(
-            product => product.FileName === fileName
-        )
+    // const getProductByFilename = (fileName: string) => {
+    //     const product = theprintspaceProducts.Data.find(
+    //         product => product.FileName === fileName
+    //     )
 
-        return product
-    }
+    //     return product
+    // }
 
     return products.map(product => {
-        const theprintspaceProduct = getProductByFilename(
-            product.metadata.sku + ".png"
-        )
+        // const theprintspaceProduct = getProductByFilename(
+        //     product.metadata.sku + ".png"
+        // )
 
-        if (product.active && !theprintspaceProduct) {
-            throw new Error(
-                `No theprintspace product found for sku ${product.metadata.sku}`
-            )
-        }
+        // if (product.active && !theprintspaceProduct) {
+        //     throw new Error(
+        //         `No theprintspace product found for sku ${product.metadata.sku}`
+        //     )
+        // }
 
         return {
             ...product,
             metadata: {
                 ...product.metadata,
-                theprintspaceProductId: String(theprintspaceProduct?.Id),
-                theprintspacePrintOptionId: String(
-                    theprintspaceProduct?.PrintOptions[0].Id
-                ),
+                // theprintspaceProductId: String(theprintspaceProduct?.Id),
+                // theprintspacePrintOptionId: String(
+                //     theprintspaceProduct?.PrintOptions[0].Id
+                // ),
             },
         }
     })
