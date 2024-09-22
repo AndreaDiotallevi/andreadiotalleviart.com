@@ -36,15 +36,17 @@ export const stripeSynchroniseProducts = async () => {
 
             const defaultPrice = stripeProduct.default_price as Stripe.Price
 
-            if (
+            const defaultPriceNeedUpdating =
                 defaultPrice.currency_options?.gbp?.unit_amount !==
                     product.currencyOptions.gbp ||
                 defaultPrice.currency_options?.eur?.unit_amount !==
                     product.currencyOptions.eur ||
                 defaultPrice.currency_options?.usd?.unit_amount !==
                     product.currencyOptions.usd
-            ) {
+
+            if (defaultPriceNeedUpdating) {
                 const newPrice = await stripe.prices.create({
+                    active: true,
                     product: stripeProduct.id,
                     currency: "gbp",
                     unit_amount: product.currencyOptions.gbp,
@@ -52,7 +54,6 @@ export const stripeSynchroniseProducts = async () => {
                         eur: { unit_amount: product.currencyOptions.eur },
                         usd: { unit_amount: product.currencyOptions.usd },
                     },
-                    active: true,
                 })
 
                 await stripe.products.update(stripeProduct.id, {
