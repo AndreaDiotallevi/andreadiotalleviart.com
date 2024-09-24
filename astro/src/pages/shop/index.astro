@@ -1,20 +1,22 @@
 ---
-export const prerender = false
+// export const prerender = false
 
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 
-import { getActivePrices } from "@utils/stripe"
+import { getActivePrices, type Currency } from "@utils/stripe"
 import { formatCurrency } from "@utils/intl"
-import { getLocalCurrency } from "@utils/currency"
+// import { getLocalCurrency } from "@utils/currency"
 
 const prices = await getActivePrices()
 
-const {
-    geo: { country },
-} = Astro.locals.netlify.context
+// const {
+//     geo: { country },
+// } = Astro.locals.netlify.context
 
-const currency = getLocalCurrency(country?.name)
+// const currency = getLocalCurrency(country?.name)
+
+const currency: Currency = "gbp"
 ---
 
 <BaseLayout

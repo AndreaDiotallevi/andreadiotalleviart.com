@@ -1,13 +1,13 @@
 ---
-export const prerender = false
+// export const prerender = false
 
 import { Image } from "@unpic/astro"
 
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
 
-import { getActivePrices, type StripePrice } from "@utils/stripe"
-import { getLocalCurrency } from "@utils/currency"
+import { getActivePrices, type Currency, type StripePrice } from "@utils/stripe"
+// import { getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 
 export async function getStaticPaths() {
@@ -24,6 +24,8 @@ export async function getStaticPaths() {
 
 const { price } = Astro.props
 
+console.log(price)
+
 const sizeToDescription: Record<
     StripePrice["product"]["metadata"]["size"],
     string
@@ -33,11 +35,13 @@ const sizeToDescription: Record<
     A1: "A1 (594 x 841 mm)",
 }
 
-const {
-    geo: { country },
-} = Astro.locals.netlify.context
+// const {
+//     geo: { country },
+// } = Astro.locals.netlify.context
 
-const currency = getLocalCurrency(country?.name)
+// const currency = getLocalCurrency(country?.name)
+
+const currency: Currency = "gbp"
 ---
 
 <BaseLayout
