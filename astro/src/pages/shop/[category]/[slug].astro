@@ -24,8 +24,6 @@ export async function getStaticPaths() {
 
 const { price } = Astro.props
 
-console.log(price)
-
 const sizeToDescription: Record<
     StripePrice["product"]["metadata"]["size"],
     string
