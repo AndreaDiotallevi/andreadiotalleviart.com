@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro"
-import Moonlight from "@components/Moonlight.astro"
 ---
 
 <BaseLayout
@@ -22,13 +21,60 @@ import Moonlight from "@components/Moonlight.astro"
         <div class="flex justify-center items-center text-white h-[100px]">
             Generative Artist & Creative Coder
         </div>
-        <Moonlight server:defer>
-            <div
-                id="sketch"
-                slot="fallback"
-                class="h-[calc(100dvh-80px-80px-100px)]"
-            >
-            </div>
-        </Moonlight>
+        <div id="sketch" class="h-[calc(100dvh-80px-80px-100px)]"></div>
     </div>
 </BaseLayout>
+
+<script>
+    // @ts-nocheck
+    import p5 from "p5"
+
+    document.addEventListener("astro:page-load", async () => {
+        const sketchElement = document.getElementById("sketch")
+
+        if (!sketchElement) return
+
+        const sketch = p5 => {
+            let t = 0
+
+            p5.setup = () => {
+                p5.createCanvas(p5.windowWidth, p5.windowHeight - 260)
+                p5.stroke(255, 25)
+                p5.noFill()
+            }
+
+            p5.draw = () => {
+                if (t > 0) {
+                    p5.translate(p5.width / 2, p5.height / 2)
+                    const n = p5.noise
+                    const a = 0.48 * p5.min(p5.width, p5.height)
+                    let b = n(t) * 6
+                    let c = n(t + 60) * 6
+                    p5.line(
+                        p5.cos(b) * a,
+                        p5.sin(b) * a,
+                        p5.cos(c) * a,
+                        p5.sin(c) * a
+                    )
+                }
+                t++
+            }
+
+            p5.mouseClicked = () => {
+                if (
+                    p5.mouseX > 0 &&
+                    p5.mouseX < p5.width &&
+                    p5.mouseY > 0 &&
+                    p5.mouseY < p5.height
+                ) {
+                    p5.noiseSeed(p5.random(1000))
+                    p5.background("#38444c") // (56, 68, 76)
+                    t = 0
+                    p5.draw()
+                }
+            }
+        }
+
+        new p5(sketch, sketchElement)
+    })
+</script>
