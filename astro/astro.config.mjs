@@ -9,6 +9,7 @@ import netlify from "@astrojs/netlify"
 export default defineConfig({
     output: "hybrid",
     adapter: netlify(),
+    trailingSlash: "never",
     integrations: [tailwind()],
     experimental: { serverIslands: true },
     prefetch: { defaultStrategy: "viewport" },
