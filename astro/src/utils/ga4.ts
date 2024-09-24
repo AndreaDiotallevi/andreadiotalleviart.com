@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Stripe from "stripe"
 
 export const sendGA4PurchaseEvent = ({

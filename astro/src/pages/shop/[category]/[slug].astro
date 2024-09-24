@@ -1,4 +1,6 @@
 ---
+export const prerender = false
+
 import { Image } from "@unpic/astro"
 
 import BaseLayout from "@layouts/BaseLayout.astro"
@@ -68,7 +70,7 @@ const currency = getLocalCurrency(country?.name)
                             id={`main-image-${index}`}
                             width={1000}
                             height={1414}
-                            src={price.product.images[index]}
+                            src={src}
                             alt={price.product.name}
                             class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
                         />
@@ -105,17 +107,9 @@ const currency = getLocalCurrency(country?.name)
                         data-currency={currency}
                         class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
-                        {
-                            [price.product.metadata.size].map(size => (
-                                <option value={price.id}>
-                                    {
-                                        sizeToDescription[
-                                            price.product.metadata.size
-                                        ]
-                                    }
-                                </option>
-                            ))
-                        }
+                        <option value={price.id}>
+                            {sizeToDescription[price.product.metadata.size]}
+                        </option>
                     </select>
                     <p>The image is printed full bleed with no border.</p>
                 </div>
