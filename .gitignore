@@ -56,7 +56,7 @@ typings/
 
 # gatsby files
 .cache/
-public
+gatsby/public
 
 # Mac files
 .DS_Store
