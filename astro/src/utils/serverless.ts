@@ -6,9 +6,9 @@ export const createCheckoutSession = async (params: {
     success_url: string
     currency: Currency
 }): Promise<Stripe.Checkout.Session | null> => {
-    if (!import.meta.env.PUBLIC_API_KEY) {
-        throw new Error("The api key is undefined.")
-    }
+    // if (!import.meta.env.PUBLIC_API_KEY) {
+    //     throw new Error("The api key is undefined.")
+    // }
 
     try {
         const response = await fetch(
@@ -17,7 +17,7 @@ export const createCheckoutSession = async (params: {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
+                    // "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
                 },
                 body: JSON.stringify(params),
             },
@@ -44,9 +44,9 @@ export const createCheckoutSession = async (params: {
 export const retrieveCheckoutSession = async (params: {
     sessionId: string
 }): Promise<Stripe.Checkout.Session | null> => {
-    if (!import.meta.env.PUBLIC_API_KEY) {
-        throw new Error("The api key is undefined.")
-    }
+    // if (!import.meta.env.PUBLIC_API_KEY) {
+    //     throw new Error("The api key is undefined.")
+    // }
 
     try {
         const response = await fetch(
@@ -56,7 +56,7 @@ export const retrieveCheckoutSession = async (params: {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
+                    // "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
                 },
             },
         )
