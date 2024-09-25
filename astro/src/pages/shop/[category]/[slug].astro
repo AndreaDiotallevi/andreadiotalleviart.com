@@ -1,14 +1,11 @@
 ---
-// export const prerender = false
-
 import { Image } from "@unpic/astro"
-
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
+import LoadingSpinner from "@components/LoadingSpinner.astro"
+import LocalisedPrice from "@components/LocalisedPrice.astro"
 
-import { getActivePrices, type Currency, type StripePrice } from "@utils/stripe"
-// import { getLocalCurrency } from "@utils/currency"
-import { formatCurrency } from "@utils/intl"
+import { getActivePrices, type StripePrice } from "@utils/stripe"
 
 export async function getStaticPaths() {
     const prices = await getActivePrices()
@@ -32,14 +29,6 @@ const sizeToDescription: Record<
     A2: "A2 (420 x 594 mm)",
     A1: "A1 (594 x 841 mm)",
 }
-
-// const {
-//     geo: { country },
-// } = Astro.locals.netlify.context
-
-// const currency = getLocalCurrency(country?.name)
-
-const currency: Currency = "gbp"
 ---
 
 <BaseLayout
@@ -48,7 +37,7 @@ const currency: Currency = "gbp"
     image={price.product.images[0]}
     type="product"
     amount={(price.unit_amount / 100).toFixed(2)}
-    currency={currency}
+    currency="gbp"
     tags={[
         price.product.metadata.displayName,
         "Generative Art",
@@ -95,7 +84,7 @@ const currency: Currency = "gbp"
             </div>
         </div>
 
-        <form id="price-form" class="w-full md:w-1/2" data-currency={currency}>
+        <form id="price-form" class="w-full md:w-1/2">
             <h1 class="text-5xl font-bold mb-5">
                 {price.product.metadata.displayName}
             </h1>
@@ -106,7 +95,6 @@ const currency: Currency = "gbp"
                     <select
                         id="price-id"
                         name="price-id"
-                        data-currency={currency}
                         class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
                         <option value={price.id}>
@@ -142,7 +130,7 @@ const currency: Currency = "gbp"
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">Free shipping</h2>
                     <p>
-                        Shipping is handled by theprintspace in London through
+                        Shipping is handled by The Print Space in London through
                         First Class Tracked Mail (typically 6-10 days). This is
                         an extremely more secure option than regular post for
                         sending art prints.
@@ -150,22 +138,22 @@ const currency: Currency = "gbp"
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        No custom charges for UK-EU-US orders
+                        No custom charges for UK, EU and US orders
                     </h2>
                     <p>
-                        With production in the UK, USA & Germany, theprintspace
-                        guarantees no extra customs charges on UK-EU-US orders.
+                        With production in the UK, USA & Germany, The Print
+                        Space guarantees no extra customs charges on UK-EU-US
+                        orders.
                     </p>
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        {
-                            formatCurrency({
-                                value: price.currency_options[currency]
-                                    .unit_amount,
-                                currency,
-                            })
-                        }
+                        <LocalisedPrice
+                            server:defer
+                            priceCurrencyOptions={price.currency_options}
+                        >
+                            <LoadingSpinner slot="fallback" />
+                        </LocalisedPrice>
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>
@@ -181,8 +169,7 @@ const currency: Currency = "gbp"
 
 <script>
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
-    import { createCheckoutSession } from "@utils/serverless"
-    import type { Currency } from "@utils/stripe"
+    import { createCheckoutSession, getLocaleCurrency } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
@@ -208,14 +195,9 @@ const currency: Currency = "gbp"
             ).value
 
             const session = await createCheckoutSession({
-                line_items: [
-                    {
-                        price: priceId,
-                        quantity: 1,
-                    },
-                ],
+                line_items: [{ price: priceId, quantity: 1 }],
                 success_url: `${window.location.origin}/shop/checkout/success`,
-                currency: priceForm.dataset.currency as Currency,
+                currency: await getLocaleCurrency(),
             })
 
             if (!session) {

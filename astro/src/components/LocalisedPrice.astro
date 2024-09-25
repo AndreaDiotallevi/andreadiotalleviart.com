@@ -1,0 +1,26 @@
+---
+// import { getLocalCurrency } from "@utils/currency"
+import { formatCurrency } from "@utils/intl"
+import { getLocaleCurrency } from "@utils/serverless"
+import type { StripePrice } from "@utils/stripe"
+
+interface Props {
+    priceCurrencyOptions: StripePrice["currency_options"]
+}
+
+const { priceCurrencyOptions } = Astro.props
+const currency = await getLocaleCurrency()
+
+// const {
+//     geo: { country },
+// } = Astro.locals.netlify.context
+
+// const currency = getLocalCurrency(country?.name)
+---
+
+{
+    formatCurrency({
+        value: priceCurrencyOptions[currency].unit_amount,
+        currency,
+    })
+}
