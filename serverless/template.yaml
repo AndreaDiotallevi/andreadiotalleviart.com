@@ -383,6 +383,11 @@ Resources:
                 AllowMethods: "'*'"
                 AllowHeaders: "'*'"
                 AllowOrigin: "'*'"
+            MethodSettings:
+                - ResourcePath: "/*"
+                  HttpMethod: "*"
+                  ThrottlingBurstLimit: 100
+                  ThrottlingRateLimit: 50
 
     StripeCreateCheckoutSessionFunction:
         Type: AWS::Serverless::Function
