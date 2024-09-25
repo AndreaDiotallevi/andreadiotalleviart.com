@@ -207,31 +207,26 @@ const currency: Currency = "gbp"
                 document.getElementById("price-id") as HTMLInputElement
             ).value
 
-            try {
-                const session = await createCheckoutSession({
-                    line_items: [
-                        {
-                            price: priceId,
-                            quantity: 1,
-                        },
-                    ],
-                    success_url: `${window.location.origin}/shop/checkout/success`,
-                    currency: priceForm.dataset.currency as Currency,
-                })
+            const session = await createCheckoutSession({
+                line_items: [
+                    {
+                        price: priceId,
+                        quantity: 1,
+                    },
+                ],
+                success_url: `${window.location.origin}/shop/checkout/success`,
+                currency: priceForm.dataset.currency as Currency,
+            })
 
-                if (!session) {
-                    console.error("Failed to create session")
-                    return
-                }
-
-                sendGA4BeginCheckoutEvent({ session })
-                window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
-            } catch (error) {
-                console.error(error)
+            if (!session) {
                 errorMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
                 button.disabled = false
+                return
             }
+
+            sendGA4BeginCheckoutEvent({ session })
+            window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
         })
     })
 </script>

@@ -6,19 +6,12 @@ export const createCheckoutSession = async (params: {
     success_url: string
     currency: Currency
 }): Promise<Stripe.Checkout.Session | null> => {
-    // if (!import.meta.env.PUBLIC_API_KEY) {
-    //     throw new Error("The api key is undefined.")
-    // }
-
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL + `/stripe-create-checkout-session`,
             {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    // "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(params),
             },
         )
@@ -29,10 +22,7 @@ export const createCheckoutSession = async (params: {
             }
             return data.session
         } else {
-            console.error(
-                "Failed to create checkout session: ",
-                response.statusText,
-            )
+            console.error(JSON.stringify(response))
             return null
         }
     } catch (error) {
@@ -44,20 +34,13 @@ export const createCheckoutSession = async (params: {
 export const retrieveCheckoutSession = async (params: {
     sessionId: string
 }): Promise<Stripe.Checkout.Session | null> => {
-    // if (!import.meta.env.PUBLIC_API_KEY) {
-    //     throw new Error("The api key is undefined.")
-    // }
-
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL +
                 `/stripe-retrieve-checkout-session/${params.sessionId}`,
             {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    // "X-Api-Key": import.meta.env.PUBLIC_API_KEY,
-                },
+                headers: { "Content-Type": "application/json" },
             },
         )
 
@@ -67,10 +50,7 @@ export const retrieveCheckoutSession = async (params: {
             }
             return data.session
         } else {
-            console.error(
-                "Failed to retrieve checkout session: ",
-                response.statusText,
-            )
+            console.error(JSON.stringify(response))
             return null
         }
     } catch (error) {
@@ -80,7 +60,6 @@ export const retrieveCheckoutSession = async (params: {
 }
 
 export const getLocaleCurrency = async (): Promise<Currency> => {
-    // return "eur"
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
@@ -93,10 +72,7 @@ export const getLocaleCurrency = async (): Promise<Currency> => {
             const data = (await response.json()) as { currency: Currency }
             return data.currency
         } else {
-            console.error(
-                "Failed to get locale currency: ",
-                response.statusText,
-            )
+            console.error(JSON.stringify(response))
             return "gbp"
         }
     } catch (error) {
