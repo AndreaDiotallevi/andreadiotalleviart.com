@@ -376,6 +376,7 @@ Resources:
         Type: AWS::Serverless::Api
         Properties:
             StageName: Prod
+            OpenApiVersion: "2.0"
             Auth:
                 ApiKeyRequired: false
             Cors:
