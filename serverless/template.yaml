@@ -380,7 +380,7 @@ Resources:
                 ApiKeyRequired: false
             Cors:
                 AllowMethods: "'*'"
-                AllowHeaders: "'Content-Type, Authorization, X-Api-Key, X-Forwarded-For'"
+                AllowHeaders: "'*'"
                 AllowOrigin: "'*'"
 
     StripeCreateCheckoutSessionFunction:
