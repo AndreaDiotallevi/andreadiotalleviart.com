@@ -2,7 +2,6 @@
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
-import LoadingSpinner from "@components/LoadingSpinner.astro"
 import LocalisedPrice from "@components/LocalisedPrice.astro"
 
 import { getActivePrices, type StripePrice } from "@utils/stripe"
@@ -149,11 +148,8 @@ const sizeToDescription: Record<
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
                         <LocalisedPrice
-                            server:defer
                             priceCurrencyOptions={price.currency_options}
-                        >
-                            <LoadingSpinner slot="fallback" />
-                        </LocalisedPrice>
+                        />
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>

@@ -1,7 +1,6 @@
 ---
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
-import LoadingSpinner from "@components/LoadingSpinner.astro"
 import LocalisedPrice from "@components/LocalisedPrice.astro"
 
 import { getActivePrices } from "@utils/stripe"
@@ -54,11 +53,8 @@ const prices = await getActivePrices()
                         </h2>
                         <p class="text-lg font-medium mt-2">
                             <LocalisedPrice
-                                server:defer
                                 priceCurrencyOptions={price.currency_options}
-                            >
-                                <LoadingSpinner slot="fallback" />
-                            </LocalisedPrice>
+                            />
                         </p>
                     </a>
                 ))
