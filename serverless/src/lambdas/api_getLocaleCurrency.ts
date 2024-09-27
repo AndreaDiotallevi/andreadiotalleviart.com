@@ -22,7 +22,7 @@ export const handler = async (
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "*",
-            "Cache-Control": "public, max-age=86400", // Cache for 1 day (86400 seconds)
+            "Cache-Control": "private, max-age=86400", // Cache for 1 day (86400 seconds)
             "Content-Type": "application/json",
         },
     }
