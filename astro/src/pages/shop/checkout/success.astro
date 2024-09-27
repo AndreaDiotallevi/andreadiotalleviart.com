@@ -59,9 +59,11 @@ const success = !!(session && currency && shippingDetails && price)
                                 </h2>
                                 <p>{shippingDetails.name}</p>
                                 <p>{shippingDetails.address?.line1}</p>
-                                {shippingDetails.address?.line2
-                                    ? `<p>{shippingDetails.address?.line2}</p>`
-                                    : ""}
+                                {shippingDetails.address?.line2 ? (
+                                    <p>{shippingDetails.address?.line2}</p>
+                                ) : (
+                                    ""
+                                )}
                                 <p>{shippingDetails.address?.postal_code}</p>
                                 <p>{shippingDetails.address?.city}</p>
                                 <p>{shippingDetails.address?.country}</p>
