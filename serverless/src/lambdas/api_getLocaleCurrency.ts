@@ -19,10 +19,11 @@ export const handler = async (
         statusCode: 200,
         body: JSON.stringify({ currency: currency.toLowerCase() }),
         headers: {
-            "Access-Control-Allow-Headers":
-                "Content-Type, X-Api-Key, X-Forwarded-For",
+            "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "*",
+            "Cache-Control": "public, max-age=86400", // Cache for 1 day (86400 seconds)
+            "Content-Type": "application/json",
         },
     }
 }
