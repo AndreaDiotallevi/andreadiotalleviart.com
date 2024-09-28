@@ -3,7 +3,7 @@ import { v2 as cloudinary } from "cloudinary"
 import { initialiseClient } from "./stripe_initialiseClient"
 import { getAllProducts } from "./theprintspace_getAllProducts"
 
-import { ProductWithMetadata } from "../types/stripe"
+import { StripePrice } from "../types/stripe"
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -106,9 +106,22 @@ const getProducts = async (): Promise<ProductInput[]> => {
 }
 
 type ProductInput = Pick<
-    ProductWithMetadata,
-    "name" | "description" | "metadata" | "active" | "images"
-> & { currencyOptions: { gbp: number; eur: number; usd: number } }
+    StripePrice["product"],
+    "name" | "description" | "active" | "images"
+> & {
+    metadata: Pick<
+        StripePrice["product"]["metadata"],
+        | "category"
+        | "displayName"
+        | "displayOrder"
+        | "orientation"
+        | "size"
+        | "slug"
+        | "sku"
+    >
+} & {
+    currencyOptions: { gbp: number; eur: number; usd: number }
+}
 
 const products: ProductInput[] = [
     // {

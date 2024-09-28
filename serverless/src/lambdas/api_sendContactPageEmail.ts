@@ -32,7 +32,7 @@ export const handler = async (
         statusCode: 200,
         body: JSON.stringify("OK"),
         headers: {
-            "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
+            "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "*",
         },

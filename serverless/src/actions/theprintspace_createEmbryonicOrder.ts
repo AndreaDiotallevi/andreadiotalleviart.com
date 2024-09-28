@@ -2,7 +2,7 @@ import Stripe from "stripe"
 
 import { getParameterValue } from "./ssm_getParameterValue"
 
-import { ProductWithMetadata } from "../types/stripe"
+import { ProductWithMetadata, StripePrice } from "../types/stripe"
 import { CreateEmbryonicOrderResponse } from "../types/theprintspace"
 import { getCountryFromCountryCode } from "./theprintspace_getCountryFromCountryCode"
 
@@ -57,7 +57,7 @@ export const createEmbryonicOrder = async ({
                             theprintspaceProductId,
                             theprintspacePrintOptionId,
                         },
-                    } = item.price?.product as unknown as ProductWithMetadata
+                    } = item.price?.product as unknown as StripePrice["product"]
 
                     return {
                         ProductId: theprintspaceProductId,
