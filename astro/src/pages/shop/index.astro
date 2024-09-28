@@ -53,6 +53,8 @@ const currency = getLocalCurrency(
                             width={1000}
                             height={1414}
                             class="w-full h-auto object-contain"
+                            loading="eager"
+                            fetchpriority="high"
                         />
                         <h2 class="text-2xl font-semibold mt-4">
                             {price.product.metadata.displayName}
