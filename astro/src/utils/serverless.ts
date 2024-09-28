@@ -1,5 +1,28 @@
 import Stripe from "stripe"
-import type { Currency } from "./stripe"
+import type { Currency, StripePrice } from "./stripe"
+
+export const getStripePrices = async (): Promise<StripePrice[]> => {
+    try {
+        const response = await fetch(
+            import.meta.env.PUBLIC_API_URL + `/stripe-get-prices`,
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            },
+        )
+
+        if (response.ok) {
+            const data = (await response.json()) as {
+                prices: StripePrice[]
+            }
+            return data.prices
+        } else {
+            throw new Error(JSON.stringify(response))
+        }
+    } catch (error) {
+        throw error
+    }
+}
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
