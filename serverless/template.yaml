@@ -417,6 +417,34 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_stripeCreateCheckoutSession.ts
 
+    StripeGetPricesFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeGetPrices
+            Handler: src/lambdas/api_stripeGetPrices.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /stripe-get-prices
+                        Method: GET
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_stripeGetPrices.ts
+
     StripeRetrieveCheckoutSessionFunction:
         Type: AWS::Serverless::Function
         Properties:
