@@ -3,9 +3,9 @@ import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import LocalisedPrice from "@components/LocalisedPrice.astro"
 
-import { getActivePrices } from "@utils/stripe"
+import { getStripePrices } from "@utils/serverless"
 
-const prices = await getActivePrices()
+const prices = await getStripePrices()
 ---
 
 <BaseLayout
