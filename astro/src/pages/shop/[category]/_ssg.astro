@@ -1,21 +1,24 @@
 ---
-export const prerender = false
-
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
+import LocalisedPrice from "@components/LocalisedPrice.astro"
 
-import { getLocalCurrency } from "@utils/currency"
-import { formatCurrency } from "@utils/intl"
-import { getStripePrices } from "@utils/serverless"
-import { type StripePrice } from "@utils/stripe"
+import { getActivePrices, type StripePrice } from "@utils/stripe"
 
-const { slug } = Astro.params
-const prices = await getStripePrices()
+export async function getStaticPaths() {
+    const prices = await getActivePrices()
 
-const price = prices.filter(price => price.product.metadata.slug === slug)[0]
+    return prices.map(price => ({
+        params: {
+            slug: price.product.metadata.slug,
+            category: price.product.metadata.category,
+        },
+        props: { price },
+    }))
+}
 
-if (!price) return Astro.redirect("/404")
+const { price } = Astro.props
 
 const sizeToDescription: Record<
     StripePrice["product"]["metadata"]["size"],
@@ -25,10 +28,6 @@ const sizeToDescription: Record<
     A2: "A2 (420 x 594 mm)",
     A1: "A1 (594 x 841 mm)",
 }
-
-const currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.name
-)
 ---
 
 <BaseLayout
@@ -148,13 +147,9 @@ const currency = getLocalCurrency(
                 </div>
                 <div>
                     <h2 class="text-2xl font-semibold mb-2">
-                        {
-                            formatCurrency({
-                                value: price.currency_options[currency]
-                                    .unit_amount,
-                                currency,
-                            })
-                        }
+                        <LocalisedPrice
+                            priceCurrencyOptions={price.currency_options}
+                        />
                     </h2>
                     <p>Apply promotion codes at checkout.</p>
                 </div>

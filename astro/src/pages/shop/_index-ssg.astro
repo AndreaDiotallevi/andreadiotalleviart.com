@@ -1,17 +1,11 @@
 ---
-export const prerender = false
-
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { getStripePrices } from "@utils/serverless"
-import { getLocalCurrency } from "@utils/currency"
-import { formatCurrency } from "@utils/intl"
+import LocalisedPrice from "@components/LocalisedPrice.astro"
 
-const prices = await getStripePrices()
+import { getActivePrices } from "@utils/stripe"
 
-const currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.name
-)
+const prices = await getActivePrices()
 ---
 
 <BaseLayout
@@ -58,11 +52,9 @@ const currency = getLocalCurrency(
                             {price.product.metadata.displayName}
                         </h2>
                         <p class="text-lg font-medium mt-2">
-                            {formatCurrency({
-                                value: price.currency_options[currency]
-                                    .unit_amount,
-                                currency,
-                            })}
+                            <LocalisedPrice
+                                priceCurrencyOptions={price.currency_options}
+                            />
                         </p>
                     </a>
                 ))
