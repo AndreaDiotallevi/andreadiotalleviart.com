@@ -4,7 +4,6 @@ import { getPrices } from "../actions/stripe_getPrices"
 
 export const handler = async (): Promise<APIGatewayProxyResult> => {
     const prices = await getPrices()
-    console.log(JSON.stringify(prices))
 
     return {
         statusCode: 200,
@@ -13,6 +12,8 @@ export const handler = async (): Promise<APIGatewayProxyResult> => {
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "*",
+            // "Cache-Control": "public, max-age=120",
+            // "Content-Type": "application/json",
         },
     }
 }
