@@ -6,6 +6,7 @@ import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
 const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 interface Props {
     title: string
@@ -45,7 +46,7 @@ const {
 
         <meta name="keywords" content={tags.join(", ")} />
         {image ? <meta name="image" content={image} /> : null}
-        {amount && <link rel="canonical" href={Astro.url.href} />}
+        <link rel="canonical" href={canonicalURL} />
 
         <!-- Open Graph Meta Tags -->
         <meta property="og:url" content={Astro.url.href} />
