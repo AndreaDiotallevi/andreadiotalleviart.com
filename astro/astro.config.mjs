@@ -9,10 +9,11 @@ import netlify from "@astrojs/netlify"
 export default defineConfig({
     output: "hybrid",
     adapter: netlify(),
-    trailingSlash: "never",
+    // trailingSlash: "never",
     integrations: [tailwind()],
     experimental: { serverIslands: true },
     prefetch: { defaultStrategy: "load", prefetchAll: true },
     site: "https://www.andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
+    build: { format: "file" },
 })
