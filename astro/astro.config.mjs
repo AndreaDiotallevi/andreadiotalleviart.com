@@ -12,7 +12,7 @@ export default defineConfig({
     trailingSlash: "never",
     integrations: [tailwind()],
     experimental: { serverIslands: true },
-    prefetch: { defaultStrategy: "viewport" },
+    prefetch: { defaultStrategy: "load", prefetchAll: true },
     site: "https://www.andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
 })

@@ -38,7 +38,6 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
                     <a
                         href={`/portfolio/${artwork.slug}`}
                         class="flex flex-col no-underline text-black hover:underline"
-                        data-astro-prefetch
                     >
                         <Image
                             alt={artwork.name}

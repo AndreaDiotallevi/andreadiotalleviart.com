@@ -14,7 +14,7 @@ const { darkTheme } = Astro.props
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
         >
             <div class="text-2xl font-semibold">
-                <a href="/" data-astro-prefetch>andreadiotalleviart</a>
+                <a href="/">andreadiotalleviart</a>
             </div>
             <!-- Hamburger icon -->
             <button id="menu-toggle" class="md:hidden" aria-label="menu-toggle">
@@ -40,7 +40,6 @@ const { darkTheme } = Astro.props
                         <a
                             href="/shop"
                             class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                            data-astro-prefetch
                         >
                             shop
                         </a>
@@ -49,17 +48,17 @@ const { darkTheme } = Astro.props
                 <a
                     href="/about"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    data-astro-prefetch>about</a
+                    >about</a
                 >
                 <a
                     href="/contact"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    data-astro-prefetch>contact</a
+                    >contact</a
                 >
                 <a
                     href="/portfolio"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    data-astro-prefetch>portfolio</a
+                    >portfolio</a
                 >
             </nav>
         </div>
@@ -77,15 +76,14 @@ const { darkTheme } = Astro.props
         >
         {
             import.meta.env.CONTEXT === "production" ? null : (
-                <a href="/shop" class="mt-10 h-11" data-astro-prefetch>
+                <a href="/shop" class="mt-10 h-11">
                     Shop
                 </a>
             )
         }
-        <a href="/about" class="mt-10 h-11" data-astro-prefetch>About</a>
-        <a href="/contact" class="mt-10 h-11" data-astro-prefetch>Contact</a>
-        <a href="/portfolio" class="mt-10 h-11" data-astro-prefetch>Portfolio</a
-        >
+        <a href="/about" class="mt-10 h-11">About</a>
+        <a href="/contact" class="mt-10 h-11">Contact</a>
+        <a href="/portfolio" class="mt-10 h-11">Portfolio</a>
     </div>
 
     <main class="flex-grow">

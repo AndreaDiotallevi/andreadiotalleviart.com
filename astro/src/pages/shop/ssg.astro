@@ -39,7 +39,6 @@ const prices = await getStripePrices()
                     <a
                         href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                         class="flex flex-col no-underline text-black hover:underline"
-                        data-astro-prefetch
                     >
                         <Image
                             alt={price.product.name}
