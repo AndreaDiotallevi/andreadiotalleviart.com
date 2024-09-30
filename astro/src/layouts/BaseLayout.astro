@@ -8,6 +8,19 @@ import NavigationLayout from "./NavigationLayout.astro"
 const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
+// function removeHtmlExtension(url: string) {
+//     // Check if the URL ends with ".html"
+//     if (url.endsWith(".html")) {
+//         // Remove ".html" from the URL
+//         return url.slice(0, -5)
+//     }
+//     return url // Return the original URL if no ".html" found
+// }
+// console.log(canonicalURL)
+// canonicalURL.
+
+// const cleanedUrl = removeHtmlExtension(canonicalURL);
+
 interface Props {
     title: string
     description: string
@@ -49,7 +62,7 @@ const {
         <link rel="canonical" href={canonicalURL} />
 
         <!-- Open Graph Meta Tags -->
-        <meta property="og:url" content={Astro.url.href} />
+        <meta property="og:url" content={canonicalURL} />
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
