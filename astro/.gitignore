@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 # netlify
 .netlify/
+
+src/pages/sketches/
