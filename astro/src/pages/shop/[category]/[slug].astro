@@ -1,6 +1,9 @@
 ---
 export const prerender = false
 
+// Astro.response.headers.set("Netlify-Vary", "country=es|de");
+Astro.response.headers.set("Cache-Control", "public, max-age=120, s-maxage=120")
+
 import { Image } from "@unpic/astro"
 import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
