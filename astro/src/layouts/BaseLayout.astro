@@ -12,6 +12,9 @@ function removeHtmlExtension(url: string) {
     if (url.endsWith(".html")) {
         return url.slice(0, -5)
     }
+    if (url.endsWith("/")) {
+        return url.slice(0, -1)
+    }
     return url
 }
 
