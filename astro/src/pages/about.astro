@@ -4,6 +4,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 import { transformImage } from "@utils/cloudinary"
 
 const aboutImageSrc = transformImage("about-page-image_bldpak")
+
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400, must-revalidate"
+)
 ---
 
 <BaseLayout

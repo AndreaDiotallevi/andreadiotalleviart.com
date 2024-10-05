@@ -4,13 +4,21 @@ export const prerender = false
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { getStripePrices } from "@utils/serverless"
-import { getLocalCurrency } from "@utils/currency"
+import { combinedCountries, getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 
 const prices = await getStripePrices()
 
 const currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.name
+    Astro.locals.netlify.context.geo.country?.code
+)
+
+console.log(currency)
+
+Astro.response.headers.set("Netlify-Vary", `country=${combinedCountries}`)
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400"
 )
 ---
 

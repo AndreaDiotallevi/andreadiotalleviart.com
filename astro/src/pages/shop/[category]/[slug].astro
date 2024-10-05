@@ -1,15 +1,12 @@
 ---
 export const prerender = false
 
-// Astro.response.headers.set("Netlify-Vary", "country=es|de");
-Astro.response.headers.set("Cache-Control", "public, max-age=120, s-maxage=120")
-
 import { Image } from "@unpic/astro"
 import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
 
-import { getLocalCurrency } from "@utils/currency"
+import { getLocalCurrency, combinedCountries } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 import { getStripePrices } from "@utils/serverless"
 import { type StripePrice } from "@utils/stripe"
@@ -31,7 +28,13 @@ const sizeToDescription: Record<
 }
 
 const currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.name
+    Astro.locals.netlify.context.geo.country?.code
+)
+
+Astro.response.headers.set("Netlify-Vary", `country=${combinedCountries}`)
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400"
 )
 ---
 

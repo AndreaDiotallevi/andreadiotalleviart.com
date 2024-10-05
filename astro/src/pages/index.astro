@@ -1,5 +1,10 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro"
+
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400, must-revalidate"
+)
 ---
 
 <BaseLayout

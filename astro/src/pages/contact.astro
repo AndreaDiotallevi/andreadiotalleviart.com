@@ -5,6 +5,11 @@ import Button from "@components/Button.astro"
 import { transformImage } from "@utils/cloudinary"
 
 const contactImageSrc = transformImage("contact-page-image_dczqrw")
+
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400, must-revalidate"
+)
 ---
 
 <BaseLayout

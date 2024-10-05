@@ -8,6 +8,11 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
     ...artwork.data,
     images: artwork.data.images.map(image => transformImage(image)),
 }))
+
+Astro.response.headers.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=86400, must-revalidate"
+)
 ---
 
 <BaseLayout
