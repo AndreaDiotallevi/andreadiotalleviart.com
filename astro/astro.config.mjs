@@ -13,7 +13,7 @@ export default defineConfig({
     integrations: [
         tailwind(),
         sitemap({
-            filter: page => !page.includes("/shop"),
+            filter: page => page && !page.includes("/shop"),
         }),
     ],
     experimental: { serverIslands: true },
