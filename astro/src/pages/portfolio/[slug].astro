@@ -1,6 +1,8 @@
 ---
 import { Image } from "@unpic/astro"
+import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+
 import { getCollection } from "astro:content"
 import { transformImage } from "@utils/cloudinary"
 
@@ -32,6 +34,7 @@ const { artwork } = Astro.props
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <BackToLink href="/portfolio" text="Back to Portfolio" />
             <div class="mb-5 relative">
                 {
                     artwork.images.map((src, index) => (

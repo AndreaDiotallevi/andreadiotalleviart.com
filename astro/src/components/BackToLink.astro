@@ -1,0 +1,25 @@
+---
+interface Props {
+    href: string
+    text: string
+}
+
+const { href, text } = Astro.props
+---
+
+<a
+    href={href}
+    class="flex items-center space-x-2 mb-4 md:hidden hover:text-gray-700 transition-colors duration-300"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+    >
+        <polygon
+            points="12.718 4.707 11.305 3.292 2.585 12 11.305 20.707 12.718 19.292 6.417 13 20 13 20 11 6.416 11 12.718 4.707"
+        ></polygon>
+    </svg>
+    <span class="font-semibold">{text}</span>
+</a>
