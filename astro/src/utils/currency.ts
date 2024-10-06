@@ -44,13 +44,11 @@ const countryCodeToCurrency: Record<string, Currency> = {
     ch: "eur", // Switzerland
 }
 
-// Function to combine country codes into the desired format
 function combineCountriesByCurrency(
     countryMap: Record<string, Currency>,
 ): string {
     const currencyGroups: Record<string, string[]> = {}
 
-    // Group country codes by currency
     for (const [countryCode, currency] of Object.entries(countryMap)) {
         if (!currencyGroups[currency]) {
             currencyGroups[currency] = []
@@ -58,7 +56,6 @@ function combineCountriesByCurrency(
         currencyGroups[currency].push(countryCode)
     }
 
-    // Create the combined string
     const combinedArray = Object.entries(currencyGroups).map(
         ([currency, countries]) => {
             return countries.join("+")
@@ -68,7 +65,6 @@ function combineCountriesByCurrency(
     return combinedArray.join("|")
 }
 
-// Example usage
 export const combinedCountries = combineCountriesByCurrency(
     countryCodeToCurrency,
 )
