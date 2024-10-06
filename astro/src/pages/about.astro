@@ -7,7 +7,7 @@ const aboutImageSrc = transformImage("about-page-image_bldpak")
 
 Astro.response.headers.set(
     "Cache-Control",
-    "public, max-age=60, s-maxage=86400, must-revalidate"
+    "public, max-age=300, s-maxage=86400, must-revalidate"
 )
 ---
 

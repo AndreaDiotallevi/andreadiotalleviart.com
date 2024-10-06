@@ -34,7 +34,7 @@ const currency = getLocalCurrency(
 Astro.response.headers.set("Netlify-Vary", `country=${combinedCountries}`)
 Astro.response.headers.set(
     "Cache-Control",
-    "public, max-age=60, s-maxage=86400"
+    "public, max-age=300, s-maxage=86400, must-revalidate"
 )
 ---
 
