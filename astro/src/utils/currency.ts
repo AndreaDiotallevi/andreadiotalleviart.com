@@ -73,10 +73,10 @@ export const combinedCountries = combineCountriesByCurrency(
     countryCodeToCurrency,
 )
 
-// console.log(combinedCountries)
 // Output: "gb+im+je+gg|us|at+be+bg+cy+cz+de+dk+ee+es+fi+fr+gr+hr+hu+ie+it+lt+lu+lv+mt+nl+pl+pt+ro+se+si+sk+no+is+li+ch"
 
 export const getLocalCurrency = (countryCode?: string): Currency => {
-    console.log("Country code: ", countryCode)
-    return countryCodeToCurrency[countryCode || ""] || "gbp"
+    return (
+        countryCodeToCurrency[countryCode?.toLocaleLowerCase() || ""] || "gbp"
+    )
 }

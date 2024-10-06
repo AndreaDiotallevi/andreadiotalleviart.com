@@ -27,6 +27,9 @@ const sizeToDescription: Record<
     A1: "A1 (594 x 841 mm)",
 }
 
+console.log(Astro.url.href)
+console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+
 const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
 )

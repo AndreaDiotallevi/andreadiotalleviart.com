@@ -9,6 +9,9 @@ import { formatCurrency } from "@utils/intl"
 
 const prices = await getStripePrices()
 
+console.log(Astro.url.href)
+console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+
 const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
 )
