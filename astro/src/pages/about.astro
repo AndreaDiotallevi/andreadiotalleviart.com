@@ -6,8 +6,12 @@ import { transformImage } from "@utils/cloudinary"
 const aboutImageSrc = transformImage("about-page-image_bldpak")
 
 Astro.response.headers.set(
-    "Cache-Control",
-    "public, max-age=300, s-maxage=86400, must-revalidate"
+    "cache-control",
+    "public, max-age=120, must-revalidate"
+)
+Astro.response.headers.set(
+    "netlify-cdn-cache-control",
+    "public, durable, s-maxage=31536000"
 )
 ---
 
