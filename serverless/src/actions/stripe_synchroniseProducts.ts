@@ -256,6 +256,12 @@ const products: ProductInput[] = [
                     format: "auto",
                 },
             }),
+            cloudinary.url("A116-flames_voptyx", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
         ],
         currencyOptions: {
             gbp: 6500,
