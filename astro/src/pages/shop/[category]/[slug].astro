@@ -34,15 +34,15 @@ const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
 )
 
-Astro.response.headers.set(
-    "cache-control",
-    "public, max-age=120, must-revalidate"
-)
-Astro.response.headers.set(
-    "netlify-cdn-cache-control",
-    "public, durable, s-maxage=31536000"
-)
-Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
+// Astro.response.headers.set(
+//     "cache-control",
+//     "public, max-age=120, must-revalidate"
+// )
+// Astro.response.headers.set(
+//     "netlify-cdn-cache-control",
+//     "public, durable, s-maxage=31536000"
+// )
+// Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 ---
 
 <BaseLayout
