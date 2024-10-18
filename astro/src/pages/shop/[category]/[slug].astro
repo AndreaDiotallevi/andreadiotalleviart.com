@@ -199,6 +199,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 <script>
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
     import { createCheckoutSession, getLocaleCurrency } from "@utils/serverless"
+    import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
@@ -237,8 +238,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             }
 
             sendGA4BeginCheckoutEvent({ session })
-            window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
-            spinner.classList.add("hidden")
+            navigate(`/shop/checkout?clientSecret=${session.client_secret}`)
         })
     })
 </script>
