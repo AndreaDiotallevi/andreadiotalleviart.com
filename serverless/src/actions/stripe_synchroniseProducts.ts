@@ -13,12 +13,15 @@ export const stripeSynchroniseProducts = async () => {
     const stripe = await initialiseClient()
 
     const stripeProducts = await stripe.products.list({
+        active: true,
         expand: ["data.default_price", "data.default_price.currency_options"],
     })
 
     const products = await getProducts()
 
     for (const product of products) {
+        console.log("Input product: ", product.metadata.sku)
+
         const payload = {
             name: product.name,
             active: product.active,
@@ -28,10 +31,12 @@ export const stripeSynchroniseProducts = async () => {
         }
 
         const stripeProduct = stripeProducts.data.find(
-            stripeProduct => stripeProduct.metadata.sku === product.metadata.sku
+            p => product.metadata.sku === p.metadata.sku
         )
 
         if (stripeProduct) {
+            console.log("Updating existing product...")
+
             await stripe.products.update(stripeProduct.id, payload)
 
             const defaultPrice = stripeProduct.default_price as Stripe.Price
@@ -63,11 +68,23 @@ export const stripeSynchroniseProducts = async () => {
                 await stripe.prices.update(defaultPrice.id, { active: false })
             }
         } else {
-            // await stripe.products.create(payload)
+            console.log("Creating new product...")
+
+            const res = await stripe.products.create({
+                ...payload,
+                default_price_data: {
+                    currency: "gbp",
+                    unit_amount: product.currencyOptions.gbp,
+                    currency_options: {
+                        eur: { unit_amount: product.currencyOptions.eur },
+                        usd: { unit_amount: product.currencyOptions.usd },
+                    },
+                },
+            })
         }
     }
 
-    console.log("Products synchronized successfully!")
+    console.log("Products synchronized successfully")
 }
 
 const getProducts = async (): Promise<ProductInput[]> => {
@@ -82,14 +99,16 @@ const getProducts = async (): Promise<ProductInput[]> => {
     }
 
     return products.map(product => {
-        const theprintspaceProduct = getProductByFilename(
+        let theprintspaceProduct = getProductByFilename(
             product.metadata.sku + ".png"
         )
 
         if (product.active && !theprintspaceProduct) {
-            throw new Error(
-                `No theprintspace product found for sku ${product.metadata.sku}`
-            )
+            if (process.env.ENVIRONMENT === "production") {
+                throw new Error(
+                    `No theprintspace product found for sku ${product.metadata.sku}`
+                )
+            }
         }
 
         return {
@@ -214,21 +233,46 @@ const products: ProductInput[] = [
     //         sku: "print-marbleLake-A2",
     //     },
     // },
-    // {
-    //     active: false,
-    //     name: "Marble Lake - A3 Giclée Fine Art Print",
-    //     description:
-    //         "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Marble Lake",
-    //         displayOrder: "2",
-    //         orientation: "portrait",
-    //         size: "A3",
-    //         slug: "marble-lake",
-    //         sku: "print-marbleLake-A3",
-    //     },
-    // },
+    {
+        active: true,
+        name: "Marble Lake - A3 Giclée Fine Art Print",
+        description:
+            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Marble Lake",
+            displayOrder: "2",
+            orientation: "portrait",
+            size: "A3",
+            slug: "marble-lake",
+            sku: "print-marbleLake-A3",
+        },
+        images: [
+            cloudinary.url("marble-lake_WEB_MOCKUP_WITHOUT_BORDER_b4p8fc", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("marble-lake_WEB_WITHOUT_BORDER_k9tcgo", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("A116-marble-lake_nmaccx", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+        ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
+    },
     {
         active: true,
         name: "Flames - A3 Giclée Fine Art Print",
