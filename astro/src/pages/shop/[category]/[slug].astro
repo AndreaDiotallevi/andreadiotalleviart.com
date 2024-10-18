@@ -97,7 +97,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                             width={1000}
                             height={1414}
                             alt={`Thumbnail ${index + 1}`}
-                            class={`w-full h-auto cursor-pointer border border-white border-dashed`}
+                            class={`w-full h-auto cursor-pointer`}
                         />
                     ))
                 }
@@ -244,7 +244,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
         if (!mainImages.length || !thumbnails.length) return
 
         let selectedThumbnail = thumbnails[0]
-        selectedThumbnail.classList.replace("border-white", "border-black")
+        // selectedThumbnail.classList.replace("border-white", "border-black")
 
         thumbnails.forEach((thumbnail, index) => {
             thumbnail.addEventListener("click", () => {
@@ -256,11 +256,11 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                     }
                 })
 
-                selectedThumbnail.classList.replace(
-                    "border-black",
-                    "border-white"
-                )
-                thumbnail.classList.replace("border-white", "border-black")
+                // selectedThumbnail.classList.replace(
+                //     "border-black",
+                //     "border-white"
+                // )
+                // thumbnail.classList.replace("border-white", "border-black")
                 selectedThumbnail = thumbnail
             })
         })
