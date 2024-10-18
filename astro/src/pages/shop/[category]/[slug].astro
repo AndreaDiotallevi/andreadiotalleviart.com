@@ -120,7 +120,13 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                         class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
                         <option value={price.id}>
-                            {sizeToDescription[price.product.metadata.size]}
+                            {sizeToDescription[price.product.metadata.size]} - {
+                                formatCurrency({
+                                    value: price.currency_options[currency]
+                                        .unit_amount,
+                                    currency,
+                                })
+                            }
                         </option>
                     </select>
                     <p>The image is printed full bleed with no border.</p>
