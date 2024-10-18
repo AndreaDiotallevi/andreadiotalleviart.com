@@ -487,6 +487,7 @@ Resources:
                         Method: POST
             Environment:
                 Variables:
+                    ENVIRONMENT: !Ref Environment
                     IMAGES_DOMAIN: "{{resolve:ssm:IMAGES_DOMAIN}}"
                     CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
                     CLOUDINARY_CLOUD_NAME: "{{resolve:ssm:CLOUDINARY_CLOUD_NAME}}"
