@@ -21,6 +21,7 @@ export const getAllProducts = async () => {
         }
     )
 
+    console.log("Fetch response: ", response)
     const data = (await response.json()) as GetAllProductsResponse
     console.log("GetAllProductsResponse: ", JSON.stringify(data))
 
