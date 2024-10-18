@@ -10,7 +10,9 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 </BaseLayout>
 
 <script>
-    import { loadStripe } from "@stripe/stripe-js"
+    import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
+
+    let checkout: StripeEmbeddedCheckout | undefined
 
     document.addEventListener("astro:page-load", async () => {
         const checkoutElement = document.getElementById("checkout")
@@ -24,7 +26,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
         const params = new URLSearchParams(window.location.search)
         const clientSecret = params.get("clientSecret") || ""
 
-        const checkout = await stripe?.initEmbeddedCheckout({
+        if (checkout) {
+            checkout.destroy()
+        }
+
+        checkout = await stripe?.initEmbeddedCheckout({
             clientSecret,
         })
 
