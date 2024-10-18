@@ -203,10 +203,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
-        console.log(priceForm)
 
         if (!priceForm) return
-        console.log("yes price form")
 
         const button = document.querySelector(
             "#submit-button"
