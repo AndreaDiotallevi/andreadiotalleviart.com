@@ -238,6 +238,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 
             sendGA4BeginCheckoutEvent({ session })
             window.location.href = `/shop/checkout?clientSecret=${session.client_secret}`
+            spinner.classList.add("hidden")
         })
     })
 </script>
