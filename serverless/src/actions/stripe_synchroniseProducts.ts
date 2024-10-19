@@ -313,4 +313,44 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
+    {
+        active: true,
+        name: "Fire Drops - A3 Giclée Fine Art Print",
+        description:
+            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Fire Drops",
+            displayOrder: "1",
+            orientation: "portrait",
+            size: "A3",
+            slug: "fire-drops",
+            sku: "print-fireDrops-A3",
+        },
+        images: [
+            cloudinary.url("fire-drops_WEB_MOCKUP_jph627", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("fire-drops_WEB_WITHOUT_BORDER_iffuzy", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("fire-drops_WEB_PAPER_jxmx4m", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+        ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
+    },
 ]
