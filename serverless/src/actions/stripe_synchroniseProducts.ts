@@ -211,7 +211,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Marble Lake",
-            displayOrder: "2",
+            displayOrder: "1",
             orientation: "portrait",
             size: "A3",
             slug: "marble-lake",
@@ -251,7 +251,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Flames",
-            displayOrder: "1",
+            displayOrder: "2",
             orientation: "portrait",
             size: "A3",
             slug: "flames",
@@ -283,46 +283,46 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
-    {
-        active: true,
-        name: "Fire Drops - A3 Giclée Fine Art Print",
-        description:
-            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-        metadata: {
-            category: "prints",
-            displayName: "Fire Drops",
-            displayOrder: "1",
-            orientation: "portrait",
-            size: "A3",
-            slug: "fire-drops",
-            sku: "print-fireDrops-A3",
-        },
-        images: [
-            cloudinary.url("fire-drops_WEB_MOCKUP_jph627", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("fire-drops_WEB_WITHOUT_BORDER_iffuzy", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("fire-drops_WEB_PAPER_jxmx4m", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-        ],
-        currencyOptions: {
-            gbp: 6500,
-            eur: 8000,
-            usd: 9000,
-        },
-    },
+    // {
+    //     active: false,
+    //     name: "Fire Drops - A3 Giclée Fine Art Print",
+    //     description:
+    //         "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+    //     metadata: {
+    //         category: "prints",
+    //         displayName: "Fire Drops",
+    //         displayOrder: "1",
+    //         orientation: "portrait",
+    //         size: "A3",
+    //         slug: "fire-drops",
+    //         sku: "print-fireDrops-A3",
+    //     },
+    //     images: [
+    //         cloudinary.url("fire-drops_WEB_MOCKUP_jph627", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //         cloudinary.url("fire-drops_WEB_WITHOUT_BORDER_iffuzy", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //         cloudinary.url("fire-drops_WEB_PAPER_jxmx4m", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //     ],
+    //     currencyOptions: {
+    //         gbp: 6500,
+    //         eur: 8000,
+    //         usd: 9000,
+    //     },
+    // },
     {
         active: true,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
@@ -331,7 +331,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
-            displayOrder: "1",
+            displayOrder: "3",
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-2",
@@ -351,6 +351,46 @@ const products: ProductInput[] = [
                 },
             }),
             cloudinary.url("moonlight-2_WEB_PAPER_jzx3xu", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+        ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
+    },
+    {
+        active: true,
+        name: "Skylines 3 - A3 Giclée Fine Art Print",
+        description:
+            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Skylines 3",
+            displayOrder: "4",
+            orientation: "portrait",
+            size: "A3",
+            slug: "skylines-3",
+            sku: "print-skylines3-A3",
+        },
+        images: [
+            cloudinary.url("skylines3-MOCKUP_esw32k", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("skylines3_WEB_jzpzpg", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("skylines3_PAPER_rrbmy8", {
                 transformation: {
                     quality: "auto",
                     format: "auto",
