@@ -57,7 +57,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                 prices.map(price => (
                     <a
                         href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                        class="flex flex-col no-underline text-black hover:underline"
+                        class="flex flex-col no-underline text-black hover:opacity-70 transition-opacity duration-300"
                     >
                         <Image
                             alt={price.product.name}
