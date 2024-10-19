@@ -175,36 +175,6 @@ const products: ProductInput[] = [
     // },
     // {
     //     active: false,
-    //     name: "Moonlight 2 - A2 Giclée Fine Art Print",
-    //     description:
-    //         "A2 420 x 594 mm (16.5 x 23.4 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Moonlight 2",
-    //         displayOrder: "4",
-    //         orientation: "portrait",
-    //         size: "A2",
-    //         slug: "moonlight-2",
-    //         sku: "print-moonlight2-A2",
-    //     },
-    // },
-    // {
-    //     active: false,
-    //     name: "Moonlight 2 - A3 Giclée Fine Art Print",
-    //     description:
-    //         "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Moonlight 2",
-    //         displayOrder: "4",
-    //         orientation: "portrait",
-    //         size: "A3",
-    //         slug: "moonlight-2",
-    //         sku: "print-moonlight2-A3",
-    //     },
-    // },
-    // {
-    //     active: false,
     //     name: "Marble Lake - A1 Giclée Fine Art Print",
     //     description:
     //         "A1 594 x 841 mm (23.4 x 33.1 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
@@ -355,32 +325,32 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Sandstorm - A3 Giclée Fine Art Print",
+        name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
             "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Sandstorm",
+            displayName: "Moonlight 2",
             displayOrder: "1",
             orientation: "portrait",
             size: "A3",
-            slug: "sandstorm",
-            sku: "print-sandstorm-A3",
+            slug: "moonlight-2",
+            sku: "print-moonlight2-A3",
         },
         images: [
-            cloudinary.url("sandstorm-MOCKUP_p9i0qf", {
+            cloudinary.url("moonlight-2_WEB_MOCKUP_WITHOUT_BORDER_aenrjl", {
                 transformation: {
                     quality: "auto",
                     format: "auto",
                 },
             }),
-            cloudinary.url("sandstorm_WEB_fsmoen", {
+            cloudinary.url("moonlight-2_WEB_WITHOUT_BORDER_sh02uz", {
                 transformation: {
                     quality: "auto",
                     format: "auto",
                 },
             }),
-            cloudinary.url("sandstorm_WEB_PAPER_jqunah", {
+            cloudinary.url("moonlight-2_WEB_PAPER_jzx3xu", {
                 transformation: {
                     quality: "auto",
                     format: "auto",
