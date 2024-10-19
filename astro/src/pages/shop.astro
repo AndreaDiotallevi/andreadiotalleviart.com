@@ -52,34 +52,40 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             </p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="grid grid-cols-2 gap-4 md:gap-6">
             {
-                prices.map(price => (
-                    <a
-                        href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                        class="flex flex-col no-underline text-black hover:opacity-70 transition-opacity duration-300"
-                    >
-                        <Image
-                            alt={price.product.name}
-                            src={price.product.images[0]}
-                            width={1000}
-                            height={1414}
-                            class="w-full h-auto object-contain"
-                            loading="eager"
-                            fetchpriority="high"
-                        />
-                        <h2 class="text-2xl font-semibold mt-4">
-                            {price.product.metadata.displayName}
-                        </h2>
-                        <p class="text-lg font-medium mt-1">
-                            {formatCurrency({
-                                value: price.currency_options[currency]
-                                    .unit_amount,
-                                currency,
-                            })}
-                        </p>
-                    </a>
-                ))
+                prices
+                    .sort(
+                        (a, b) =>
+                            parseInt(a.product.metadata.displayOrder) -
+                            parseInt(b.product.metadata.displayOrder)
+                    )
+                    .map(price => (
+                        <a
+                            href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                            class="flex flex-col no-underline text-black hover:opacity-70 transition-opacity duration-300"
+                        >
+                            <Image
+                                alt={price.product.name}
+                                src={price.product.images[0]}
+                                width={1000}
+                                height={1414}
+                                class="w-full h-auto object-contain"
+                                loading="eager"
+                                fetchpriority="high"
+                            />
+                            <h2 class="text-2xl font-semibold mt-4">
+                                {price.product.metadata.displayName}
+                            </h2>
+                            <p class="text-lg font-medium mt-1">
+                                {formatCurrency({
+                                    value: price.currency_options[currency]
+                                        .unit_amount,
+                                    currency,
+                                })}
+                            </p>
+                        </a>
+                    ))
             }
         </div>
     </div>
