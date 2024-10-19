@@ -79,8 +79,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                     price.product.images.map((src, index) => (
                         <Image
                             id={`main-image-${index}`}
-                            width={1000}
-                            height={1414}
+                            width={734}
+                            height={1038}
                             src={src}
                             alt={price.product.name}
                             class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
@@ -94,8 +94,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                         <Image
                             id={`thumbnail-${index}`}
                             src={img}
-                            width={500}
-                            height={707}
+                            width={172}
+                            height={243}
                             alt={`Thumbnail ${index + 1}`}
                             class={`w-full h-auto cursor-pointer`}
                         />
