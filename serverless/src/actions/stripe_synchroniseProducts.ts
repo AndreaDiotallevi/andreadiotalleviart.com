@@ -353,4 +353,44 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
+    {
+        active: true,
+        name: "Sandstorm - A3 Giclée Fine Art Print",
+        description:
+            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Sandstorm",
+            displayOrder: "1",
+            orientation: "portrait",
+            size: "A3",
+            slug: "sandstorm",
+            sku: "print-sandstorm-A3",
+        },
+        images: [
+            cloudinary.url("sandstorm-MOCKUP_p9i0qf", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("sandstorm_WEB_fsmoen", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("sandstorm_WEB_PAPER_jqunah", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+        ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
+    },
 ]
