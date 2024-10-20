@@ -42,11 +42,13 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
         "Hahnemühle photo rag",
     ]}
 >
-    <div class="max-w-screen-xl mx-auto px-4 py-8">
+    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
         <div class="text-center mb-8">
-            <h1 class="text-5xl font-bold mb-6">Shop</h1>
+            <h1 class="text-4xl md:text-5xl font-semibold mb-4 md:mb-6">
+                Shop
+            </h1>
             <p class="max-w-[600px] mx-auto">
-                Museum-quality fine art prints on premium 100% cotton paper with
+                Museum quality fine art prints on premium 100% cotton paper with
                 an organic feel, delivered sustainably with carbon-neutral free
                 shipping
             </p>
@@ -74,7 +76,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                                 loading="eager"
                                 fetchpriority="high"
                             />
-                            <h2 class="md:text-2xl font-bold mt-4">
+                            <h2 class="md:text-2xl font-semibold mt-4">
                                 {price.product.metadata.displayName}
                             </h2>
                             <p class="md:text-lg md:mt-1">
