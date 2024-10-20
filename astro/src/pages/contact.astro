@@ -23,9 +23,12 @@ Astro.response.headers.set(
     tags={["Contact"]}
 >
     <div
-        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <h1 class="text-center text-4xl font-semibold mb-8 md:hidden">
+                Contact
+            </h1>
             <Image
                 src={contactImageSrc}
                 alt="Contact Image"
@@ -36,7 +39,7 @@ Astro.response.headers.set(
         </div>
 
         <div class="w-full md:w-1/2">
-            <h1 class="text-5xl font-semibold mb-5">Contact</h1>
+            <h1 class="text-5xl font-semibold mb-6 hidden md:block">Contact</h1>
             <form id="contact-form" class="space-y-4">
                 <div>
                     <label for="name" class="block text-lg font-medium mb-1"

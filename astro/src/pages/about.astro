@@ -22,20 +22,23 @@ Astro.response.headers.set(
     tags={["About"]}
 >
     <div
-        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 max-w-screen-xl mx-auto"
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <h1 class="text-center text-4xl font-semibold mb-8 md:hidden">
+                About
+            </h1>
             <Image
                 src={aboutImageSrc}
                 alt="About Image"
                 class="w-full h-auto"
-                width={640}
-                height={640}
+                width={735}
+                height={735}
             />
         </div>
 
         <div class="w-full md:w-1/2">
-            <h1 class="text-5xl font-semibold mb-5">About</h1>
+            <h1 class="text-5xl font-semibold mb-6 hidden md:block">About</h1>
             <p class="mb-4">
                 My name is Andrea Diotallevi. I am a generative artist and
                 creative coder based in London.

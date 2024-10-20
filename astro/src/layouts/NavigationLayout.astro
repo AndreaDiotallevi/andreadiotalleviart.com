@@ -68,7 +68,7 @@ const { darkTheme } = Astro.props
     <!-- Fullscreen mobile menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg-[#38444c] text-white flex flex-col items-center pt-20 px-5 text-5xl hidden z-50"
+        class="fixed inset-0 bg-[#38444c] text-white flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
     >
         <button
             id="menu-close"
@@ -77,14 +77,14 @@ const { darkTheme } = Astro.props
         >
         {
             import.meta.env.CONTEXT === "production" ? null : (
-                <a href="/shop" class="mt-10 h-11">
+                <a href="/shop" class="mb-6">
                     Shop
                 </a>
             )
         }
-        <a href="/about" class="mt-10 h-11">About</a>
-        <a href="/contact" class="mt-10 h-11">Contact</a>
-        <a href="/portfolio" class="mt-10 h-11">Portfolio</a>
+        <a href="/about" class="mb-6">About</a>
+        <a href="/contact" class="mb-6">Contact</a>
+        <a href="/portfolio" class="mb-6">Portfolio</a>
     </div>
 
     <main class="flex-grow">
