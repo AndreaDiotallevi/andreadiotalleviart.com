@@ -76,7 +76,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                                 fetchpriority="high"
                             />
                             <h2 class="md:text-2xl font-semibold mt-4">
-                                {price.product.metadata.displayName}
+                                {`${price.product.metadata.displayName} (${price.product.metadata.size})`}
                             </h2>
                             <p class="md:text-lg md:mt-1">
                                 {formatCurrency({
