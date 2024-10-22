@@ -256,7 +256,6 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
         if (!mainImages.length || !thumbnails.length) return
 
         let selectedThumbnail = thumbnails[0]
-        // selectedThumbnail.classList.replace("border-white", "border-black")
 
         thumbnails.forEach((thumbnail, index) => {
             thumbnail.addEventListener("click", () => {
@@ -268,11 +267,6 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                     }
                 })
 
-                // selectedThumbnail.classList.replace(
-                //     "border-black",
-                //     "border-white"
-                // )
-                // thumbnail.classList.replace("border-white", "border-black")
                 selectedThumbnail = thumbnail
             })
         })
