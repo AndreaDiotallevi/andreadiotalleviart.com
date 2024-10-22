@@ -13,9 +13,8 @@ const session = await retrieveCheckoutSession({ sessionId })
 
 const currency = session?.currency
 const shippingDetails = session?.shipping_details
-const price = session?.line_items?.data[0].price as unknown as StripePrice
 
-const success = !!(session && currency && shippingDetails && price)
+const success = !!(session && currency && shippingDetails)
 ---
 
 <BaseLayout
@@ -35,7 +34,10 @@ const success = !!(session && currency && shippingDetails && price)
                             Thanks for your order!
                         </h1>
                         <Image
-                            src={price.product.images[0]}
+                            src={
+                                session.line_items?.data[0].price?.product
+                                    .images[0]
+                            }
                             alt="Product Image"
                             class="w-full h-auto hidden md:block"
                             width={1000}
@@ -81,10 +83,23 @@ const success = !!(session && currency && shippingDetails && price)
                                 <h2 class="text-xl font-semibold mb-2">
                                     Items
                                 </h2>
-                                <p>
-                                    {price.product.metadata.displayName} -{" "}
-                                    {price.product.description}
-                                </p>
+                                <ol class="list-none">
+                                    {session.line_items?.data.map(item => {
+                                        const price =
+                                            item.price as unknown as StripePrice
+
+                                        return (
+                                            <li>
+                                                {item.quantity} x{" "}
+                                                {
+                                                    price.product.metadata
+                                                        .displayName
+                                                }{" "}
+                                                - {price.product.description}
+                                            </li>
+                                        )
+                                    })}
+                                </ol>
                             </div>
                             <div>
                                 <h2 class="text-xl font-semibold mb-2">
