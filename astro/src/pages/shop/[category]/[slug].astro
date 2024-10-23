@@ -117,6 +117,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                     <select
                         id="price-id"
                         name="price-id"
+                        data-currency={currency}
                         class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2"
                     >
                         <option value={price.id}>
@@ -201,7 +202,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 
 <script>
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
-    import { createCheckoutSession, getLocaleCurrency } from "@utils/serverless"
+    import { createCheckoutSession } from "@utils/serverless"
+    import type { Currency } from "@utils/stripe"
     import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
@@ -223,14 +225,17 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             spinner.classList.remove("hidden")
             errorMessage.classList.add("hidden")
 
-            const priceId = (
-                document.getElementById("price-id") as HTMLInputElement
-            ).value
+            const priceIdElement = document.getElementById(
+                "price-id"
+            ) as HTMLInputElement
+
+            const priceId = priceIdElement.value
+            const currency = priceIdElement.dataset.currency as Currency
 
             const session = await createCheckoutSession({
                 line_items: [{ price: priceId, quantity: 1 }],
                 success_url: `${window.location.origin}/shop/checkout/success`,
-                currency: await getLocaleCurrency(),
+                currency,
             })
 
             if (!session) {

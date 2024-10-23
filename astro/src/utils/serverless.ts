@@ -82,24 +82,24 @@ export const retrieveCheckoutSession = async (params: {
     }
 }
 
-export const getLocaleCurrency = async (): Promise<Currency> => {
-    try {
-        const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
-            {
-                method: "GET",
-            },
-        )
+// export const getLocaleCurrency = async (): Promise<Currency> => {
+//     try {
+//         const response = await fetch(
+//             import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
+//             {
+//                 method: "GET",
+//             },
+//         )
 
-        if (response.ok) {
-            const data = (await response.json()) as { currency: Currency }
-            return data.currency
-        } else {
-            console.error(JSON.stringify(response))
-            return "gbp"
-        }
-    } catch (error) {
-        console.error(error)
-        return "gbp"
-    }
-}
+//         if (response.ok) {
+//             const data = (await response.json()) as { currency: Currency }
+//             return data.currency
+//         } else {
+//             console.error(JSON.stringify(response))
+//             return "gbp"
+//         }
+//     } catch (error) {
+//         console.error(error)
+//         return "gbp"
+//     }
+// }
