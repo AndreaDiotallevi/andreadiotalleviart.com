@@ -8,7 +8,7 @@ const { darkTheme } = Astro.props
 
 <div class="flex flex-col min-h-[100dvh]">
     <header
-        class={`fixed top-0 left-0 right-0 flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"} z-50 bg-opacity-70 backdrop-blur-md`}
+        class={`fixed top-0 left-0 right-0 flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black bg-opacity-70 backdrop-blur-md"} z-50`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
@@ -35,31 +35,31 @@ const { darkTheme } = Astro.props
             </button>
 
             <!-- Links for larger screens -->
-            <nav class="hidden md:flex space-x-6">
+            <nav class="hidden md:flex space-x-7">
                 {
                     import.meta.env.CONTEXT === "production" ? null : (
                         <a
                             href="/shop"
                             class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
                         >
-                            shop
+                            Shop
                         </a>
                     )
                 }
                 <a
                     href="/about"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    >about</a
+                    >About</a
                 >
                 <a
                     href="/contact"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    >contact</a
+                    >Contact</a
                 >
                 <a
                     href="/portfolio"
                     class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
-                    >portfolio</a
+                    >Portfolio</a
                 >
             </nav>
         </div>
