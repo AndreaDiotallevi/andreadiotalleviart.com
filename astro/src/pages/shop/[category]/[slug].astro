@@ -192,7 +192,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                 </div>
                 <Button
                     id="submit-button"
-                    buttonText="Continue to checkout"
+                    buttonText="Add to cart"
                     errorMessage="There was an error creating your session. Please try again."
                 />
             </div>
@@ -201,10 +201,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 </BaseLayout>
 
 <script>
-    import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
-    import { createCheckoutSession } from "@utils/serverless"
     import type { Currency } from "@utils/stripe"
-    import { navigate } from "astro:transitions/client"
+    import { addToCart } from "@scripts/cart"
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
@@ -232,21 +230,17 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             const priceId = priceIdElement.value
             const currency = priceIdElement.dataset.currency as Currency
 
-            const session = await createCheckoutSession({
-                line_items: [{ price: priceId, quantity: 1 }],
-                success_url: `${window.location.origin}/shop/checkout/success`,
-                currency,
-            })
+            const response = await addToCart({ priceId, currency })
 
-            if (!session) {
+            if (response?.error) {
                 errorMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
                 button.disabled = false
                 return
             }
 
-            sendGA4BeginCheckoutEvent({ session })
-            navigate(`/shop/checkout?clientSecret=${session.client_secret}`)
+            // sendGA4BeginCheckoutEvent({ session })
+
             spinner.classList.add("hidden")
             button.disabled = false
         })
