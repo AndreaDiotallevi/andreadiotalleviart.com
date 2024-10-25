@@ -83,7 +83,7 @@ const success = !!(session && currency && shippingDetails)
                                 <h2 class="text-xl font-semibold mb-2">
                                     Items
                                 </h2>
-                                <ol class="list-none">
+                                <ol class="list-none space-y-2">
                                     {session.line_items?.data.map(item => {
                                         const price =
                                             item.price as unknown as StripePrice
