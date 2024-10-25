@@ -12,6 +12,7 @@ export const retrieveCheckoutSession = async (params: {
             expand: [
                 "line_items",
                 "line_items.data.price.product",
+                "line_items.data.price.currency_options",
                 "customer",
                 "invoice",
                 "invoice.charge",
