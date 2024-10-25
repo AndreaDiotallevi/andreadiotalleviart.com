@@ -22,6 +22,11 @@ export const createCheckoutSession = async (params: {
             shipping_address_collection: { allowed_countries: countriesArray },
             shipping_options: [],
             currency,
+            expand: [
+                "line_items",
+                // "line_items.data.price.product",
+                // "line_items.data.price.currency_options",
+            ],
         })
 
         return {
