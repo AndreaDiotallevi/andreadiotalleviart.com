@@ -153,6 +153,10 @@ const success = !!(session && currency && shippingDetails)
 <script>
     import type Stripe from "stripe"
     import { sendGA4PurchaseEvent } from "@utils/ga4"
+    import {
+        removeCartTotalQuantity,
+        removeSessionId,
+    } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", async () => {
         const successPageContent = document.getElementById(
@@ -167,6 +171,8 @@ const success = !!(session && currency && shippingDetails)
 
         if (session) {
             sendGA4PurchaseEvent({ session })
+            removeSessionId()
+            removeCartTotalQuantity()
         }
     })
 </script>
