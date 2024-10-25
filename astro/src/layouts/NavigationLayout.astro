@@ -1,4 +1,6 @@
 ---
+import ShoppingCart from "@components/ShoppingCart.astro"
+
 interface Props {
     darkTheme?: boolean
 }
@@ -18,24 +20,67 @@ const { darkTheme } = Astro.props
             >
                 <a href="/">andreadiotalleviart</a>
             </div>
-            <!-- Hamburger icon -->
-            <button id="menu-toggle" class="md:hidden" aria-label="menu-toggle">
-                <svg
-                    class="w-11 h-11"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+            <div class="flex items-center">
+                {
+                    import.meta.env.CONTEXT === "production" ? null : (
+                        <a
+                            id="cart-link-mobile"
+                            href="/cart"
+                            class="flex items-center md:hidden pr-6"
+                        >
+                            <ShoppingCart />
+                            <span id="cart-items-mobile" class="font-semibold">
+                                (0)
+                            </span>
+                        </a>
+                    )
+                }
+                <!-- Hamburger icon -->
+                <button
+                    id="menu-toggle"
+                    class="md:hidden"
+                    aria-label="menu-toggle"
                 >
-                    <path
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
+                    <svg
+                        class="w-11 h-11"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
 
             <!-- Links for larger screens -->
             <nav class="hidden md:flex space-x-7">
+                {
+                    import.meta.env.CONTEXT === "production" ? null : (
+                        <a
+                            id="cart-link-desktop"
+                            href="/cart"
+                            class="flex items-center"
+                        >
+                            <>
+                                <span
+                                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-700"} transition-colors duration-300`}
+                                >
+                                    Cart
+                                </span>
+                                <span
+                                    id="cart-items-desktop"
+                                    class="font-semibold pl-1"
+                                >
+                                    (0)
+                                </span>
+                            </>
+                        </a>
+                    )
+                }
                 {
                     import.meta.env.CONTEXT === "production" ? null : (
                         <a
@@ -175,6 +220,32 @@ const { darkTheme } = Astro.props
         menuClose.addEventListener("click", () => {
             mobileMenu.classList.add("hidden")
             document.body.style.overflow = "auto" // Enable scrolling
+        })
+    })
+</script>
+
+<script>
+    import { getSessionId, getCartTotalQuantity } from "@utils/localStorage"
+
+    document.addEventListener("astro:page-load", () => {
+        const cartLinks = document.querySelectorAll(
+            '[id^="cart-link-"]'
+        ) as NodeListOf<HTMLAnchorElement>
+
+        const cartItems = document.querySelectorAll(
+            '[id^="cart-items-"]'
+        ) as NodeListOf<HTMLAnchorElement>
+
+        if (!cartLinks.length || !cartItems.length) return
+
+        cartLinks.forEach(link => {
+            const sessionId = getSessionId()
+            link.setAttribute("href", `/cart?session_id=${sessionId}`)
+        })
+
+        cartItems.forEach(async item => {
+            const cartTotalQuantity = getCartTotalQuantity()
+            item.innerHTML = `(${cartTotalQuantity})`
         })
     })
 </script>
