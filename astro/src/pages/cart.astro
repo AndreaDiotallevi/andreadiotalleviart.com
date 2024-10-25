@@ -1,0 +1,214 @@
+---
+export const prerender = false
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { Image } from "@unpic/astro"
+
+import { formatCurrency } from "@utils/intl"
+import { retrieveCheckoutSession } from "@utils/serverless"
+import type { Currency, StripePrice } from "@utils/stripe"
+
+const sessionId = Astro.url.searchParams.get("session_id") || ""
+const session = await retrieveCheckoutSession({ sessionId })
+const currency = session?.currency as Currency
+---
+
+<BaseLayout
+    title="Cart | Andrea Diotallevi Art"
+    description="Your shopping cart."
+>
+    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
+        {
+            session ? (
+                <>
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-5xl font-semibold mb-4 md:mb-6">
+                            Cart
+                        </h1>
+                    </div>
+                    <table class="min-w-full">
+                        <thead class="md:text-2xl">
+                            <tr>
+                                <th class="py-4 pr-8 text-left font-semibold">
+                                    Item
+                                </th>
+                                <th class="hidden mb:block py-4 px-8 text-left font-semibold">
+                                    Price
+                                </th>
+                                <th class="py-4 px-8 text-center font-semibold">
+                                    Quantity
+                                </th>
+                                <th class="py-4 pl-8 text-right font-semibold">
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y md:text-xl">
+                            {session.line_items?.data.map(item => {
+                                const price =
+                                    item.price as unknown as StripePrice
+
+                                return (
+                                    <tr>
+                                        <td class="py-4 pr-2 md:pr-8 flex items-center">
+                                            <Image
+                                                alt={
+                                                    price.product.metadata
+                                                        .displayName
+                                                }
+                                                src={price.product.images[0]}
+                                                width={70}
+                                                height={99}
+                                                class="w-full h-auto object-contain"
+                                                loading="eager"
+                                                fetchpriority="high"
+                                            />
+                                            <span class="hidden md:block pl-4">
+                                                {
+                                                    price.product.metadata
+                                                        .displayName
+                                                }
+                                                <span class="hidden md:block text-base pt-2">
+                                                    {price.product.description}
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="py-4 px-2 md:px-8 hidden mb:block">
+                                            {formatCurrency({
+                                                value: price.currency_options[
+                                                    currency
+                                                ].unit_amount,
+                                                currency,
+                                            })}
+                                        </td>
+                                        <td class="py-4 px-2 md:px-8 text-center">
+                                            <div class="border border-slate-700 rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
+                                                <button
+                                                    class="flex items-center justify-center text-4xl w-12 h-12"
+                                                    data-price-id={price.id}
+                                                    data-currency={currency}
+                                                    id={`remove-from-cart-${price.id}`}
+                                                >
+                                                    -
+                                                </button>
+                                                <p class="min-w-[48px] flex items-center justify-center border-x border-slate-400">
+                                                    {item.quantity}
+                                                </p>
+                                                <button
+                                                    class="flex items-center justify-center text-4xl w-12 h-12"
+                                                    data-price-id={price.id}
+                                                    data-currency={currency}
+                                                    id={`add-to-cart-${price.id}`}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="text-right py-4 pl-2 md:pl-8">
+                                            {formatCurrency({
+                                                value: item.amount_total,
+                                                currency,
+                                            })}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                    <div class="flex justify-end mb-8">
+                        <table class="md:text-xl">
+                            <tbody>
+                                <tr>
+                                    <td>Subtotal</td>
+                                    <td class="text-right pl-16 py-2">
+                                        {formatCurrency({
+                                            value: session.amount_subtotal!,
+                                            currency,
+                                        })}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping</td>
+                                    <td class="text-right pl-16 py-2">Free</td>
+                                </tr>
+                                <tr>
+                                    <td>Discounts</td>
+                                    <td class="text-right pl-16 py-2">
+                                        {formatCurrency({
+                                            value: session.total_details
+                                                ?.amount_discount!,
+                                            currency,
+                                        })}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-semibold">Total</td>
+                                    <td class="text-right pl-16 py-2 font-semibold">
+                                        {formatCurrency({
+                                            value: session.amount_total!,
+                                            currency,
+                                        })}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <a
+                            href="/shop"
+                            class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:bg-black hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
+                        >
+                            Continue shopping
+                        </a>
+                        <a
+                            href={`/shop/checkout?clientSecret=${session.client_secret}`}
+                            class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold max-w-lg transition-colors duration-300"
+                        >
+                            Continue to checkout
+                        </a>
+                    </div>
+                </>
+            ) : (
+                <p class="font-semibold min-h-[48px] border border-red-600 rounded-md bg-red-100 text-red-800 flex items-center px-4 py-2">
+                    There was an error retrieving your session. Please try
+                    refreshing the page.
+                </p>
+            )
+        }
+    </div>
+</BaseLayout>
+
+<script>
+    import { addToCart, removeFromCart } from "@scripts/cart"
+    import type { Currency } from "@utils/stripe"
+
+    document.addEventListener("astro:page-load", async () => {
+        const addToCartButtons = document.querySelectorAll(
+            '[id^="add-to-cart-"]'
+        ) as NodeListOf<HTMLButtonElement>
+
+        const removeFromCartButtons = document.querySelectorAll(
+            '[id^="remove-from-cart-"]'
+        ) as NodeListOf<HTMLButtonElement>
+
+        if (!addToCartButtons.length || !removeFromCartButtons.length) return
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", async e => {
+                e.preventDefault()
+                const priceId = button.dataset.priceId as string
+                const currency = button.dataset.currency as Currency
+                addToCart({ priceId, currency })
+            })
+        })
+
+        removeFromCartButtons.forEach(button => {
+            button.addEventListener("click", async e => {
+                e.preventDefault()
+                const priceId = button.dataset.priceId as string
+                const currency = button.dataset.currency as Currency
+                removeFromCart({ priceId, currency })
+            })
+        })
+    })
+</script>
