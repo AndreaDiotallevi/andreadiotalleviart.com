@@ -6,6 +6,8 @@ import {
 } from "@utils/serverless"
 import {
     getSessionId,
+    removeCartTotalQuantity,
+    removeSessionId,
     setOrUpdateCartTotalQuantity,
     setOrUpdateSessionId,
 } from "@utils/localStorage"
@@ -96,6 +98,13 @@ export const removeFromCart = async ({
             return
         }
     } else {
+        return
+    }
+
+    if (lineItems.filter(item => item.quantity).length === 0) {
+        removeSessionId()
+        removeCartTotalQuantity()
+        navigate(`/cart`)
         return
     }
 
