@@ -23,30 +23,14 @@ const success = !!(session && currency && shippingDetails)
 >
     <div
         id="success-page-content"
-        class="flex flex-col md:flex-row items-center md:items-start justify-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
+        class="max-w-screen-sm mx-auto px-4 py-8 pt-0 md:pt-8"
         data-session={JSON.stringify(session)}
     >
         {
             success ? (
                 <>
-                    <div class="w-full md:w-1/2 mb-4 md:mb-0 md:mr-8">
-                        <h1 class="text-4xl font-semibold md:hidden">
-                            Thanks for your order!
-                        </h1>
-                        <Image
-                            src={
-                                session.line_items?.data[0].price?.product
-                                    .images[0]
-                            }
-                            alt="Product Image"
-                            class="w-full h-auto hidden md:block"
-                            width={1000}
-                            height={1414}
-                        />
-                    </div>
-
-                    <div class="w-full md:w-1/2">
-                        <h1 class="text-5xl font-semibold mb-6 hidden md:block">
+                    <div class="w-full">
+                        <h1 class="text-4xl md:text-5xl font-semibold mb-4 md:mb-6">
                             Thanks for your order
                         </h1>
                         <div class="space-y-6">
@@ -89,13 +73,26 @@ const success = !!(session && currency && shippingDetails)
                                             item.price as unknown as StripePrice
 
                                         return (
-                                            <li>
-                                                {item.quantity} x{" "}
-                                                {
-                                                    price.product.metadata
-                                                        .displayName
-                                                }{" "}
-                                                - {price.product.description}
+                                            <li class="flex mb-4">
+                                                <Image
+                                                    alt={price.product.name}
+                                                    src={
+                                                        price.product.images[0]
+                                                    }
+                                                    width={60}
+                                                    height={85}
+                                                    loading="eager"
+                                                    fetchpriority="high"
+                                                />
+                                                <p class="pl-4">
+                                                    {item.quantity} x{" "}
+                                                    {
+                                                        price.product.metadata
+                                                            .displayName
+                                                    }{" "}
+                                                    -{" "}
+                                                    {price.product.description}
+                                                </p>
                                             </li>
                                         )
                                     })}
