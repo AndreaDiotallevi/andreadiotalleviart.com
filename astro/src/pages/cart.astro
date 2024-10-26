@@ -80,18 +80,25 @@ if (sessionId) {
                                 return (
                                     <tr>
                                         <td class="py-4 pr-2 md:pr-8 flex items-center">
-                                            <Image
-                                                alt={
-                                                    price.product.metadata
-                                                        .displayName
-                                                }
-                                                src={price.product.images[0]}
-                                                width={70}
-                                                height={99}
-                                                class="w-full h-auto object-contain"
-                                                loading="eager"
-                                                fetchpriority="high"
-                                            />
+                                            <a
+                                                href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                                                class="min-w-[70px] hover:opacity-70 transition-opacity duration-300"
+                                            >
+                                                <Image
+                                                    alt={
+                                                        price.product.metadata
+                                                            .displayName
+                                                    }
+                                                    src={
+                                                        price.product.images[0]
+                                                    }
+                                                    width={70}
+                                                    height={99}
+                                                    class="w-full h-auto object-contain"
+                                                    loading="eager"
+                                                    fetchpriority="high"
+                                                />
+                                            </a>
                                             <span class="hidden md:block pl-4">
                                                 {
                                                     price.product.metadata
