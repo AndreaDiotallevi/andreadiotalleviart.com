@@ -257,7 +257,7 @@ const { darkTheme } = Astro.props
 
         cartItems.forEach(async item => {
             const cartTotalQuantity = getCartTotalQuantity()
-            item.innerHTML = `(${cartTotalQuantity})`
+            item.textContent = `(${cartTotalQuantity})`
         })
     })
 </script>
