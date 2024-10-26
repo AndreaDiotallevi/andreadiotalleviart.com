@@ -1,6 +1,7 @@
 ---
 export const prerender = false
 
+import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
 import { getLocalCurrency } from "@utils/currency"
@@ -125,9 +126,10 @@ if (sessionId) {
                                                     data-currency={currency}
                                                     id={`remove-from-cart-${price.id}`}
                                                 >
-                                                    -
+                                                    <span class="pb-1">-</span>
+                                                    <LoadingSpinner />
                                                 </button>
-                                                <p class="min-w-[48px] flex items-center justify-center border-x border-slate-400">
+                                                <p class="min-w-12 flex items-center justify-center border-x border-slate-400">
                                                     {item.quantity}
                                                 </p>
                                                 <button
@@ -136,7 +138,8 @@ if (sessionId) {
                                                     data-currency={currency}
                                                     id={`add-to-cart-${price.id}`}
                                                 >
-                                                    +
+                                                    <span class="pb-1">+</span>
+                                                    <LoadingSpinner />
                                                 </button>
                                             </div>
                                         </td>
@@ -234,6 +237,13 @@ if (sessionId) {
         addToCartButtons.forEach(button => {
             button.addEventListener("click", async e => {
                 e.preventDefault()
+
+                button.querySelector("span")?.classList.add("hidden")
+
+                button
+                    .querySelector("#loading-spinner")
+                    ?.classList.remove("hidden")
+
                 const priceId = button.dataset.priceId as string
                 const currency = button.dataset.currency as Currency
                 addToCart({ priceId, currency })
@@ -243,6 +253,13 @@ if (sessionId) {
         removeFromCartButtons.forEach(button => {
             button.addEventListener("click", async e => {
                 e.preventDefault()
+
+                button.querySelector("span")?.classList.add("hidden")
+
+                button
+                    .querySelector("#loading-spinner")
+                    ?.classList.remove("hidden")
+
                 const priceId = button.dataset.priceId as string
                 const currency = button.dataset.currency as Currency
                 removeFromCart({ priceId, currency })
