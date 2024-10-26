@@ -58,16 +58,16 @@ if (sessionId) {
                     <table class="min-w-full">
                         <thead class="md:text-2xl">
                             <tr>
-                                <th class="py-4 pr-8 text-left font-semibold">
+                                <th class="pr-8 text-left font-semibold">
                                     Item
                                 </th>
-                                <th class="hidden md:table-cell py-4 px-8 text-left font-semibold">
+                                <th class="hidden md:table-cell px-8 text-left font-semibold">
                                     Price
                                 </th>
-                                <th class="py-4 px-8 text-center font-semibold">
+                                <th class="px-8 text-center font-semibold">
                                     Quantity
                                 </th>
-                                <th class="py-4 pl-8 text-right font-semibold">
+                                <th class="pl-8 text-right font-semibold">
                                     Total
                                 </th>
                             </tr>
@@ -156,7 +156,7 @@ if (sessionId) {
                             <tbody>
                                 <tr>
                                     <td>Subtotal</td>
-                                    <td class="text-right pl-16 py-2">
+                                    <td class="text-right py-1 min-w-36">
                                         {formatCurrency({
                                             value: session.amount_subtotal!,
                                             currency,
@@ -165,11 +165,13 @@ if (sessionId) {
                                 </tr>
                                 <tr>
                                     <td>Shipping</td>
-                                    <td class="text-right pl-16 py-2">Free</td>
+                                    <td class="text-right py-1 min-w-36">
+                                        Free
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Discounts</td>
-                                    <td class="text-right pl-16 py-2">
+                                    <td class="text-right py-1 min-w-36">
                                         {formatCurrency({
                                             value: session.total_details
                                                 ?.amount_discount!,
@@ -179,7 +181,7 @@ if (sessionId) {
                                 </tr>
                                 <tr>
                                     <td class="font-semibold">Total</td>
-                                    <td class="text-right pl-16 py-2 font-semibold">
+                                    <td class="text-right py-1 min-w-36 font-semibold">
                                         {formatCurrency({
                                             value: session.amount_total!,
                                             currency,
@@ -189,7 +191,7 @@ if (sessionId) {
                             </tbody>
                         </table>
                     </div>
-                    <div class="flex flex-col items-end">
+                    <div class="flex flex-col items-center md:items-end">
                         <a
                             href="/shop"
                             class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:bg-black hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
