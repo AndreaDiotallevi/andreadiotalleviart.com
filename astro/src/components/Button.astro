@@ -37,24 +37,16 @@ const { id, buttonText, errorMessage, successMessage } = Astro.props
     <span id="button-text" class="font-semibold">{buttonText}</span>
 </button>
 
-{
-    errorMessage ? (
-        <p
-            id="error-message"
-            class="hidden font-semibold min-h-[48px] border border-red-600 rounded-md bg-red-100 text-red-800 flex items-center px-4 py-2"
-        >
-            {errorMessage}
-        </p>
-    ) : null
-}
+<p
+    id="error-message"
+    class="hidden font-semibold min-h-[48px] border border-red-600 rounded-md bg-red-100 text-red-800 flex items-center px-4 py-2"
+>
+    {errorMessage}
+</p>
 
-{
-    successMessage ? (
-        <p
-            id="success-message"
-            class="hidden font-semibold min-h-[48px] border border-green-600 rounded-md bg-green-100 text-green-800 flex items-center px-4 py-2"
-        >
-            {successMessage}
-        </p>
-    ) : null
-}
+<p
+    id="success-message"
+    class="hidden font-semibold min-h-[48px] border border-green-600 rounded-md bg-green-100 text-green-800 flex items-center px-4 py-2"
+>
+    {successMessage}
+</p>
