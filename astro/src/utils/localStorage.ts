@@ -1,34 +1,36 @@
-const sessionIdKey = "andreadiotalleviart:sessionId"
+import type Stripe from "stripe"
 
-export const setOrUpdateSessionId = ({ sessionId }: { sessionId: string }) => {
-    localStorage.setItem(sessionIdKey, sessionId)
-}
+// const sessionIdKey = "andreadiotalleviart:sessionId"
 
-export const getSessionId = () => {
-    return localStorage.getItem(sessionIdKey)
-}
+// export const setOrUpdateSessionId = ({ sessionId }: { sessionId: string }) => {
+//     localStorage.setItem(sessionIdKey, sessionId)
+// }
 
-export const removeSessionId = () => {
-    localStorage.removeItem(sessionIdKey)
-}
+// export const getSessionId = () => {
+//     return localStorage.getItem(sessionIdKey)
+// }
 
-const cartTotalQuantityKey = "andreadiotalleviart:cartTotalQuantity"
+// export const removeSessionId = () => {
+//     localStorage.removeItem(sessionIdKey)
+// }
 
-export const setOrUpdateCartTotalQuantity = ({
-    quantity,
-}: {
-    quantity: number
-}) => {
-    localStorage.setItem(cartTotalQuantityKey, `${quantity}`)
-}
+// const cartTotalQuantityKey = "andreadiotalleviart:cartTotalQuantity"
 
-export const getCartTotalQuantity = () => {
-    return parseInt(localStorage.getItem(cartTotalQuantityKey) || "0")
-}
+// export const setOrUpdateCartTotalQuantity = ({
+//     quantity,
+// }: {
+//     quantity: number
+// }) => {
+//     localStorage.setItem(cartTotalQuantityKey, `${quantity}`)
+// }
 
-export const removeCartTotalQuantity = () => {
-    localStorage.removeItem(cartTotalQuantityKey)
-}
+// export const getCartTotalQuantity = () => {
+//     return parseInt(localStorage.getItem(cartTotalQuantityKey) || "0")
+// }
+
+// export const removeCartTotalQuantity = () => {
+//     localStorage.removeItem(cartTotalQuantityKey)
+// }
 
 // export const setOrUpdateLineItems = ({
 //     lineItems,
@@ -66,3 +68,43 @@ export const removeCartTotalQuantity = () => {
 
 //     localStorage.setItem(lineItemsKey, JSON.stringify(lineItems))
 // }
+
+const clientSessionKey = "andreadiotalleviart"
+
+interface ClientSession {
+    totalQuantity: number
+    lineItems: { price: string; quantity: number }[]
+    sessionId: string
+}
+
+export const getClientSession = (): ClientSession => {
+    const str = localStorage.getItem(clientSessionKey)
+
+    if (!str) {
+        return { totalQuantity: 0, lineItems: [], sessionId: "" }
+    }
+
+    return JSON.parse(str) as ClientSession
+}
+
+export const updateClientSession = (session: Stripe.Checkout.Session) => {
+    const clientSession = {
+        sessionId: session.id,
+        totalQuantity:
+            session.line_items?.data.reduce(
+                (total, item) => total + item.quantity!,
+                0,
+            ) || 0,
+        lineItems:
+            session.line_items?.data.map(item => ({
+                price: item.price?.id!,
+                quantity: item.quantity!,
+            })) || [],
+    }
+
+    localStorage.setItem(clientSessionKey, JSON.stringify(clientSession))
+}
+
+export const clearClientSession = () => {
+    localStorage.removeItem(clientSessionKey)
+}

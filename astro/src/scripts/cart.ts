@@ -1,15 +1,8 @@
-import type Stripe from "stripe"
-
+import { createCheckoutSession } from "@utils/serverless"
 import {
-    createCheckoutSession,
-    retrieveCheckoutSession,
-} from "@utils/serverless"
-import {
-    getSessionId,
-    removeCartTotalQuantity,
-    removeSessionId,
-    setOrUpdateCartTotalQuantity,
-    setOrUpdateSessionId,
+    clearClientSession,
+    getClientSession,
+    updateClientSession,
 } from "@utils/localStorage"
 import { navigate } from "astro:transitions/client"
 import type { Currency } from "@utils/stripe"
@@ -21,49 +14,33 @@ export const addToCart = async ({
     priceId: string
     currency: Currency
 }) => {
-    let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = []
+    const { sessionId, lineItems } = getClientSession()
 
-    const sessionId = getSessionId()
+    let newLineItems: typeof lineItems = []
 
     if (sessionId) {
-        const currentSession = await retrieveCheckoutSession({
-            sessionId,
-        })
-
-        const currentLineItems = currentSession?.line_items?.data.map(item => ({
-            price: item.price?.id || "",
-            quantity: item.quantity || 1,
-        }))!
-
-        if (currentLineItems.find(item => item.price === priceId)) {
-            lineItems = currentLineItems.map(item => ({
+        if (lineItems.find(item => item.price === priceId)) {
+            newLineItems = lineItems.map(item => ({
                 price: item.price,
                 quantity:
                     item.price === priceId ? item.quantity + 1 : item.quantity,
             }))
         } else {
-            lineItems = [...currentLineItems, { price: priceId, quantity: 1 }]
+            newLineItems = [...lineItems, { price: priceId, quantity: 1 }]
         }
     } else {
-        lineItems = [{ price: priceId, quantity: 1 }]
+        newLineItems = [{ price: priceId, quantity: 1 }]
     }
 
     const session = await createCheckoutSession({
-        line_items: lineItems,
+        line_items: newLineItems,
         success_url: `${window.location.origin}/shop/checkout/success`,
         currency,
     })
 
     if (!session) return { error: true }
 
-    setOrUpdateCartTotalQuantity({
-        quantity:
-            session.line_items?.data.reduce(
-                (total, item) => total + item.quantity!,
-                0,
-            ) || 0,
-    })
-    setOrUpdateSessionId({ sessionId: session.id })
+    updateClientSession(session)
     navigate(`/cart?session_id=${session.id}`)
 }
 
@@ -74,22 +51,13 @@ export const removeFromCart = async ({
     priceId: string
     currency: Currency
 }) => {
-    let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = []
+    const { sessionId, lineItems } = getClientSession()
 
-    const sessionId = getSessionId()
+    let newLineItems: typeof lineItems = []
 
     if (sessionId) {
-        const currentSession = await retrieveCheckoutSession({
-            sessionId,
-        })
-
-        const currentLineItems = currentSession?.line_items?.data.map(item => ({
-            price: item.price?.id || "",
-            quantity: item.quantity || 1,
-        }))!
-
-        if (currentLineItems.find(item => item.price === priceId)) {
-            lineItems = currentLineItems.map(item => ({
+        if (lineItems.find(item => item.price === priceId)) {
+            newLineItems = lineItems.map(item => ({
                 price: item.price,
                 quantity:
                     item.price === priceId ? item.quantity - 1 : item.quantity,
@@ -101,28 +69,20 @@ export const removeFromCart = async ({
         return
     }
 
-    if (lineItems.filter(item => item.quantity).length === 0) {
-        removeSessionId()
-        removeCartTotalQuantity()
+    if (newLineItems.filter(item => item.quantity).length === 0) {
+        clearClientSession()
         navigate(`/cart`)
         return
     }
 
     const session = await createCheckoutSession({
-        line_items: lineItems.filter(item => item.quantity! > 0),
+        line_items: newLineItems.filter(item => item.quantity! > 0),
         success_url: `${window.location.origin}/shop/checkout/success`,
         currency,
     })
 
     if (!session) return
 
-    setOrUpdateCartTotalQuantity({
-        quantity:
-            session.line_items?.data.reduce(
-                (total, item) => total + item.quantity!,
-                0,
-            ) || 0,
-    })
-    setOrUpdateSessionId({ sessionId: session.id })
+    updateClientSession(session)
     navigate(`/cart?session_id=${session.id}`)
 }

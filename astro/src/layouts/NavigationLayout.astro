@@ -225,17 +225,11 @@ const { darkTheme } = Astro.props
 </script>
 
 <script>
-    import {
-        getSessionId,
-        getCartTotalQuantity,
-        removeCartTotalQuantity,
-        removeSessionId,
-    } from "@utils/localStorage"
+    import { clearClientSession, getClientSession } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", () => {
         if (window.location.pathname === "/shop/checkout/success") {
-            removeSessionId()
-            removeCartTotalQuantity()
+            clearClientSession()
             return
         }
 
@@ -249,15 +243,15 @@ const { darkTheme } = Astro.props
 
         if (!cartLinks.length || !cartItems.length) return
 
+        const { sessionId, totalQuantity } = getClientSession()
+
         cartLinks.forEach(link => {
-            const sessionId = getSessionId()
             sessionId &&
                 link.setAttribute("href", `/cart?session_id=${sessionId}`)
         })
 
         cartItems.forEach(async item => {
-            const cartTotalQuantity = getCartTotalQuantity()
-            item.textContent = `(${cartTotalQuantity})`
+            item.textContent = `(${totalQuantity})`
         })
     })
 </script>
