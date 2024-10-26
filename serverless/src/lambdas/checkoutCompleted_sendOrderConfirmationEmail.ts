@@ -5,6 +5,7 @@ import { sendEmail } from "../actions/ses_sendEmail"
 import { getParameterValue } from "../actions/ssm_getParameterValue"
 import { retrieveCheckoutSession } from "../actions/stripe_retrieveCheckoutSession"
 import { formatCurrency } from "../actions/intl_formatCurrency"
+import { StripePrice } from "../types/stripe"
 
 export const handler = async (event: SQSEvent): Promise<void> => {
     try {
@@ -39,12 +40,10 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                 throw new Error("No shipping address")
             }
 
-            const product = session.line_items?.data[0].price?.product as
-                | Stripe.Product
-                | undefined
+            const items = session.line_items?.data
 
-            if (!product) {
-                throw new Error("No product")
+            if (!items?.length) {
+                throw new Error("No items")
             }
 
             const invoice = session.invoice as Stripe.Invoice | null
@@ -69,9 +68,6 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     town: address.city || "",
                     country: address.country || "",
                     paymentMethod: "Card",
-                    productDisplayName: product.metadata.displayName || "",
-                    productDescription: product.description || "",
-                    productImageSource: product.images[0] || "",
                     itemQuantity: session.line_items?.data[0].quantity || "",
                     amountSubtotal: formatCurrency({
                         value: session.amount_subtotal!,
@@ -86,6 +82,17 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                         currency: session.currency,
                     }),
                     receiptPdf: charge?.receipt_url?.replace("?", "/pdf?"),
+                    item: items.map(item => {
+                        const product = item.price
+                            ?.product as unknown as StripePrice["product"]
+
+                        return {
+                            displayName: product.metadata.displayName,
+                            description: product.description,
+                            imageSource: product.images[0],
+                            quantity: item.quantity,
+                        }
+                    }),
                 }),
             })
         }

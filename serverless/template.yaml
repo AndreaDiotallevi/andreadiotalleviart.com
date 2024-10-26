@@ -273,10 +273,20 @@ Resources:
                             <p>Thanks for your order!</p>
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
                             <h3>Items</h3>
-                            <div>
-                                {{productDisplayName}} {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
-                            </div>
+                            <table>
+                                <tbody>
+                                    {{#each item}}
+                                        <tr style="margin-bottom: 8px;">
+                                            <td width="20%">
+                                                <img src="{{imageSource}}" alt="{{displayName}}" style="width: 100%; height: auto;">
+                                            </td>
+                                            <td width="80%" style="vertical-align: top; padding-left: 12px;">
+                                                {{quantity}} x {{displayName}} - {{description}}
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
                             <h3>Delivery address</h3>
                             <div>
                                 {{name}}<br>
