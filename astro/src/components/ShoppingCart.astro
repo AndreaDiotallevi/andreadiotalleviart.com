@@ -1,5 +1,13 @@
+---
+interface Props {
+    darkTheme?: boolean
+}
+
+const { darkTheme } = Astro.props
+---
+
 <svg
-    fill="#000000"
+    fill={darkTheme ? "#ffffff" : "#000000"}
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     viewBox="0 0 902.86 902.86"
