@@ -225,9 +225,20 @@ const { darkTheme } = Astro.props
 </script>
 
 <script>
-    import { getSessionId, getCartTotalQuantity } from "@utils/localStorage"
+    import {
+        getSessionId,
+        getCartTotalQuantity,
+        removeCartTotalQuantity,
+        removeSessionId,
+    } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", () => {
+        if (window.location.pathname === "/shop/checkout/success") {
+            removeSessionId()
+            removeCartTotalQuantity()
+            return
+        }
+
         const cartLinks = document.querySelectorAll(
             '[id^="cart-link-"]'
         ) as NodeListOf<HTMLAnchorElement>
