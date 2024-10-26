@@ -240,7 +240,8 @@ const { darkTheme } = Astro.props
 
         cartLinks.forEach(link => {
             const sessionId = getSessionId()
-            link.setAttribute("href", `/cart?session_id=${sessionId}`)
+            sessionId &&
+                link.setAttribute("href", `/cart?session_id=${sessionId}`)
         })
 
         cartItems.forEach(async item => {
