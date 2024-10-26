@@ -317,7 +317,7 @@ Resources:
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Thanks for your order!"
+                SubjectPart: "Thanks for your order"
 
     OrderShippedEmailTemplate:
         Type: AWS::SES::Template
