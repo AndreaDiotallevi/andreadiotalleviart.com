@@ -24,7 +24,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
         )
 
         const params = new URLSearchParams(window.location.search)
-        const clientSecret = params.get("clientSecret") || ""
+        const clientSecret = params.get("client_secret") || ""
 
         if (checkout) {
             checkout.destroy()
