@@ -1,32 +1,40 @@
 import Stripe from "stripe"
 
 import { initialiseClient } from "./stripe_initialiseClient"
+import { retrievePromotionCode } from "./stripe_retrievePromotionCode"
 
 export const createCheckoutSession = async (params: {
-    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    line_items: Stripe.Checkout.SessionCreateParams["line_items"]
     success_url: string
     currency: string
+    promotion_code?: string
 }) => {
     try {
         const stripe = await initialiseClient()
 
-        const { line_items, success_url, currency } = params
+        const { line_items, success_url, currency, promotion_code } = params
+
+        let promotionCode: Stripe.PromotionCode | null = null
+
+        if (promotion_code) {
+            promotionCode = await retrievePromotionCode({
+                code: promotion_code,
+            })
+        }
 
         const session = await stripe.checkout.sessions.create({
+            expand: ["line_items"],
             ui_mode: "embedded",
             mode: "payment",
             return_url: `${success_url}?session_id={CHECKOUT_SESSION_ID}`,
             line_items,
-            allow_promotion_codes: true,
             invoice_creation: { enabled: true },
             shipping_address_collection: { allowed_countries: countriesArray },
             shipping_options: [],
             currency,
-            expand: [
-                "line_items",
-                // "line_items.data.price.product",
-                // "line_items.data.price.currency_options",
-            ],
+            discounts: promotionCode
+                ? [{ promotion_code: promotionCode.id }]
+                : undefined,
         })
 
         return {

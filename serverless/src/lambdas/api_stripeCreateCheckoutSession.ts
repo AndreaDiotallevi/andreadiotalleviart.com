@@ -6,11 +6,9 @@ import { createCheckoutSession } from "../actions/stripe_createCheckoutSession"
 export const handler = async (
     event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-    const {
-        line_items,
-        success_url,
-        currency = "gbp",
-    } = JSON.parse(event.body as string) as Stripe.Checkout.SessionCreateParams
+    const { line_items, success_url, currency, promotion_code } = JSON.parse(
+        event.body as string
+    ) as Stripe.Checkout.SessionCreateParams & { promotion_code?: string }
 
     if (!line_items) {
         throw new Error("No line items")
@@ -20,10 +18,15 @@ export const handler = async (
         throw new Error("No success url")
     }
 
+    if (!currency) {
+        throw new Error("No currency")
+    }
+
     const { session } = await createCheckoutSession({
         line_items,
         success_url,
-        currency: currency,
+        currency,
+        promotion_code,
     })
 
     console.log(JSON.stringify(session))
