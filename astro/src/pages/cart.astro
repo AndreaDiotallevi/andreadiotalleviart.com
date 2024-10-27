@@ -87,10 +87,10 @@ if (sessionId) {
 
                                 return (
                                     <tr>
-                                        <td class="py-4 pr-2 md:pr-8 flex items-center">
+                                        <td class="py-4 pr-1 md:pr-8 flex items-center">
                                             <a
                                                 href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                                                class="min-w-[70px] hover:opacity-70 transition-opacity duration-300"
+                                                class="min-w-[60px] hover:opacity-70 transition-opacity duration-300"
                                             >
                                                 <Image
                                                     alt={
@@ -100,8 +100,8 @@ if (sessionId) {
                                                     src={
                                                         price.product.images[0]
                                                     }
-                                                    width={70}
-                                                    height={99}
+                                                    width={60}
+                                                    height={85}
                                                     class="w-full h-auto object-contain"
                                                     loading="eager"
                                                     fetchpriority="high"
@@ -117,7 +117,7 @@ if (sessionId) {
                                                 </span>
                                             </span>
                                         </td>
-                                        <td class="py-4 px-2 md:px-8 hidden md:table-cell">
+                                        <td class="py-4 px-0 md:px-8 hidden md:table-cell">
                                             {formatCurrency({
                                                 value: price.currency_options[
                                                     currency
@@ -125,7 +125,7 @@ if (sessionId) {
                                                 currency,
                                             })}
                                         </td>
-                                        <td class="py-4 px-2 md:px-8 text-center">
+                                        <td class="py-4 px-0 md:px-8 text-center">
                                             <div class="border border-black rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
                                                 <button
                                                     class="flex items-center justify-center text-4xl w-12 h-12 hover:text-gray-600 transition-colors duration-300"
@@ -152,7 +152,7 @@ if (sessionId) {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td class="text-right py-4 pl-2 md:pl-8 md:min-w-36">
+                                        <td class="text-right py-4 pl-1 md:pl-8 md:min-w-36">
                                             {formatCurrency({
                                                 value: item.amount_total,
                                                 currency,
@@ -207,7 +207,7 @@ if (sessionId) {
                         <div class="w-full max-w-lg">
                             <div class="flex h-12">
                                 {coupon ? (
-                                    <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 font-semibold">
+                                    <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 font-semibold overflow-x-hidden">
                                         {coupon.name} ({coupon.percent_off}%
                                         off)
                                     </p>
@@ -217,7 +217,7 @@ if (sessionId) {
                                         name="promotion-code-value"
                                         type="text"
                                         class="w-full px-3 py-3 border border-black rounded-md mr-2 font-semibold h-12"
-                                        placeholder="Promotion code"
+                                        placeholder="Discount code"
                                     />
                                 )}
                                 <button
@@ -226,10 +226,10 @@ if (sessionId) {
                                             ? "remove-promotion-code-button"
                                             : "add-promotion-code-button"
                                     }
-                                    class="w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:text-gray-600 text-center font-semibold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
+                                    class="w-40 px-4 py-3 text-black bg-white rounded-lg border border-black hover:text-gray-600 text-center font-semibold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
                                 >
                                     <span class="md:pb-1">
-                                        {coupon ? "Remove" : "Apply"} code
+                                        {coupon ? "Remove" : "Apply"}
                                     </span>
                                     <LoadingSpinner />
                                 </button>
