@@ -25,9 +25,10 @@ export const getStripePrices = async (): Promise<StripePrice[]> => {
 }
 
 export const createCheckoutSession = async (params: {
-    line_items: Stripe.Checkout.SessionCreateParams.LineItem[]
+    line_items: Stripe.Checkout.SessionCreateParams["line_items"]
     success_url: string
     currency: Currency
+    promotion_code?: string
 }): Promise<Stripe.Checkout.Session | null> => {
     try {
         const response = await fetch(
@@ -81,25 +82,3 @@ export const retrieveCheckoutSession = async (params: {
         return null
     }
 }
-
-// export const getLocaleCurrency = async (): Promise<Currency> => {
-//     try {
-//         const response = await fetch(
-//             import.meta.env.PUBLIC_API_URL + `/get-locale-currency`,
-//             {
-//                 method: "GET",
-//             },
-//         )
-
-//         if (response.ok) {
-//             const data = (await response.json()) as { currency: Currency }
-//             return data.currency
-//         } else {
-//             console.error(JSON.stringify(response))
-//             return "gbp"
-//         }
-//     } catch (error) {
-//         console.error(error)
-//         return "gbp"
-//     }
-// }

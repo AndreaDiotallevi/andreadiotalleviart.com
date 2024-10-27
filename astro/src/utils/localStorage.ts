@@ -1,80 +1,12 @@
 import type Stripe from "stripe"
 
-// const sessionIdKey = "andreadiotalleviart:sessionId"
-
-// export const setOrUpdateSessionId = ({ sessionId }: { sessionId: string }) => {
-//     localStorage.setItem(sessionIdKey, sessionId)
-// }
-
-// export const getSessionId = () => {
-//     return localStorage.getItem(sessionIdKey)
-// }
-
-// export const removeSessionId = () => {
-//     localStorage.removeItem(sessionIdKey)
-// }
-
-// const cartTotalQuantityKey = "andreadiotalleviart:cartTotalQuantity"
-
-// export const setOrUpdateCartTotalQuantity = ({
-//     quantity,
-// }: {
-//     quantity: number
-// }) => {
-//     localStorage.setItem(cartTotalQuantityKey, `${quantity}`)
-// }
-
-// export const getCartTotalQuantity = () => {
-//     return parseInt(localStorage.getItem(cartTotalQuantityKey) || "0")
-// }
-
-// export const removeCartTotalQuantity = () => {
-//     localStorage.removeItem(cartTotalQuantityKey)
-// }
-
-// export const setOrUpdateLineItems = ({
-//     lineItems,
-// }: {
-//     lineItems: { priceId: string; quantity: number }[]
-// }) => {
-//     localStorage.setItem(lineItemsKey, JSON.stringify(lineItems))
-// }
-
-// const lineItemsKey = "andreadiotalleviart:lineItems"
-
-// export const getLineItems = () => {
-//     return JSON.parse(localStorage.getItem(lineItemsKey) || "[]") as {
-//         price: string
-//         quantity: number
-//     }[]
-// }
-
-// export const removeLineItems = () => {
-//     localStorage.removeItem(lineItemsKey)
-// }
-
-// export const addToCart = ({ priceId }: { priceId: string }) => {
-//     let lineItems = getLineItems()
-
-//     const existingItemIndex = lineItems.findIndex(
-//         item => item.price === priceId,
-//     )
-
-//     if (existingItemIndex == -1) {
-//         lineItems.push({ price: priceId, quantity: 1 })
-//     } else {
-//         lineItems[existingItemIndex].quantity += 1
-//     }
-
-//     localStorage.setItem(lineItemsKey, JSON.stringify(lineItems))
-// }
-
 const clientSessionKey = "andreadiotalleviart"
 
 interface ClientSession {
+    sessionId: string
     totalQuantity: number
     lineItems: { price: string; quantity: number }[]
-    sessionId: string
+    promotionCode?: string
 }
 
 export const getClientSession = (): ClientSession => {
@@ -87,8 +19,14 @@ export const getClientSession = (): ClientSession => {
     return JSON.parse(str) as ClientSession
 }
 
-export const updateClientSession = (session: Stripe.Checkout.Session) => {
-    const clientSession = {
+export const updateClientSession = ({
+    session,
+    promotionCode,
+}: {
+    session: Stripe.Checkout.Session
+    promotionCode?: string
+}) => {
+    const clientSession: ClientSession = {
         sessionId: session.id,
         totalQuantity:
             session.line_items?.data.reduce(
@@ -100,6 +38,7 @@ export const updateClientSession = (session: Stripe.Checkout.Session) => {
                 price: item.price?.id!,
                 quantity: item.quantity!,
             })) || [],
+        promotionCode,
     }
 
     localStorage.setItem(clientSessionKey, JSON.stringify(clientSession))

@@ -14,7 +14,7 @@ export const addToCart = async ({
     priceId: string
     currency: Currency
 }) => {
-    const { sessionId, lineItems } = getClientSession()
+    const { sessionId, lineItems, promotionCode } = getClientSession()
 
     let newLineItems: typeof lineItems = []
 
@@ -36,11 +36,12 @@ export const addToCart = async ({
         line_items: newLineItems,
         success_url: `${window.location.origin}/shop/checkout/success`,
         currency,
+        promotion_code: promotionCode,
     })
 
     if (!session) return { error: true }
 
-    updateClientSession(session)
+    updateClientSession({ session, promotionCode })
     navigate(`/cart?session_id=${session.id}`)
 }
 
@@ -51,7 +52,7 @@ export const removeFromCart = async ({
     priceId: string
     currency: Currency
 }) => {
-    const { sessionId, lineItems } = getClientSession()
+    const { sessionId, lineItems, promotionCode } = getClientSession()
 
     let newLineItems: typeof lineItems = []
 
@@ -79,10 +80,56 @@ export const removeFromCart = async ({
         line_items: newLineItems.filter(item => item.quantity! > 0),
         success_url: `${window.location.origin}/shop/checkout/success`,
         currency,
+        promotion_code: promotionCode,
     })
 
     if (!session) return
 
-    updateClientSession(session)
+    updateClientSession({ session, promotionCode })
+    navigate(`/cart?session_id=${session.id}`)
+}
+
+export const addPromotionCode = async ({
+    code,
+    currency,
+}: {
+    code: string
+    currency: Currency
+}) => {
+    const { lineItems } = getClientSession()
+
+    if (lineItems.length === 0) return
+
+    const session = await createCheckoutSession({
+        line_items: lineItems,
+        success_url: `${window.location.origin}/shop/checkout/success`,
+        currency,
+        promotion_code: code,
+    })
+
+    if (!session) return
+
+    updateClientSession({ session, promotionCode: code })
+    navigate(`/cart?session_id=${session.id}`)
+}
+
+export const removePromotionCode = async ({
+    currency,
+}: {
+    currency: Currency
+}) => {
+    const { lineItems } = getClientSession()
+
+    if (lineItems.length === 0) return
+
+    const session = await createCheckoutSession({
+        line_items: lineItems,
+        success_url: `${window.location.origin}/shop/checkout/success`,
+        currency,
+    })
+
+    if (!session) return
+
+    updateClientSession({ session })
     navigate(`/cart?session_id=${session.id}`)
 }

@@ -17,6 +17,7 @@ let session: Stripe.Checkout.Session | null = null
 let currency: Currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
 )
+let coupon: Stripe.Coupon | undefined
 let cartEmpty: boolean = false
 let error: boolean = false
 
@@ -27,6 +28,8 @@ if (sessionId) {
         error = true
     } else {
         currency = session.currency as Currency
+        coupon =
+            session.total_details?.breakdown?.discounts[0]?.discount?.coupon
     }
 } else {
     cartEmpty = true
@@ -37,7 +40,11 @@ if (sessionId) {
     title="Cart | Andrea Diotallevi Art"
     description="Your shopping cart."
 >
-    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
+    <div
+        id="cart-page-content"
+        data-currency={currency}
+        class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8"
+    >
         <div class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-semibold mb-4 md:mb-6">
                 Cart
@@ -119,11 +126,10 @@ if (sessionId) {
                                             })}
                                         </td>
                                         <td class="py-4 px-2 md:px-8 text-center">
-                                            <div class="border border-slate-700 rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
+                                            <div class="border border-black rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
                                                 <button
-                                                    class="flex items-center justify-center text-4xl w-12 h-12"
+                                                    class="flex items-center justify-center text-4xl w-12 h-12 hover:text-gray-600 transition-colors duration-300"
                                                     data-price-id={price.id}
-                                                    data-currency={currency}
                                                     id={`remove-from-cart-${price.id}`}
                                                 >
                                                     <span class="md:pb-1">
@@ -131,13 +137,12 @@ if (sessionId) {
                                                     </span>
                                                     <LoadingSpinner />
                                                 </button>
-                                                <p class="min-w-12 flex items-center justify-center border-x border-slate-400">
+                                                <p class="min-w-12 flex items-center justify-center border-x border-gray-400">
                                                     {item.quantity}
                                                 </p>
                                                 <button
-                                                    class="flex items-center justify-center text-4xl w-12 h-12"
+                                                    class="flex items-center justify-center text-4xl w-12 h-12 hover:text-gray-600 transition-colors duration-300"
                                                     data-price-id={price.id}
-                                                    data-currency={currency}
                                                     id={`add-to-cart-${price.id}`}
                                                 >
                                                     <span class="md:pb-1">
@@ -198,16 +203,47 @@ if (sessionId) {
                             </tbody>
                         </table>
                     </div>
-                    <div class="flex flex-col items-center md:items-end">
+                    <div class="flex flex-col items-center md:items-end space-y-4">
+                        <div class="w-full max-w-lg">
+                            <div class="flex h-12">
+                                {coupon ? (
+                                    <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 font-semibold">
+                                        {coupon.name} ({coupon.percent_off}%
+                                        off)
+                                    </p>
+                                ) : (
+                                    <input
+                                        id="promotion-code-value"
+                                        name="promotion-code-value"
+                                        type="text"
+                                        class="w-full px-3 py-3 border border-black rounded-md mr-2 font-semibold h-12"
+                                        placeholder="Promotion code"
+                                    />
+                                )}
+                                <button
+                                    id={
+                                        coupon
+                                            ? "remove-promotion-code-button"
+                                            : "add-promotion-code-button"
+                                    }
+                                    class="w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:text-gray-600 text-center font-semibold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
+                                >
+                                    <span class="md:pb-1">
+                                        {coupon ? "Remove" : "Apply"} code
+                                    </span>
+                                    <LoadingSpinner />
+                                </button>
+                            </div>
+                        </div>
                         <a
                             href="/shop"
-                            class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:bg-black hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
+                            class="w-full px-4 py-3 text-black bg-white rounded-lg border border-black hover:bg-black hover:text-white text-center font-semibold max-w-lg transition-colors duration-300"
                         >
                             Continue shopping
                         </a>
                         <a
                             href={`/shop/checkout?client_secret=${session.client_secret}`}
-                            class="block w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold max-w-lg transition-colors duration-300"
+                            class="w-full px-4 py-3 text-white bg-black rounded-lg hover:bg-gray-800 text-center font-semibold max-w-lg transition-colors duration-300"
                         >
                             Proceed to checkout
                         </a>
@@ -224,10 +260,22 @@ if (sessionId) {
 </BaseLayout>
 
 <script>
-    import { addToCart, removeFromCart } from "@scripts/cart"
+    import {
+        addToCart,
+        removeFromCart,
+        addPromotionCode,
+        removePromotionCode,
+    } from "@scripts/cart"
+
     import type { Currency } from "@utils/stripe"
 
     document.addEventListener("astro:page-load", async () => {
+        const cartPageContent = document.getElementById("cart-page-content")
+
+        if (!cartPageContent) return
+
+        const currency = cartPageContent.dataset.currency as Currency
+
         const addToCartButtons = document.querySelectorAll(
             '[id^="add-to-cart-"]'
         ) as NodeListOf<HTMLButtonElement>
@@ -236,7 +284,13 @@ if (sessionId) {
             '[id^="remove-from-cart-"]'
         ) as NodeListOf<HTMLButtonElement>
 
-        if (!addToCartButtons.length || !removeFromCartButtons.length) return
+        const addPromotionCodeButton = document.querySelector(
+            "#add-promotion-code-button"
+        ) as HTMLButtonElement
+
+        const removePromotionCodeButton = document.querySelector(
+            "#remove-promotion-code-button"
+        ) as HTMLButtonElement
 
         addToCartButtons.forEach(button => {
             button.addEventListener("click", async e => {
@@ -249,8 +303,7 @@ if (sessionId) {
                     ?.classList.remove("hidden")
 
                 const priceId = button.dataset.priceId as string
-                const currency = button.dataset.currency as Currency
-                addToCart({ priceId, currency })
+                await addToCart({ priceId, currency })
             })
         })
 
@@ -265,9 +318,42 @@ if (sessionId) {
                     ?.classList.remove("hidden")
 
                 const priceId = button.dataset.priceId as string
-                const currency = button.dataset.currency as Currency
-                removeFromCart({ priceId, currency })
+                await removeFromCart({ priceId, currency })
             })
         })
+
+        addPromotionCodeButton &&
+            addPromotionCodeButton.addEventListener("click", async e => {
+                e.preventDefault()
+
+                addPromotionCodeButton
+                    .querySelector("span")
+                    ?.classList.add("hidden")
+
+                addPromotionCodeButton
+                    .querySelector("#loading-spinner")
+                    ?.classList.remove("hidden")
+
+                const promotionCode = document.querySelector(
+                    "#promotion-code-value"
+                ) as HTMLInputElement
+
+                await addPromotionCode({ code: promotionCode.value, currency })
+            })
+
+        removePromotionCodeButton &&
+            removePromotionCodeButton.addEventListener("click", async e => {
+                e.preventDefault()
+
+                removePromotionCodeButton
+                    .querySelector("span")
+                    ?.classList.add("hidden")
+
+                removePromotionCodeButton
+                    .querySelector("#loading-spinner")
+                    ?.classList.remove("hidden")
+
+                await removePromotionCode({ currency })
+            })
     })
 </script>
