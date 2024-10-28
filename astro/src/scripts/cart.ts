@@ -98,7 +98,7 @@ export const addPromotionCode = async ({
 }) => {
     const { lineItems } = getClientSession()
 
-    if (lineItems.length === 0) return
+    if (lineItems.length === 0) return { session: null }
 
     const session = await createCheckoutSession({
         line_items: lineItems,
@@ -107,10 +107,7 @@ export const addPromotionCode = async ({
         promotion_code: code,
     })
 
-    if (!session) return
-
-    updateClientSession({ session, promotionCode: code })
-    navigate(`/cart?session_id=${session.id}`)
+    return { session }
 }
 
 export const removePromotionCode = async ({
@@ -120,7 +117,7 @@ export const removePromotionCode = async ({
 }) => {
     const { lineItems } = getClientSession()
 
-    if (lineItems.length === 0) return
+    if (lineItems.length === 0) return { session: null }
 
     const session = await createCheckoutSession({
         line_items: lineItems,
@@ -128,8 +125,5 @@ export const removePromotionCode = async ({
         currency,
     })
 
-    if (!session) return
-
-    updateClientSession({ session })
-    navigate(`/cart?session_id=${session.id}`)
+    return { session }
 }

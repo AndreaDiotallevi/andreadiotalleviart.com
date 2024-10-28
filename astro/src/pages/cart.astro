@@ -264,8 +264,10 @@ if (sessionId) {
         addPromotionCode,
         removePromotionCode,
     } from "@scripts/cart"
+    import { updateClientSession } from "@utils/localStorage"
 
     import type { Currency } from "@utils/stripe"
+    import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
         const cartPageContent = document.getElementById("cart-page-content")
@@ -324,6 +326,14 @@ if (sessionId) {
             addPromotionCodeButton.addEventListener("click", async e => {
                 e.preventDefault()
 
+                const code = (
+                    document.querySelector(
+                        "#promotion-code-value"
+                    ) as HTMLInputElement
+                ).value
+
+                if (!code) return
+
                 addPromotionCodeButton
                     .querySelector("span")
                     ?.classList.add("hidden")
@@ -332,11 +342,26 @@ if (sessionId) {
                     .querySelector("#loading-spinner")
                     ?.classList.remove("hidden")
 
-                const promotionCode = document.querySelector(
-                    "#promotion-code-value"
-                ) as HTMLInputElement
+                const { session } = await addPromotionCode({
+                    code,
+                    currency,
+                })
 
-                await addPromotionCode({ code: promotionCode.value, currency })
+                if (session) {
+                    updateClientSession({
+                        session,
+                        promotionCode: code,
+                    })
+                    navigate(`/cart?session_id=${session.id}`)
+                } else {
+                    addPromotionCodeButton
+                        .querySelector("span")
+                        ?.classList.remove("hidden")
+
+                    addPromotionCodeButton
+                        .querySelector("#loading-spinner")
+                        ?.classList.add("hidden")
+                }
             })
 
         removePromotionCodeButton &&
@@ -351,7 +376,22 @@ if (sessionId) {
                     .querySelector("#loading-spinner")
                     ?.classList.remove("hidden")
 
-                await removePromotionCode({ currency })
+                const { session } = await removePromotionCode({ currency })
+
+                if (session) {
+                    updateClientSession({
+                        session,
+                    })
+                    navigate(`/cart?session_id=${session.id}`)
+                } else {
+                    addPromotionCodeButton
+                        .querySelector("span")
+                        ?.classList.remove("hidden")
+
+                    addPromotionCodeButton
+                        .querySelector("#loading-spinner")
+                        ?.classList.add("hidden")
+                }
             })
     })
 </script>

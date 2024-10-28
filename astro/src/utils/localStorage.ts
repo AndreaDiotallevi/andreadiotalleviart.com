@@ -21,7 +21,7 @@ export const getClientSession = (): ClientSession => {
 
 export const updateClientSession = ({
     session,
-    promotionCode,
+    promotionCode = "",
 }: {
     session: Stripe.Checkout.Session
     promotionCode?: string
