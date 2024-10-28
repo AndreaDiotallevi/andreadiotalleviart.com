@@ -228,7 +228,7 @@ const { darkTheme } = Astro.props
     import { clearClientSession, getClientSession } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", () => {
-        if (window.location.pathname === "/shop/checkout/success") {
+        if (window.location.pathname === "/checkout/success") {
             clearClientSession()
             return
         }

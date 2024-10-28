@@ -34,7 +34,7 @@ export const addToCart = async ({
 
     const session = await createCheckoutSession({
         line_items: newLineItems,
-        success_url: `${window.location.origin}/shop/checkout/success`,
+        success_url: `${window.location.origin}/checkout/success`,
         currency,
         promotion_code: promotionCode,
     })
@@ -78,7 +78,7 @@ export const removeFromCart = async ({
 
     const session = await createCheckoutSession({
         line_items: newLineItems.filter(item => item.quantity! > 0),
-        success_url: `${window.location.origin}/shop/checkout/success`,
+        success_url: `${window.location.origin}/checkout/success`,
         currency,
         promotion_code: promotionCode,
     })
@@ -102,7 +102,7 @@ export const addPromotionCode = async ({
 
     const session = await createCheckoutSession({
         line_items: lineItems,
-        success_url: `${window.location.origin}/shop/checkout/success`,
+        success_url: `${window.location.origin}/checkout/success`,
         currency,
         promotion_code: code,
     })
@@ -124,7 +124,7 @@ export const removePromotionCode = async ({
 
     const session = await createCheckoutSession({
         line_items: lineItems,
-        success_url: `${window.location.origin}/shop/checkout/success`,
+        success_url: `${window.location.origin}/checkout/success`,
         currency,
     })
 
