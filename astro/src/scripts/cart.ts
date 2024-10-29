@@ -32,14 +32,14 @@ export const addToCart = async ({
         newLineItems = [{ price: priceId, quantity: 1 }]
     }
 
-    const session = await createCheckoutSession({
+    const { session, error } = await createCheckoutSession({
         line_items: newLineItems,
         success_url: `${window.location.origin}/checkout/success`,
         currency,
         promotion_code: promotionCode,
     })
 
-    if (!session) return { error: true }
+    if (!session) return { error }
 
     updateClientSession({ session, promotionCode })
     navigate(`/cart?session_id=${session.id}`, {
@@ -78,7 +78,7 @@ export const removeFromCart = async ({
         return
     }
 
-    const session = await createCheckoutSession({
+    const { session, error } = await createCheckoutSession({
         line_items: newLineItems.filter(item => item.quantity! > 0),
         success_url: `${window.location.origin}/checkout/success`,
         currency,
@@ -102,14 +102,14 @@ export const addPromotionCode = async ({
 
     if (lineItems.length === 0) return { session: null }
 
-    const session = await createCheckoutSession({
+    const { session, error } = await createCheckoutSession({
         line_items: lineItems,
         success_url: `${window.location.origin}/checkout/success`,
         currency,
         promotion_code: code,
     })
 
-    return { session }
+    return { session, error }
 }
 
 export const removePromotionCode = async ({
@@ -121,11 +121,11 @@ export const removePromotionCode = async ({
 
     if (lineItems.length === 0) return { session: null }
 
-    const session = await createCheckoutSession({
+    const { session, error } = await createCheckoutSession({
         line_items: lineItems,
         success_url: `${window.location.origin}/checkout/success`,
         currency,
     })
 
-    return { session }
+    return { session, error }
 }

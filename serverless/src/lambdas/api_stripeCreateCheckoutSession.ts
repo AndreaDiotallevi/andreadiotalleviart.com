@@ -1,39 +1,61 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import Stripe from "stripe"
 
+import { Currency } from "../types/stripe"
 import { createCheckoutSession } from "../actions/stripe_createCheckoutSession"
+import { retrievePromotionCode } from "../actions/stripe_retrievePromotionCode"
 
 export const handler = async (
     event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
     const { line_items, success_url, currency, promotion_code } = JSON.parse(
         event.body as string
-    ) as Stripe.Checkout.SessionCreateParams & { promotion_code?: string }
-
-    if (!line_items) {
-        throw new Error("No line items")
+    ) as {
+        line_items: Stripe.Checkout.SessionCreateParams["line_items"]
+        success_url: string
+        currency: Currency
+        promotion_code?: string
     }
 
-    if (!success_url) {
-        throw new Error("No success url")
+    let error: string | undefined
+    let session: Stripe.Checkout.Session | undefined
+    let promotionCode: Stripe.PromotionCode | undefined
+
+    if (promotion_code) {
+        const response = await retrievePromotionCode({
+            code: promotion_code,
+        })
+
+        if (response.error) {
+            error = response.error
+        } else {
+            promotionCode = response.promotionCode
+        }
     }
 
-    if (!currency) {
-        throw new Error("No currency")
+    if (!error) {
+        const response = await createCheckoutSession({
+            line_items,
+            success_url,
+            currency,
+            discounts: promotionCode
+                ? [{ promotion_code: promotionCode.id }]
+                : undefined,
+        })
+
+        if (response.error) {
+            error = response.error
+        } else {
+            session = response.session
+        }
     }
 
-    const { session } = await createCheckoutSession({
-        line_items,
-        success_url,
-        currency,
-        promotion_code,
-    })
-
-    console.log(JSON.stringify(session))
+    const statusCode = error ? 500 : 200
+    const body = error ? JSON.stringify({ error }) : JSON.stringify({ session })
 
     return {
-        statusCode: 200,
-        body: JSON.stringify({ session }),
+        statusCode,
+        body,
         headers: {
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",

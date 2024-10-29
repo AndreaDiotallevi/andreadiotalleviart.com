@@ -1,26 +1,17 @@
 import Stripe from "stripe"
 
 import { initialiseClient } from "./stripe_initialiseClient"
-import { retrievePromotionCode } from "./stripe_retrievePromotionCode"
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams["line_items"]
     success_url: string
     currency: string
-    promotion_code?: string
-}) => {
+    discounts: Stripe.Checkout.SessionCreateParams["discounts"]
+}): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
         const stripe = await initialiseClient()
 
-        const { line_items, success_url, currency, promotion_code } = params
-
-        let promotionCode: Stripe.PromotionCode | null = null
-
-        if (promotion_code) {
-            promotionCode = await retrievePromotionCode({
-                code: promotion_code,
-            })
-        }
+        const { line_items, success_url, currency, discounts } = params
 
         const session = await stripe.checkout.sessions.create({
             expand: ["line_items"],
@@ -32,17 +23,12 @@ export const createCheckoutSession = async (params: {
             shipping_address_collection: { allowed_countries: countriesArray },
             shipping_options: [],
             currency,
-            discounts: promotionCode
-                ? [{ promotion_code: promotionCode.id }]
-                : undefined,
+            discounts,
         })
 
-        return {
-            session,
-        }
+        return { session }
     } catch (error) {
-        console.error(error)
-        throw error
+        return { error: "Something went wrong" }
     }
 }
 

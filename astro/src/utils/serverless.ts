@@ -29,7 +29,7 @@ export const createCheckoutSession = async (params: {
     success_url: string
     currency: Currency
     promotion_code?: string
-}): Promise<Stripe.Checkout.Session | null> => {
+}): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL + `/stripe-create-checkout-session`,
@@ -41,17 +41,20 @@ export const createCheckoutSession = async (params: {
         )
 
         if (response.ok) {
-            const data = (await response.json()) as {
+            const { session } = (await response.json()) as {
                 session: Stripe.Checkout.Session
             }
-            return data.session
+
+            return { session }
         } else {
-            console.error(JSON.stringify(response))
-            return null
+            const { error } = (await response.json()) as {
+                error: string
+            }
+
+            return { error }
         }
     } catch (error) {
-        console.error(error)
-        return null
+        return { error: "Something went wrong" }
     }
 }
 

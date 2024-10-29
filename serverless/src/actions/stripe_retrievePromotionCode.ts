@@ -1,6 +1,9 @@
+import Stripe from "stripe"
 import { initialiseClient } from "./stripe_initialiseClient"
 
-export const retrievePromotionCode = async (params: { code: string }) => {
+export const retrievePromotionCode = async (params: {
+    code: string
+}): Promise<{ promotionCode?: Stripe.PromotionCode; error?: string }> => {
     try {
         const stripe = await initialiseClient()
 
@@ -11,12 +14,11 @@ export const retrievePromotionCode = async (params: { code: string }) => {
         })
 
         if (promotionCodes.data.length === 0) {
-            throw new Error("Promotion code not found")
+            return { error: "Promotion code not found" }
         }
 
-        return promotionCodes.data[0]
+        return { promotionCode: promotionCodes.data[0] }
     } catch (error) {
-        console.error(error)
-        throw error
+        return { error: "Something went wrong" }
     }
 }
