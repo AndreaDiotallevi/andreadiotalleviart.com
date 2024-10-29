@@ -352,7 +352,9 @@ if (sessionId) {
                         session,
                         promotionCode: code,
                     })
-                    navigate(`/cart?session_id=${session.id}`)
+                    navigate(`/cart?session_id=${session.id}`, {
+                        history: "replace",
+                    })
                 } else {
                     addPromotionCodeButton
                         .querySelector("span")
@@ -382,7 +384,9 @@ if (sessionId) {
                     updateClientSession({
                         session,
                     })
-                    navigate(`/cart?session_id=${session.id}`)
+                    navigate(`/cart?session_id=${session.id}`, {
+                        history: "replace",
+                    })
                 } else {
                     addPromotionCodeButton
                         .querySelector("span")
