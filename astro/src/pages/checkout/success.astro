@@ -9,7 +9,7 @@ import { retrieveCheckoutSession } from "@utils/serverless"
 import type { StripePrice } from "@utils/stripe"
 
 const sessionId = Astro.url.searchParams.get("session_id") || ""
-const session = await retrieveCheckoutSession({ sessionId })
+const { session } = await retrieveCheckoutSession({ sessionId })
 
 const currency = session?.currency
 const shippingDetails = session?.shipping_details

@@ -22,11 +22,12 @@ let cartEmpty: boolean = false
 let error: boolean = false
 
 if (sessionId) {
-    session = await retrieveCheckoutSession({ sessionId })
+    const response = await retrieveCheckoutSession({ sessionId })
 
-    if (!session) {
+    if (!response.session) {
         error = true
     } else {
+        session = response.session
         currency = session.currency as Currency
         coupon =
             session.total_details?.breakdown?.discounts[0]?.discount?.coupon

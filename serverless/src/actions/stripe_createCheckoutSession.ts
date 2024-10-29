@@ -34,7 +34,7 @@ export const createCheckoutSession = async (params: {
         console.error(error)
         const stripeError = error as {
             raw: {
-                code: "promotion_code_used_up" | "resource_missing"
+                code: string // "promotion_code_used_up" | "resource_missing"
                 message: string
                 param: string
             }

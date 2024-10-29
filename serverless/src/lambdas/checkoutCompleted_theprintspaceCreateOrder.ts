@@ -15,6 +15,8 @@ export const handler: SQSHandler = async (event): Promise<void> => {
         const sessionId = event.data.object.id
         const { session } = await retrieveCheckoutSession({ sessionId })
 
+        if (!session) throw new Error("Checkout session not found")
+
         console.log(JSON.stringify(session))
 
         const { orderId, deliveryOptions } = await createEmbryonicOrder({

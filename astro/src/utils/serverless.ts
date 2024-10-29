@@ -55,7 +55,7 @@ export const createCheckoutSession = async (params: {
 
 export const retrieveCheckoutSession = async (params: {
     sessionId: string
-}): Promise<Stripe.Checkout.Session | null> => {
+}): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
         const response = await fetch(
             import.meta.env.PUBLIC_API_URL +
@@ -66,17 +66,15 @@ export const retrieveCheckoutSession = async (params: {
             },
         )
 
-        if (response.ok) {
-            const data = (await response.json()) as {
-                session: Stripe.Checkout.Session
-            }
-            return data.session
-        } else {
-            console.error(JSON.stringify(response))
-            return null
+        const { session, error } = (await response.json()) as {
+            session?: Stripe.Checkout.Session
+            error?: string
         }
+
+        return { session, error }
     } catch (error) {
-        console.error(error)
-        return null
+        return {
+            error: "There was a problem with your request. Please try again.",
+        }
     }
 }

@@ -8,6 +8,8 @@ export const retrieveCheckoutSession = async (params: {
 
         const { sessionId } = params
 
+        console.log("Retrieving checkout session...")
+
         const session = await stripe.checkout.sessions.retrieve(sessionId, {
             expand: [
                 "line_items",
@@ -20,11 +22,16 @@ export const retrieveCheckoutSession = async (params: {
             ],
         })
 
-        return {
-            session,
-        }
+        return { session }
     } catch (error) {
         console.error(error)
-        throw error
+        const stripeError = error as {
+            raw: {
+                code: string
+                message: string
+                param: string
+            }
+        }
+        return { error: stripeError.raw.message }
     }
 }
