@@ -13,6 +13,8 @@ export const createCheckoutSession = async (params: {
 
         const { line_items, success_url, currency, discounts } = params
 
+        console.log("Creating checkout session...")
+
         const session = await stripe.checkout.sessions.create({
             expand: ["line_items"],
             ui_mode: "embedded",
@@ -25,10 +27,19 @@ export const createCheckoutSession = async (params: {
             currency,
             discounts,
         })
+        console.log(session)
 
         return { session }
     } catch (error) {
-        return { error: "Something went wrong" }
+        console.error(error)
+        const stripeError = error as {
+            raw: {
+                code: "promotion_code_used_up" | "resource_missing"
+                message: string
+                param: string
+            }
+        }
+        return { error: stripeError.raw.message }
     }
 }
 

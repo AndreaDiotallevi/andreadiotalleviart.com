@@ -9,16 +9,20 @@ export const retrievePromotionCode = async (params: {
 
         const { code } = params
 
+        console.log("Retrieving promotion code...")
+
         const promotionCodes = await stripe.promotionCodes.list({
             code,
         })
 
         if (promotionCodes.data.length === 0) {
-            return { error: "Promotion code not found" }
+            return { error: "This promotion code is invalid." }
         }
 
         return { promotionCode: promotionCodes.data[0] }
     } catch (error) {
-        return { error: "Something went wrong" }
+        return {
+            error: "There was a problem with your request. Please try again.",
+        }
     }
 }

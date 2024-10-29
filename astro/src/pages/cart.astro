@@ -235,10 +235,8 @@ if (sessionId) {
                             <div class="flex w-full max-w-lg pt-2">
                                 <p
                                     id="promotion-code-error"
-                                    class="text-red-700 hidden"
-                                >
-                                    Invalid discount code
-                                </p>
+                                    class="text-red-700 hidden text-wrap"
+                                />
                             </div>
                         </div>
                         <a
@@ -378,6 +376,7 @@ if (sessionId) {
 
                     promotionCodeError.classList.remove("hidden")
                     promotionCodeElement.classList.add("border-red-700")
+                    promotionCodeError.textContent = error!
                 }
             })
 
