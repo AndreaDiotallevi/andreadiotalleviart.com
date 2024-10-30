@@ -27,6 +27,7 @@ const { darkTheme } = Astro.props
                             id="cart-link-mobile"
                             href="/cart"
                             class="md:hidden pr-4"
+                            aria-label="See shopping cart"
                         >
                             <ShoppingCart darkTheme={darkTheme} />
                         </a>
@@ -82,7 +83,11 @@ const { darkTheme } = Astro.props
                 >
                 {
                     import.meta.env.CONTEXT === "production" ? null : (
-                        <a id="cart-link-desktop" href="/cart">
+                        <a
+                            id="cart-link-desktop"
+                            href="/cart"
+                            aria-label="See shopping cart"
+                        >
                             <ShoppingCart darkTheme={darkTheme} />
                         </a>
                     )
