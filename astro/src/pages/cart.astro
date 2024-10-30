@@ -207,7 +207,7 @@ if (sessionId) {
                     </div>
                     <div class="flex flex-col items-center md:items-end space-y-4">
                         <div class="w-full max-w-lg">
-                            <div class="flex h-12">
+                            <form id="promotion-code-form" class="flex h-12">
                                 {coupon ? (
                                     <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 font-semibold overflow-x-auto overflow-y-hidden">
                                         {coupon.name} ({coupon.percent_off}%
@@ -220,6 +220,8 @@ if (sessionId) {
                                         type="text"
                                         class="w-full px-3 py-3 border border-black rounded-md mr-2 font-semibold h-12"
                                         placeholder="Discount code"
+                                        autocomplete="off"
+                                        required
                                     />
                                 )}
                                 <button
@@ -228,6 +230,7 @@ if (sessionId) {
                                             ? "remove-promotion-code-button"
                                             : "add-promotion-code-button"
                                     }
+                                    type="submit"
                                     class="w-40 px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:text-gray-600 text-center font-semibold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
                                 >
                                     <span class="md:pb-1">
@@ -235,7 +238,7 @@ if (sessionId) {
                                     </span>
                                     <LoadingSpinner />
                                 </button>
-                            </div>
+                            </form>
                             <div class="flex w-full max-w-lg pt-2">
                                 <p
                                     id="promotion-code-error"
@@ -310,6 +313,10 @@ if (sessionId) {
             "#remove-promotion-code-button"
         ) as HTMLButtonElement
 
+        const promotionCodeForm = document.querySelector(
+            "#promotion-code-form"
+        ) as HTMLFormElement
+
         addToCartButtons.forEach(button => {
             button.addEventListener("click", async e => {
                 e.preventDefault()
@@ -340,57 +347,54 @@ if (sessionId) {
             })
         })
 
-        addPromotionCodeButton &&
-            addPromotionCodeButton.addEventListener("click", async e => {
-                e.preventDefault()
+        promotionCodeForm.addEventListener("submit", async e => {
+            e.preventDefault()
 
-                const promotionCodeElement = document.querySelector(
-                    "#promotion-code-value"
-                ) as HTMLInputElement
+            const promotionCodeElement = document.querySelector(
+                "#promotion-code-value"
+            ) as HTMLInputElement
 
-                const code = promotionCodeElement.value.trim()
+            const code = promotionCodeElement.value.trim()
 
-                if (!code) return
+            addPromotionCodeButton
+                .querySelector("span")
+                ?.classList.add("hidden")
 
+            addPromotionCodeButton
+                .querySelector("#loading-spinner")
+                ?.classList.remove("hidden")
+
+            const promotionCodeError = document.querySelector(
+                "#promotion-code-error"
+            ) as HTMLInputElement
+
+            const { session, error } = await addPromotionCode({
+                code,
+                currency,
+            })
+
+            if (session) {
+                updateClientSession({
+                    session,
+                    promotionCode: code,
+                })
+                navigate(`/cart?session_id=${session.id}`, {
+                    history: "replace",
+                })
+            } else {
                 addPromotionCodeButton
                     .querySelector("span")
-                    ?.classList.add("hidden")
+                    ?.classList.remove("hidden")
 
                 addPromotionCodeButton
                     .querySelector("#loading-spinner")
-                    ?.classList.remove("hidden")
+                    ?.classList.add("hidden")
 
-                const promotionCodeError = document.querySelector(
-                    "#promotion-code-error"
-                ) as HTMLInputElement
-
-                const { session, error } = await addPromotionCode({
-                    code,
-                    currency,
-                })
-
-                if (session) {
-                    updateClientSession({
-                        session,
-                        promotionCode: code,
-                    })
-                    navigate(`/cart?session_id=${session.id}`, {
-                        history: "replace",
-                    })
-                } else {
-                    addPromotionCodeButton
-                        .querySelector("span")
-                        ?.classList.remove("hidden")
-
-                    addPromotionCodeButton
-                        .querySelector("#loading-spinner")
-                        ?.classList.add("hidden")
-
-                    promotionCodeError.classList.remove("hidden")
-                    promotionCodeElement.classList.add("border-red-700")
-                    promotionCodeError.textContent = error!
-                }
-            })
+                promotionCodeError.classList.remove("hidden")
+                promotionCodeElement.classList.add("border-red-700")
+                promotionCodeError.textContent = error!
+            }
+        })
 
         removePromotionCodeButton &&
             removePromotionCodeButton.addEventListener("click", async e => {
