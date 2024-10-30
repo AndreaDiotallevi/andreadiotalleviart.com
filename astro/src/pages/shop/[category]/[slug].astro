@@ -216,6 +216,9 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
         const spinner = document.getElementById("loading-spinner")!
         const errorMessage = document.getElementById("error-message")!
 
+        spinner.classList.add("hidden")
+        button.disabled = false
+
         priceForm.addEventListener("submit", async e => {
             e.preventDefault()
 
@@ -240,9 +243,6 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             }
 
             // sendGA4BeginCheckoutEvent({ session })
-
-            spinner.classList.add("hidden")
-            button.disabled = false
         })
     })
 </script>
