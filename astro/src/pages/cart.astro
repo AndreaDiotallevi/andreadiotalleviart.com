@@ -19,6 +19,7 @@ let currency: Currency = getLocalCurrency(
 )
 let coupon: Stripe.Coupon | undefined
 let cartEmpty: boolean = false
+let sessionExpired: boolean = false
 let error: boolean = false
 
 if (sessionId) {
@@ -28,6 +29,9 @@ if (sessionId) {
         error = true
     } else {
         session = response.session
+        if (session.status === "expired") {
+            sessionExpired = true
+        }
         currency = session.currency as Currency
         coupon =
             session.total_details?.breakdown?.discounts[0]?.discount?.coupon
@@ -50,9 +54,13 @@ if (sessionId) {
             <h1 class="text-lg md:text-5xl font-semibold mb-4 md:mb-6">Cart</h1>
         </div> -->
         {
-            cartEmpty ? (
+            cartEmpty || sessionExpired ? (
                 <div class="flex flex-col items-center">
-                    <p class="text-center mb-4">Your cart is empty</p>
+                    <p class="text-center mb-4">
+                        {cartEmpty
+                            ? "Your cart is empty."
+                            : "Your session has expired."}
+                    </p>
                     <a
                         href="/shop"
                         class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:bg-black md:hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
