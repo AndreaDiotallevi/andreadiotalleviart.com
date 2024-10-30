@@ -228,7 +228,11 @@ const { darkTheme } = Astro.props
 
             const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
 
-            cartItemsSpan.textContent = `${totalQuantity}`
+            if (totalQuantity > 0) {
+                cartItemsSpan.textContent = `${totalQuantity}`
+            } else {
+                cartItemsSpan.classList.add("hidden")
+            }
         })
     })
 </script>
