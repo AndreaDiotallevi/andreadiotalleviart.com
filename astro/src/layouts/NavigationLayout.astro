@@ -16,7 +16,7 @@ const { darkTheme } = Astro.props
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
         >
             <div
-                class={`md:text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                class={`md:text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
             >
                 <a href="/">andreadiotalleviart</a>
             </div>
@@ -67,7 +67,7 @@ const { darkTheme } = Astro.props
                         >
                             <>
                                 <span
-                                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                                    class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                                 >
                                     cart
                                 </span>
@@ -85,7 +85,7 @@ const { darkTheme } = Astro.props
                     import.meta.env.CONTEXT === "production" ? null : (
                         <a
                             href="/shop"
-                            class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                            class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                         >
                             shop
                         </a>
@@ -93,17 +93,17 @@ const { darkTheme } = Astro.props
                 }
                 <a
                     href="/about"
-                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >about</a
                 >
                 <a
                     href="/contact"
-                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >contact</a
                 >
                 <a
                     href="/portfolio"
-                    class={`text-2xl font-semibold ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >portfolio</a
                 >
             </nav>
@@ -147,7 +147,7 @@ const { darkTheme } = Astro.props
                 <a
                     href="https://github.com/AndreaDiotallevi/andreadiotalleviart.com"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     aria-label="GitHub"
                 >
                     <svg
@@ -164,7 +164,7 @@ const { darkTheme } = Astro.props
                 <a
                     href="https://twitter.com/adiotalleviart"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     aria-label="Twitter"
                 >
                     <svg
@@ -181,7 +181,7 @@ const { darkTheme } = Astro.props
                 <a
                     href="https://www.instagram.com/andreadiotalleviart"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "hover:text-gray-300" : "hover:text-gray-600"} transition-colors duration-300`}
+                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     aria-label="Instagram"
                 >
                     <svg
