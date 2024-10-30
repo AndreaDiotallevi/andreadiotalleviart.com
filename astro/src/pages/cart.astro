@@ -64,19 +64,13 @@ if (sessionId) {
                 <>
                     <table class="min-w-full">
                         <thead class="md:text-2xl">
-                            <tr>
-                                <th class="pr-8 text-left font-semibold">
-                                    Item
-                                </th>
-                                <th class="hidden md:table-cell px-8 text-left font-semibold">
+                            <tr class="font-semibold">
+                                <th class="text-left">Item</th>
+                                <th class="hidden md:table-cell text-center">
                                     Price
                                 </th>
-                                <th class="px-8 text-center font-semibold">
-                                    Quantity
-                                </th>
-                                <th class="pl-8 text-right font-semibold md:min-w-36">
-                                    Subtotal
-                                </th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-right md:min-w-36">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y md:text-xl">
@@ -86,7 +80,7 @@ if (sessionId) {
 
                                 return (
                                     <tr>
-                                        <td class="py-4 pr-1 md:pr-8 flex items-center">
+                                        <td class="py-4 md:pr-8 flex items-center">
                                             <a
                                                 href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                                                 class="min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
@@ -151,7 +145,7 @@ if (sessionId) {
                                                 </button>
                                             </div>
                                         </td>
-                                        <td class="text-right py-4 pl-1 md:pl-8 md:min-w-36">
+                                        <td class="text-right">
                                             {formatCurrency({
                                                 value: item.amount_subtotal,
                                                 currency,
