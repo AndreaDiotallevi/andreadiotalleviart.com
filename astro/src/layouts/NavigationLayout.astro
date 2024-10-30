@@ -3,9 +3,10 @@ import ShoppingCart from "@components/ShoppingCart.astro"
 
 interface Props {
     darkTheme?: boolean
+    hideFooter?: boolean
 }
 
-const { darkTheme } = Astro.props
+const { darkTheme, hideFooter } = Astro.props
 ---
 
 <div class="flex flex-col min-h-[100dvh]">
@@ -123,7 +124,7 @@ const { darkTheme } = Astro.props
     </main>
 
     <footer
-        class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"}`}
+        class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"} ${hideFooter ? "hidden md:flex" : ""}`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
