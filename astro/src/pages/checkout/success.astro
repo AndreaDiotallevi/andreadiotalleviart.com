@@ -67,13 +67,13 @@ const success = !!(session && currency && shippingDetails)
                                 <h2 class="text-xl font-semibold mb-2">
                                     Items
                                 </h2>
-                                <ol class="list-none space-y-2">
+                                <ol class="list-none space-y-4">
                                     {session.line_items?.data.map(item => {
                                         const price =
                                             item.price as unknown as StripePrice
 
                                         return (
-                                            <li class="flex mb-4">
+                                            <li class="flex">
                                                 <Image
                                                     alt={price.product.name}
                                                     src={
