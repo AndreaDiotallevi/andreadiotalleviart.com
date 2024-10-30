@@ -73,7 +73,7 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             </h1>
             <BackToLink href="/shop" text="Back to shop" />
             <div
-                class={`mb-${price.product.images.length > 1 ? "5" : "0"} relative`}
+                class={`${price.product.images.length > 1 ? "mb-5" : ""} relative`}
             >
                 {
                     price.product.images.map((src, index) => (

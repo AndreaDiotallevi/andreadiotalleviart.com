@@ -47,7 +47,7 @@ Astro.response.headers.set(
                 {artwork.name}
             </h1>
             <BackToLink href="/portfolio" text="Back to portfolio" />
-            <div class={`mb-${artwork.images.length > 1 ? "5" : "0"} relative`}>
+            <div class={`${artwork.images.length > 1 ? "mb-5" : "0"} relative`}>
                 {
                     artwork.images.map((src, index) => (
                         <Image
