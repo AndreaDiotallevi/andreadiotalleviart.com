@@ -207,7 +207,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Marble Lake - A3 Giclée Fine Art Print",
         description:
-            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Marble Lake",
@@ -247,7 +247,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
-            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Flames",
@@ -287,7 +287,7 @@ const products: ProductInput[] = [
     //     active: false,
     //     name: "Fire Drops - A3 Giclée Fine Art Print",
     //     description:
-    //         "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+    //         "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
     //     metadata: {
     //         category: "prints",
     //         displayName: "Fire Drops",
@@ -327,7 +327,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
-            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
@@ -367,7 +367,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Skylines 3 - A3 Giclée Fine Art Print",
         description:
-            "A3 297 x 420 mm (11.7 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
+            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Skylines 3",
