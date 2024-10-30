@@ -48,6 +48,7 @@ if (sessionId) {
     <div
         id="cart-page-content"
         data-currency={currency}
+        data-session-status={session?.status}
         class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8"
     >
         <!-- <div class="text-center mb-8">
@@ -273,7 +274,10 @@ if (sessionId) {
         addPromotionCode,
         removePromotionCode,
     } from "@scripts/cart"
-    import { updateClientSession } from "@utils/localStorage"
+    import {
+        clearClientSession,
+        updateClientSession,
+    } from "@utils/localStorage"
 
     import type { Currency } from "@utils/stripe"
     import { navigate } from "astro:transitions/client"
@@ -284,6 +288,11 @@ if (sessionId) {
         if (!cartPageContent) return
 
         const currency = cartPageContent.dataset.currency as Currency
+        const sessionStatus = cartPageContent.dataset.sessionStatus
+
+        if (sessionStatus === "expired") {
+            clearClientSession()
+        }
 
         const addToCartButtons = document.querySelectorAll(
             '[id^="add-to-cart-"]'
