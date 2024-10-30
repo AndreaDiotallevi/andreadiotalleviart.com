@@ -26,12 +26,9 @@ const { darkTheme } = Astro.props
                         <a
                             id="cart-link-mobile"
                             href="/cart"
-                            class="flex items-center md:hidden pr-6"
+                            class="md:hidden pr-4"
                         >
                             <ShoppingCart darkTheme={darkTheme} />
-                            <span id="cart-items-mobile" class="font-semibold">
-                                (0)
-                            </span>
                         </a>
                     )
                 }
@@ -61,29 +58,6 @@ const { darkTheme } = Astro.props
                 {
                     import.meta.env.CONTEXT === "production" ? null : (
                         <a
-                            id="cart-link-desktop"
-                            href="/cart"
-                            class="flex items-center"
-                        >
-                            <>
-                                <span
-                                    class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
-                                >
-                                    cart
-                                </span>
-                                <span
-                                    id="cart-items-desktop"
-                                    class="font-semibold pl-1"
-                                >
-                                    (0)
-                                </span>
-                            </>
-                        </a>
-                    )
-                }
-                {
-                    import.meta.env.CONTEXT === "production" ? null : (
-                        <a
                             href="/shop"
                             class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                         >
@@ -106,6 +80,13 @@ const { darkTheme } = Astro.props
                     class={`text-2xl font-semibold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >portfolio</a
                 >
+                {
+                    import.meta.env.CONTEXT === "production" ? null : (
+                        <a id="cart-link-desktop" href="/cart">
+                            <ShoppingCart darkTheme={darkTheme} />
+                        </a>
+                    )
+                }
             </nav>
         </div>
     </header>
@@ -237,21 +218,17 @@ const { darkTheme } = Astro.props
             '[id^="cart-link-"]'
         ) as NodeListOf<HTMLAnchorElement>
 
-        const cartItems = document.querySelectorAll(
-            '[id^="cart-items-"]'
-        ) as NodeListOf<HTMLAnchorElement>
-
-        if (!cartLinks.length || !cartItems.length) return
+        if (!cartLinks.length) return
 
         const { sessionId, totalQuantity } = getClientSession()
 
         cartLinks.forEach(link => {
             sessionId &&
                 link.setAttribute("href", `/cart?session_id=${sessionId}`)
-        })
 
-        cartItems.forEach(async item => {
-            item.textContent = `(${totalQuantity})`
+            const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
+
+            cartItemsSpan.textContent = `${totalQuantity}`
         })
     })
 </script>
