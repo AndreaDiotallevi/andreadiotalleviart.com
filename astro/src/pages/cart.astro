@@ -347,54 +347,55 @@ if (sessionId) {
             })
         })
 
-        promotionCodeForm.addEventListener("submit", async e => {
-            e.preventDefault()
+        promotionCodeForm &&
+            promotionCodeForm.addEventListener("submit", async e => {
+                e.preventDefault()
 
-            const promotionCodeElement = document.querySelector(
-                "#promotion-code-value"
-            ) as HTMLInputElement
+                const promotionCodeElement = document.querySelector(
+                    "#promotion-code-value"
+                ) as HTMLInputElement
 
-            const code = promotionCodeElement.value.trim()
+                const code = promotionCodeElement.value.trim()
 
-            addPromotionCodeButton
-                .querySelector("span")
-                ?.classList.add("hidden")
-
-            addPromotionCodeButton
-                .querySelector("#loading-spinner")
-                ?.classList.remove("hidden")
-
-            const promotionCodeError = document.querySelector(
-                "#promotion-code-error"
-            ) as HTMLInputElement
-
-            const { session, error } = await addPromotionCode({
-                code,
-                currency,
-            })
-
-            if (session) {
-                updateClientSession({
-                    session,
-                    promotionCode: code,
-                })
-                navigate(`/cart?session_id=${session.id}`, {
-                    history: "replace",
-                })
-            } else {
                 addPromotionCodeButton
                     .querySelector("span")
-                    ?.classList.remove("hidden")
+                    ?.classList.add("hidden")
 
                 addPromotionCodeButton
                     .querySelector("#loading-spinner")
-                    ?.classList.add("hidden")
+                    ?.classList.remove("hidden")
 
-                promotionCodeError.classList.remove("hidden")
-                promotionCodeElement.classList.add("border-red-700")
-                promotionCodeError.textContent = error!
-            }
-        })
+                const promotionCodeError = document.querySelector(
+                    "#promotion-code-error"
+                ) as HTMLInputElement
+
+                const { session, error } = await addPromotionCode({
+                    code,
+                    currency,
+                })
+
+                if (session) {
+                    updateClientSession({
+                        session,
+                        promotionCode: code,
+                    })
+                    navigate(`/cart?session_id=${session.id}`, {
+                        history: "replace",
+                    })
+                } else {
+                    addPromotionCodeButton
+                        .querySelector("span")
+                        ?.classList.remove("hidden")
+
+                    addPromotionCodeButton
+                        .querySelector("#loading-spinner")
+                        ?.classList.add("hidden")
+
+                    promotionCodeError.classList.remove("hidden")
+                    promotionCodeElement.classList.add("border-red-700")
+                    promotionCodeError.textContent = error!
+                }
+            })
 
         removePromotionCodeButton &&
             removePromotionCodeButton.addEventListener("click", async e => {
