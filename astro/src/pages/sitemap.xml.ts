@@ -1,5 +1,3 @@
-export const prerender = false
-
 import { getStripePrices } from "@utils/serverless"
 import { getCollection } from "astro:content"
 
