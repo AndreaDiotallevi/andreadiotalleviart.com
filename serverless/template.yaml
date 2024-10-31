@@ -662,3 +662,19 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/api_getLocaleCurrency.ts
+
+    # NEWSLETTER CONTACT LISTS
+    # NewsletterContactList:
+    #     Type: AWS::SES::ContactList
+    #     Properties:
+    #         ContactListName: NewsletterContactList
+    #         Description: TBC
+    #         Topics:
+    #             - TopicName: GeneralUpdates
+    #               DisplayName: General Updates
+    #               Description: Updates on general topics.
+    #               DefaultSubscriptionStatus: OPT_IN
+    #             - TopicName: Promotions
+    #               DisplayName: Promotions
+    #               Description: Receive special promotions and offers.
+    #               DefaultSubscriptionStatus: OPT_OUT
