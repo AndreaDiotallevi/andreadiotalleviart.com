@@ -9,7 +9,7 @@ export async function GET() {
     const baseUrl = "https://www.andreadiotalleviart.com"
 
     const urls = [
-        `${baseUrl}/`,
+        `${baseUrl}`,
         `${baseUrl}/about`,
         `${baseUrl}/contact`,
         `${baseUrl}/portfolio`,
