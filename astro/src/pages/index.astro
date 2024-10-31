@@ -33,26 +33,29 @@ Astro.response.headers.set(
         >
             <div id="sketch" class="w-full md:w-1/2 h-full"></div>
             <div
-                class="flex flex-col justify-center md:items-start w-full md:w-1/2 text-white mb-8 md:mb-0"
+                class="flex flex-col items-center justify-center w-full md:w-1/2 text-white mb-8 md:mb-0"
             >
-                <h1
-                    class="text-2xl md:text-5xl text-center md:text-left font-semibold mb-4 md:mb-6"
-                >
-                    Generative Artist
-                </h1>
-                <p class="text-center md:text-left mb-2 md:mb-4">
+                <div class="flex flex-col items-center md:items-start">
+                    <h1
+                        class="text-2xl md:text-5xl text-center md:text-left font-semibold mb-4 md:mb-6"
+                    >
+                        <!-- Generative Artist -->
+                        I make art with code
+                    </h1>
+                    <!-- <p class="text-center md:text-left mb-2 md:mb-4">
                     I make art with code
-                </p>
-                <BackToLink
-                    href={import.meta.env.CONTEXT === "production"
-                        ? "/portfolio"
-                        : "/shop"}
-                    text={import.meta.env.CONTEXT === "production"
-                        ? "Explore"
-                        : "Buy a print"}
-                    towardsRight={true}
-                    darkMode={true}
-                />
+                </p> -->
+                    <BackToLink
+                        href={import.meta.env.CONTEXT === "production"
+                            ? "/portfolio"
+                            : "/shop"}
+                        text={import.meta.env.CONTEXT === "production"
+                            ? "Explore"
+                            : "Explore prints"}
+                        towardsRight={true}
+                        darkMode={true}
+                    />
+                </div>
             </div>
         </div>
     </div>
