@@ -68,7 +68,9 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-            <BackToLink href="/shop" text="Back to shop" />
+            <div class="md:hidden mb-4">
+                <BackToLink href="/shop" text="Back to shop" />
+            </div>
             <h1 class="text-2xl font-semibold mb-4 md:hidden">
                 {price.product.metadata.displayName}
             </h1>
