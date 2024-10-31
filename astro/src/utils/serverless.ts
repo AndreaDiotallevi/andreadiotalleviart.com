@@ -17,10 +17,12 @@ export const getStripePrices = async (): Promise<StripePrice[]> => {
             }
             return data.prices
         } else {
-            throw new Error(JSON.stringify(response))
+            console.error(response)
+            return []
         }
     } catch (error) {
-        throw error
+        console.error(error)
+        return []
     }
 }
 
