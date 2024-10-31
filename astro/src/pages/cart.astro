@@ -83,14 +83,14 @@ if (sessionId) {
                                 <th class="text-right md:min-w-36">Subtotal</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y md:text-xl">
+                        <tbody class="md:text-xl">
                             {session.line_items?.data.map(item => {
                                 const price =
                                     item.price as unknown as StripePrice
 
                                 return (
                                     <tr>
-                                        <td class="py-4 pr-1 md:pr-8 flex items-center">
+                                        <td class="py-2 md:py-4 pr-1 md:pr-8 flex items-center">
                                             <a
                                                 href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                                                 class="min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
@@ -120,7 +120,7 @@ if (sessionId) {
                                                 </span>
                                             </span>
                                         </td>
-                                        <td class="py-4 px-0 md:px-8 hidden md:table-cell">
+                                        <td class="py-2 md:py-4 px-0 md:px-8 hidden md:table-cell">
                                             {formatCurrency({
                                                 value: price.currency_options[
                                                     currency
@@ -128,7 +128,7 @@ if (sessionId) {
                                                 currency,
                                             })}
                                         </td>
-                                        <td class="py-4 px-0 md:px-8 text-center">
+                                        <td class="py-2 md:py-4 px-0 md:px-8 text-center">
                                             <div class="border border-black rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
                                                 <button
                                                     class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
@@ -171,7 +171,7 @@ if (sessionId) {
                             <tbody>
                                 <tr>
                                     <td>Subtotal</td>
-                                    <td class="text-right py-1 min-w-36">
+                                    <td class="text-right md:py-1 min-w-36">
                                         {formatCurrency({
                                             value: session.amount_subtotal!,
                                             currency,
@@ -180,13 +180,13 @@ if (sessionId) {
                                 </tr>
                                 <tr>
                                     <td>Shipping</td>
-                                    <td class="text-right py-1 min-w-36">
+                                    <td class="text-right md:py-1 min-w-36">
                                         Free
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Discounts</td>
-                                    <td class="text-right py-1 min-w-36">
+                                    <td class="text-right md:py-1 min-w-36">
                                         {formatCurrency({
                                             value: session.total_details
                                                 ?.amount_discount!,
@@ -196,7 +196,7 @@ if (sessionId) {
                                 </tr>
                                 <tr>
                                     <td class="font-semibold">Total</td>
-                                    <td class="text-right py-1 min-w-36 font-semibold">
+                                    <td class="text-right md:py-1 min-w-36 font-semibold">
                                         {formatCurrency({
                                             value: session.amount_total!,
                                             currency,
