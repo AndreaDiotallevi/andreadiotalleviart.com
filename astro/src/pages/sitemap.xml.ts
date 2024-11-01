@@ -1,8 +1,8 @@
-import { getStripePrices } from "@utils/serverless"
+// import { getStripePrices } from "@utils/serverless"
 import { getCollection } from "astro:content"
 
 export async function GET() {
-    const prices = await getStripePrices()
+    // const prices = await getStripePrices()
     const artworks = await getCollection("artworks")
     const baseUrl = "https://www.andreadiotalleviart.com"
 
@@ -11,11 +11,11 @@ export async function GET() {
         `${baseUrl}/about`,
         `${baseUrl}/contact`,
         `${baseUrl}/portfolio`,
-        `${baseUrl}/shop`,
-        ...prices.map(
-            price =>
-                `${baseUrl}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`,
-        ),
+        // `${baseUrl}/shop`,
+        // ...prices.map(
+        //     price =>
+        //         `${baseUrl}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`,
+        // ),
         ...artworks.map(artwork => `${baseUrl}/portfolio/${artwork.data.slug}`),
     ]
 
