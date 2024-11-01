@@ -215,9 +215,12 @@ const { darkTheme, hideFooter } = Astro.props
     import { clearClientSession, getClientSession } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", () => {
-        if (window.location.pathname === "/checkout/success") {
+        if (
+            window.location.pathname === "/checkout/success" ||
+            (window.location.pathname === "/cart" &&
+                !window.location.search.includes("session_id="))
+        ) {
             clearClientSession()
-            return
         }
 
         const cartLinks = document.querySelectorAll(
