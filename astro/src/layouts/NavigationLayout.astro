@@ -11,7 +11,7 @@ const { darkTheme, hideFooter } = Astro.props
 
 <div class="flex flex-col min-h-[100dvh]">
     <header
-        class={`fixed top-0 left-0 right-0 flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black bg-opacity-70 backdrop-blur-md"} z-50`}
+        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black bg-opacity-70 backdrop-blur-md"} z-50`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
@@ -100,7 +100,7 @@ const { darkTheme, hideFooter } = Astro.props
     <!-- Fullscreen mobile menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg-[#38444c] text-white flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
+        class="fixed inset-0 bg-[#38444c] min-w-[320px] text-white flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
     >
         <button
             id="menu-close"
