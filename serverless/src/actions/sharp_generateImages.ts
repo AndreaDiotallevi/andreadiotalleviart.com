@@ -1,7 +1,7 @@
 import sharp from "sharp"
 
 export const handler = async () => {
-    const name = "moonlight-2"
+    const name = "moonlight-1"
 
     // await cropToVerticalA3Ratio(
     //     `./${name}.png`,
@@ -13,10 +13,7 @@ export const handler = async () => {
     //     `./${name}_PRODUCTION_WITH_BORDER.png`
     // )
 
-    await createWebImage(
-        `./${name}_PRODUCTION_WITHOUT_BORDER.png`,
-        `./${name}_WEB_WITHOUT_BORDER.png`
-    )
+    await createWebImage(`./${name}.png`, `./${name}_WEB_WITHOUT_BORDER.png`)
 
     // await createWebImage(
     //     `./${name}_PRODUCTION_WITH_BORDER.png`,
@@ -29,9 +26,7 @@ export const handler = async () => {
     // )
 }
 
-handler()
-
-// npx ts-node ./src/scripts/sharpGenerateImages.ts
+// npx ts-node ./src/actions/sharp_generateImages.ts
 
 export const addBorder = async (imagePath: string, outputPath: string) => {
     console.log("Adding border...")
@@ -137,8 +132,9 @@ export const createThumbnail = async (
         })
 }
 
-export const createWebImage = async (imagePath: string, outputPath: string) => {
+const createWebImage = async (imagePath: string, outputPath: string) => {
     const targetWidth = 1400 // Set target width for the thumbnail
+    console.log("there")
 
     // Resize the image and convert to JPEG
     await sharp(imagePath)
@@ -151,3 +147,5 @@ export const createWebImage = async (imagePath: string, outputPath: string) => {
             console.error("Error creating thumbnail:", err)
         })
 }
+
+handler()
