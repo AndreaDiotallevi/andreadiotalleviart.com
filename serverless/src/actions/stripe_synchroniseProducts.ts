@@ -325,13 +325,53 @@ const products: ProductInput[] = [
     // },
     {
         active: true,
+        name: "Moonlight 1 - A3 Giclée Fine Art Print",
+        description:
+            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Moonlight 1",
+            displayOrder: "3",
+            orientation: "portrait",
+            size: "A3",
+            slug: "moonlight-1",
+            sku: "print-moonlight1-A3",
+        },
+        images: [
+            cloudinary.url("moonlight-1_MOCKUP_xul3pi", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("moonlight-1_WEB_WITHOUT_BORDER_ecwgkl", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+            cloudinary.url("moonlight-1_PAPER_cdhgj9", {
+                transformation: {
+                    quality: "auto",
+                    format: "auto",
+                },
+            }),
+        ],
+        currencyOptions: {
+            gbp: 6500,
+            eur: 8000,
+            usd: 9000,
+        },
+    },
+    {
+        active: true,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
             "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
-            displayOrder: "3",
+            displayOrder: "4",
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-2",
@@ -363,44 +403,44 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
-    {
-        active: true,
-        name: "Skylines 3 - A3 Giclée Fine Art Print",
-        description:
-            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
-        metadata: {
-            category: "prints",
-            displayName: "Skylines 3",
-            displayOrder: "4",
-            orientation: "portrait",
-            size: "A3",
-            slug: "skylines-3",
-            sku: "print-skylines3-A3",
-        },
-        images: [
-            cloudinary.url("skylines3-MOCKUP_esw32k", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("skylines3_WEB_jzpzpg", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("skylines3_PAPER_rrbmy8", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-        ],
-        currencyOptions: {
-            gbp: 6500,
-            eur: 8000,
-            usd: 9000,
-        },
-    },
+    // {
+    //     active: false,
+    //     name: "Skylines 3 - A3 Giclée Fine Art Print",
+    //     description:
+    //         "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+    //     metadata: {
+    //         category: "prints",
+    //         displayName: "Skylines 3",
+    //         displayOrder: "4",
+    //         orientation: "portrait",
+    //         size: "A3",
+    //         slug: "skylines-3",
+    //         sku: "print-skylines3-A3",
+    //     },
+    //     images: [
+    //         cloudinary.url("skylines3-MOCKUP_esw32k", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //         cloudinary.url("skylines3_WEB_jzpzpg", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //         cloudinary.url("skylines3_PAPER_rrbmy8", {
+    //             transformation: {
+    //                 quality: "auto",
+    //                 format: "auto",
+    //             },
+    //         }),
+    //     ],
+    //     currencyOptions: {
+    //         gbp: 6500,
+    //         eur: 8000,
+    //         usd: 9000,
+    //     },
+    // },
 ]
