@@ -35,7 +35,7 @@ const { darkTheme, hideFooter } = Astro.props
                 id="submit-button"
                 buttonText="Join"
                 errorMessage="There was an error sending your message. Please try again."
-                successMessage="Message sent!"
+                successMessage="You are in!"
             />
             <!-- <p class="text-center text-sm">Unsubscribe Anytime</p> -->
         </form>
@@ -43,18 +43,20 @@ const { darkTheme, hideFooter } = Astro.props
 </div>
 
 <script>
+    import { newsletterCreateContact } from "@utils/serverless"
+
     document.addEventListener("astro:page-load", async () => {
         const newsletterForm = document.querySelector("#newsletter-form")
 
         if (!newsletterForm) return
 
-        const button = document.querySelector(
+        const button = newsletterForm.querySelector(
             "#submit-button"
         ) as HTMLButtonElement
 
-        const spinner = document.getElementById("loading-spinner")!
-        const errorMessage = document.getElementById("error-message")!
-        const successMessage = document.getElementById("success-message")!
+        const spinner = newsletterForm.querySelector("#loading-spinner")!
+        const errorMessage = newsletterForm.querySelector("#error-message")!
+        const successMessage = newsletterForm.querySelector("#success-message")!
 
         newsletterForm.addEventListener("submit", async e => {
             e.preventDefault()
@@ -63,30 +65,33 @@ const { darkTheme, hideFooter } = Astro.props
             spinner.classList.remove("hidden")
             errorMessage.classList.add("hidden")
             successMessage.classList.add("hidden")
+            successMessage.textContent = "You are in!"
 
-            const email = (document.getElementById("email") as HTMLInputElement)
-                .value
+            const email = (
+                newsletterForm.querySelector("#email") as HTMLInputElement
+            ).value
 
-            console.log(name, email)
+            const { error } = await newsletterCreateContact({ email })
 
-            // try {
-            //     await fetch(
-            //         import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
-            //         {
-            //             method: "POST",
-            //             headers: { "Content-Type": "application/json" },
-            //             body: JSON.stringify({ name, email }),
-            //         }
-            //     )
+            if (error) {
+                if (error === "AlreadyExistsException") {
+                    successMessage.textContent = "You are already subscribed!"
+                    successMessage.classList.remove("hidden")
+                    spinner.classList.add("hidden")
+                    button.disabled = false
+                    return
+                }
 
-            //     successMessage.classList.remove("hidden")
-            //     spinner.classList.add("hidden")
-            // } catch (error) {
-            //     console.error(error)
-            //     errorMessage.classList.remove("hidden")
-            //     spinner.classList.add("hidden")
-            //     button.disabled = false
-            // }
+                console.error(error)
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+                return
+            }
+
+            successMessage.classList.remove("hidden")
+            spinner.classList.add("hidden")
+            button.disabled = false
         })
     })
 </script>
