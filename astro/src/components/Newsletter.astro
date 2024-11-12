@@ -1,0 +1,89 @@
+---
+import Button from "@components/Button.astro"
+
+interface Props {
+    darkTheme?: boolean
+    hideFooter?: boolean
+}
+
+const { darkTheme, hideFooter } = Astro.props
+---
+
+<div
+    class={`flex justify-center items-center px-4 py-8 bg-white ${hideFooter ? "hidden md:flex" : ""} ${darkTheme ? "hidden" : ""}`}
+>
+    <div class="w-full max-w-sm rounded-lg">
+        <h3 class="mb-2">Be the first to know about new products.</h3>
+        <form id="newsletter-form" class="space-y-4">
+            <div>
+                <!-- <label for="email" class="block mb-1">Email:</label> -->
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    class="w-full px-3 py-3 border border-black rounded-md"
+                    placeholder="Your Email"
+                    autocomplete="email"
+                    required
+                />
+            </div>
+            <Button
+                variant="secondary"
+                id="submit-button"
+                buttonText="Join"
+                errorMessage="There was an error sending your message. Please try again."
+                successMessage="Message sent!"
+            />
+            <!-- <p class="text-center text-sm">Unsubscribe Anytime</p> -->
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("astro:page-load", async () => {
+        const newsletterForm = document.querySelector("#newsletter-form")
+
+        if (!newsletterForm) return
+
+        const button = document.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
+
+        const spinner = document.getElementById("loading-spinner")!
+        const errorMessage = document.getElementById("error-message")!
+        const successMessage = document.getElementById("success-message")!
+
+        newsletterForm.addEventListener("submit", async e => {
+            e.preventDefault()
+
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
+            successMessage.classList.add("hidden")
+
+            const email = (document.getElementById("email") as HTMLInputElement)
+                .value
+
+            console.log(name, email)
+
+            // try {
+            //     await fetch(
+            //         import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
+            //         {
+            //             method: "POST",
+            //             headers: { "Content-Type": "application/json" },
+            //             body: JSON.stringify({ name, email }),
+            //         }
+            //     )
+
+            //     successMessage.classList.remove("hidden")
+            //     spinner.classList.add("hidden")
+            // } catch (error) {
+            //     console.error(error)
+            //     errorMessage.classList.remove("hidden")
+            //     spinner.classList.add("hidden")
+            //     button.disabled = false
+            // }
+        })
+    })
+</script>

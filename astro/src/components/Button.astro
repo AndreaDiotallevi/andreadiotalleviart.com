@@ -4,15 +4,22 @@ interface Props {
     buttonText: string
     errorMessage: string
     successMessage?: string
+    variant?: "primary" | "secondary"
 }
 
-const { id, buttonText, errorMessage, successMessage } = Astro.props
+const {
+    id,
+    buttonText,
+    errorMessage,
+    successMessage,
+    variant = "primary",
+} = Astro.props
 ---
 
 <button
     id={id}
     type="submit"
-    class="flex items-center justify-center w-full rounded-lg bg-black px-4 py-3 text-white md:hover:bg-gray-800 transition-colors duration-300"
+    class={`flex items-center justify-center w-full rounded-lg px-4 py-3 ${variant === "primary" ? "bg-black text-white md:hover:bg-gray-800" : "bg-white text-black md:hover:bg-black md:hover:text-white border border-black"} transition-colors duration-300`}
 >
     <svg
         id="loading-spinner"

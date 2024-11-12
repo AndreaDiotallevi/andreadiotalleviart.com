@@ -1,4 +1,5 @@
 ---
+import Newsletter from "@components/Newsletter.astro"
 import ShoppingCart from "@components/ShoppingCart.astro"
 
 interface Props {
@@ -127,6 +128,12 @@ const { darkTheme, hideFooter } = Astro.props
     <main class="flex-grow pt-[80px]">
         <slot />
     </main>
+
+    {
+        import.meta.env.CONTEXT === "production" ? null : (
+            <Newsletter darkTheme={darkTheme} hideFooter={hideFooter} />
+        )
+    }
 
     <footer
         class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"} ${hideFooter ? "hidden md:flex" : ""}`}
