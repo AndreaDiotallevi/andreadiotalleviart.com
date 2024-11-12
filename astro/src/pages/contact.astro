@@ -115,13 +115,13 @@ Astro.response.headers.set(
 
         if (!contactForm) return
 
-        const button = document.querySelector(
+        const button = contactForm.querySelector(
             "#submit-button"
         ) as HTMLButtonElement
 
-        const spinner = document.getElementById("loading-spinner")!
-        const errorMessage = document.getElementById("error-message")!
-        const successMessage = document.getElementById("success-message")!
+        const spinner = contactForm.querySelector("#loading-spinner")!
+        const errorMessage = contactForm.querySelector("#error-message")!
+        const successMessage = contactForm.querySelector("#success-message")!
 
         contactForm.addEventListener("submit", async e => {
             e.preventDefault()
@@ -131,15 +131,17 @@ Astro.response.headers.set(
             errorMessage.classList.add("hidden")
             successMessage.classList.add("hidden")
 
-            const name = (document.getElementById("name") as HTMLInputElement)
-                .value
-            const email = (document.getElementById("email") as HTMLInputElement)
-                .value
+            const name = (
+                contactForm.querySelector("#name") as HTMLInputElement
+            ).value
+            const email = (
+                contactForm.querySelector("#email") as HTMLInputElement
+            ).value
             const subject = (
-                document.getElementById("subject") as HTMLInputElement
+                contactForm.querySelector("#subject") as HTMLInputElement
             ).value
             const message = (
-                document.getElementById("message") as HTMLInputElement
+                contactForm.querySelector("#message") as HTMLInputElement
             ).value
 
             try {
@@ -154,6 +156,7 @@ Astro.response.headers.set(
 
                 successMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
+                button.disabled = false
             } catch (error) {
                 console.error(error)
                 errorMessage.classList.remove("hidden")

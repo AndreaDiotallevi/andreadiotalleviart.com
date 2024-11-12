@@ -281,7 +281,9 @@ if (sessionId) {
     import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
-        const cartPageContent = document.getElementById("cart-page-content")
+        const cartPageContent = document.querySelector(
+            "#cart-page-content"
+        ) as HTMLElement
 
         if (!cartPageContent) return
 
@@ -292,23 +294,23 @@ if (sessionId) {
             clearClientSession()
         }
 
-        const addToCartButtons = document.querySelectorAll(
+        const addToCartButtons = cartPageContent.querySelectorAll(
             '[id^="add-to-cart-"]'
         ) as NodeListOf<HTMLButtonElement>
 
-        const removeFromCartButtons = document.querySelectorAll(
+        const removeFromCartButtons = cartPageContent.querySelectorAll(
             '[id^="remove-from-cart-"]'
         ) as NodeListOf<HTMLButtonElement>
 
-        const addPromotionCodeButton = document.querySelector(
+        const addPromotionCodeButton = cartPageContent.querySelector(
             "#add-promotion-code-button"
         ) as HTMLButtonElement
 
-        const removePromotionCodeButton = document.querySelector(
+        const removePromotionCodeButton = cartPageContent.querySelector(
             "#remove-promotion-code-button"
         ) as HTMLButtonElement
 
-        const promotionCodeForm = document.querySelector(
+        const promotionCodeForm = cartPageContent.querySelector(
             "#promotion-code-form"
         ) as HTMLFormElement
 
@@ -346,7 +348,7 @@ if (sessionId) {
             promotionCodeForm.addEventListener("submit", async e => {
                 e.preventDefault()
 
-                const promotionCodeElement = document.querySelector(
+                const promotionCodeElement = cartPageContent.querySelector(
                     "#promotion-code-value"
                 ) as HTMLInputElement
 
@@ -360,7 +362,7 @@ if (sessionId) {
                     .querySelector("#loading-spinner")
                     ?.classList.remove("hidden")
 
-                const promotionCodeError = document.querySelector(
+                const promotionCodeError = cartPageContent.querySelector(
                     "#promotion-code-error"
                 ) as HTMLInputElement
 

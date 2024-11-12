@@ -211,12 +211,12 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
 
         if (!priceForm) return
 
-        const button = document.querySelector(
+        const button = priceForm.querySelector(
             "#submit-button"
         ) as HTMLButtonElement
 
-        const spinner = document.getElementById("loading-spinner")!
-        const errorMessage = document.getElementById("error-message")!
+        const spinner = priceForm.querySelector("#loading-spinner")!
+        const errorMessage = priceForm.querySelector("#error-message")!
 
         spinner.classList.add("hidden")
         button.disabled = false
@@ -228,8 +228,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
             spinner.classList.remove("hidden")
             errorMessage.classList.add("hidden")
 
-            const priceIdElement = document.getElementById(
-                "price-id"
+            const priceIdElement = document.querySelector(
+                "#price-id"
             ) as HTMLInputElement
 
             const priceId = priceIdElement.value

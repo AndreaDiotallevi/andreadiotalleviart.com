@@ -152,9 +152,9 @@ const success = !!(session && currency && shippingDetails)
     import { sendGA4PurchaseEvent } from "@utils/ga4"
 
     document.addEventListener("astro:page-load", async () => {
-        const successPageContent = document.getElementById(
-            "success-page-content"
-        )
+        const successPageContent = document.querySelector(
+            "#success-page-content"
+        ) as HTMLElement
 
         if (!successPageContent) return
 
