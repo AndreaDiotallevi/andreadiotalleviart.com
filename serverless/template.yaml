@@ -698,6 +698,37 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_newsletterListContacts.ts
 
+    NewsletterCreateContactFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-NewsletterCreateContact
+            Handler: src/lambdas/api_newsletterCreateContact.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /newsletter-contacts
+                        Method: POST
+            Environment:
+                Variables:
+                    NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
+            Policies:
+                - Statement:
+                      - Sid: listContacts
+                        Effect: Allow
+                        Action:
+                            - ses:CreateContact
+                        Resource:
+                            - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_newsletterCreateContact.ts
+
     # NEWSLETTER CONTACT LISTS
     NewsletterContactList:
         Type: AWS::SES::ContactList
