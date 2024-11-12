@@ -12,8 +12,10 @@ export const newsletterCreateContact = async ({ email }: { email: string }) => {
         console.log("Creating newsletter contact...")
         const response = await sesClient.send(command)
         console.log(response)
+        return { error: null }
     } catch (error) {
         console.error(error)
-        throw error
+        const awsError = error as unknown as { name: string }
+        return { error: awsError.name || "Unknown error" }
     }
 }

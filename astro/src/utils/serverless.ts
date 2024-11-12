@@ -80,3 +80,29 @@ export const retrieveCheckoutSession = async (params: {
         }
     }
 }
+
+export const newsletterCreateContact = async (params: {
+    email: string
+}): Promise<{ success?: boolean; error?: string }> => {
+    try {
+        const response = await fetch(
+            import.meta.env.PUBLIC_API_URL + `/newsletter-contacts`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(params),
+            },
+        )
+
+        const { success, error } = (await response.json()) as {
+            success: boolean
+            error?: string
+        }
+
+        return { success, error }
+    } catch (error) {
+        return {
+            error: "There was a problem with your request. Please try again.",
+        }
+    }
+}
