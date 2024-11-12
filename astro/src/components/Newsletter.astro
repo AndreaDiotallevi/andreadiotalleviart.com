@@ -1,17 +1,8 @@
 ---
 import Button from "@components/Button.astro"
-
-interface Props {
-    darkTheme?: boolean
-    hideFooter?: boolean
-}
-
-const { darkTheme, hideFooter } = Astro.props
 ---
 
-<div
-    class={`flex justify-center items-center px-4 py-8 bg-white ${hideFooter ? "hidden md:flex" : ""} ${darkTheme ? "hidden" : ""}`}
->
+<div class={`flex justify-center items-center px-4 py-8 bg-white`}>
     <div class="w-full max-w-sm rounded-lg">
         <h3 class="mb-2">
             Get 10% off your first purchase and be the first to know about new

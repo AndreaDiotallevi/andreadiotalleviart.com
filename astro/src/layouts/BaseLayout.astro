@@ -30,6 +30,7 @@ interface Props {
     currency?: Currency
     darkTheme?: boolean
     hideFooter?: boolean
+    newsletter?: boolean
 }
 
 const {
@@ -42,6 +43,7 @@ const {
     currency = "gbp",
     darkTheme = false,
     hideFooter = false,
+    newsletter = false,
 } = Astro.props
 ---
 
@@ -123,7 +125,11 @@ const {
     </head>
     <body class="min-w-[320px]">
         <GlobalStyles />
-        <NavigationLayout darkTheme={darkTheme} hideFooter={hideFooter}>
+        <NavigationLayout
+            darkTheme={darkTheme}
+            hideFooter={hideFooter}
+            newsletter={newsletter}
+        >
             <slot />
         </NavigationLayout>
     </body>
