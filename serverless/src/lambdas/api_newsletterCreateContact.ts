@@ -23,7 +23,7 @@ export const handler = async (
         Destination: {
             ToAddresses: [email],
         },
-        Template: "NewsletterWelcomeEmailTemplate",
+        Template: "NewsletterWelcomeBeforeLaunchEmailTemplate",
         TemplateData: JSON.stringify({ promotionCode }),
     })
 

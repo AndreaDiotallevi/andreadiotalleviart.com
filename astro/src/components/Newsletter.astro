@@ -9,8 +9,9 @@ import Button from "@components/Button.astro"
         >
             <div class="w-full max-w-sm">
                 <h3 class="mb-2 md:text-center">
-                    Get 10% off your first purchase and be the first to know
-                    when I launch new products.
+                    <!-- Get 10% off your first purchase and be the first to know
+                    when I launch new products. -->
+                    Art prints shop coming soon. Be the first to know!
                 </h3>
                 <form id="newsletter-form" class="space-y-4">
                     <div>
@@ -62,7 +63,6 @@ import Button from "@components/Button.astro"
             spinner.classList.remove("hidden")
             errorMessage.classList.add("hidden")
             successMessage.classList.add("hidden")
-            successMessage.textContent = "You are in!"
 
             const email = (
                 newsletterForm.querySelector("#email") as HTMLInputElement
@@ -72,8 +72,6 @@ import Button from "@components/Button.astro"
 
             if (error) {
                 if (error === "AlreadyExistsException") {
-                    successMessage.textContent =
-                        "You are already subscribed.\nI sent you the email again just in case!"
                     successMessage.classList.remove("hidden")
                     spinner.classList.add("hidden")
                     button.disabled = false
