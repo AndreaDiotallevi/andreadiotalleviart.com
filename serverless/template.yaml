@@ -403,6 +403,19 @@ Resources:
                     </html>
                 SubjectPart: "Welcome - Unlock your 10% discount"
 
+    NewsletterEmailTestTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: NewsletterEmailTestTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            Test email
+                        </body>
+                    </html>
+                SubjectPart: "Newsletter test email"
+
     # FUNCTIONS
     ApiGateway:
         Type: AWS::Serverless::Api
@@ -733,7 +746,7 @@ Resources:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
             Policies:
                 - Statement:
-                      - Sid: listContacts
+                      - Sid: createContacts
                         Effect: Allow
                         Action:
                             - ses:CreateContact
@@ -761,6 +774,52 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/api_newsletterCreateContact.ts
+
+    NewsletterSendBulkEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-NewsletterSendBulkEmail
+            Handler: src/lambdas/api_newsletterSendBulkEmail.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /newsletter-send-bulk-email
+                        Method: POST
+            Environment:
+                Variables:
+                    NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
+            Policies:
+                - Statement:
+                      - Sid: listContacts
+                        Effect: Allow
+                        Action:
+                            - ses:ListContacts
+                        Resource:
+                            - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_CONTACT_LIST_NAME
+                - Statement:
+                      - Sid: sendBulkEmail
+                        Effect: Allow
+                        Action:
+                            - ses:SendBulkEmail
+                            - ses:SendBulkTemplatedEmail
+                        Resource: "*"
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_newsletterSendBulkEmail.ts
 
     # NEWSLETTER CONTACT LISTS
     NewsletterContactList:
