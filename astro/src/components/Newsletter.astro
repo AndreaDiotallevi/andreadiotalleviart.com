@@ -5,7 +5,7 @@ import Button from "@components/Button.astro"
 <div class="w-full flex justify-center items-center">
     <div class="w-full max-w-screen-xl px-4">
         <div
-            class="w-full flex justify-center items-center pt-8 pb-0 border-t border-gray-400"
+            class="w-full flex justify-center items-center pt-8 pb-2 border-t border-gray-400"
         >
             <div class="w-full max-w-sm">
                 <h3 class="mb-2 md:text-center">
@@ -30,7 +30,7 @@ import Button from "@components/Button.astro"
                         id="submit-button"
                         buttonText="Join"
                         errorMessage="There was an error sending your message. Please try again."
-                        successMessage="You are in!"
+                        successMessage="Thank you for subscribing!"
                     />
                     <!-- <p class="text-center text-sm">Unsubscribe Anytime</p> -->
                 </form>
@@ -73,7 +73,7 @@ import Button from "@components/Button.astro"
             if (error) {
                 if (error === "AlreadyExistsException") {
                     successMessage.textContent =
-                        "You are already subscribed, but I have resent you the email just in case!"
+                        "You are already subscribed!\nI sent you the email again just in case!"
                     successMessage.classList.remove("hidden")
                     spinner.classList.add("hidden")
                     button.disabled = false

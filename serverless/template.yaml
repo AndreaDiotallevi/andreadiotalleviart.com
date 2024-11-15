@@ -401,7 +401,7 @@ Resources:
                             <h3>Andrea</h3>
                         </body>
                     </html>
-                SubjectPart: "Welcome - Unlock your 10% discount2"
+                SubjectPart: "Welcome - Unlock your 10% discount"
 
     # FUNCTIONS
     ApiGateway:
