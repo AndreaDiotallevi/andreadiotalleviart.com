@@ -385,6 +385,25 @@ Resources:
                     </html>
                 SubjectPart: "{{subject}}"
 
+    NewsletterWelcomeBeforeLaunchEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: NewsletterWelcomeBeforeLaunchEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <h3>Ciao,</h3>
+                            <p>Thanks for your interest on my future online shop!</p>
+                            <p>That boosts my motivation to launch it as soon as I can.</p>
+                            <p>I will send you an email just before it goes live with an exclusive discount code for your first purchase.</p>
+                            <p>Stay tuned!</p>
+                            <h3>Andrea</h3>
+                            <a href="https://andreadiotalleviart.com">www.andreadiotalleviart.com</a>
+                        </body>
+                    </html>
+                SubjectPart: "Welcome to my future online shop"
+
     NewsletterWelcomeEmailTemplate:
         Type: AWS::SES::Template
         Properties:
@@ -832,7 +851,48 @@ Resources:
                   DisplayName: General Updates
                   Description: Updates on general topics.
                   DefaultSubscriptionStatus: OPT_IN
-                # - TopicName: Promotions
-                #   DisplayName: Promotions
-                #   Description: Receive special promotions and offers.
-                #   DefaultSubscriptionStatus: OPT_OUT
+
+    # SESEventPublishingRole:
+    #     Type: AWS::IAM::Role
+    #     Properties:
+    #         AssumeRolePolicyDocument:
+    #             Version: "2012-10-17"
+    #             Statement:
+    #                 - Effect: Allow
+    #                   Principal:
+    #                       Service: ses.amazonaws.com
+    #                   Action: sts:AssumeRole
+    #         Policies:
+    #             - PolicyName: SESEventBridgePublishPolicy
+    #               PolicyDocument:
+    #                   Version: "2012-10-17"
+    #                   Statement:
+    #                       - Effect: Allow
+    #                         Action:
+    #                             - events:PutEvents
+    #                         Resource:
+    #                             - !GetAtt EventBus.Arn
+
+    # SESConfigurationSet:
+    #     Type: AWS::SES::ConfigurationSet
+    #     Properties:
+    #         Name: "EmailLoggingConfigSet"
+
+    # SESConfigurationSetEventDestination:
+    #     Type: AWS::SES::ConfigurationSetEventDestination
+    #     Properties:
+    #         ConfigurationSetName: !Ref SESConfigurationSet
+    #         EventDestination:
+    #             Name: EventBridgeDestination
+    #             Enabled: true
+    #             MatchingEventTypes:
+    #                 - send
+    #                 - reject
+    #                 - bounce
+    #                 - complaint
+    #                 - delivery
+    #                 - open
+    #                 - click
+    #                 - renderingFailure
+    #             EventBridgeDestination:
+    #                 EventBusArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
