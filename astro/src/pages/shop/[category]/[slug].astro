@@ -87,6 +87,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                             src={src}
                             alt={price.product.name}
                             class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                            loading="eager"
+                            fetchpriority="high"
                         />
                     ))
                 }
@@ -101,6 +103,8 @@ Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
                             height={243}
                             alt={`Thumbnail ${index + 1}`}
                             class={`w-full h-auto cursor-pointer`}
+                            loading="eager"
+                            fetchpriority="high"
                         />
                     ))
                 }
