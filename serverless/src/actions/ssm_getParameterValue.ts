@@ -14,6 +14,7 @@ export const getParameterValue = async <T>({
         WithDecryption: withDecryption,
     })
 
+    console.log(`Getting ${name} parameter value...`)
     const { Parameter } = await ssmClient.send(getParameterCommand)
 
     if (!Parameter?.Value) {
