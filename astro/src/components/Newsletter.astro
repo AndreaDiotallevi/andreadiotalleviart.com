@@ -72,7 +72,8 @@ import Button from "@components/Button.astro"
 
             if (error) {
                 if (error === "AlreadyExistsException") {
-                    successMessage.textContent = "You are already subscribed!"
+                    successMessage.textContent =
+                        "You are already subscribed, but I have resent you the email just in case!"
                     successMessage.classList.remove("hidden")
                     spinner.classList.add("hidden")
                     button.disabled = false
