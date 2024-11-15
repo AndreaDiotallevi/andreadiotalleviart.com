@@ -6,17 +6,38 @@ interface ClientSession {
     sessionId: string
     totalQuantity: number
     lineItems: { price: string; quantity: number }[]
-    promotionCode?: string
+    promotionCode: string
+    expiresAt: number
+}
+
+const defaultClientSession: ClientSession = {
+    sessionId: "",
+    totalQuantity: 0,
+    lineItems: [],
+    promotionCode: "",
+    expiresAt: 0,
+}
+
+const isSessionExpired = (expiresAt: number) => {
+    const currentTime = Math.floor(Date.now() / 1000) // Current time in seconds
+    return currentTime >= expiresAt
 }
 
 export const getClientSession = (): ClientSession => {
     const str = localStorage.getItem(clientSessionKey)
 
     if (!str) {
-        return { totalQuantity: 0, lineItems: [], sessionId: "" }
+        return defaultClientSession
     }
 
-    return JSON.parse(str) as ClientSession
+    const clientSession = JSON.parse(str) as ClientSession
+
+    if (isSessionExpired(clientSession.expiresAt)) {
+        clearClientSession()
+        return defaultClientSession
+    }
+
+    return clientSession
 }
 
 export const updateClientSession = ({
@@ -24,7 +45,7 @@ export const updateClientSession = ({
     promotionCode = "",
 }: {
     session: Stripe.Checkout.Session
-    promotionCode?: string
+    promotionCode?: ClientSession["promotionCode"]
 }) => {
     const clientSession: ClientSession = {
         sessionId: session.id,
@@ -39,6 +60,7 @@ export const updateClientSession = ({
                 quantity: item.quantity!,
             })) || [],
         promotionCode,
+        expiresAt: session.expires_at,
     }
 
     localStorage.setItem(clientSessionKey, JSON.stringify(clientSession))
