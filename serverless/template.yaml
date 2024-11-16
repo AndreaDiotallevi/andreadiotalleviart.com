@@ -394,15 +394,14 @@ Resources:
                     <html>
                         <body>
                             <h3>Ciao,</h3>
-                            <p>Thanks for your interest on my future online shop!</p>
-                            <p>That boosts my motivation to launch it as soon as I can.</p>
-                            <p>I will send you an email just before it goes live with an exclusive discount code for your first purchase.</p>
+                            <p>Thank you for joining the newsletter!</p>
+                            <p>You will receive an email with an exclusive discount code just before the print shop goes live.</p>
                             <p>Stay tuned!</p>
                             <h3>Andrea</h3>
                             <a href="https://andreadiotalleviart.com">www.andreadiotalleviart.com</a>
                         </body>
                     </html>
-                SubjectPart: "Welcome to my future online shop"
+                SubjectPart: "Welcome to my newsletter"
 
     NewsletterWelcomeEmailTemplate:
         Type: AWS::SES::Template
