@@ -25,9 +25,13 @@ export const handler = async (
         },
         Content: {
             Template: {
-                TemplateName: "NewsletterWelcomeBeforeLaunchEmailTemplate",
+                TemplateName: process.env.NEWSLETTER_EMAIL_TEMPLATE_NAME,
                 TemplateData: JSON.stringify({ promotionCode }),
             },
+        },
+        ListManagementOptions: {
+            ContactListName: process.env.NEWSLETTER_CONTACT_LIST_NAME,
+            TopicName: process.env.NEWSLETTER_TOPIC_NAME,
         },
     })
 
