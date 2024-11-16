@@ -901,3 +901,56 @@ Resources:
     #                 - renderingFailure
     #             EventBridgeDestination:
     #                 EventBusArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
+
+    SESEventPublishingRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: ses.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: SESEventSNSPublishPolicy
+                  PolicyDocument:
+                      Version: "2012-10-17"
+                      Statement:
+                          - Effect: Allow
+                            Action:
+                                - sns:Publish
+                            Resource:
+                                - !Ref SNSNotificationTopic
+
+    SNSNotificationTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: "SES Email Events Topic"
+            Subscription:
+                - Protocol: email
+                  Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
+    SESConfigurationSet:
+        Type: AWS::SES::ConfigurationSet
+        Properties:
+            Name: "EmailLoggingConfigSet"
+
+    SESConfigurationSetEventDestination:
+        Type: AWS::SES::ConfigurationSetEventDestination
+        Properties:
+            ConfigurationSetName: !Ref SESConfigurationSet
+            EventDestination:
+                Name: SNSDestination
+                Enabled: true
+                MatchingEventTypes:
+                    - send
+                    - reject
+                    - bounce
+                    - complaint
+                    - delivery
+                    - open
+                    - click
+                    - renderingFailure
+                SnsDestination:
+                    TopicARN: !Ref SNSNotificationTopic
