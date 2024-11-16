@@ -20,12 +20,17 @@ export const handler = async (
     })
 
     await sendEmail({
-        Source: myEmail,
+        FromEmailAddress: myEmail,
         Destination: {
             ToAddresses: [myEmail],
+            CcAddresses: [email],
         },
-        Template: "ContactPageEmailTemplate",
-        TemplateData: JSON.stringify({ name, email, subject, message }),
+        Content: {
+            Template: {
+                TemplateName: "ContactPageEmailTemplate",
+                TemplateData: JSON.stringify({ name, email, subject, message }),
+            },
+        },
     })
 
     return {

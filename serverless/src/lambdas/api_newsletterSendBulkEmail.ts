@@ -31,12 +31,19 @@ export const handler = async (
 
     for (const batch of contactBatches) {
         await sendBulkEmail({
-            Source: myEmail,
-            Destinations: batch.map(contact => ({
-                Destination: { ToAddresses: [contact.EmailAddress!] },
+            FromEmailAddress: myEmail,
+            DefaultContent: {
+                Template: {
+                    TemplateName: templateName,
+                    TemplateData: JSON.stringify({}),
+                    Headers: [],
+                },
+            },
+            BulkEmailEntries: batch.map(contact => ({
+                Destination: {
+                    ToAddresses: [contact.EmailAddress!],
+                },
             })),
-            DefaultTemplateData: JSON.stringify({}),
-            Template: templateName,
         })
     }
 

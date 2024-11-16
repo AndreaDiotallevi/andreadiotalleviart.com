@@ -10,7 +10,7 @@ export const handler = async (
     const { email } = JSON.parse(event.body as string) as { email: string }
     const { error } = await newsletterCreateContact({ email })
 
-    const emailSource = await getParameterValue<string>({
+    const myEmail = await getParameterValue<string>({
         name: "EMAIL_ANDREA",
     })
 
@@ -19,12 +19,16 @@ export const handler = async (
     })
 
     await sendEmail({
-        Source: emailSource,
+        FromEmailAddress: myEmail,
         Destination: {
             ToAddresses: [email],
         },
-        Template: "NewsletterWelcomeBeforeLaunchEmailTemplate",
-        TemplateData: JSON.stringify({ promotionCode }),
+        Content: {
+            Template: {
+                TemplateName: "NewsletterWelcomeBeforeLaunchEmailTemplate",
+                TemplateData: JSON.stringify({ promotionCode }),
+            },
+        },
     })
 
     const statusCode = error ? 500 : 200

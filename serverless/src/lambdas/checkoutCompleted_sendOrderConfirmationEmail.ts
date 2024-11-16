@@ -55,45 +55,53 @@ export const handler = async (event: SQSEvent): Promise<void> => {
             const charge = invoice.charge as Stripe.Charge | null
 
             await sendEmail({
-                Source: emailSource,
+                FromEmailAddress: emailSource,
                 Destination: {
                     ToAddresses: [session.customer_details.email],
                 },
-                Template: "OrderConfirmationEmailTemplate",
-                TemplateData: JSON.stringify({
-                    name: session.customer_details?.name || "",
-                    addressLine1: address.line1 || "",
-                    addressLine2: address.line2 || "",
-                    postcode: address.postal_code || "",
-                    town: address.city || "",
-                    country: address.country || "",
-                    paymentMethod: "Card",
-                    itemQuantity: session.line_items?.data[0].quantity || "",
-                    amountSubtotal: formatCurrency({
-                        value: session.amount_subtotal!,
-                        currency: session.currency,
-                    }),
-                    amountDiscount: formatCurrency({
-                        value: session.total_details?.amount_discount!,
-                        currency: session.currency,
-                    }),
-                    amountTotal: formatCurrency({
-                        value: session.amount_total!,
-                        currency: session.currency,
-                    }),
-                    receiptPdf: charge?.receipt_url?.replace("?", "/pdf?"),
-                    item: items.map(item => {
-                        const product = item.price
-                            ?.product as unknown as StripePrice["product"]
+                Content: {
+                    Template: {
+                        TemplateName: "OrderConfirmationEmailTemplate",
+                        TemplateData: JSON.stringify({
+                            name: session.customer_details?.name || "",
+                            addressLine1: address.line1 || "",
+                            addressLine2: address.line2 || "",
+                            postcode: address.postal_code || "",
+                            town: address.city || "",
+                            country: address.country || "",
+                            paymentMethod: "Card",
+                            itemQuantity:
+                                session.line_items?.data[0].quantity || "",
+                            amountSubtotal: formatCurrency({
+                                value: session.amount_subtotal!,
+                                currency: session.currency,
+                            }),
+                            amountDiscount: formatCurrency({
+                                value: session.total_details?.amount_discount!,
+                                currency: session.currency,
+                            }),
+                            amountTotal: formatCurrency({
+                                value: session.amount_total!,
+                                currency: session.currency,
+                            }),
+                            receiptPdf: charge?.receipt_url?.replace(
+                                "?",
+                                "/pdf?"
+                            ),
+                            item: items.map(item => {
+                                const product = item.price
+                                    ?.product as unknown as StripePrice["product"]
 
-                        return {
-                            displayName: product.metadata.displayName,
-                            description: product.description,
-                            imageSource: product.images[0],
-                            quantity: item.quantity,
-                        }
-                    }),
-                }),
+                                return {
+                                    displayName: product.metadata.displayName,
+                                    description: product.description,
+                                    imageSource: product.images[0],
+                                    quantity: item.quantity,
+                                }
+                            }),
+                        }),
+                    },
+                },
             })
         }
     } catch (error) {
