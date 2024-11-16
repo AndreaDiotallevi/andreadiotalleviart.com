@@ -798,13 +798,6 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-NewsletterSendBulkEmail
             Handler: src/lambdas/api_newsletterSendBulkEmail.handler
-            Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /newsletter-send-bulk-email
-                        Method: POST
             Environment:
                 Variables:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName

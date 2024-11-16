@@ -12,13 +12,7 @@ function chunkArray<T>(array: T[], chunkSize: number): T[][] {
     return chunks
 }
 
-export const handler = async (
-    event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-    const { templateName } = JSON.parse(event.body as string) as {
-        templateName: string
-    }
-
+export const handler = async ({ templateName }: { templateName: string }) => {
     const myEmail = await getParameterValue<string>({
         name: "EMAIL_ANDREA",
     })
@@ -36,7 +30,16 @@ export const handler = async (
                 Template: {
                     TemplateName: templateName,
                     TemplateData: JSON.stringify({}),
-                    Headers: [],
+                    // Headers: [
+                    //     {
+                    //         Name: "List-Unsubscribe",
+                    //         Value: `<https://www.andreadiotalleviart.com/?address=x&topic=GeneralUpdates>, <mailto: unsubscribe@nutrition.co?subject=TopicUnsubscribe>`,
+                    //     },
+                    //     {
+                    //         Name: "List-Unsubscribe-Post",
+                    //         Value: "List-Unsubscribe=One-Click",
+                    //     },
+                    // ],
                 },
             },
             BulkEmailEntries: batch.map(contact => ({
@@ -47,13 +50,5 @@ export const handler = async (
         })
     }
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify("OK"),
-        headers: {
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*",
-        },
-    }
+    return "OK"
 }
