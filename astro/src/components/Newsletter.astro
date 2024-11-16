@@ -44,7 +44,9 @@ import Button from "@components/Button.astro"
     import { newsletterCreateContact } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {
-        const newsletterForm = document.querySelector("#newsletter-form")
+        const newsletterForm = document.querySelector(
+            "#newsletter-form"
+        ) as HTMLFormElement
 
         if (!newsletterForm) return
 
@@ -55,6 +57,9 @@ import Button from "@components/Button.astro"
         const spinner = newsletterForm.querySelector("#loading-spinner")!
         const errorMessage = newsletterForm.querySelector("#error-message")!
         const successMessage = newsletterForm.querySelector("#success-message")!
+        const emailInput = newsletterForm.querySelector(
+            "#email"
+        ) as HTMLInputElement
 
         newsletterForm.addEventListener("submit", async e => {
             e.preventDefault()
@@ -64,17 +69,16 @@ import Button from "@components/Button.astro"
             errorMessage.classList.add("hidden")
             successMessage.classList.add("hidden")
 
-            const email = (
-                newsletterForm.querySelector("#email") as HTMLInputElement
-            ).value
-
-            const { error } = await newsletterCreateContact({ email })
+            const { error } = await newsletterCreateContact({
+                email: emailInput.value,
+            })
 
             if (error) {
                 if (error === "AlreadyExistsException") {
                     successMessage.classList.remove("hidden")
                     spinner.classList.add("hidden")
                     button.disabled = false
+                    newsletterForm.reset()
                     return
                 }
 
@@ -88,6 +92,7 @@ import Button from "@components/Button.astro"
             successMessage.classList.remove("hidden")
             spinner.classList.add("hidden")
             button.disabled = false
+            newsletterForm.reset()
         })
     })
 </script>
