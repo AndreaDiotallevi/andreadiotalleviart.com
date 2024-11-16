@@ -1,53 +1,54 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
-
 import { getParameterValue } from "../actions/ssm_getParameterValue"
-import { sendBulkEmail } from "../actions/ses_sendBulkEmail"
 import { newsletterListContacts } from "../actions/ses_listContacts"
+import { sendEmail } from "../actions/ses_sendEmail"
 
-function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-    const chunks = []
-    for (let i = 0; i < array.length; i += chunkSize) {
-        chunks.push(array.slice(i, i + chunkSize))
-    }
-    return chunks
-}
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const handler = async ({ templateName }: { templateName: string }) => {
     const myEmail = await getParameterValue<string>({
         name: "EMAIL_ANDREA",
     })
 
+    const promotionCode = await getParameterValue<string>({
+        name: "NEWSLETTER_PROMOTION_CODE",
+    })
+
     const { contacts } = await newsletterListContacts()
 
-    const batchSize = 50
+    const batchSize = 5
+    const sleepTime = 60000
 
-    const contactBatches = chunkArray(contacts, batchSize)
+    for (let i = 0; i < contacts.length; i += batchSize) {
+        const batch = contacts.slice(i, i + batchSize)
 
-    for (const batch of contactBatches) {
-        await sendBulkEmail({
-            FromEmailAddress: myEmail,
-            DefaultContent: {
-                Template: {
-                    TemplateName: templateName,
-                    TemplateData: JSON.stringify({}),
-                    // Headers: [
-                    //     {
-                    //         Name: "List-Unsubscribe",
-                    //         Value: `<https://www.andreadiotalleviart.com/?address=x&topic=GeneralUpdates>, <mailto: unsubscribe@nutrition.co?subject=TopicUnsubscribe>`,
-                    //     },
-                    //     {
-                    //         Name: "List-Unsubscribe-Post",
-                    //         Value: "List-Unsubscribe=One-Click",
-                    //     },
-                    // ],
-                },
-            },
-            BulkEmailEntries: batch.map(contact => ({
-                Destination: {
-                    ToAddresses: [contact.EmailAddress!],
-                },
-            })),
-        })
+        await Promise.all(
+            batch.map(async contact => {
+                await sendEmail({
+                    FromEmailAddress: myEmail,
+                    Destination: {
+                        ToAddresses: [contact.EmailAddress!],
+                    },
+                    Content: {
+                        Template: {
+                            TemplateName: "NewsletterDiscountEmailTemplate",
+                            TemplateData: JSON.stringify({ promotionCode }),
+                        },
+                    },
+                    ListManagementOptions: {
+                        ContactListName:
+                            process.env.NEWSLETTER_CONTACT_LIST_NAME,
+                        TopicName: process.env.NEWSLETTER_TOPIC_NAME,
+                    },
+                })
+            })
+        )
+
+        if (i + batchSize < contacts.length) {
+            console.log(
+                `Sent batch of ${batch.length} emails, sleeping for 1 minute...`
+            )
+            await sleep(sleepTime)
+        }
     }
 
     return "OK"

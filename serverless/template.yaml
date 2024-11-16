@@ -408,23 +408,26 @@ Resources:
                     </html>
                 SubjectPart: "Welcome to my newsletter"
 
-    # NewsletterWelcomeEmailTemplate:
-    #     Type: AWS::SES::Template
-    #     Properties:
-    #         Template:
-    #             TemplateName: NewsletterWelcomeEmailTemplate
-    #             HtmlPart: !Sub |
-    #                 <html>
-    #                     <body>
-    #                         <h3>Hello,</h3>
-    #                         <p>Thank you for being a part of the Andrea Diotallevi Art family.</p>
-    #                         <p>As promised, we're offering you a 10% discount on your next purchase.</p>
-    #                         <p>Simply use the promo code <big>{{promotionCode}}</big> in the cart page to apply the discount.</p>
-    #                         <a href="https://andreadiotalleviart.com/shop">Explore prints</a>!
-    #                         <h3>Andrea</h3>
-    #                     </body>
-    #                 </html>
-    #             SubjectPart: "Welcome - Unlock your 10% discount"
+    NewsletterDiscountEmailTemplate:
+        Type: AWS::SES::Template
+        Properties:
+            Template:
+                TemplateName: NewsletterDiscountEmailTemplate
+                HtmlPart: !Sub |
+                    <html>
+                        <body>
+                            <h3>Dear friend,</h3>
+                            <p>As promised, simply use the promo code <big>{{promotionCode}}</big> in the cart page to apply a 10% discount.</p>
+                            <h3>Andrea</h3>
+                            <hr>
+                            <small>
+                                You are receiving this email because you subscribed to Andrea Diotallevi Art newsletter. 
+                                If you no longer wish to receive these emails, you can 
+                                <a href="{{amazonSESUnsubscribeUrl}}">unsubscribe here</a>.
+                            </small>
+                        </body>
+                    </html>
+                SubjectPart: "Test email"
 
     NewsletterEmailTestTemplate:
         Type: AWS::SES::Template
@@ -786,7 +789,7 @@ Resources:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_PROMOTION_CODE
                 - Statement:
-                      - Sid: sendOrderConfirmationEmail
+                      - Sid: sendNewsletterWelcomeEmail
                         Effect: Allow
                         Action:
                             - ses:SendEmail
@@ -807,7 +810,9 @@ Resources:
             Handler: src/lambdas/api_newsletterSendBulkEmail.handler
             Environment:
                 Variables:
+                    NEWSLETTER_EMAIL_TEMPLATE_NAME: !Ref NewsletterWelcomeEmailTemplate
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
+                    NEWSLETTER_TOPIC_NAME: GeneralUpdates
             Policies:
                 - Statement:
                       - Sid: listContacts
@@ -823,13 +828,14 @@ Resources:
                             - ssm:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_PROMOTION_CODE
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_CONTACT_LIST_NAME
                 - Statement:
-                      - Sid: sendBulkEmail
+                      - Sid: sendNewsletterDiscountEmail
                         Effect: Allow
                         Action:
-                            - ses:SendBulkEmail
-                            - ses:SendBulkTemplatedEmail
+                            - ses:SendEmail
+                            - ses:SendTemplatedEmail
                         Resource: "*"
         Metadata:
             BuildMethod: esbuild

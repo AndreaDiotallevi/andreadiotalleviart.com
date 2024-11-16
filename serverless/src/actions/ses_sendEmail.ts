@@ -15,8 +15,12 @@ export const sendEmail = async (input: SendEmailCommandInput) => {
         })
 
         return await sesClient.send(sendEmailCommand)
-    } catch (error) {
-        console.error(error)
-        throw error
+    } catch (caught) {
+        if (caught instanceof Error && caught.name === "MessageRejected") {
+            const messageRejectedError = caught
+            console.error(messageRejectedError)
+            return messageRejectedError
+        }
+        throw caught
     }
 }
