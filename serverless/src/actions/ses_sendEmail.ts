@@ -12,6 +12,7 @@ export const sendEmail = async (input: SendEmailCommandInput) => {
         const sendEmailCommand = new SendEmailCommand({
             ...input,
             FromEmailAddress: `Andrea Diotallevi Art <${input.FromEmailAddress}>`,
+            ConfigurationSetName: process.env.CONFIGURATION_SET_NAME,
         })
 
         return await sesClient.send(sendEmailCommand)

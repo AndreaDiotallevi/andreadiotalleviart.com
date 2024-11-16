@@ -584,6 +584,9 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-SendOrderConfirmationEmail
             Handler: src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.handler
+            Environment:
+                Variables:
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
             Events:
                 MySQSEvent:
                     Type: SQS
@@ -619,6 +622,9 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-SendContactPageEmail
             Handler: src/lambdas/api_sendContactPageEmail.handler
+            Environment:
+                Variables:
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
             Events:
                 Root:
                     Type: Api
@@ -739,6 +745,7 @@ Resources:
             Environment:
                 Variables:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
             Policies:
                 - Statement:
                       - Sid: listContacts
@@ -813,6 +820,7 @@ Resources:
                     NEWSLETTER_EMAIL_TEMPLATE_NAME: !Ref NewsletterWelcomeEmailTemplate
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
                     NEWSLETTER_TOPIC_NAME: GeneralUpdates
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
             Policies:
                 - Statement:
                       - Sid: listContacts
@@ -934,7 +942,7 @@ Resources:
     SESConfigurationSet:
         Type: AWS::SES::ConfigurationSet
         Properties:
-            Name: "EmailLoggingConfigSet"
+            Name: EmailLoggingConfigurationSet
 
     SESConfigurationSetEventDestination:
         Type: AWS::SES::ConfigurationSetEventDestination
