@@ -1,19 +1,17 @@
 import {
-    SESClient,
-    SendBulkTemplatedEmailCommand,
-    SendBulkTemplatedEmailCommandInput,
-} from "@aws-sdk/client-ses"
+    SESv2Client,
+    SendBulkEmailCommand,
+    SendBulkEmailCommandInput,
+} from "@aws-sdk/client-sesv2"
 
-const sesClient = new SESClient({ region: process.env.AWS_REGION })
+const sesClient = new SESv2Client({ region: process.env.AWS_REGION })
 
-export const sendBulkEmail = async (
-    input: SendBulkTemplatedEmailCommandInput
-) => {
+export const sendBulkEmail = async (input: SendBulkEmailCommandInput) => {
     try {
         console.log("Sending bulk email...")
-        const sendEmailCommand = new SendBulkTemplatedEmailCommand({
+        const sendEmailCommand = new SendBulkEmailCommand({
             ...input,
-            Source: `Andrea Diotallevi Art <${input.Source}>`,
+            FromEmailAddress: `Andrea Diotallevi Art <${input.FromEmailAddress}>`,
         })
 
         return await sesClient.send(sendEmailCommand)

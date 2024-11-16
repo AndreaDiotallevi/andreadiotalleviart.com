@@ -1,17 +1,17 @@
 import {
-    SESClient,
-    SendTemplatedEmailCommand,
-    SendTemplatedEmailCommandInput,
-} from "@aws-sdk/client-ses"
+    SESv2Client,
+    SendEmailCommand,
+    SendEmailCommandInput,
+} from "@aws-sdk/client-sesv2"
 
-const sesClient = new SESClient({ region: process.env.AWS_REGION })
+const sesClient = new SESv2Client({ region: process.env.AWS_REGION })
 
-export const sendEmail = async (input: SendTemplatedEmailCommandInput) => {
+export const sendEmail = async (input: SendEmailCommandInput) => {
     try {
         console.log("Sending email...")
-        const sendEmailCommand = new SendTemplatedEmailCommand({
+        const sendEmailCommand = new SendEmailCommand({
             ...input,
-            Source: `Andrea Diotallevi Art <${input.Source}>`,
+            FromEmailAddress: `Andrea Diotallevi Art <${input.FromEmailAddress}>`,
         })
 
         return await sesClient.send(sendEmailCommand)
