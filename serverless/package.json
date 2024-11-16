@@ -2,7 +2,6 @@
   "dependencies": {
     "@aws-sdk/client-eventbridge": "^3.496.0",
     "@aws-sdk/client-s3": "^3.515.0",
-    "@aws-sdk/client-ses": "^3.496.0",
     "@aws-sdk/client-sesv2": "^3.687.0",
     "@aws-sdk/client-ssm": "^3.496.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",
