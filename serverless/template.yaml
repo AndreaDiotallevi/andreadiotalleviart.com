@@ -952,12 +952,12 @@ Resources:
                 Name: SNSDestination
                 Enabled: true
                 MatchingEventTypes:
-                    - send
+                    # - send
                     - reject
                     - bounce
                     - complaint
-                    - delivery
-                    - open
+                    # - delivery
+                    # - open
                     - click
                     - renderingFailure
                 SnsDestination:
