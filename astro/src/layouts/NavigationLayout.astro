@@ -130,11 +130,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
         <slot />
     </main>
 
-    {
-        import.meta.env.CONTEXT === "production"
-            ? null
-            : newsletter && <Newsletter />
-    }
+    {newsletter && <Newsletter />}
 
     <footer
         class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"} ${hideFooter ? "hidden md:flex" : ""}`}
