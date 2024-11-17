@@ -30,7 +30,7 @@ import Button from "@components/Button.astro"
                         variant="secondary"
                         id="submit-button"
                         buttonText="Join"
-                        errorMessage="There was an error sending your message. Please try again."
+                        errorMessage="There was an error with the connection. Please try again."
                         successMessage="Thank you for subscribing!"
                     />
                     <!-- <p class="text-center text-sm">Unsubscribe Anytime</p> -->
@@ -69,30 +69,21 @@ import Button from "@components/Button.astro"
             errorMessage.classList.add("hidden")
             successMessage.classList.add("hidden")
 
-            const { error } = await newsletterCreateContact({
+            const { success, error } = await newsletterCreateContact({
                 email: emailInput.value,
             })
 
-            if (error) {
-                if (error === "AlreadyExistsException") {
-                    successMessage.classList.remove("hidden")
-                    spinner.classList.add("hidden")
-                    button.disabled = false
-                    newsletterForm.reset()
-                    return
-                }
-
+            if (success) {
+                successMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+                newsletterForm.reset()
+            } else {
                 console.error(error)
                 errorMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
                 button.disabled = false
-                return
             }
-
-            successMessage.classList.remove("hidden")
-            spinner.classList.add("hidden")
-            button.disabled = false
-            newsletterForm.reset()
         })
     })
 </script>

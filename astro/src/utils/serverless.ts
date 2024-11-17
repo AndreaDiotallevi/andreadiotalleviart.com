@@ -102,7 +102,8 @@ export const newsletterCreateContact = async (params: {
         return { success, error }
     } catch (error) {
         return {
-            error: "There was a problem with your request. Please try again.",
+            success: false,
+            error: "Unknown error.",
         }
     }
 }

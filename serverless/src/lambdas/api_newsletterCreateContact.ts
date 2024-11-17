@@ -35,14 +35,9 @@ export const handler = async (
         },
     })
 
-    const statusCode = error ? 500 : 200
-    const body = error
-        ? JSON.stringify({ error, success: false })
-        : JSON.stringify({ success: true })
-
     return {
-        statusCode,
-        body,
+        statusCode: 200,
+        body: JSON.stringify({ success: true, error: error?.name }),
         headers: {
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",
