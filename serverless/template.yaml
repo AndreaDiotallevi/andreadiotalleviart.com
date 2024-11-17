@@ -22,6 +22,9 @@ Parameters:
         Default: Newsletter
         AllowedValues: [Newsletter]
 
+Conditions:
+    IsProduction: !Equals [!Ref Environment, "production"]
+
 Resources:
     # BUCKETS
     Bucket:
@@ -181,19 +184,6 @@ Resources:
         Properties:
             Protocol: email
             TopicArn: !Ref SendOrderShippedEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
-
-    EmailBounceTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: EmailBounceTopic
-            TopicName: EmailBounceTopic
-
-    EmailBounceTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref EmailBounceTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     TheprintspaceCreateOrderTopic:
@@ -935,6 +925,7 @@ Resources:
         Type: AWS::SNS::Topic
         Properties:
             DisplayName: SES Email Events Topic
+            TopicName: EmailEventsTopic
             Subscription:
                 - Protocol: email
                   Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
@@ -952,13 +943,22 @@ Resources:
                 Name: SNSDestination
                 Enabled: true
                 MatchingEventTypes:
-                    # - send
-                    - reject
-                    - bounce
-                    - complaint
-                    # - delivery
-                    # - open
-                    - click
-                    - renderingFailure
+                    Fn::If:
+                        - IsProduction
+                        - # All events in production
+                          - send
+                          - reject
+                          - bounce
+                          - complaint
+                          - delivery
+                          - open
+                          - click
+                          - renderingFailure
+                        - # Subset of events in non-production environments
+                          - reject
+                          - bounce
+                          - complaint
+                          - click
+                          - renderingFailure
                 SnsDestination:
                     TopicARN: !Ref SNSNotificationTopic
