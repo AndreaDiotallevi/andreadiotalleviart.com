@@ -239,10 +239,10 @@ if (sessionId) {
                                     <LoadingSpinner />
                                 </button>
                             </form>
-                            <div class="flex w-full max-w-lg pt-2">
+                            <div class="flex w-full max-w-lg">
                                 <p
                                     id="promotion-code-error"
-                                    class="text-red-700 hidden text-wrap"
+                                    class="w-full hidden font-semibold min-h-[48px] border border-rose-300 rounded-md bg-rose-100 text-rose-700 flex items-center px-4 mt-4"
                                 />
                             </div>
                         </div>
@@ -389,7 +389,7 @@ if (sessionId) {
                         ?.classList.add("hidden")
 
                     promotionCodeError.classList.remove("hidden")
-                    promotionCodeElement.classList.add("border-red-700")
+                    // promotionCodeElement.classList.add("border-rose-700")
                     promotionCodeError.textContent = error!
                 }
             })
