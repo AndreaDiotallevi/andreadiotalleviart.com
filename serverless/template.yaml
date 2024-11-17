@@ -934,7 +934,7 @@ Resources:
     SNSNotificationTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: "SES Email Events Topic"
+            DisplayName: SES Email Events Topic
             Subscription:
                 - Protocol: email
                   Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
