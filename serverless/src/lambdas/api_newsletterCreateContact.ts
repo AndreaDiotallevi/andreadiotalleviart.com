@@ -3,7 +3,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import { newsletterCreateContact } from "../actions/ses_createContact"
 import { sendEmail } from "../actions/ses_sendEmail"
 import { getParameterValue } from "../actions/ssm_getParameterValue"
-// import { publishMessage } from "../actions/sns_publishMessage"
+import { publishMessage } from "../actions/sns_publishMessage"
 
 export const handler = async (
     event: APIGatewayProxyEvent
@@ -18,10 +18,6 @@ export const handler = async (
     const promotionCode = await getParameterValue<string>({
         name: "NEWSLETTER_PROMOTION_CODE",
     })
-
-    // const phoneNumber = await getParameterValue<string>({
-    //     name: "PHONE_NUMBER",
-    // })
 
     await sendEmail({
         FromEmailAddress: myEmail,
@@ -50,10 +46,10 @@ export const handler = async (
         },
     })
 
-    // await publishMessage({
-    //     Message: "New subscriber!",
-    //     TopicArn: process.env.SMS_NOTIFICATION_TOPIC_ARN,
-    // })
+    await publishMessage({
+        Message: "New subscriber!",
+        TopicArn: process.env.ACHIEVEMENTS_TOPIC_ARN,
+    })
 
     return {
         statusCode: 200,

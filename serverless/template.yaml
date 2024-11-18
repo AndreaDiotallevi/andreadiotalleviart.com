@@ -199,6 +199,19 @@ Resources:
             TopicArn: !Ref TheprintspaceCreateOrderTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
+    AchievementsNotificationTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: AchievementsNotificationTopic
+            TopicName: AchievementsNotificationTopic
+
+    AchievementsNotificationTopicSubscription:
+        Type: AWS::SNS::Subscription
+        Properties:
+            Protocol: email
+            TopicArn: !Ref AchievementsNotificationTopic
+            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
+
     # ALARMS
     SendOrderConfirmationEmailAlarm:
         Type: AWS::CloudWatch::Alarm
@@ -769,7 +782,7 @@ Resources:
                     NEWSLETTER_EMAIL_TEMPLATE_NAME: !Ref NewsletterWelcomeEmailTemplate
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
                     NEWSLETTER_TOPIC_NAME: GeneralUpdates
-                    SMS_NOTIFICATION_TOPIC_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:EmailEventsTopic
+                    ACHIEVEMENTS_TOPIC_ARN: !Ref AchievementsNotificationTopic
             Policies:
                 - Statement:
                       - Sid: createContacts
@@ -784,7 +797,6 @@ Resources:
                         Action:
                             - SSM:GetParameter
                         Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PHONE_NUMBER
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_PROMOTION_CODE
                 - Statement:
@@ -799,7 +811,8 @@ Resources:
                         Effect: Allow
                         Action:
                             - SNS:Publish
-                        Resource: "*"
+                        Resource:
+                            - !Ref AchievementsNotificationTopic
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
