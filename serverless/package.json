@@ -6,6 +6,7 @@
     "@aws-sdk/client-sns": "^3.693.0",
     "@aws-sdk/client-ssm": "^3.496.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",
+    "@netlify/functions": "^2.8.2",
     "cloudinary": "^2.5.0",
     "esbuild": "^0.19.11",
     "sharp": "^0.33.3",
