@@ -467,7 +467,7 @@ Resources:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
@@ -495,7 +495,7 @@ Resources:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
@@ -523,7 +523,7 @@ Resources:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
@@ -557,7 +557,7 @@ Resources:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
@@ -588,14 +588,14 @@ Resources:
                       - Sid: sendOrderConfirmationEmail
                         Effect: Allow
                         Action:
-                            - ses:SendEmail
-                            - ses:SendTemplatedEmail
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
                         Resource: "*"
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
@@ -627,14 +627,14 @@ Resources:
                       - Sid: sendContactPageEmail
                         Effect: Allow
                         Action:
-                            - ses:SendEmail
-                            - ses:SendTemplatedEmail
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
                         Resource: "*"
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_SUPPORT
         Metadata:
@@ -688,7 +688,7 @@ Resources:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
@@ -741,7 +741,7 @@ Resources:
                       - Sid: listContacts
                         Effect: Allow
                         Action:
-                            - ses:ListContacts
+                            - SES:ListContacts
                         Resource:
                             - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
         Metadata:
@@ -769,28 +769,36 @@ Resources:
                     NEWSLETTER_EMAIL_TEMPLATE_NAME: !Ref NewsletterWelcomeEmailTemplate
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
                     NEWSLETTER_TOPIC_NAME: GeneralUpdates
+                    SMS_NOTIFICATION_TOPIC_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:EmailEventsTopic
             Policies:
                 - Statement:
                       - Sid: createContacts
                         Effect: Allow
                         Action:
-                            - ses:CreateContact
+                            - SES:CreateContact
                         Resource:
                             - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/PHONE_NUMBER
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_PROMOTION_CODE
                 - Statement:
                       - Sid: sendNewsletterWelcomeEmail
                         Effect: Allow
                         Action:
-                            - ses:SendEmail
-                            - ses:SendTemplatedEmail
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: publishMessage
+                        Effect: Allow
+                        Action:
+                            - SNS:Publish
                         Resource: "*"
         Metadata:
             BuildMethod: esbuild
@@ -816,14 +824,14 @@ Resources:
                       - Sid: listContacts
                         Effect: Allow
                         Action:
-                            - ses:ListContacts
+                            - SES:ListContacts
                         Resource:
                             - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NEWSLETTER_PROMOTION_CODE
@@ -832,8 +840,8 @@ Resources:
                       - Sid: sendNewsletterDiscountEmail
                         Effect: Allow
                         Action:
-                            - ses:SendEmail
-                            - ses:SendTemplatedEmail
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
                         Resource: "*"
         Metadata:
             BuildMethod: esbuild
@@ -917,14 +925,14 @@ Resources:
                       Statement:
                           - Effect: Allow
                             Action:
-                                - sns:Publish
+                                - SNS:Publish
                             Resource:
                                 - !Ref SNSNotificationTopic
 
     SNSNotificationTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: SES Email Events Topic
+            DisplayName: EmailEventsTopic
             TopicName: EmailEventsTopic
             Subscription:
                 - Protocol: email
@@ -943,22 +951,13 @@ Resources:
                 Name: SNSDestination
                 Enabled: true
                 MatchingEventTypes:
-                    Fn::If:
-                        - IsProduction
-                        - # All events in production
-                          - send
-                          - reject
-                          - bounce
-                          - complaint
-                          - delivery
-                          - open
-                          - click
-                          - renderingFailure
-                        - # Subset of events in non-production environments
-                          - reject
-                          - bounce
-                          - complaint
-                          - click
-                          - renderingFailure
+                    - send
+                    - reject
+                    - bounce
+                    - complaint
+                    - delivery
+                    - open
+                    - click
+                    - renderingFailure
                 SnsDestination:
                     TopicARN: !Ref SNSNotificationTopic
