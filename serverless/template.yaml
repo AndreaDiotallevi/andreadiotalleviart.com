@@ -456,7 +456,7 @@ Resources:
             Cors:
                 AllowMethods: "'*'"
                 AllowHeaders: "'*'"
-                AllowOrigin: "'*'"
+                AllowOrigin: "'{{resolve:ssm:CORS_ALLOW_ORIGIN}}'"
             MethodSettings:
                 - ResourcePath: "/*"
                   HttpMethod: "*"
