@@ -43,6 +43,7 @@ Astro.response.headers.set(
     "public, durable, s-maxage=31536000"
 )
 Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
+Astro.response.headers.set("netlify-cache-tag", "stripe")
 ---
 
 <BaseLayout

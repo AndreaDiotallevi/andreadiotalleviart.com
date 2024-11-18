@@ -552,13 +552,6 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeSynchroniseProducts
             Handler: src/lambdas/api_stripeSynchroniseProducts.handler
-            Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /stripe-synchronise-products
-                        Method: POST
             Environment:
                 Variables:
                     ENVIRONMENT: !Ref Environment
@@ -574,6 +567,8 @@ Resources:
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_ACCESS_TOKEN
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_SITE_ID
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
