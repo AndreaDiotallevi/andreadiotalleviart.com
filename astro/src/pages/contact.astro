@@ -8,7 +8,7 @@ const contactImageSrc = transformImage("contact-page-image_dczqrw")
 
 Astro.response.headers.set(
     "cache-control",
-    "public, max-age=120, must-revalidate"
+    "public, max-age=0, must-revalidate"
 )
 Astro.response.headers.set(
     "netlify-cdn-cache-control",
