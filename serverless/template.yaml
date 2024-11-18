@@ -569,6 +569,7 @@ Resources:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_ACCESS_TOKEN
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_SITE_ID
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CORS_ALLOW_ORIGIN
         Metadata:
             BuildMethod: esbuild
             BuildProperties:

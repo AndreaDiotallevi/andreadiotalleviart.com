@@ -14,9 +14,18 @@ export const purgeNetlifyCache = async () => {
         withDecryption: true,
     })
 
+    const origin = await getParameterValue<string>({
+        name: "CORS_ALLOW_ORIGIN",
+    })
+
     console.log("Purging Netlify Cache...")
 
-    await purgeCache({ token, siteID, tags: ["stripe"] })
+    await purgeCache({
+        token,
+        siteID,
+        tags: ["stripe"],
+        domain: origin.split("https://")[1],
+    })
 
     return new Response("Purged!", { status: 202 })
 }
