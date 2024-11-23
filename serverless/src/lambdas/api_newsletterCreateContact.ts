@@ -28,16 +28,6 @@ export const handler = async (
             Template: {
                 TemplateName: process.env.NEWSLETTER_EMAIL_TEMPLATE_NAME,
                 TemplateData: JSON.stringify({ promotionCode }),
-                // Headers: [
-                // {
-                //     Name: "List-Unsubscribe",
-                //     Value: "<https://nutrition.co/?address=x&topic=x>, <mailto: unsubscribe@nutrition.co?subject=TopicUnsubscribe>",
-                // },
-                //     {
-                //         Name: "List-Unsubscribe-Post",
-                //         Value: "List-Unsubscribe=One-Click",
-                //     },
-                // ],
             },
         },
         ListManagementOptions: {

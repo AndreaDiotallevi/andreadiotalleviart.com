@@ -872,51 +872,6 @@ Resources:
                   Description: Updates on general topics.
                   DefaultSubscriptionStatus: OPT_IN
 
-    # SESEventPublishingRole:
-    #     Type: AWS::IAM::Role
-    #     Properties:
-    #         AssumeRolePolicyDocument:
-    #             Version: "2012-10-17"
-    #             Statement:
-    #                 - Effect: Allow
-    #                   Principal:
-    #                       Service: ses.amazonaws.com
-    #                   Action: sts:AssumeRole
-    #         Policies:
-    #             - PolicyName: SESEventBridgePublishPolicy
-    #               PolicyDocument:
-    #                   Version: "2012-10-17"
-    #                   Statement:
-    #                       - Effect: Allow
-    #                         Action:
-    #                             - events:PutEvents
-    #                         Resource:
-    #                             - !GetAtt EventBus.Arn
-
-    # SESConfigurationSet:
-    #     Type: AWS::SES::ConfigurationSet
-    #     Properties:
-    #         Name: "EmailLoggingConfigSet"
-
-    # SESConfigurationSetEventDestination:
-    #     Type: AWS::SES::ConfigurationSetEventDestination
-    #     Properties:
-    #         ConfigurationSetName: !Ref SESConfigurationSet
-    #         EventDestination:
-    #             Name: EventBridgeDestination
-    #             Enabled: true
-    #             MatchingEventTypes:
-    #                 - send
-    #                 - reject
-    #                 - bounce
-    #                 - complaint
-    #                 - delivery
-    #                 - open
-    #                 - click
-    #                 - renderingFailure
-    #             EventBridgeDestination:
-    #                 EventBusArn: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
-
     SESEventPublishingRole:
         Type: AWS::IAM::Role
         Properties:
