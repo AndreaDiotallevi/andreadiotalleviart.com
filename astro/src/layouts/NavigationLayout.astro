@@ -11,9 +11,11 @@ interface Props {
 const { darkTheme, hideFooter, newsletter } = Astro.props
 ---
 
-<div class="flex flex-col min-h-[100dvh]">
+<div
+    class={`flex flex-col min-h-[100dvh] ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"}`}
+>
     <header
-        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black bg-opacity-70 backdrop-blur-md"} z-50`}
+        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "" : "bg-white bg-opacity-70 backdrop-blur-md"} z-50`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
@@ -21,11 +23,6 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             <div
                 class={`md:text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
             >
-                <!-- <a
-                    href="/"
-                    class="w-full h-full flex justify-center items-center"
-                    ><img src="./logo.png" class="rounded-full w-10 h-10" /></a
-                > -->
                 <a href="/">andreadiotalleviart</a>
             </div>
             <div class="flex items-center">
@@ -133,7 +130,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
     {newsletter && <Newsletter />}
 
     <footer
-        class={`flex items-center justify-center h-20 ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-black"} ${hideFooter ? "hidden md:flex" : ""}`}
+        class={`flex items-center justify-center h-20 ${hideFooter ? "hidden md:flex" : ""}`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
