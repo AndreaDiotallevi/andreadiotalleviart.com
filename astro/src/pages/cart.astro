@@ -14,30 +14,26 @@ import type Stripe from "stripe"
 const sessionId = Astro.url.searchParams.get("session_id")
 
 let session: Stripe.Checkout.Session | null = null
-let currency: Currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.code
-)
-let coupon: Stripe.Coupon | undefined
-let cartEmpty: boolean = false
-let sessionExpired: boolean = false
 
 if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
 
     if (!response.session || response.error) {
         return Astro.redirect("/cart")
-    } else {
-        session = response.session
-        if (session.status === "expired") {
-            sessionExpired = true
-        }
-        currency = session.currency as Currency
-        coupon =
-            session.total_details?.breakdown?.discounts[0]?.discount?.coupon
     }
-} else {
-    cartEmpty = true
+
+    if (response.session.status === "expired") {
+        return Astro.redirect("/cart")
+    }
+
+    session = response.session
 }
+
+const currency =
+    (session?.currency as Currency) ||
+    getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
+
+const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 ---
 
 <BaseLayout
@@ -48,30 +44,15 @@ if (sessionId) {
     <div
         id="cart-page-content"
         data-currency={currency}
-        data-session-status={session?.status}
         class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8"
     >
         <h1 class="text-center text-2xl md:text-5xl font-semibold mb-4 md:mb-6">
             Cart
         </h1>
         {
-            cartEmpty || sessionExpired ? (
-                <div class="flex flex-col items-center">
-                    <p class="text-center mb-4">
-                        {cartEmpty
-                            ? "Your cart is empty."
-                            : "Your session has expired."}
-                    </p>
-                    <a
-                        href="/shop"
-                        class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:bg-black md:hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
-                    >
-                        Explore prints
-                    </a>
-                </div>
-            ) : session ? (
+            session ? (
                 <>
-                    <table class="min-w-full">
+                    <table class="min-w-full table-auto">
                         <thead class="md:text-2xl">
                             <tr class="font-semibold">
                                 <th class="text-left">Item</th>
@@ -260,7 +241,17 @@ if (sessionId) {
                         </a>
                     </div>
                 </>
-            ) : null
+            ) : (
+                <div class="flex flex-col items-center">
+                    <p class="text-center mb-4">Your cart is empty.</p>
+                    <a
+                        href="/shop"
+                        class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:bg-black md:hover:text-white text-center font-semibold max-w-lg mb-4 transition-colors duration-300"
+                    >
+                        Explore prints
+                    </a>
+                </div>
+            )
         }
     </div>
 </BaseLayout>
@@ -272,10 +263,8 @@ if (sessionId) {
         addPromotionCode,
         removePromotionCode,
     } from "@scripts/cart"
-    import {
-        clearClientSession,
-        updateClientSession,
-    } from "@utils/localStorage"
+
+    import { updateClientSession, getClientSession } from "@utils/localStorage"
 
     import type { Currency } from "@utils/stripe"
     import { navigate } from "astro:transitions/client"
@@ -287,12 +276,17 @@ if (sessionId) {
 
         if (!cartPageContent) return
 
-        const currency = cartPageContent.dataset.currency as Currency
-        const sessionStatus = cartPageContent.dataset.sessionStatus
+        const clientSession = getClientSession()
 
-        if (sessionStatus === "expired") {
-            clearClientSession()
+        if (
+            window.location.pathname !== "/cart" &&
+            clientSession.lineItems.length === 0
+        ) {
+            navigate("/cart", { history: "replace" })
+            return
         }
+
+        const currency = cartPageContent.dataset.currency as Currency
 
         const addToCartButtons = cartPageContent.querySelectorAll(
             '[id^="add-to-cart-"]'

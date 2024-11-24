@@ -19,7 +19,7 @@ const defaultClientSession: ClientSession = {
 }
 
 const isSessionExpired = (expiresAt: number) => {
-    const currentTime = Math.floor(Date.now() / 1000) // Current time in seconds
+    const currentTime = Math.floor(Date.now() / 1000)
     return currentTime >= expiresAt
 }
 
