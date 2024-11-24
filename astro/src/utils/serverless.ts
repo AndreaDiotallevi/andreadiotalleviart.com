@@ -4,7 +4,7 @@ import type { Currency, StripePrice } from "./stripe"
 export const getStripePrices = async (): Promise<StripePrice[]> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/stripe-get-prices`,
+            import.meta.env.PUBLIC_API_URL + `/prices`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
@@ -34,7 +34,7 @@ export const createCheckoutSession = async (params: {
 }): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/stripe-create-checkout-session`,
+            import.meta.env.PUBLIC_API_URL + `/sessions`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,8 +60,7 @@ export const retrieveCheckoutSession = async (params: {
 }): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL +
-                `/stripe-retrieve-checkout-session/${params.sessionId}`,
+            import.meta.env.PUBLIC_API_URL + `/sessions/${params.sessionId}`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
@@ -86,7 +85,7 @@ export const newsletterCreateContact = async (params: {
 }): Promise<{ success?: boolean; error?: string }> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/newsletter-contacts`,
+            import.meta.env.PUBLIC_API_URL + `/contacts`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

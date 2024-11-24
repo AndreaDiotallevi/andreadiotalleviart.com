@@ -473,7 +473,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /stripe-create-checkout-session
+                        Path: /sessions
                         Method: POST
             Policies:
                 - Statement:
@@ -501,7 +501,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /stripe-get-prices
+                        Path: /prices
                         Method: GET
             Policies:
                 - Statement:
@@ -529,7 +529,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /stripe-retrieve-checkout-session/{sessionId}
+                        Path: /sessions/{sessionId}
                         Method: GET
             Policies:
                 - Statement:
@@ -629,7 +629,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /send-contact-page-email
+                        Path: /messages
                         Method: POST
             Policies:
                 - Statement:
@@ -709,38 +709,11 @@ Resources:
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_theprintspaceCreateOrder.ts
 
-    GetLocaleCurrencyFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-GetLocaleCurrency
-            Handler: src/lambdas/api_getLocaleCurrency.handler
-            Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /get-locale-currency
-                        Method: GET
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/api_getLocaleCurrency.ts
-
     NewsletterListContactsFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: !Sub ${AWS::StackName}-NewsletterListContacts
             Handler: src/lambdas/api_newsletterListContacts.handler
-            Events:
-                Root:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /newsletter-contacts
-                        Method: GET
             Environment:
                 Variables:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
@@ -771,7 +744,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /newsletter-contacts
+                        Path: /contacts
                         Method: POST
             Environment:
                 Variables:

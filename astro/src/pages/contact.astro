@@ -113,7 +113,9 @@ Astro.response.headers.set(
 
 <script>
     document.addEventListener("astro:page-load", async () => {
-        const contactForm = document.querySelector("#contact-form")
+        const contactForm = document.querySelector(
+            "#contact-form"
+        ) as HTMLFormElement
 
         if (!contactForm) return
 
@@ -147,18 +149,16 @@ Astro.response.headers.set(
             ).value
 
             try {
-                await fetch(
-                    import.meta.env.PUBLIC_API_URL + `/send-contact-page-email`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ name, email, subject, message }),
-                    }
-                )
+                await fetch(import.meta.env.PUBLIC_API_URL + `/messages`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, subject, message }),
+                })
 
                 successMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
                 button.disabled = false
+                contactForm.reset()
             } catch (error) {
                 console.error(error)
                 errorMessage.classList.remove("hidden")
