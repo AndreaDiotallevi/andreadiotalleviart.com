@@ -47,7 +47,7 @@ Astro.response.headers.set(
             <div class="md:hidden mb-4">
                 <BackToLink href="/portfolio" text="Back to portfolio" />
             </div>
-            <h1 class="text-2xl font-semibold mb-4 md:hidden">
+            <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
             </h1>
             <div class={`${artwork.images.length > 1 ? "mb-5" : "0"} relative`}>
@@ -83,13 +83,13 @@ Astro.response.headers.set(
         </div>
 
         <div class="w-full md:w-1/2">
-            <h1 class="text-5xl font-semibold mb-6 hidden md:block">
+            <h1 class="text-5xl font-bold mb-6 hidden md:block">
                 {artwork.name}
             </h1>
 
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">Description</h2>
+                    <h2 class="text-2xl font-bold mb-2">Description</h2>
                     <p>{artwork.description}</p>
                 </div>
             </div>

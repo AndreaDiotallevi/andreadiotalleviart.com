@@ -73,7 +73,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
             <div class="md:hidden mb-4">
                 <BackToLink href="/shop" text="Back to shop" />
             </div>
-            <h1 class="text-2xl font-semibold mb-4 md:hidden">
+            <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {price.product.metadata.displayName}
             </h1>
             <div
@@ -113,13 +113,13 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
-            <h1 class="text-5xl font-semibold mb-6 hidden md:block">
+            <h1 class="text-5xl font-bold mb-6 hidden md:block">
                 {price.product.metadata.displayName}
             </h1>
 
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
+                    <h2 class="text-2xl font-bold mb-2">
                         <label for="price-id">Size</label>
                     </h2>
                     <select
@@ -141,9 +141,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     <p>The image is printed full bleed with no border.</p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
-                        100% cotton paper
-                    </h2>
+                    <h2 class="text-2xl font-bold mb-2">100% cotton paper</h2>
                     <p>
                         The artwork is printed on a white cotton paper called
                         Hahnemühle photo rag 308gsm. With its characteristic,
@@ -153,7 +151,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
+                    <h2 class="text-2xl font-bold mb-2">
                         Premium print quality
                     </h2>
                     <p>
@@ -165,7 +163,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
+                    <h2 class="text-2xl font-bold mb-2">
                         Free carbon neutral shipping
                     </h2>
                     <p>
@@ -176,9 +174,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
-                        No custom charges
-                    </h2>
+                    <h2 class="text-2xl font-bold mb-2">No custom charges</h2>
                     <p>
                         With production in the UK, USA & Germany, The Print
                         Space guarantees no extra customs charges on UK-EU-US
@@ -187,7 +183,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-semibold mb-2">
+                    <h2 class="text-2xl font-bold mb-2">
                         {
                             formatCurrency({
                                 value: price.currency_options[currency]
