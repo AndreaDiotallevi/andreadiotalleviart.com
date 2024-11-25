@@ -18,13 +18,13 @@ let session: Stripe.Checkout.Session | null = null
 if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
 
-    if (!response.session || response.error) {
-        return Astro.redirect("/cart")
-    }
+    // if (!response.session || response.error) {
+    //     return Astro.redirect("/cart")
+    // }
 
-    if (response.session.status === "expired") {
-        return Astro.redirect("/cart")
-    }
+    // if (response.session.status === "expired") {
+    //     return Astro.redirect("/cart")
+    // }
 
     session = response.session
 }
@@ -282,7 +282,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         const sessionId = params.get("session_id")
 
         if (sessionId && !clientSession.sessionId) {
-            console.log("here 1")
             navigate("/cart", { history: "replace" })
             return
         }
@@ -292,7 +291,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             clientSession.sessionId &&
             sessionId !== clientSession.sessionId
         ) {
-            console.log("here 2")
             navigate(`/cart?session_id=${clientSession.sessionId}`, {
                 history: "replace",
             })
