@@ -21,12 +21,12 @@ if (sessionId) {
 
     if (!response.session || response.error) {
         console.log("Redirect 1", response.error)
-        return Astro.redirect("/cart")
+        return Astro.redirect("/cart?session_id=")
     }
 
     if (response.session.status === "expired") {
         console.log("Redirect 2")
-        return Astro.redirect("/cart")
+        return Astro.redirect("/cart?session_id=")
     }
 
     session = response.session
