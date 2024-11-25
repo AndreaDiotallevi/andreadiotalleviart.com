@@ -12,24 +12,15 @@ import type { Currency, StripePrice } from "@utils/stripe"
 import type Stripe from "stripe"
 
 const sessionId = Astro.url.searchParams.get("session_id")
-console.log("sessionId", sessionId)
 
 let session: Stripe.Checkout.Session | null = null
 
 if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
 
-    if (!response.session || response.error) {
-        console.log("Redirect 1", response.error)
-        return Astro.redirect("/cart?session_id=")
+    if (response.session && response.session.status !== "expired") {
+        session = response.session
     }
-
-    if (response.session.status === "expired") {
-        console.log("Redirect 2")
-        return Astro.redirect("/cart?session_id=")
-    }
-
-    session = response.session
 }
 
 const currency =
@@ -284,21 +275,21 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         const params = new URLSearchParams(window.location.search)
         const sessionId = params.get("session_id")
 
-        // if (
-        //     sessionId &&
-        //     clientSession.sessionId &&
-        //     sessionId !== clientSession.sessionId
-        // ) {
-        //     navigate(`/cart?session_id=${clientSession.sessionId}`, {
-        //         history: "replace",
-        //     })
-        //     return
-        // }
+        if (
+            sessionId &&
+            clientSession.sessionId &&
+            sessionId !== clientSession.sessionId
+        ) {
+            navigate(`/cart?session_id=${clientSession.sessionId}`, {
+                history: "replace",
+            })
+            return
+        }
 
-        // if (sessionId && !clientSession.sessionId) {
-        //     navigate("/cart", { history: "replace" })
-        //     return
-        // }
+        if (sessionId && !clientSession.sessionId) {
+            navigate("/cart", { history: "replace" })
+            return
+        }
 
         const currency = cartPageContent.dataset.currency as Currency
 
