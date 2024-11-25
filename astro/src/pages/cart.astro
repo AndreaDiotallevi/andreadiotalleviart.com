@@ -12,6 +12,7 @@ import type { Currency, StripePrice } from "@utils/stripe"
 import type Stripe from "stripe"
 
 const sessionId = Astro.url.searchParams.get("session_id")
+console.log("sessionId", sessionId)
 
 let session: Stripe.Checkout.Session | null = null
 
@@ -19,10 +20,12 @@ if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
 
     if (!response.session || response.error) {
+        console.log("Redirect 1", response.error)
         return Astro.redirect("/cart")
     }
 
     if (response.session.status === "expired") {
+        console.log("Redirect 2")
         return Astro.redirect("/cart")
     }
 
