@@ -37,7 +37,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 >
     <div
         id="cart-page-content"
-        data-currency={currency}
+        data-session={JSON.stringify(session)}
         class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8"
     >
         <h1 class="text-center text-2xl md:text-5xl font-bold mb-4 md:mb-6">
@@ -251,6 +251,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 </BaseLayout>
 
 <script>
+    import type Stripe from "stripe"
     import {
         addToCart,
         removeFromCart,
@@ -270,15 +271,16 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         if (!cartPageContent) return
 
+        const session = JSON.parse(
+            cartPageContent.dataset.session!
+        ) as Stripe.Checkout.Session | null
+
         const clientSession = getClientSession()
 
-        const params = new URLSearchParams(window.location.search)
-        const sessionId = params.get("session_id")
-
         if (
-            sessionId &&
+            session &&
             clientSession.sessionId &&
-            sessionId !== clientSession.sessionId
+            session.id !== clientSession.sessionId
         ) {
             navigate(`/cart?session_id=${clientSession.sessionId}`, {
                 history: "replace",
@@ -286,12 +288,12 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        if (sessionId && !clientSession.sessionId) {
+        if (session?.id && !clientSession.sessionId) {
             navigate("/cart", { history: "replace" })
             return
         }
 
-        const currency = cartPageContent.dataset.currency as Currency
+        const currency = (session?.currency || "gbp") as Currency
 
         const addToCartButtons = cartPageContent.querySelectorAll(
             '[id^="add-to-cart-"]'
