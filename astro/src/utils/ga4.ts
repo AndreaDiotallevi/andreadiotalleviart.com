@@ -1,6 +1,21 @@
 // @ts-nocheck
 import Stripe from "stripe"
 
+const constructItemsArray = ({
+    session,
+}: {
+    session: Stripe.Checkout.Session
+}) => {
+    return session.line_items?.data.map(item => ({
+        item_id: item.price?.product.metadata.sku,
+        item_name: item.price?.product.name,
+        item_category: item.price?.product.metadata.category,
+        price: item.amount_total / 100,
+        discount: item.amount_discount / 100,
+        quantity: item.quantity ?? 1,
+    }))
+}
+
 export const sendGA4PurchaseEvent = ({
     session,
 }: {
@@ -15,14 +30,7 @@ export const sendGA4PurchaseEvent = ({
             currency: session.currency.toUpperCase(),
             value: (session.amount_total || 0) / 100,
             ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
-            items: session.line_items?.data.map(item => ({
-                item_id: item.price?.product.metadata.sku,
-                item_name: item.price?.product.name,
-                item_category: item.price?.product.metadata.category,
-                price: item.amount_total / 100,
-                discount: item.amount_discount / 100,
-                quantity: item.quantity ?? 1,
-            })),
+            items: constructItemsArray({ session }),
         }
 
         if ("gtag" in window) {
@@ -46,14 +54,7 @@ export const sendGA4BeginCheckoutEvent = ({
             value: (session.amount_total || 0) / 100,
             currency: session.currency.toUpperCase(),
             ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
-            items: session.line_items?.data.map(item => ({
-                item_id: item.price?.product.metadata.sku,
-                item_name: item.price?.product.name,
-                item_category: item.price?.product.metadata.category,
-                price: item.amount_total / 100,
-                discount: item.amount_discount / 100,
-                quantity: item.quantity ?? 1,
-            })),
+            items: constructItemsArray({ session }),
         }
 
         if ("gtag" in window) {
