@@ -12,10 +12,8 @@ export const sendGA4PurchaseEvent = ({
 
         const gtagEventData: Gtag.EventParams = {
             transaction_id: session.id,
+            currency: session.currency.toUpperCase(),
             value: (session.amount_total || 0) / 100,
-            ...(session.currency
-                ? { currency: session.currency.toUpperCase() }
-                : {}),
             ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
             items: session.line_items?.data.map(item => ({
                 item_id: item.price?.product.metadata.sku,
@@ -46,9 +44,7 @@ export const sendGA4BeginCheckoutEvent = ({
 
         const gtagEventData: Gtag.EventParams = {
             value: (session.amount_total || 0) / 100,
-            ...(session.currency
-                ? { currency: session.currency.toUpperCase() }
-                : {}),
+            currency: session.currency.toUpperCase(),
             ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
             items: session.line_items?.data.map(item => ({
                 item_id: item.price?.product.metadata.sku,
