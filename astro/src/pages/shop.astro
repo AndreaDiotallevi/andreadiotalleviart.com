@@ -63,7 +63,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             parseInt(a.product.metadata.displayOrder) -
                             parseInt(b.product.metadata.displayOrder)
                     )
-                    .map(price => (
+                    .map((price, index) => (
                         <a
                             href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                             class="flex flex-col no-underline text-black md:hover:opacity-70 transition-opacity duration-300"
@@ -74,8 +74,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 width={1414}
                                 height={2000}
                                 sizes="(max-width: 1280px) 50vw, 608px"
-                                loading="eager"
-                                fetchpriority="high"
+                                loading={index > 1 ? "eager" : "lazy"}
+                                fetchpriority={index > 1 ? "high" : "low"}
                             />
                             <h2 class="md:text-2xl font-bold mt-4">
                                 {`${price.product.metadata.displayName} (${price.product.metadata.size})`}

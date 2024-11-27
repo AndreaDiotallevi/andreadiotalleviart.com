@@ -91,8 +91,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             height={2000}
                             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
                             class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
-                            loading="eager"
-                            fetchpriority="high"
+                            loading={index === 0 ? "eager" : "lazy"}
+                            fetchpriority={index === 0 ? "high" : "low"}
                         />
                     ))
                 }

@@ -45,7 +45,7 @@ Astro.response.headers.set(
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {
-                artworks.map(artwork => (
+                artworks.map((artwork, index) => (
                     <a
                         href={`/portfolio/${artwork.slug}`}
                         class="flex flex-col no-underline text-black md:hover:underline"
@@ -56,6 +56,8 @@ Astro.response.headers.set(
                             width={750}
                             height={750}
                             sizes="(max-width: 1280px) 50vw, 608px"
+                            loading={index > 1 ? "eager" : "lazy"}
+                            fetchpriority={index > 1 ? "high" : "low"}
                         />
                         {/* <h2 class="text-2xl font-bold mt-4">
                             {artwork.name}
