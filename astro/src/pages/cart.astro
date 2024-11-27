@@ -1,6 +1,7 @@
 ---
 export const prerender = false
 
+import Button from "@components/Button.astro"
 import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
@@ -227,12 +228,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         >
                             Explore more prints
                         </a>
-                        <a
-                            href={`/checkout?client_secret=${session.client_secret}`}
-                            class="w-full px-4 py-3 text-white bg-black rounded-lg md:hover:bg-gray-800 text-center font-bold max-w-lg transition-colors duration-300"
-                        >
-                            Proceed to checkout
-                        </a>
+                        <Button
+                            id="proceed-to-checkout-button"
+                            buttonText="Proceed to checkout"
+                        />
                     </div>
                 </>
             ) : (
@@ -259,8 +258,8 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         removePromotionCode,
     } from "@scripts/cart"
 
+    import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
     import { updateClientSession, getClientSession } from "@utils/localStorage"
-
     import type { Currency } from "@utils/stripe"
     import { navigate } from "astro:transitions/client"
 
@@ -294,6 +293,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         }
 
         const currency = (session?.currency || "gbp") as Currency
+
+        const proceedToCheckoutButton = cartPageContent.querySelector(
+            "#proceed-to-checkout-button"
+        ) as HTMLButtonElement
 
         const addToCartButtons = cartPageContent.querySelectorAll(
             '[id^="add-to-cart-"]'
@@ -390,7 +393,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         ?.classList.add("hidden")
 
                     promotionCodeError.classList.remove("hidden")
-                    // promotionCodeElement.classList.add("border-rose-700")
                     promotionCodeError.textContent = error!
                 }
             })
@@ -425,6 +427,13 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         .querySelector("#loading-spinner")
                         ?.classList.add("hidden")
                 }
+            })
+
+        session &&
+            proceedToCheckoutButton.addEventListener("click", async e => {
+                e.preventDefault()
+                sendGA4BeginCheckoutEvent({ session })
+                navigate(`/checkout?client_secret=${session.client_secret}`)
             })
     })
 </script>
