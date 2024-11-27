@@ -1,19 +1,33 @@
-// @ts-nocheck
 import Stripe from "stripe"
+import type { StripePrice } from "./stripe"
 
-const constructItemsArray = ({
-    session,
-}: {
-    session: Stripe.Checkout.Session
-}) => {
-    return session.line_items?.data.map(item => ({
-        item_id: item.price?.product.metadata.sku,
-        item_name: item.price?.product.name,
-        item_category: item.price?.product.metadata.category,
-        price: item.amount_total / 100,
-        discount: item.amount_discount / 100,
-        quantity: item.quantity ?? 1,
-    }))
+const getCouponField = ({ session }: { session: Stripe.Checkout.Session }) => {
+    const discount = session.total_details?.breakdown?.discounts[0]?.discount
+
+    if (discount?.coupon.name) {
+        return { coupon: discount.coupon.name }
+    } else {
+        return {}
+    }
+}
+
+const getCommonFields = ({ session }: { session: Stripe.Checkout.Session }) => {
+    return {
+        currency: session.currency!.toUpperCase(),
+        value: (session.amount_total || 0) / 100,
+        items: session.line_items?.data.map(item => {
+            const price = item.price as unknown as StripePrice
+
+            return {
+                item_id: price.product.metadata.sku,
+                item_name: price?.product.name,
+                item_category: price?.product.metadata.category,
+                price: item.amount_total / 100 / (item.quantity ?? 1),
+                discount: item.amount_discount / 100 / (item.quantity ?? 1),
+                quantity: item.quantity ?? 1,
+            }
+        }),
+    }
 }
 
 export const sendGA4PurchaseEvent = ({
@@ -22,18 +36,14 @@ export const sendGA4PurchaseEvent = ({
     session: Stripe.Checkout.Session
 }) => {
     try {
-        const discount =
-            session.total_details?.breakdown?.discounts[0]?.discount
-
         const gtagEventData: Gtag.EventParams = {
+            ...getCommonFields({ session }),
+            ...getCouponField({ session }),
             transaction_id: session.id,
-            currency: session.currency.toUpperCase(),
-            value: (session.amount_total || 0) / 100,
-            ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
-            items: constructItemsArray({ session }),
         }
 
         if ("gtag" in window) {
+            // console.log(gtagEventData)
             window.gtag("event", "purchase", gtagEventData)
         }
     } catch (error) {
@@ -47,18 +57,33 @@ export const sendGA4BeginCheckoutEvent = ({
     session: Stripe.Checkout.Session
 }) => {
     try {
-        const discount =
-            session.total_details?.breakdown?.discounts[0]?.discount
-
         const gtagEventData: Gtag.EventParams = {
-            value: (session.amount_total || 0) / 100,
-            currency: session.currency.toUpperCase(),
-            ...(discount?.coupon.name ? { coupon: discount.coupon.name } : {}),
-            items: constructItemsArray({ session }),
+            ...getCommonFields({ session }),
+            ...getCouponField({ session }),
         }
 
         if ("gtag" in window) {
+            // console.log(gtagEventData)
             window.gtag("event", "begin_checkout", gtagEventData)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const sendGA4AddToCart = ({
+    session,
+}: {
+    session: Stripe.Checkout.Session
+}) => {
+    try {
+        const gtagEventData: Gtag.EventParams = {
+            ...getCommonFields({ session }),
+        }
+
+        if ("gtag" in window) {
+            // console.log(gtagEventData)
+            window.gtag("event", "add_to_cart", gtagEventData)
         }
     } catch (error) {
         console.error(error)

@@ -16,7 +16,7 @@ export const createCheckoutSession = async (params: {
         console.log("Creating checkout session...")
 
         const session = await stripe.checkout.sessions.create({
-            expand: ["line_items"],
+            expand: ["line_items", "line_items.data.price.product"],
             ui_mode: "embedded",
             mode: "payment",
             return_url: `${success_url}?session_id={CHECKOUT_SESSION_ID}`,
