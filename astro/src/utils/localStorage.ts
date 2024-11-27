@@ -30,14 +30,18 @@ export const getClientSession = (): ClientSession => {
         return defaultClientSession
     }
 
-    const clientSession = JSON.parse(str) as ClientSession
+    try {
+        const clientSession = JSON.parse(str) as ClientSession
 
-    if (isSessionExpired(clientSession.expiresAt)) {
-        clearClientSession()
+        if (isSessionExpired(clientSession.expiresAt)) {
+            clearClientSession()
+            return defaultClientSession
+        }
+
+        return clientSession
+    } catch (error) {
         return defaultClientSession
     }
-
-    return clientSession
 }
 
 export const updateClientSession = ({
