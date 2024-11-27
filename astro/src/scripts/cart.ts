@@ -6,7 +6,6 @@ import {
 } from "@utils/localStorage"
 import { navigate } from "astro:transitions/client"
 import type { Currency } from "@utils/stripe"
-import { sendGA4AddToCart } from "@utils/ga4"
 
 export const addToCart = async ({
     priceId,
@@ -43,7 +42,6 @@ export const addToCart = async ({
     if (!session) return { error }
 
     updateClientSession({ session, promotionCode })
-    sendGA4AddToCart({ session })
     navigate(`/cart?session_id=${session.id}`, {
         history: window.location.pathname === "/cart" ? "replace" : "push",
     })

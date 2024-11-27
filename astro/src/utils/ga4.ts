@@ -70,22 +70,3 @@ export const sendGA4BeginCheckoutEvent = ({
         console.error(error)
     }
 }
-
-export const sendGA4AddToCart = ({
-    session,
-}: {
-    session: Stripe.Checkout.Session
-}) => {
-    try {
-        const gtagEventData: Gtag.EventParams = {
-            ...getCommonFields({ session }),
-        }
-
-        if ("gtag" in window) {
-            // console.log(gtagEventData)
-            window.gtag("event", "add_to_cart", gtagEventData)
-        }
-    } catch (error) {
-        console.error(error)
-    }
-}
