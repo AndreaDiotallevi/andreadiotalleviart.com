@@ -55,11 +55,14 @@ Astro.response.headers.set(
                     artwork.images.map((src, index) => (
                         <Image
                             id={`main-image-${index}`}
+                            alt={artwork.name}
+                            src={src}
                             width={750}
                             height={750}
-                            src={src}
-                            alt={artwork.name}
-                            class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                            class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                            loading="eager"
+                            fetchpriority="high"
                         />
                     ))
                 }
@@ -70,11 +73,14 @@ Astro.response.headers.set(
                         {artwork.images.map((img, index) => (
                             <Image
                                 id={`thumbnail-${index}`}
+                                alt={`Thumbnail ${index + 1}`}
                                 src={img}
                                 width={172}
                                 height={172}
-                                alt={`Thumbnail ${index + 1}`}
-                                class={`w-full h-auto cursor-pointer`}
+                                sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                                class="cursor-pointer"
+                                loading="eager"
+                                fetchpriority="high"
                             />
                         ))}
                     </div>

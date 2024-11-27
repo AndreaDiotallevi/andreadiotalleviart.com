@@ -85,11 +85,12 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     price.product.images.map((src, index) => (
                         <Image
                             id={`main-image-${index}`}
-                            width={734}
-                            height={1038}
-                            src={src}
                             alt={price.product.name}
-                            class={`w-full h-auto ${index === 0 ? "" : "absolute top-0 opacity-0"}`}
+                            src={src}
+                            width={1414}
+                            height={2000}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                            class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
                             loading="eager"
                             fetchpriority="high"
                         />
@@ -101,11 +102,12 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     price.product.images.map((img, index) => (
                         <Image
                             id={`thumbnail-${index}`}
-                            src={img}
-                            width={172}
-                            height={243}
                             alt={`Thumbnail ${index + 1}`}
-                            class={`w-full h-auto cursor-pointer`}
+                            src={img}
+                            width={1414}
+                            height={2000}
+                            sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                            class="cursor-pointer"
                             loading="eager"
                             fetchpriority="high"
                         />
