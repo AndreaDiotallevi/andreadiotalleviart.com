@@ -68,7 +68,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         <td class="py-2 md:py-4 pr-1 md:pr-8 flex items-center">
                                             <a
                                                 href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                                                class="min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
+                                                class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
                                             >
                                                 <Image
                                                     alt={
@@ -81,6 +81,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                     width={1414}
                                                     height={2000}
                                                     sizes="60px"
+                                                    breakpoints={[60, 120, 240]}
                                                     loading="eager"
                                                     fetchpriority="high"
                                                 />

@@ -90,6 +90,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             width={1414}
                             height={2000}
                             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                            breakpoints={[136, 254, 372, 490, 608, 1000, 1414]}
                             class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
                             loading={index === 0 ? "eager" : "lazy"}
                             fetchpriority={index === 0 ? "high" : "low"}
@@ -107,6 +108,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             width={1414}
                             height={2000}
                             sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                            breakpoints={[60, 120, 240]}
                             class="cursor-pointer"
                             loading="eager"
                             fetchpriority="high"
