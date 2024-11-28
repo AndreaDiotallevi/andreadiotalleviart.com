@@ -9,6 +9,15 @@ cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 })
 
+const transformImage = (displayName: string) => {
+    return cloudinary.url(displayName, {
+        transformation: {
+            quality: "auto",
+            format: "auto",
+        },
+    })
+}
+
 export const stripeSynchroniseProducts = async () => {
     const stripe = await initialiseClient()
 
@@ -143,66 +152,6 @@ type ProductInput = Pick<
 }
 
 const products: ProductInput[] = [
-    // {
-    //     active: false,
-    //     name: "New York - A3 Giclée Fine Art Print",
-    //     description:
-    //         "A3 420 x 297 mm (16.5 x 11.7 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "New York",
-    //         displayOrder: "3",
-    //         orientation: "landscape",
-    //         size: "A3",
-    //         slug: "new-york",
-    //         sku: "print-newYork-A3",
-    //     },
-    // },
-    // {
-    //     active: false,
-    //     name: "New York - A2 Giclée Fine Art Print",
-    //     description:
-    //         "A2 594 x 420 mm (23.4 x 16.5 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "New York",
-    //         displayOrder: "3",
-    //         orientation: "landscape",
-    //         size: "A2",
-    //         slug: "new-york",
-    //         sku: "print-newYork-A2",
-    //     },
-    // },
-    // {
-    //     active: false,
-    //     name: "Marble Lake - A1 Giclée Fine Art Print",
-    //     description:
-    //         "A1 594 x 841 mm (23.4 x 33.1 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Marble Lake",
-    //         displayOrder: "2",
-    //         orientation: "portrait",
-    //         size: "A1",
-    //         slug: "marble-lake",
-    //         sku: "print-marbleLake-A1",
-    //     },
-    // },
-    // {
-    //     active: false,
-    //     name: "Marble Lake - A2 Giclée Fine Art Print",
-    //     description:
-    //         "A2 420 x 594 mm (16.5 x 23.4 inches) giclée fine art print on Hahnemühle photo rag 308gsm vegan certified matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Marble Lake",
-    //         displayOrder: "2",
-    //         orientation: "portrait",
-    //         size: "A2",
-    //         slug: "marble-lake",
-    //         sku: "print-marbleLake-A2",
-    //     },
-    // },
     {
         active: true,
         name: "Marble Lake - A3 Giclée Fine Art Print",
@@ -218,24 +167,9 @@ const products: ProductInput[] = [
             sku: "print-marbleLake-A3",
         },
         images: [
-            cloudinary.url("marble-lake_WEB_MOCKUP_WITHOUT_BORDER_b4p8fc", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("marble-lake_WEB_WITHOUT_BORDER_k9tcgo", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("A116-marble-lake_nmaccx", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
+            transformImage("marble-lake_WEB_MOCKUP_WITHOUT_BORDER_b4p8fc"),
+            transformImage("marble-lake_WEB_WITHOUT_BORDER_k9tcgo"),
+            transformImage("A116-marble-lake_nmaccx"),
         ],
         currencyOptions: {
             gbp: 6500,
@@ -258,24 +192,9 @@ const products: ProductInput[] = [
             sku: "print-flames-A3",
         },
         images: [
-            cloudinary.url("flames-mockup_gzj45v", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("flames-artwork_ioxny4", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("A116-flames_voptyx", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
+            transformImage("flames-mockup_gzj45v"),
+            transformImage("flames-artwork_ioxny4"),
+            transformImage("A116-flames_voptyx"),
         ],
         currencyOptions: {
             gbp: 6500,
@@ -283,46 +202,6 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
-    // {
-    //     active: false,
-    //     name: "Fire Drops - A3 Giclée Fine Art Print",
-    //     description:
-    //         "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Fire Drops",
-    //         displayOrder: "1",
-    //         orientation: "portrait",
-    //         size: "A3",
-    //         slug: "fire-drops",
-    //         sku: "print-fireDrops-A3",
-    //     },
-    //     images: [
-    //         cloudinary.url("fire-drops_WEB_MOCKUP_jph627", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //         cloudinary.url("fire-drops_WEB_WITHOUT_BORDER_iffuzy", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //         cloudinary.url("fire-drops_WEB_PAPER_jxmx4m", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //     ],
-    //     currencyOptions: {
-    //         gbp: 6500,
-    //         eur: 8000,
-    //         usd: 9000,
-    //     },
-    // },
     {
         active: true,
         name: "Moonlight 1 - A3 Giclée Fine Art Print",
@@ -338,24 +217,9 @@ const products: ProductInput[] = [
             sku: "print-moonlight1-A3",
         },
         images: [
-            cloudinary.url("moonlight-1_MOCKUP_xul3pi", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("moonlight-1_WEB_WITHOUT_BORDER_ecwgkl", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("moonlight-1_PAPER_cdhgj9", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
+            transformImage("moonlight-1_MOCKUP_xul3pi"),
+            transformImage("moonlight-1_WEB_WITHOUT_BORDER_ecwgkl"),
+            transformImage("moonlight-1_PAPER_cdhgj9"),
         ],
         currencyOptions: {
             gbp: 6500,
@@ -378,24 +242,9 @@ const products: ProductInput[] = [
             sku: "print-moonlight2-A3",
         },
         images: [
-            cloudinary.url("moonlight-2_WEB_MOCKUP_WITHOUT_BORDER_aenrjl", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("moonlight-2_WEB_WITHOUT_BORDER_sh02uz", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
-            cloudinary.url("moonlight-2_WEB_PAPER_jzx3xu", {
-                transformation: {
-                    quality: "auto",
-                    format: "auto",
-                },
-            }),
+            transformImage("moonlight-2_WEB_MOCKUP_WITHOUT_BORDER_aenrjl"),
+            transformImage("moonlight-2_WEB_WITHOUT_BORDER_sh02uz"),
+            transformImage("moonlight-2_WEB_PAPER_jzx3xu"),
         ],
         currencyOptions: {
             gbp: 6500,
@@ -403,44 +252,4 @@ const products: ProductInput[] = [
             usd: 9000,
         },
     },
-    // {
-    //     active: false,
-    //     name: "Skylines 3 - A3 Giclée Fine Art Print",
-    //     description:
-    //         "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Skylines 3",
-    //         displayOrder: "4",
-    //         orientation: "portrait",
-    //         size: "A3",
-    //         slug: "skylines-3",
-    //         sku: "print-skylines3-A3",
-    //     },
-    //     images: [
-    //         cloudinary.url("skylines3-MOCKUP_esw32k", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //         cloudinary.url("skylines3_WEB_jzpzpg", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //         cloudinary.url("skylines3_PAPER_rrbmy8", {
-    //             transformation: {
-    //                 quality: "auto",
-    //                 format: "auto",
-    //             },
-    //         }),
-    //     ],
-    //     currencyOptions: {
-    //         gbp: 6500,
-    //         eur: 8000,
-    //         usd: 9000,
-    //     },
-    // },
 ]
