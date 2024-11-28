@@ -75,8 +75,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 height={2000}
                                 sizes="(max-width: 1280px) 50vw, 608px"
                                 breakpoints={[136, 254, 372, 490, 608]}
-                                loading={index < 2 ? "eager" : "lazy"}
-                                fetchpriority={index < 2 ? "high" : "low"}
+                                loading={index < 4 ? "eager" : "lazy"}
+                                fetchpriority={index < 4 ? "high" : "low"}
                             />
                             <h2 class="md:text-2xl font-bold mt-4">
                                 {`${price.product.metadata.displayName} (${price.product.metadata.size})`}
