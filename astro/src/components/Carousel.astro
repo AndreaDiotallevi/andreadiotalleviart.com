@@ -30,8 +30,9 @@ const { images, main, thumbnail } = Astro.props
                                 width={main.width}
                                 height={main.height}
                                 sizes={main.sizes}
-                                loading={index === 0 ? "eager" : "lazy"}
-                                fetchpriority={index === 0 ? "high" : "low"}
+                                sizes={thumbnail.sizes}
+                                loading="eager"
+                                fetchpriority="high"
                             />
                         </div>
                     </div>
