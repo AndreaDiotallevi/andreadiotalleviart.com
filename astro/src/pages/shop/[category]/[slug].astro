@@ -1,10 +1,10 @@
 ---
 export const prerender = false
 
-import { Image } from "@unpic/astro"
 import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
+import Carousel from "@components/Carousel.astro"
 
 import { getLocalCurrency, combinedCountries } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
@@ -78,42 +78,19 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {price.product.metadata.displayName}
             </h1>
-            <div
-                class={`${price.product.images.length > 1 ? "mb-5" : ""} relative`}
-            >
-                {
-                    price.product.images.map((src, index) => (
-                        <Image
-                            id={`main-image-${index}`}
-                            alt={price.product.name}
-                            src={src}
-                            width={1414}
-                            height={2000}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
-                            class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
-                            loading={index === 0 ? "eager" : "lazy"}
-                            fetchpriority={index === 0 ? "high" : "low"}
-                        />
-                    ))
-                }
-            </div>
-            <div class="grid grid-cols-4 gap-4">
-                {
-                    price.product.images.map((img, index) => (
-                        <Image
-                            id={`thumbnail-${index}`}
-                            alt={`Thumbnail ${index + 1}`}
-                            src={img}
-                            width={300}
-                            height={424}
-                            sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
-                            class="cursor-pointer"
-                            loading="eager"
-                            fetchpriority="high"
-                        />
-                    ))
-                }
-            </div>
+            <Carousel
+                images={price.product.images}
+                main={{
+                    width: 1414,
+                    height: 2000,
+                    sizes: "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px",
+                }}
+                thumbnail={{
+                    width: 600,
+                    height: 848,
+                    sizes: "(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px",
+                }}
+            />
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
