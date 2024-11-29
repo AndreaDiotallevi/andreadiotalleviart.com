@@ -234,28 +234,3 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
         })
     })
 </script>
-
-<script>
-    document.addEventListener("astro:page-load", () => {
-        const mainImages = document.querySelectorAll('[id^="main-image-"]')
-        const thumbnails = document.querySelectorAll('[id^="thumbnail-"]')
-
-        if (!mainImages.length || !thumbnails.length) return
-
-        let selectedThumbnail = thumbnails[0]
-
-        thumbnails.forEach((thumbnail, index) => {
-            thumbnail.addEventListener("click", () => {
-                mainImages.forEach((img, i) => {
-                    if (i === index) {
-                        img.classList.remove("absolute", "top-0", "opacity-0")
-                    } else {
-                        img.classList.add("absolute", "top-0", "opacity-0")
-                    }
-                })
-
-                selectedThumbnail = thumbnail
-            })
-        })
-    })
-</script>

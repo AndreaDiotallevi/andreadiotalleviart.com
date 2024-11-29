@@ -24,6 +24,7 @@ const { images, main, thumbnail } = Astro.props
                     <div class="embla__slide">
                         <div class="embla__slide__number">
                             <Image
+                                id={`product-image-index-${index}`}
                                 alt={`Product image index ${index}`}
                                 src={src}
                                 width={main.width}
@@ -51,6 +52,7 @@ const { images, main, thumbnail } = Astro.props
                                 class="embla-thumbs__slide__number"
                             >
                                 <Image
+                                    id={`product-thumbnail-index-${index}`}
                                     alt={`Product thumbnail index ${index}`}
                                     src={src}
                                     width={thumbnail.width}
