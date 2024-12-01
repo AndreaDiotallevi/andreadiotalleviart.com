@@ -27,7 +27,6 @@ const DEFAULT_RESOLUTIONS = [
     250,
     200,
     150,
-    100,
 ]
 
 export const imageBreakpoints = ({
