@@ -1,5 +1,6 @@
 ---
 import { Image } from "@unpic/astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 
 interface MyImageProps {
     width: number
@@ -30,6 +31,7 @@ const { images, main, thumbnail } = Astro.props
                                 width={main.width}
                                 height={main.height}
                                 sizes={main.sizes}
+                                breakpoints={imageBreakpoints(main.width)}
                                 loading="eager"
                                 fetchpriority="high"
                             />
@@ -58,6 +60,9 @@ const { images, main, thumbnail } = Astro.props
                                     width={thumbnail.width}
                                     height={thumbnail.height}
                                     sizes={thumbnail.sizes}
+                                    breakpoints={imageBreakpoints(
+                                        thumbnail.width
+                                    )}
                                     loading="eager"
                                     fetchpriority="high"
                                 />
