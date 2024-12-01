@@ -2,19 +2,13 @@
 import { Image } from "@unpic/astro"
 import { imageBreakpoints } from "@utils/breakpoints"
 
-interface MyImageProps {
-    width: number
-    height: number
-    sizes: string
-}
-
 interface Props {
     images: string[]
-    main: MyImageProps
-    thumbnail: MyImageProps
+    width: number
+    height: number
 }
 
-const { images, main, thumbnail } = Astro.props
+const { images, width, height } = Astro.props
 ---
 
 <div class="embla">
@@ -28,10 +22,13 @@ const { images, main, thumbnail } = Astro.props
                                 id={`product-image-index-${index}`}
                                 alt={`Product image index ${index}`}
                                 src={src}
-                                width={main.width}
-                                height={main.height}
-                                sizes={main.sizes}
-                                breakpoints={imageBreakpoints(main.width)}
+                                width={width}
+                                height={height}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                                breakpoints={imageBreakpoints({
+                                    maxWidth: 608,
+                                    assetWidth: width,
+                                })}
                                 loading="eager"
                                 fetchpriority="high"
                             />
@@ -57,12 +54,13 @@ const { images, main, thumbnail } = Astro.props
                                     id={`product-thumbnail-index-${index}`}
                                     alt={`Product thumbnail index ${index}`}
                                     src={src}
-                                    width={thumbnail.width}
-                                    height={thumbnail.height}
-                                    sizes={thumbnail.sizes}
-                                    breakpoints={imageBreakpoints(
-                                        thumbnail.width
-                                    )}
+                                    width={width}
+                                    height={height}
+                                    sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                                    breakpoints={imageBreakpoints({
+                                        maxWidth: 140,
+                                        assetWidth: width,
+                                    })}
                                     loading="eager"
                                     fetchpriority="high"
                                 />

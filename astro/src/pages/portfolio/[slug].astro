@@ -50,19 +50,7 @@ Astro.response.headers.set(
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
             </h1>
-            <Carousel
-                images={artwork.images}
-                main={{
-                    width: 750,
-                    height: 750,
-                    sizes: "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px",
-                }}
-                thumbnail={{
-                    width: 400,
-                    height: 400,
-                    sizes: "(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px",
-                }}
-            />
+            <Carousel images={artwork.images} width={750} height={750} />
         </div>
 
         <div class="w-full md:w-1/2">

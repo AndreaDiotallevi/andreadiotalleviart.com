@@ -2,6 +2,7 @@
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { transformImage } from "@utils/cloudinary"
 
 const contactImageSrc = transformImage("contact-page-image_dczqrw")
@@ -34,6 +35,10 @@ Astro.response.headers.set(
                 width={2000}
                 height={2000}
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                breakpoints={imageBreakpoints({
+                    maxWidth: 608,
+                    assetWidth: 2000,
+                })}
                 loading="eager"
                 fetchpriority="high"
             />

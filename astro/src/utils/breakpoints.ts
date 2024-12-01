@@ -17,15 +17,22 @@ const DEFAULT_RESOLUTIONS = [
     640, // older and lower-end phones
 
     // Additional for mobile
-    500,
     400,
-    300,
+    200,
 ]
 
-export const imageBreakpoints = (imageWidth: number) => {
-    const srcsetArr = DEFAULT_RESOLUTIONS.filter(res => res <= imageWidth * 2)
+export const imageBreakpoints = ({
+    maxWidth,
+    assetWidth,
+}: {
+    maxWidth: number
+    assetWidth: number
+}) => {
+    const srcsetArr = DEFAULT_RESOLUTIONS.filter(res => res <= maxWidth * 3)
 
-    srcsetArr.push(imageWidth)
+    if (!srcsetArr.includes(assetWidth)) {
+        srcsetArr.push(assetWidth)
+    }
 
-    return srcsetArr
+    return srcsetArr.sort((a, b) => a - b)
 }

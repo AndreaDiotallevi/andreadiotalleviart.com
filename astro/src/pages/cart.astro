@@ -5,6 +5,7 @@ import Button from "@components/Button.astro"
 import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { getLocalCurrency } from "@utils/currency"
 
 import { formatCurrency } from "@utils/intl"
@@ -78,9 +79,15 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                     src={
                                                         price.product.images[0]
                                                     }
-                                                    width={400}
-                                                    height={566}
+                                                    width={1414}
+                                                    height={2000}
                                                     sizes="60px"
+                                                    breakpoints={imageBreakpoints(
+                                                        {
+                                                            maxWidth: 60,
+                                                            assetWidth: 1414,
+                                                        }
+                                                    )}
                                                     loading="eager"
                                                     fetchpriority="high"
                                                 />
