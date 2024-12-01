@@ -37,7 +37,9 @@ export const imageBreakpoints = ({
     maxWidth: number
     assetWidth: number
 }) => {
-    const srcsetArr = DEFAULT_RESOLUTIONS.filter(res => res <= maxWidth * 3)
+    const srcsetArr = DEFAULT_RESOLUTIONS.filter(
+        res => res <= Math.max(600, maxWidth * 3),
+    )
 
     if (!srcsetArr.includes(assetWidth)) {
         srcsetArr.push(assetWidth)
