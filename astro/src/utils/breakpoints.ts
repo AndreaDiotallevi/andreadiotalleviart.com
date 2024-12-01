@@ -17,8 +17,17 @@ const DEFAULT_RESOLUTIONS = [
     640, // older and lower-end phones
 
     // Additional for mobile
+    600,
+    550,
+    500,
+    450,
     400,
+    350,
+    300,
+    250,
     200,
+    150,
+    100,
 ]
 
 export const imageBreakpoints = ({
