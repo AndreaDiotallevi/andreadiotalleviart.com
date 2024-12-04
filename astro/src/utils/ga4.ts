@@ -42,7 +42,10 @@ export const sendGA4PurchaseEvent = ({
             transaction_id: session.id,
         }
 
-        window.dataLayer.push({ event: "purchase", ...gtagEventData })
+        if ("gtag" in window) {
+            // console.log(gtagEventData)
+            window.gtag("event", "purchase", gtagEventData)
+        }
     } catch (error) {
         console.error(error)
     }
@@ -59,7 +62,10 @@ export const sendGA4BeginCheckoutEvent = ({
             ...getCouponField({ session }),
         }
 
-        window.dataLayer.push({ event: "begin_checkout", ...gtagEventData })
+        if ("gtag" in window) {
+            // console.log(gtagEventData)
+            window.gtag("event", "begin_checkout", gtagEventData)
+        }
     } catch (error) {
         console.error(error)
     }

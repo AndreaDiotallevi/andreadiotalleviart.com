@@ -106,16 +106,14 @@ const {
         />
         <!-- Google tag (gtag.js) -->
         <script
-            async
             is:inline
-            type="text/partytown"
             src=`https://www.googletagmanager.com/gtag/js?id=${ga4TrackingID}`
         ></script>
-        <script is:inline type="text/partytown" define:vars={{ ga4TrackingID }}>
+        <script is:inline define:vars={{ ga4TrackingID }}>
             document.addEventListener("astro:page-load", () => {
                 window.dataLayer = window.dataLayer || []
-                window.gtag = function gtag(...args) {
-                    window.dataLayer.push(arguments)
+                window.gtag = function gtag() {
+                    dataLayer.push(arguments)
                 }
                 window.gtag("js", new Date())
                 window.gtag("config", ga4TrackingID)
