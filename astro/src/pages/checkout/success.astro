@@ -73,23 +73,26 @@ const success = !!(session && currency && shippingDetails)
 
                                         return (
                                             <li class="flex">
-                                                <Image
-                                                    alt={price.product.name}
-                                                    src={
-                                                        price.product.images[0]
-                                                    }
-                                                    width={1414}
-                                                    height={2000}
-                                                    sizes="60px"
-                                                    breakpoints={imageBreakpoints(
-                                                        {
-                                                            maxWidth: 60,
-                                                            assetWidth: 1414,
+                                                <div class="max-w-[60px]">
+                                                    <Image
+                                                        alt={price.product.name}
+                                                        src={
+                                                            price.product
+                                                                .images[0]
                                                         }
-                                                    )}
-                                                    loading="eager"
-                                                    fetchpriority="high"
-                                                />
+                                                        width={1414}
+                                                        height={2000}
+                                                        sizes="60px"
+                                                        breakpoints={imageBreakpoints(
+                                                            {
+                                                                maxWidth: 300,
+                                                                assetWidth: 1414,
+                                                            }
+                                                        )}
+                                                        loading="eager"
+                                                        fetchpriority="high"
+                                                    />
+                                                </div>
                                                 <p class="pl-4">
                                                     {item.quantity} x{" "}
                                                     {
