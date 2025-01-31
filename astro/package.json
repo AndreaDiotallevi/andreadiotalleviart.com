@@ -10,12 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.3",
-    "@astrojs/netlify": "^5.5.3",
-    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/netlify": "^6.1.0",
+    "@astrojs/tailwind": "^6.0.0",
     "@stripe/stripe-js": "^4.4.0",
     "@unpic/astro": "^0.0.47",
-    "astro": "^4.15.3",
+    "astro": "^5.2.2",
     "cloudinary": "^2.5.0",
     "embla-carousel": "^8.5.1",
     "p5": "^1.10.0",

@@ -5,12 +5,11 @@ import netlify from "@astrojs/netlify"
 
 // https://astro.build/config
 export default defineConfig({
-    output: "hybrid",
+    output: "static",
     adapter: netlify(),
     trailingSlash: "never",
     build: { format: "file" },
     integrations: [tailwind()],
-    experimental: { serverIslands: true },
     prefetch: { defaultStrategy: "load", prefetchAll: true },
     site: "https://www.andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
