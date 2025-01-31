@@ -62,17 +62,16 @@ Astro.response.headers.set(
 </BaseLayout>
 
 <script>
-    // @ts-nocheck
     import p5 from "p5"
 
     document.addEventListener("astro:page-load", async () => {
-        const sketchElement = document.querySelector("#sketch")
+        const sketchElement = document.querySelector("#sketch") as HTMLElement
         const canvasWidth = sketchElement?.clientWidth || 0
         const canvasHeight = sketchElement?.clientHeight || 0
 
         if (!sketchElement) return
 
-        const sketch = p5 => {
+        const sketch = (p5: p5) => {
             let t = 0
 
             p5.setup = () => {
@@ -113,7 +112,7 @@ Astro.response.headers.set(
             }
 
             p5.windowResized = () => {
-                const newElement = document.querySelector("#sketch")
+                const newElement = document.querySelector("#sketch")!
                 p5.resizeCanvas(
                     newElement?.clientWidth,
                     newElement?.clientHeight
