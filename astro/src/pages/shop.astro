@@ -32,7 +32,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 <BaseLayout
     title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
     description="Museum quality fine art prints on premium cotton paper delivered with carbon-neutral free shipping."
-    image={prices[0].product.images[0]}
+    image={prices[0] ? prices[0].product.images[0] : undefined}
     tags={[
         "Generative art",
         "p5.js",
