@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions"
+import { ClientRouter } from "astro:transitions"
 
 import type { Currency } from "@utils/stripe"
 import GlobalStyles from "@components/GlobalStyles.astro"
@@ -119,7 +119,7 @@ const {
                 window.gtag("config", ga4TrackingID)
             })
         </script>
-        <ViewTransitions />
+        <ClientRouter />
     </head>
     <body class="min-w-[320px]">
         <GlobalStyles />
