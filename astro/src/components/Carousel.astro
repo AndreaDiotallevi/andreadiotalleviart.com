@@ -22,9 +22,15 @@ const { images, width, height } = Astro.props
                                 id={`product-image-index-${index}`}
                                 alt={`Product image index ${index}`}
                                 src={src}
-                                aspectRatio={0.666}
+                                width={1414}
+                                height={2000}
                                 loading="eager"
                                 fetchpriority="high"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                                breakpoints={imageBreakpoints({
+                                    maxWidth: 608,
+                                    assetWidth: width,
+                                })}
                             />
                         </div>
                     </div>
@@ -48,9 +54,15 @@ const { images, width, height } = Astro.props
                                     id={`product-thumbnail-index-${index}`}
                                     alt={`Product thumbnail index ${index}`}
                                     src={src}
-                                    aspectRatio={0.666}
+                                    width={1414}
+                                    height={2000}
                                     loading="eager"
                                     fetchpriority="high"
+                                    sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                                    breakpoints={imageBreakpoints({
+                                        maxWidth: 140,
+                                        assetWidth: width,
+                                    })}
                                 />
                             </button>
                         </div>
@@ -229,15 +241,3 @@ const { images, width, height } = Astro.props
 
 <!-- https://www.embla-carousel.com/examples/predefined/ -->
 <!-- https://codesandbox.io/p/sandbox/3n5r7x?file=%2Fsrc%2Fjs%2Findex.ts%3A1%2C8-1%2C21 -->
-
-<!-- sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
-breakpoints={imageBreakpoints({
-    maxWidth: 608,
-    assetWidth: width,
-})} -->
-
-<!-- sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
-breakpoints={imageBreakpoints({
-    maxWidth: 140,
-    assetWidth: width,
-})} -->
