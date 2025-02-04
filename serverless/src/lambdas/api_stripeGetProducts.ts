@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult } from "aws-lambda"
 
-import { getPrices, getProducts } from "../actions/stripe_getPrices"
+import { getProducts } from "../actions/stripe_getProducts"
 
 export const handler = async (): Promise<APIGatewayProxyResult> => {
     const products = await getProducts()

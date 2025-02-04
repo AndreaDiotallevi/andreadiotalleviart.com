@@ -1,10 +1,10 @@
 import Stripe from "stripe"
 import type { Currency, StripeProduct } from "./stripe"
 
-export const getStripePrices = async (): Promise<StripeProduct[]> => {
+export const getStripeProducts = async (): Promise<StripeProduct[]> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/prices`,
+            import.meta.env.PUBLIC_API_URL + `/products`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },

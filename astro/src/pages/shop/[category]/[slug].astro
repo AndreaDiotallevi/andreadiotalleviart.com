@@ -8,11 +8,11 @@ import Carousel from "@components/Carousel.astro"
 
 import { getLocalCurrency, combinedCountries } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
-import { getStripePrices } from "@utils/serverless"
+import { getStripeProducts } from "@utils/serverless"
 import { type StripeProduct } from "@utils/stripe"
 
 const { slug } = Astro.params
-const products = await getStripePrices()
+const products = await getStripeProducts()
 
 const product = products.filter(product => product.metadata.slug === slug)[0]
 

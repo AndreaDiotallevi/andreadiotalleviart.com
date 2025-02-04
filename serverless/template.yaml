@@ -491,17 +491,17 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_stripeCreateCheckoutSession.ts
 
-    StripeGetPricesFunction:
+    StripeGetProductsFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-StripeGetPrices
-            Handler: src/lambdas/api_stripeGetPrices.handler
+            FunctionName: !Sub ${AWS::StackName}-StripeGetProducts
+            Handler: src/lambdas/api_stripeGetProducts.handler
             Events:
                 Root:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /prices
+                        Path: /products
                         Method: GET
             Policies:
                 - Statement:
@@ -517,7 +517,7 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/api_stripeGetPrices.ts
+                    - src/lambdas/api_stripeGetProducts.ts
 
     StripeRetrieveCheckoutSessionFunction:
         Type: AWS::Serverless::Function

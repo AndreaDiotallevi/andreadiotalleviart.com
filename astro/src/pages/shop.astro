@@ -4,11 +4,11 @@ export const prerender = false
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { imageBreakpoints } from "@utils/breakpoints"
-import { getStripePrices } from "@utils/serverless"
+import { getStripeProducts } from "@utils/serverless"
 import { combinedCountries, getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 
-const products = await getStripePrices()
+const products = await getStripeProducts()
 
 // console.log(Astro.url.href)
 // console.log(JSON.stringify(Astro.locals.netlify.context.geo))
