@@ -59,6 +59,7 @@ export const stripeSynchroniseProducts = async () => {
                     product.currencyOptions.usd
 
             if (defaultPriceNeedUpdating) {
+                console.log("Updating default price...")
                 const newPrice = await stripe.prices.create({
                     active: true,
                     product: stripeProduct.id,
@@ -79,7 +80,7 @@ export const stripeSynchroniseProducts = async () => {
         } else {
             console.log("Creating new product...")
 
-            const res = await stripe.products.create({
+            await stripe.products.create({
                 ...payload,
                 default_price_data: {
                     currency: "gbp",
@@ -153,14 +154,14 @@ type ProductInput = Pick<
 
 const products: ProductInput[] = [
     {
-        active: true,
+        active: false,
         name: "Marble Lake - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Marble Lake",
-            displayOrder: "1",
+            displayOrder: "20",
             orientation: "portrait",
             size: "A3",
             slug: "marble-lake",
@@ -178,14 +179,14 @@ const products: ProductInput[] = [
         },
     },
     {
-        active: true,
+        active: false,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Flames",
-            displayOrder: "2",
+            displayOrder: "21",
             orientation: "portrait",
             size: "A3",
             slug: "flames",
@@ -203,14 +204,14 @@ const products: ProductInput[] = [
         },
     },
     {
-        active: true,
+        active: false,
         name: "Moonlight 1 - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 1",
-            displayOrder: "3",
+            displayOrder: "22",
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-1",
@@ -228,14 +229,14 @@ const products: ProductInput[] = [
         },
     },
     {
-        active: true,
+        active: false,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclee fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
-            displayOrder: "4",
+            displayOrder: "23",
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-2",
@@ -250,6 +251,30 @@ const products: ProductInput[] = [
             gbp: 6500,
             eur: 8000,
             usd: 9000,
+        },
+    },
+    {
+        active: true,
+        name: "Nebulae #3 - 50x70cm Giclée Fine Art Print",
+        description:
+            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Nebulae #3",
+            displayOrder: "1",
+            orientation: "portrait",
+            size: "50x70cm",
+            slug: "nebulae-3",
+            sku: "nebulae-3-50x70",
+        },
+        images: [
+            transformImage("nebulae-mockup-with-border-3-portrait_adkdeh"),
+            transformImage("nebula-width2000-variation3_dbs4mr"),
+        ],
+        currencyOptions: {
+            gbp: 10000,
+            eur: 12000,
+            usd: 13000,
         },
     },
 ]

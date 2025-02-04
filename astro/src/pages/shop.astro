@@ -8,10 +8,10 @@ import { getStripePrices } from "@utils/serverless"
 import { combinedCountries, getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 
-const prices = await getStripePrices()
+const products = await getStripePrices()
 
-console.log(Astro.url.href)
-console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+// console.log(Astro.url.href)
+// console.log(JSON.stringify(Astro.locals.netlify.context.geo))
 
 const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
@@ -32,7 +32,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 <BaseLayout
     title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
     description="Museum quality fine art prints on premium cotton paper delivered with carbon-neutral free shipping."
-    image={prices[0] ? prices[0].product.images[0] : undefined}
+    image={products[0] ? products[0].images[0] : undefined}
     tags={[
         "Generative art",
         "p5.js",
@@ -58,20 +58,20 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 
         <div class="grid grid-cols-2 gap-x-4 gap-y-8 md:gap-x-8 md:gap-y-16">
             {
-                prices
+                products
                     .sort(
                         (a, b) =>
-                            parseInt(a.product.metadata.displayOrder) -
-                            parseInt(b.product.metadata.displayOrder)
+                            parseInt(a.metadata.displayOrder) -
+                            parseInt(b.metadata.displayOrder)
                     )
-                    .map((price, index) => (
+                    .map((product, index) => (
                         <a
-                            href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                            href={`/shop/${product.metadata.category}/${product.metadata.slug}`}
                             class="flex flex-col no-underline text-black md:hover:opacity-70 transition-opacity duration-300"
                         >
                             <Image
-                                alt={price.product.name}
-                                src={price.product.images[0]}
+                                alt={product.name}
+                                src={product.images[0]}
                                 width={1414}
                                 height={2000}
                                 sizes="(max-width: 1280px) 50vw, 608px"
@@ -83,12 +83,12 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 fetchpriority={index < 4 ? "high" : "low"}
                             />
                             <h2 class="md:text-2xl font-bold mt-4">
-                                {`${price.product.metadata.displayName} (${price.product.metadata.size})`}
+                                {`${product.metadata.displayName} (${product.metadata.size})`}
                             </h2>
                             <p class="md:text-lg md:mt-1">
                                 {formatCurrency({
-                                    value: price.currency_options[currency]
-                                        .unit_amount,
+                                    value: product.default_price
+                                        .currency_options[currency].unit_amount,
                                     currency,
                                 })}
                             </p>

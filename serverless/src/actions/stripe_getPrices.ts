@@ -1,17 +1,14 @@
-import { StripePrice } from "../types/stripe"
+import { StripeProduct } from "../types/stripe"
 import { initialiseClient } from "./stripe_initialiseClient"
 
-export async function getPrices(): Promise<StripePrice[]> {
+export async function getProducts(): Promise<StripeProduct[]> {
     const stripe = await initialiseClient()
 
-    const response = await stripe.prices.list({
+    console.log("Getting Stripe products...")
+    const response = await stripe.products.list({
         active: true,
-        expand: ["data.product", "data.currency_options"],
+        expand: ["data.default_price", "data.default_price.currency_options"],
     })
 
-    const allPrices = response.data as unknown as StripePrice[]
-
-    return allPrices.filter(
-        price => price.product.active && price.product.metadata.slug
-    )
+    return response.data as unknown as StripeProduct[]
 }

@@ -9,26 +9,24 @@ import Carousel from "@components/Carousel.astro"
 import { getLocalCurrency, combinedCountries } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 import { getStripePrices } from "@utils/serverless"
-import { type StripePrice } from "@utils/stripe"
+import { type StripeProduct } from "@utils/stripe"
 
 const { slug } = Astro.params
-const prices = await getStripePrices()
+const products = await getStripePrices()
 
-const price = prices.filter(price => price.product.metadata.slug === slug)[0]
+const product = products.filter(product => product.metadata.slug === slug)[0]
 
-if (!price) return Astro.redirect("/404")
+if (!product) return Astro.redirect("/404")
 
-const sizeToDescription: Record<
-    StripePrice["product"]["metadata"]["size"],
-    string
-> = {
+const sizeToDescription: Record<StripeProduct["metadata"]["size"], string> = {
     A3: "A3 (297 x 420 mm)",
     A2: "A2 (420 x 594 mm)",
     A1: "A1 (594 x 841 mm)",
+    "50x70cm": "500 x 700 mm",
 }
 
-console.log(Astro.url.href)
-console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+// console.log(Astro.url.href)
+// console.log(JSON.stringify(Astro.locals.netlify.context.geo))
 
 const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
@@ -47,14 +45,14 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 ---
 
 <BaseLayout
-    title={`${price.product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
-    description={price.product.description}
-    image={price.product.images[0]}
+    title={`${product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
+    description={product.description}
+    image={product.images[0]}
     type="product"
-    amount={(price.unit_amount / 100).toFixed(2)}
+    amount={(product.default_price.unit_amount / 100).toFixed(2)}
     currency="gbp"
     tags={[
-        price.product.metadata.displayName,
+        product.metadata.displayName,
         "Generative art",
         "p5.js",
         "Processing",
@@ -76,18 +74,14 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                 <BackToLink href="/shop" text="Back to shop" />
             </div>
             <h1 class="text-2xl font-bold mb-4 md:hidden">
-                {price.product.metadata.displayName}
+                {product.metadata.displayName}
             </h1>
-            <Carousel
-                images={price.product.images}
-                width={1414}
-                height={2000}
-            />
+            <Carousel images={product.images} width={1414} height={2000} />
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
             <h1 class="text-5xl font-bold mb-6 hidden md:block">
-                {price.product.metadata.displayName}
+                {product.metadata.displayName}
             </h1>
 
             <div class="space-y-6">
@@ -101,11 +95,11 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         data-currency={currency}
                         class="w-full px-3 py-3 border border-black rounded-md mb-2"
                     >
-                        <option value={price.id}>
-                            {sizeToDescription[price.product.metadata.size]} - {
+                        <option value={product.default_price.id}>
+                            {sizeToDescription[product.metadata.size]} - {
                                 formatCurrency({
-                                    value: price.currency_options[currency]
-                                        .unit_amount,
+                                    value: product.default_price
+                                        .currency_options[currency].unit_amount,
                                     currency,
                                 })
                             }
@@ -164,8 +158,9 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     <h2 class="text-2xl font-bold mb-2">
                         {
                             formatCurrency({
-                                value: price.currency_options[currency]
-                                    .unit_amount,
+                                value: product.default_price.currency_options[
+                                    currency
+                                ].unit_amount,
                                 currency,
                             })
                         }
