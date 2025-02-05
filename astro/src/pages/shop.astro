@@ -10,8 +10,13 @@ import { formatCurrency } from "@utils/intl"
 
 const products = await getStripeProducts()
 
-// console.log(Astro.url.href)
-// console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+if (
+    import.meta.env.CONTEXT === "production" ||
+    import.meta.env.CONTEXT === "staging"
+) {
+    console.log(Astro.url.href)
+    console.log(JSON.stringify(Astro.locals.netlify.context.geo))
+}
 
 const currency = getLocalCurrency(
     Astro.locals.netlify.context.geo.country?.code
