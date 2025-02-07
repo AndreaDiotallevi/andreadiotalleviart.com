@@ -22,10 +22,10 @@ const { images, width, height } = Astro.props
                                 id={`product-image-index-${index}`}
                                 alt={`Product image index ${index}`}
                                 src={src}
-                                width={1414}
+                                width={1429}
                                 height={2000}
-                                loading="eager"
-                                fetchpriority="high"
+                                loading={"eager"}
+                                fetchpriority={"high"}
                                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
                                 breakpoints={imageBreakpoints({
                                     maxWidth: 608,
@@ -54,7 +54,7 @@ const { images, width, height } = Astro.props
                                     id={`product-thumbnail-index-${index}`}
                                     alt={`Product thumbnail index ${index}`}
                                     src={src}
-                                    width={1414}
+                                    width={1429}
                                     height={2000}
                                     loading="eager"
                                     fetchpriority="high"
@@ -71,173 +71,180 @@ const { images, width, height } = Astro.props
             </div>
         </div>
     </div>
-</div>
 
-<style>
-    .embla {
-        --slide-size: 100%;
-    }
-    .embla__viewport {
-        overflow: hidden;
-    }
-    .embla__container {
-        display: flex;
-        touch-action: pan-y pinch-zoom;
-        margin-left: calc(var(--slide-spacing) * -1);
-    }
-    .embla__slide {
-        transform: translate3d(0, 0, 0);
-        flex: 0 0 var(--slide-size);
-        min-width: 0;
-        padding-left: var(--slide-spacing);
-    }
-    .embla__slide__number {
-        border-radius: 1.8rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-    }
-    .embla-thumbs {
-        --thumbs-slide-spacing: 0.8rem;
-        --thumbs-slide-height: 8rem;
-        margin-top: var(--thumbs-slide-spacing);
-    }
-    .embla-thumbs__viewport {
-        overflow: hidden;
-    }
-    .embla-thumbs__container {
-        display: flex;
-        flex-direction: row;
-        margin-left: calc(var(--thumbs-slide-spacing) * -1);
-    }
-    .embla-thumbs__slide {
-        flex: 0 0 25%;
-        min-width: 0;
-        padding-left: var(--thumbs-slide-spacing);
-    }
-    .embla-thumbs__slide__number {
-        -webkit-appearance: none;
-        appearance: none;
-        background-color: transparent;
-        touch-action: manipulation;
-        display: inline-flex;
-        cursor: pointer;
-        border: 0;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-bottom: 2px;
-        border-bottom: 4px solid white;
-    }
-    .embla-thumbs__slide--selected .embla-thumbs__slide__number {
-        /* opacity: 0.65; */
-        border-bottom: 4px solid black;
-    }
-</style>
-
-<script>
-    import EmblaCarousel, {
-        type EmblaCarouselType,
-        type EmblaOptionsType,
-    } from "embla-carousel"
-
-    document.addEventListener("astro:page-load", async () => {
-        const OPTIONS: EmblaOptionsType = {}
-        const OPTIONS_THUMBS: EmblaOptionsType = {
-            containScroll: "keepSnaps",
-            dragFree: true,
+    <style>
+        .embla {
+            --slide-size: 100%;
         }
+        .embla__viewport {
+            overflow: hidden;
+        }
+        .embla__container {
+            display: flex;
+            touch-action: pan-y pinch-zoom;
+            margin-left: calc(var(--slide-spacing) * -1);
+        }
+        .embla__slide {
+            transform: translate3d(0, 0, 0);
+            flex: 0 0 var(--slide-size);
+            min-width: 0;
+            padding-left: var(--slide-spacing);
+        }
+        .embla__slide__number {
+            border-radius: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .embla-thumbs {
+            --thumbs-slide-spacing: 0.8rem;
+            --thumbs-slide-height: 8rem;
+            margin-top: var(--thumbs-slide-spacing);
+        }
+        .embla-thumbs__viewport {
+            overflow: hidden;
+        }
+        .embla-thumbs__container {
+            display: flex;
+            flex-direction: row;
+            margin-left: calc(var(--thumbs-slide-spacing) * -1);
+        }
+        .embla-thumbs__slide {
+            flex: 0 0 25%;
+            min-width: 0;
+            padding-left: var(--thumbs-slide-spacing);
+        }
+        .embla-thumbs__slide__number {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: transparent;
+            touch-action: manipulation;
+            display: inline-flex;
+            cursor: pointer;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 2px;
+            border-bottom: 4px solid white;
+        }
+        .embla-thumbs__slide--selected .embla-thumbs__slide__number {
+            /* opacity: 0.65; */
+            border-bottom: 4px solid black;
+        }
+    </style>
 
-        const viewportNodeMainCarousel = document.querySelector(
-            ".embla__viewport"
-        ) as HTMLElement
-        const viewportNodeThumbCarousel = document.querySelector(
-            ".embla-thumbs__viewport"
-        ) as HTMLElement
+    <script>
+        import EmblaCarousel, {
+            type EmblaCarouselType,
+            type EmblaOptionsType,
+        } from "embla-carousel"
 
-        if (!viewportNodeMainCarousel || !viewportNodeThumbCarousel) return
+        document.addEventListener("astro:page-load", async () => {
+            const OPTIONS: EmblaOptionsType = {}
+            const OPTIONS_THUMBS: EmblaOptionsType = {
+                containScroll: "keepSnaps",
+                dragFree: true,
+            }
 
-        const addThumbBtnsClickHandlers = (
-            emblaApiMain: EmblaCarouselType,
-            emblaApiThumb: EmblaCarouselType
-        ): (() => void) => {
-            const slidesThumbs = emblaApiThumb.slideNodes()
+            const viewportNodeMainCarousel = document.querySelector(
+                ".embla__viewport"
+            ) as HTMLElement
+            const viewportNodeThumbCarousel = document.querySelector(
+                ".embla-thumbs__viewport"
+            ) as HTMLElement
 
-            const scrollToIndex = slidesThumbs.map(
-                (_, index) => (): void => emblaApiMain.scrollTo(index)
-            )
+            if (!viewportNodeMainCarousel || !viewportNodeThumbCarousel) return
 
-            slidesThumbs.forEach((slideNode, index) => {
-                slideNode.addEventListener("click", scrollToIndex[index], false)
-            })
+            const addThumbBtnsClickHandlers = (
+                emblaApiMain: EmblaCarouselType,
+                emblaApiThumb: EmblaCarouselType
+            ): (() => void) => {
+                const slidesThumbs = emblaApiThumb.slideNodes()
 
-            return (): void => {
+                const scrollToIndex = slidesThumbs.map(
+                    (_, index) => (): void => emblaApiMain.scrollTo(index)
+                )
+
                 slidesThumbs.forEach((slideNode, index) => {
-                    slideNode.removeEventListener(
+                    slideNode.addEventListener(
                         "click",
                         scrollToIndex[index],
                         false
                     )
                 })
-            }
-        }
 
-        const addToggleThumbBtnsActive = (
-            emblaApiMain: EmblaCarouselType,
-            emblaApiThumb: EmblaCarouselType
-        ): (() => void) => {
-            const slidesThumbs = emblaApiThumb.slideNodes()
-
-            const toggleThumbBtnsState = (): void => {
-                emblaApiThumb.scrollTo(emblaApiMain.selectedScrollSnap())
-                const previous = emblaApiMain.previousScrollSnap()
-                const selected = emblaApiMain.selectedScrollSnap()
-                slidesThumbs[previous].classList.remove(
-                    "embla-thumbs__slide--selected"
-                )
-                slidesThumbs[selected].classList.add(
-                    "embla-thumbs__slide--selected"
-                )
+                return (): void => {
+                    slidesThumbs.forEach((slideNode, index) => {
+                        slideNode.removeEventListener(
+                            "click",
+                            scrollToIndex[index],
+                            false
+                        )
+                    })
+                }
             }
 
-            emblaApiMain.on("select", toggleThumbBtnsState)
-            emblaApiThumb.on("init", toggleThumbBtnsState)
+            const addToggleThumbBtnsActive = (
+                emblaApiMain: EmblaCarouselType,
+                emblaApiThumb: EmblaCarouselType
+            ): (() => void) => {
+                const slidesThumbs = emblaApiThumb.slideNodes()
 
-            return (): void => {
-                const selected = emblaApiMain.selectedScrollSnap()
-                slidesThumbs[selected].classList.remove(
-                    "embla-thumbs__slide--selected"
-                )
+                const toggleThumbBtnsState = (): void => {
+                    emblaApiThumb.scrollTo(emblaApiMain.selectedScrollSnap())
+                    const previous = emblaApiMain.previousScrollSnap()
+                    const selected = emblaApiMain.selectedScrollSnap()
+                    slidesThumbs[previous].classList.remove(
+                        "embla-thumbs__slide--selected"
+                    )
+                    slidesThumbs[selected].classList.add(
+                        "embla-thumbs__slide--selected"
+                    )
+                }
+
+                emblaApiMain.on("select", toggleThumbBtnsState)
+                emblaApiThumb.on("init", toggleThumbBtnsState)
+
+                return (): void => {
+                    const selected = emblaApiMain.selectedScrollSnap()
+                    slidesThumbs[selected].classList.remove(
+                        "embla-thumbs__slide--selected"
+                    )
+                }
             }
-        }
 
-        const emblaApiMain = EmblaCarousel(viewportNodeMainCarousel, OPTIONS)
-        const emblaApiThumb = EmblaCarousel(
-            viewportNodeThumbCarousel,
-            OPTIONS_THUMBS
-        )
+            const emblaApiMain = EmblaCarousel(
+                viewportNodeMainCarousel,
+                OPTIONS
+            )
+            const emblaApiThumb = EmblaCarousel(
+                viewportNodeThumbCarousel,
+                OPTIONS_THUMBS
+            )
 
-        const removeThumbBtnsClickHandlers = addThumbBtnsClickHandlers(
-            emblaApiMain,
+            const removeThumbBtnsClickHandlers = addThumbBtnsClickHandlers(
+                emblaApiMain,
+                emblaApiThumb
+            )
+            const removeToggleThumbBtnsActive = addToggleThumbBtnsActive(
+                emblaApiMain,
+                emblaApiThumb
+            )
+
+            emblaApiMain
+                .on("destroy", removeThumbBtnsClickHandlers)
+                .on("destroy", removeToggleThumbBtnsActive)
+
             emblaApiThumb
-        )
-        const removeToggleThumbBtnsActive = addToggleThumbBtnsActive(
-            emblaApiMain,
-            emblaApiThumb
-        )
+                .on("destroy", removeThumbBtnsClickHandlers)
+                .on("destroy", removeToggleThumbBtnsActive)
+        })
+    </script>
 
-        emblaApiMain
-            .on("destroy", removeThumbBtnsClickHandlers)
-            .on("destroy", removeToggleThumbBtnsActive)
-
-        emblaApiThumb
-            .on("destroy", removeThumbBtnsClickHandlers)
-            .on("destroy", removeToggleThumbBtnsActive)
-    })
-</script>
-
-<!-- https://www.embla-carousel.com/examples/predefined/ -->
-<!-- https://codesandbox.io/p/sandbox/3n5r7x?file=%2Fsrc%2Fjs%2Findex.ts%3A1%2C8-1%2C21 -->
+    <!-- https://www.embla-carousel.com/examples/predefined/ -->
+    <!-- https://codesandbox.io/p/sandbox/3n5r7x?file=%2Fsrc%2Fjs%2Findex.ts%3A1%2C8-1%2C21 -->
+</div>

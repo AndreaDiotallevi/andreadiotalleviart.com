@@ -255,22 +255,61 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebulae #3 - 50x70cm Giclée Fine Art Print",
+        name: "Nebulae 1 - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebulae #3",
+            displayName: "Nebulae 1",
             displayOrder: "1",
+            orientation: "portrait",
+            size: "50x70cm",
+            slug: "nebulae-1",
+            sku: "nebulae-1-50x70",
+        },
+        images: [transformImage("mockup-single-1_cta5am")],
+        currencyOptions: {
+            gbp: 10000,
+            eur: 12000,
+            usd: 13000,
+        },
+    },
+    {
+        active: true,
+        name: "Nebulae 2 - 50x70cm Giclée Fine Art Print",
+        description:
+            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Nebulae 2",
+            displayOrder: "2",
+            orientation: "portrait",
+            size: "50x70cm",
+            slug: "nebulae-2",
+            sku: "nebulae-2-50x70",
+        },
+        images: [transformImage("mockup-single-2_p9or2q")],
+        currencyOptions: {
+            gbp: 10000,
+            eur: 12000,
+            usd: 13000,
+        },
+    },
+    {
+        active: true,
+        name: "Nebulae 3 - 50x70cm Giclée Fine Art Print",
+        description:
+            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+        metadata: {
+            category: "prints",
+            displayName: "Nebulae 3",
+            displayOrder: "3",
             orientation: "portrait",
             size: "50x70cm",
             slug: "nebulae-3",
             sku: "nebulae-3-50x70",
         },
-        images: [
-            transformImage("nebulae-mockup-with-border-3-portrait_adkdeh"),
-            transformImage("nebula-width2000-variation3_dbs4mr"),
-        ],
+        images: [transformImage("mockup-single-3_mdsiip")],
         currencyOptions: {
             gbp: 10000,
             eur: 12000,
