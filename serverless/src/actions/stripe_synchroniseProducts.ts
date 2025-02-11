@@ -269,9 +269,9 @@ const products: ProductInput[] = [
         },
         images: [transformImage("mockup-single-1_cta5am")],
         currencyOptions: {
-            gbp: 10000,
-            eur: 12000,
-            usd: 13000,
+            gbp: 13500,
+            eur: 15000,
+            usd: 17000,
         },
     },
     {
@@ -290,9 +290,9 @@ const products: ProductInput[] = [
         },
         images: [transformImage("mockup-single-2_p9or2q")],
         currencyOptions: {
-            gbp: 10000,
-            eur: 12000,
-            usd: 13000,
+            gbp: 13500,
+            eur: 15000,
+            usd: 17000,
         },
     },
     {
@@ -311,9 +311,30 @@ const products: ProductInput[] = [
         },
         images: [transformImage("mockup-single-3_mdsiip")],
         currencyOptions: {
-            gbp: 10000,
-            eur: 12000,
-            usd: 13000,
+            gbp: 13500,
+            eur: 15000,
+            usd: 17000,
         },
     },
+    // {
+    //     active: true,
+    //     name: "Nebulae Series - 3 x 50x70cm Giclée Fine Art Prints",
+    //     description:
+    //         "3 x 50x70cm giclée fine art prints on Hahnemühle photo rag 308gsm matte paper.",
+    //     metadata: {
+    //         category: "prints",
+    //         displayName: "Nebulae Series",
+    //         displayOrder: "4",
+    //         orientation: "portrait",
+    //         size: "50x70cm",
+    //         slug: "nebulae-series",
+    //         sku: "nebulae-series-50x70",
+    //     },
+    //     images: [transformImage("mockup-series-vertical_hpqksb")],
+    //     currencyOptions: {
+    //         gbp: 10000,
+    //         eur: 12000,
+    //         usd: 13000,
+    //     },
+    // },
 ]
