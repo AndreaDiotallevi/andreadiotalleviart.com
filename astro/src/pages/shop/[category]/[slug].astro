@@ -91,6 +91,28 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 
             <div class="space-y-6">
                 <div>
+                    <p class="italic font-semibold">
+                        "This piece is extra special to me because it was
+                        created for a friend's living room - a space that needed
+                        a burst of warmth and life. Each artwork in the series
+                        features overlapping circles, but what makes them unique
+                        is how the circles grow in size and how the background
+                        hue warms up as the series progresses. The transparency
+                        of the circles creates a stunning blend of colors where
+                        they overlap, giving the artwork depth and movement.
+                        It's like a glowing nebula or a living organism -
+                        dynamic, vibrant, and full of life."
+                        <!-- "This piece is extra special to me because it was
+                        created for a friend's living room - a space that needed
+                        a burst of warmth and life. If your home or office feels
+                        a little dim or could use a pop of color, this artwork
+                        is here to transform your walls into a lively, inspiring
+                        focal point. It's more than just a print; it's a piece
+                        of modern art that tells a story of creativity,
+                        technology, and beauty." -->
+                    </p>
+                </div>
+                <div>
                     <h2 class="text-2xl font-bold mb-2">
                         <label for="price-id">Size</label>
                     </h2>
@@ -98,7 +120,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         id="price-id"
                         name="price-id"
                         data-currency={currency}
-                        class="w-full px-3 py-3 border border-black rounded-md mb-2"
+                        class="w-full px-3 py-3 border border-black rounded-md mb-2 font-bold"
                     >
                         <option value={product.default_price.id}>
                             {sizeToDescription[product.metadata.size]} - {
@@ -110,47 +132,126 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             }
                         </option>
                     </select>
-                    <p>The image is printed full bleed with no border.</p>
+                    <p class="mb-1">
+                        The image is <span class="font-bold"
+                            >printed full bleed with no border</span
+                        >. Any frames shown in images are for display purposes
+                        only.
+                    </p>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-bold mb-2">100% Cotton Paper</h2>
+                <!-- {
+                    [
+                        {
+                            header: "How This Artwork Comes to Life",
+                            paragraphs: [
+                                `Ever wondered how art and technology come together? This
+                                piece is part of a series of three, all created using
+                                code. I use JavaScript and a library called p5.js to
+                                guide the computer in generating the design. Think of it
+                                as a creative conversation between me and the machine—I
+                                set the rules, and the computer brings them to life.`,
+                            ],
+                        },
+                    ].map(
+                        ({
+                            header,
+                            paragraphs,
+                        }: {
+                            header: string
+                            paragraphs: string[]
+                        }) => (
+                            <div>
+                                <h2 class="text-2xl font-bold mb-2">
+                                    {header}
+                                </h2>
+                                {paragraphs.map(p => (
+                                    <p>{p}</p>
+                                ))}
+                            </div>
+                        )
+                    )
+                } -->
+                <!-- <div>
+                    <h2 class="text-2xl font-bold mb-2">Story</h2>
+                    <p class="mb-1">
+                        This piece is part of a series of three, all created
+                        using code. I use JavaScript and a library called <a
+                            href="https://p5js.org/"
+                            class="font-bold underline hover:text-gray-600 transition-colors duration-300"
+                            target="_blank">p5.js</a
+                        >
+                        to guide the computer in generating the design. Think of
+                        it as a creative conversation between me and the machine
+                        - I set the rules, and the computer brings them to life.
+                    </p>
                     <p>
-                        The artwork is printed on Hahnemühle Photo Rag 308gsm, a
-                        white cotton paper renowned for its archival quality.
-                        Acid- and lignin-free, it resists yellowing and
-                        deterioration over time. Its soft texture and subtle
-                        felt structure enhance the artwork with impressive depth
-                        and a refined finish, making it ideal for fine art
-                        prints.
+                        Each artwork in the series features overlapping circles,
+                        but what makes them unique is how the circles grow in
+                        size and how the background hue warms up as the series
+                        progresses. The transparency of the circles creates a
+                        stunning blend of colors where they overlap, giving the
+                        artwork depth and movement. It's like a glowing nebula
+                        or a living organism-dynamic, vibrant, and full of life.
+                    </p>
+                </div> -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">
+                        Best printing quality
+                    </h2>
+                    <p>
+                        I want you to have the very best, so I've partnered with
+                        <a
+                            href="https://uk.trustpilot.com/review/www.point101.com"
+                            class="font-bold underline text-blue-800 hover:text-blue-600 transition-colors duration-300"
+                            target="_blank">Point101</a
+                        >, London's top printing service, known for their
+                        exceptional quality and customer satisfaction. They use
+                        giclée printing, a premium technique that sprays ink
+                        onto the paper to achieve vivid, lifelike colors and
+                        incredible detail. This means your print will capture
+                        every nuance of the original artwork, bringing its bold,
+                        vibrant energy into your home.
                     </p>
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
-                        Premium Giclée Printing
+                        Premium paper quality
                     </h2>
                     <p>
-                        Giclée printing, derived from the French word meaning
-                        "to spray," uses pigment-based inks for exceptional
-                        detail and color accuracy. Known for its museum-quality
-                        standards, this technique ensures vibrant,
-                        fade-resistant prints that last up to 200 years,
-                        preserving every nuance of the original artwork.
+                        Your print will be on <span class="font-bold"
+                            >Hahnemühle Photo Rag 308gsm</span
+                        >, a museum-grade, acid-free cotton paper that's
+                        renowned for its texture, vibrancy, and longevity. This
+                        isn't just any paper - it's the kind used in galleries
+                        and museums, ensuring your artwork stays vibrant for up
+                        to 400 years. It's an investment in art that will last
+                        generations.
                     </p>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold mb-2">
-                        Free Carbon-Neutral Shipping
-                    </h2>
-                    <p>
-                        Enjoy free, end-to-end carbon-neutral shipping with
-                        every order. The Print Space uses green couriers,
-                        renewable energy, and global print facilities to
-                        minimize emissions. Any remaining impact is offset
-                        through The Gold Standard, supporting environmental
-                        projects.
+                    <h2 class="text-2xl font-bold mb-2">Framing advice</h2>
+                    <p class="mb-1">
+                        I recommend a <span class="font-bold"
+                            >simple white frame (50x70cm)</span
+                        > with a frame width no wider than 20mm. This clean style
+                        lets the artwork shine, and the print fits straight into
+                        the frame - no extra matting needed. If you're buying this
+                        artwork alone (not as part of the series), you can add a
+                        5cm mount and use a larger frame (60x80cm) for a bold, eye-catching
+                        look.
                     </p>
                 </div>
                 <div>
+                    <h2 class="text-2xl font-bold mb-2">Free shipping</h2>
+                    <p>
+                        I want your artwork to arrive in perfect condition, so I
+                        offer free shipping with top-quality packaging to
+                        protect it during transit. Your print will arrive at
+                        your doorstep in about 1 week, ready to bring color and
+                        life to your space.
+                    </p>
+                </div>
+                <!-- <div>
                     <h2 class="text-2xl font-bold mb-2">No Custom Charges</h2>
                     <p>
                         With production facilities in the UK, USA, and Germany,
@@ -158,7 +259,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         US. For other regions, please contact me directly for
                         details.
                     </p>
-                </div>
+                </div> -->
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
                         {
