@@ -14,6 +14,9 @@ export const handler = async (
     const statusCode = error ? 500 : 200
     const body = error ? JSON.stringify({ error }) : JSON.stringify({ session })
 
+    console.log("API response...")
+    console.log(body)
+
     return {
         statusCode,
         body,
