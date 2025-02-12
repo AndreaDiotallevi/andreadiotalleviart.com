@@ -78,30 +78,39 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
             <div class="md:hidden mb-4">
                 <BackToLink href="/shop" text="Back to shop" />
             </div>
-            <h1 class="text-2xl font-bold mb-4 md:hidden">
-                {product.metadata.displayName}
-            </h1>
-            <Carousel images={product.images} width={1429} height={2000} />
+            <div class="mb-4 md:hidden">
+                <h1 class="text-2xl font-bold mb-1">
+                    {product.metadata.displayName}
+                </h1>
+                <h4 class="italic">Part of a series of three</h4>
+            </div>
+            <Carousel images={product.images} width={2592} height={3337} />
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
-            <h1 class="text-5xl font-bold mb-6 hidden md:block">
-                {product.metadata.displayName}
-            </h1>
+            <div class="mb-6 hidden md:block">
+                <h1 class="text-6xl font-bold mb-2">
+                    {product.metadata.displayName}
+                </h1>
+                <h4 class="text-2xl font-normal italic">
+                    Part of a series of three
+                </h4>
+            </div>
 
             <div class="space-y-6">
                 <div>
+                    <h2 class="text-2xl font-bold mb-2">Story</h2>
                     <p>
                         This piece is extra special to me because it was created
-                        for a friend's living room - a space that needed a burst
-                        of warmth and life. Each artwork in the series features
-                        overlapping circles, but what makes them unique is how
-                        the circles grow in size and how the background hue
-                        warms up as the series progresses. The transparency of
-                        the circles creates a stunning blend of colors where
-                        they overlap, giving the artwork depth and movement.
-                        It's like a glowing nebula or a living organism -
-                        dynamic, vibrant, and full of life.
+                        for my friend Alessandro, who wanted bold, saturated
+                        colours to bring life and energy to his slightly dark
+                        living room. Each artwork in the series features
+                        <span class="font-bold">overlapping circles</span> that grow
+                        in size, with the background hue warming up as the series
+                        progresses. The transparency of the circles creates a stunning
+                        blend of colours, giving the artwork depth and movement.
+                        It's like a glowing nebula-dynamic, vibrant, and full of
+                        life.
                         <!-- "This piece is extra special to me because it was
                         created for a friend's living room - a space that needed
                         a burst of warmth and life. If your home or office feels
@@ -199,7 +208,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         Best printing quality
                     </h2>
                     <p>
-                        I want you to have the very best, so I've partnered with
+                        To ensure your artwork is as stunning as possible, I've
+                        partnered with
                         <a
                             href="https://uk.trustpilot.com/review/www.point101.com"
                             class="font-bold underline text-blue-800 hover:text-blue-600 transition-colors duration-300"
