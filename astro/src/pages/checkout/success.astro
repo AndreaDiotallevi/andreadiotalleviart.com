@@ -73,7 +73,7 @@ const success = !!(session && currency && shippingDetails)
 
                                         return (
                                             <li class="flex">
-                                                <div class="max-w-[60px]">
+                                                <div class="w-[60px] flex-shrink-0">
                                                     <Image
                                                         alt={price.product.name}
                                                         src={
@@ -82,6 +82,7 @@ const success = !!(session && currency && shippingDetails)
                                                         }
                                                         width={1414}
                                                         height={2000}
+                                                        layout="constrained"
                                                         sizes="60px"
                                                         breakpoints={imageBreakpoints(
                                                             {
