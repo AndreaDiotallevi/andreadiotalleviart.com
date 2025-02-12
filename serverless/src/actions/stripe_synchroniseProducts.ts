@@ -267,7 +267,11 @@ const products: ProductInput[] = [
             slug: "nebulae-1",
             sku: "nebulae-1-50x70",
         },
-        images: [transformImage("mockup-single-1_cta5am")],
+        // images: [transformImage("mockup-single-1_cta5am")],
+        images: [
+            transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
+            transformImage("nebulae1_tiboq3"),
+        ],
         currencyOptions: {
             gbp: 13500,
             eur: 15000,
@@ -288,7 +292,11 @@ const products: ProductInput[] = [
             slug: "nebulae-2",
             sku: "nebulae-2-50x70",
         },
-        images: [transformImage("mockup-single-2_p9or2q")],
+        // images: [transformImage("mockup-single-2_p9or2q")],
+        images: [
+            transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
+            transformImage("nebulae2_unlnm2"),
+        ],
         currencyOptions: {
             gbp: 13500,
             eur: 15000,
@@ -309,7 +317,11 @@ const products: ProductInput[] = [
             slug: "nebulae-3",
             sku: "nebulae-3-50x70",
         },
-        images: [transformImage("mockup-single-3_mdsiip")],
+        // images: [transformImage("mockup-single-3_mdsiip")],
+        images: [
+            transformImage("nebulae-mockup-with-border-3-portrait_adkdeh"),
+            transformImage("nebulae3_y5qb1g"),
+        ],
         currencyOptions: {
             gbp: 13500,
             eur: 15000,
