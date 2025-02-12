@@ -19,10 +19,7 @@ let session: Stripe.Checkout.Session | null = null
 
 if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
-
-    if (response.session && response.session.status !== "expired") {
-        session = response.session
-    }
+    session = response.session ?? null
 }
 
 const currency =
@@ -81,6 +78,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                     }
                                                     width={1414}
                                                     height={2000}
+                                                    layout="constrained"
                                                     sizes="60px"
                                                     breakpoints={imageBreakpoints(
                                                         {
@@ -265,9 +263,12 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         addPromotionCode,
         removePromotionCode,
     } from "@scripts/cart"
-
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
-    import { updateClientSession, getClientSession } from "@utils/localStorage"
+    import {
+        clearClientSession,
+        getClientSession,
+        updateClientSession,
+    } from "@utils/localStorage"
     import type { Currency } from "@utils/stripe"
     import { navigate } from "astro:transitions/client"
 
@@ -298,6 +299,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         if (session?.id && !clientSession.sessionId) {
             navigate("/cart", { history: "replace" })
             return
+        }
+
+        if (!session) {
+            clearClientSession()
         }
 
         const currency = (session?.currency || "gbp") as Currency
