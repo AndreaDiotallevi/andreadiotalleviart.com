@@ -22,6 +22,16 @@ export const retrieveCheckoutSession = async (params: {
             ],
         })
 
+        if (session.status == "expired") {
+            return { error: "Session is expired" }
+        }
+
+        for (const item of session.line_items?.data ?? []) {
+            if (!item.price?.active) {
+                return { error: "Price is not active" }
+            }
+        }
+
         return { session }
     } catch (error) {
         console.error(error)
