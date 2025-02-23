@@ -26,9 +26,9 @@ const { images, width, height } = Astro.props
                                 height={2000}
                                 loading={"eager"}
                                 fetchpriority={"high"}
-                                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                                 breakpoints={imageBreakpoints({
-                                    maxWidth: 608,
+                                    maxWidth: 1500,
                                     assetWidth: width,
                                 })}
                             />
@@ -58,9 +58,9 @@ const { images, width, height } = Astro.props
                                     height={2000}
                                     loading="eager"
                                     fetchpriority="high"
-                                    sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
+                                    sizes="(max-width: 768px) 25vw, 15vw"
                                     breakpoints={imageBreakpoints({
-                                        maxWidth: 140,
+                                        maxWidth: 600,
                                         assetWidth: width,
                                     })}
                                 />
