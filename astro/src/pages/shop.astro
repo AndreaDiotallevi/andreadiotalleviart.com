@@ -89,18 +89,17 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 loading={index < 4 ? "eager" : "lazy"}
                                 fetchpriority={index < 4 ? "high" : "low"}
                             />
-                            <h2 class="text-xl md:text-2xl font-bold mt-4">
+                            <h2 class="md:text-2xl font-bold mt-4">
                                 {product.metadata.displayName}
                             </h2>
-                            <p class="md:mt-1 italic">Part of a series of 3</p>
-                            <p class="font-bold md:mt-1">
+                            <p class="mt-1 italic">Part of a series of 3</p>
+                            <p class="mt-1">
                                 {formatCurrency({
                                     value: product.default_price
                                         .currency_options[currency].unit_amount,
                                     currency,
                                 })}{" "}
-                                <span class="font-normal">•</span>{" "}
-                                {product.metadata.size}
+                                • {product.metadata.size}
                             </p>
                         </a>
                     ))
