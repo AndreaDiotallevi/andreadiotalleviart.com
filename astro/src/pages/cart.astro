@@ -57,93 +57,108 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                             </tr>
                         </thead>
                         <tbody class="md:text-xl">
-                            {session.line_items?.data.map(item => {
-                                const price =
-                                    item.price as unknown as StripePrice
+                            {session.line_items?.data
+                                .sort((a, b) =>
+                                    (
+                                        a.price as unknown as StripePrice
+                                    ).product.metadata.displayName.localeCompare(
+                                        (b.price as unknown as StripePrice)
+                                            .product.metadata.displayName
+                                    )
+                                )
+                                .map(item => {
+                                    const price =
+                                        item.price as unknown as StripePrice
 
-                                return (
-                                    <tr>
-                                        <td class="py-2 md:py-4 pr-1 md:pr-8 flex items-center">
-                                            <a
-                                                href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
-                                                class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
-                                            >
-                                                <Image
-                                                    alt={
+                                    return (
+                                        <tr>
+                                            <td class="py-2 md:py-4 pr-1 md:pr-8 flex items-center">
+                                                <a
+                                                    href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                                                    class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
+                                                >
+                                                    <Image
+                                                        alt={
+                                                            price.product
+                                                                .metadata
+                                                                .displayName
+                                                        }
+                                                        src={
+                                                            price.product
+                                                                .images[0]
+                                                        }
+                                                        width={1414}
+                                                        height={2000}
+                                                        layout="constrained"
+                                                        sizes="60px"
+                                                        breakpoints={imageBreakpoints(
+                                                            {
+                                                                maxWidth: 60,
+                                                                assetWidth: 1414,
+                                                            }
+                                                        )}
+                                                        loading="eager"
+                                                        fetchpriority="high"
+                                                    />
+                                                </a>
+                                                <span class="hidden md:block pl-4">
+                                                    {
                                                         price.product.metadata
                                                             .displayName
                                                     }
-                                                    src={
-                                                        price.product.images[0]
-                                                    }
-                                                    width={1414}
-                                                    height={2000}
-                                                    layout="constrained"
-                                                    sizes="60px"
-                                                    breakpoints={imageBreakpoints(
+                                                    <span class="hidden md:block text-base pt-2">
                                                         {
-                                                            maxWidth: 60,
-                                                            assetWidth: 1414,
+                                                            price.product
+                                                                .description
                                                         }
-                                                    )}
-                                                    loading="eager"
-                                                    fetchpriority="high"
-                                                />
-                                            </a>
-                                            <span class="hidden md:block pl-4">
-                                                {
-                                                    price.product.metadata
-                                                        .displayName
-                                                }
-                                                <span class="hidden md:block text-base pt-2">
-                                                    {price.product.description}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </td>
-                                        <td class="py-2 md:py-4 px-0 md:px-8 hidden md:table-cell">
-                                            {formatCurrency({
-                                                value: price.currency_options[
-                                                    currency
-                                                ].unit_amount,
-                                                currency,
-                                            })}
-                                        </td>
-                                        <td class="py-2 md:py-4 px-0 md:px-8 text-center">
-                                            <div class="border border-black rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
-                                                <button
-                                                    class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
-                                                    data-price-id={price.id}
-                                                    id={`remove-from-cart-${price.id}`}
-                                                >
-                                                    <span class="md:pb-1">
-                                                        -
-                                                    </span>
-                                                    <LoadingSpinner />
-                                                </button>
-                                                <p class="min-w-12 flex items-center justify-center border-x border-gray-400">
-                                                    {item.quantity}
-                                                </p>
-                                                <button
-                                                    class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
-                                                    data-price-id={price.id}
-                                                    id={`add-to-cart-${price.id}`}
-                                                >
-                                                    <span class="md:pb-1">
-                                                        +
-                                                    </span>
-                                                    <LoadingSpinner />
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            {formatCurrency({
-                                                value: item.amount_subtotal,
-                                                currency,
-                                            })}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                                            </td>
+                                            <td class="py-2 md:py-4 px-0 md:px-8 hidden md:table-cell">
+                                                {formatCurrency({
+                                                    value: price
+                                                        .currency_options[
+                                                        currency
+                                                    ].unit_amount,
+                                                    currency,
+                                                })}
+                                            </td>
+                                            <td class="py-2 md:py-4 px-0 md:px-8 text-center">
+                                                <div class="border border-black rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
+                                                    <button
+                                                        class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
+                                                        data-price-id={price.id}
+                                                        id={`remove-from-cart-${price.id}`}
+                                                    >
+                                                        <span class="md:pb-1">
+                                                            -
+                                                        </span>
+                                                        <LoadingSpinner />
+                                                    </button>
+                                                    <p class="min-w-12 flex items-center justify-center border-x border-gray-400">
+                                                        {item.quantity}
+                                                    </p>
+                                                    <button
+                                                        class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
+                                                        data-price-id={price.id}
+                                                        id={`add-to-cart-${price.id}`}
+                                                    >
+                                                        <span class="md:pb-1">
+                                                            +
+                                                        </span>
+                                                        <LoadingSpinner />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="text-right">
+                                                {formatCurrency({
+                                                    value: item.amount_subtotal,
+                                                    currency,
+                                                })}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
                         </tbody>
                     </table>
                     <div class="flex justify-end mb-8">
