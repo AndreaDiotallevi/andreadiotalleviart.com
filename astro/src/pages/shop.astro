@@ -99,7 +99,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                         .currency_options[currency].unit_amount,
                                     currency,
                                 })}{" "}
-                                • {product.metadata.size}
+                                <span class="font-normal">•</span>{" "}
+                                {product.metadata.size}
                             </p>
                         </a>
                     ))
