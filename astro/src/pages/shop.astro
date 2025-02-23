@@ -53,7 +53,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
     newsletter={false}
 >
     <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
-        <div class="text-center mb-6">
+        <div class="text-center mb-4 md:mb-6">
             <h1 class="text-2xl md:text-5xl font-bold mb-1 md:mb-2">Shop</h1>
             <h4 class="mx-auto italic md:text-xl">
                 Museum-quality prints on premium cotton paper delivered with
@@ -92,10 +92,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             <h2 class="text-xl md:text-2xl font-bold mt-4">
                                 {product.metadata.displayName}
                             </h2>
-                            <p class="md:mt-1 italic">
-                                Part of a series of three
-                            </p>
-                            <p class="font-bold mt-1">
+                            <p class="md:mt-1 italic">Part of a series of 3</p>
+                            <p class="font-bold md:mt-1">
                                 {formatCurrency({
                                     value: product.default_price
                                         .currency_options[currency].unit_amount,
