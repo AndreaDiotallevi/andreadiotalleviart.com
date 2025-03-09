@@ -10,7 +10,7 @@ export default defineConfig({
     trailingSlash: "never",
     build: { format: "file" },
     integrations: [tailwind()],
-    prefetch: { defaultStrategy: "load", prefetchAll: true },
+    prefetch: { defaultStrategy: "load", prefetchAll: false },
     site: "https://www.andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
 })
