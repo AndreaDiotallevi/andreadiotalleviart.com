@@ -19,6 +19,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
         const checkoutElement = document.querySelector(
             "#checkout"
         ) as HTMLElement
+        console.log(checkoutElement)
 
         if (!checkoutElement) return
 
@@ -33,6 +34,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
         const params = new URLSearchParams(window.location.search)
         const clientSecret = params.get("client_secret") || ""
+        console.log(clientSecret)
 
         if (checkout) {
             console.log("Destroying checkout...")
