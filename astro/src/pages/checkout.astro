@@ -26,17 +26,28 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
         )
 
+        if (!stripe) {
+            console.error("Stripe not loaded")
+            return
+        }
+
         const params = new URLSearchParams(window.location.search)
         const clientSecret = params.get("client_secret") || ""
 
         if (checkout) {
+            console.log("Destroying checkout...")
             checkout.destroy()
         }
 
-        checkout = await stripe?.initEmbeddedCheckout({
+        checkout = await stripe.initEmbeddedCheckout({
             clientSecret,
         })
 
-        checkout?.mount(checkoutElement)
+        if (!checkout) {
+            console.error("Checkout not initialised")
+            return
+        }
+
+        checkout.mount(checkoutElement)
     })
 </script>
