@@ -269,14 +269,14 @@ const products: ProductInput[] = [
         },
         images: [
             transformImage("nebulae-mockup-paper-1_gvzthk"),
-            // transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
             transformImage("nebulae1_tiboq3"),
+            transformImage("IMG_5220_cizhq8"),
             transformImage("mockup-series-vertical_hpqksb"),
         ],
         currencyOptions: {
-            gbp: 13500,
-            eur: 15000,
-            usd: 17000,
+            gbp: 8500,
+            eur: 9900,
+            usd: 10900,
         },
     },
     {
@@ -295,14 +295,14 @@ const products: ProductInput[] = [
         },
         images: [
             transformImage("nebulae-mockup-paper-2_mynxf0"),
-            // transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
             transformImage("nebulae2_unlnm2"),
+            transformImage("IMG_5224_fqexh6"),
             transformImage("mockup-series-vertical_hpqksb"),
         ],
         currencyOptions: {
-            gbp: 13500,
-            eur: 15000,
-            usd: 17000,
+            gbp: 8500,
+            eur: 9900,
+            usd: 10900,
         },
     },
     {
@@ -321,36 +321,14 @@ const products: ProductInput[] = [
         },
         images: [
             transformImage("nebulae-mockup-paper-3_kq6yok"),
-            // transformImage("nebulae-mockup-with-border-3-portrait_adkdeh"),
             transformImage("nebulae3_y5qb1g"),
-            // transformImage("my-mockups-4_g6riga"),
+            transformImage("IMG_5198_pzut4l"),
             transformImage("mockup-series-vertical_hpqksb"),
         ],
         currencyOptions: {
-            gbp: 13500,
-            eur: 15000,
-            usd: 17000,
+            gbp: 8500,
+            eur: 9900,
+            usd: 10900,
         },
     },
-    // {
-    //     active: true,
-    //     name: "Nebulae Series - 3 x 50x70cm Giclée Fine Art Prints",
-    //     description:
-    //         "3 x 50x70cm giclée fine art prints on Hahnemühle photo rag 308gsm matte paper.",
-    //     metadata: {
-    //         category: "prints",
-    //         displayName: "Nebulae Series",
-    //         displayOrder: "4",
-    //         orientation: "portrait",
-    //         size: "50x70cm",
-    //         slug: "nebulae-series",
-    //         sku: "nebulae-series-50x70",
-    //     },
-    //     images: [transformImage("mockup-series-vertical_hpqksb")],
-    //     currencyOptions: {
-    //         gbp: 10000,
-    //         eur: 12000,
-    //         usd: 13000,
-    //     },
-    // },
 ]
