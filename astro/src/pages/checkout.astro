@@ -30,10 +30,10 @@ import BaseLayout from "@layouts/BaseLayout.astro"
         import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
     )
 
-    if (!stripe) {
-        console.error("Stripe not loaded")
-        return
-    }
+    // if (!stripe) {
+    //     console.error("Stripe not loaded")
+    //     return
+    // }
 
     const params = new URLSearchParams(window.location.search)
     const clientSecret = params.get("client_secret") || ""
@@ -44,15 +44,15 @@ import BaseLayout from "@layouts/BaseLayout.astro"
         checkout.destroy()
     }
 
-    checkout = await stripe.initEmbeddedCheckout({
+    checkout = await stripe?.initEmbeddedCheckout({
         clientSecret,
     })
 
     if (!checkout) {
         console.error("Checkout not initialised")
-        return
+        // return
     }
 
-    checkout.mount(checkoutElement)
+    checkout?.mount(checkoutElement)
     // })
 </script>
