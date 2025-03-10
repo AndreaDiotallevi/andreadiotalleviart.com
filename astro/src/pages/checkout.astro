@@ -16,45 +16,43 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     let checkout: StripeEmbeddedCheckout | undefined
     console.log("testing checkout page")
 
-    document.addEventListener("astro:page-load", async () => {
-        console.log("checkout script")
-        console.log(window.location.pathname)
-        console.log("")
-        const checkoutElement = document.querySelector(
-            "#checkout"
-        ) as HTMLElement
+    // document.addEventListener("astro:page-load", async () => {
+    console.log("checkout script")
+    console.log(window.location.pathname)
+    console.log("")
+    const checkoutElement = document.querySelector("#checkout") as HTMLElement
 
-        console.log(checkoutElement)
+    console.log(checkoutElement)
 
-        if (!checkoutElement) return
+    if (!checkoutElement) return
 
-        const stripe = await loadStripe(
-            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
-        )
+    const stripe = await loadStripe(
+        import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+    )
 
-        if (!stripe) {
-            console.error("Stripe not loaded")
-            return
-        }
+    if (!stripe) {
+        console.error("Stripe not loaded")
+        return
+    }
 
-        const params = new URLSearchParams(window.location.search)
-        const clientSecret = params.get("client_secret") || ""
-        console.log(clientSecret)
+    const params = new URLSearchParams(window.location.search)
+    const clientSecret = params.get("client_secret") || ""
+    console.log(clientSecret)
 
-        if (checkout) {
-            console.log("Destroying checkout...")
-            checkout.destroy()
-        }
+    if (checkout) {
+        console.log("Destroying checkout...")
+        checkout.destroy()
+    }
 
-        checkout = await stripe.initEmbeddedCheckout({
-            clientSecret,
-        })
-
-        if (!checkout) {
-            console.error("Checkout not initialised")
-            return
-        }
-
-        checkout.mount(checkoutElement)
+    checkout = await stripe.initEmbeddedCheckout({
+        clientSecret,
     })
+
+    if (!checkout) {
+        console.error("Checkout not initialised")
+        return
+    }
+
+    checkout.mount(checkoutElement)
+    // })
 </script>
