@@ -10,40 +10,38 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     <div id="checkout" class="px-4 py-8"></div>
 </BaseLayout>
 
-<script>
-    import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
+<script is:inline>
+    import { loadStripe } from "@stripe/stripe-js"
 
-    let checkout: StripeEmbeddedCheckout | undefined
+    let checkout
     console.log("testing checkout page")
 
-    document.addEventListener("astro:after-swap", async () => {
-        console.log("checkout script")
-        console.log(window.location.pathname)
-        console.log("")
-        const checkoutElement = document.querySelector(
-            "#checkout"
-        ) as HTMLElement
+    // document.addEventListener("astro:page-load", async () => {
+    console.log("checkout script")
+    console.log(window.location.pathname)
+    console.log("")
+    const checkoutElement = document.querySelector("#checkout")
 
-        console.log(checkoutElement)
+    console.log(checkoutElement)
 
-        if (checkoutElement) {
-            const stripe = await loadStripe(
-                import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
-            )
+    if (checkoutElement) {
+        const stripe = await loadStripe(
+            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+        )
 
-            const params = new URLSearchParams(window.location.search)
-            const clientSecret = params.get("client_secret") || ""
+        const params = new URLSearchParams(window.location.search)
+        const clientSecret = params.get("client_secret") || ""
 
-            if (checkout) {
-                console.log("Destroying checkout...")
-                checkout.destroy()
-            }
-
-            checkout = await stripe?.initEmbeddedCheckout({
-                clientSecret,
-            })
-
-            checkout?.mount(checkoutElement)
+        if (checkout) {
+            console.log("Destroying checkout...")
+            checkout.destroy()
         }
-    })
+
+        checkout = await stripe?.initEmbeddedCheckout({
+            clientSecret,
+        })
+
+        checkout?.mount(checkoutElement)
+    }
+    // })
 </script>
