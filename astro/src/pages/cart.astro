@@ -288,7 +288,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
     import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
+        console.log("cart script")
         console.log(window.location.pathname)
+        console.log("")
         const cartPageContent = document.querySelector(
             "#cart-page-content"
         ) as HTMLElement
