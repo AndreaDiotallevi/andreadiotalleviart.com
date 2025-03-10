@@ -24,35 +24,24 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
     console.log(checkoutElement)
 
-    if (!checkoutElement) return
+    if (checkoutElement) {
+        const stripe = await loadStripe(
+            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+        )
 
-    const stripe = await loadStripe(
-        import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
-    )
+        const params = new URLSearchParams(window.location.search)
+        const clientSecret = params.get("client_secret") || ""
 
-    // if (!stripe) {
-    //     console.error("Stripe not loaded")
-    //     return
-    // }
+        if (checkout) {
+            console.log("Destroying checkout...")
+            checkout.destroy()
+        }
 
-    const params = new URLSearchParams(window.location.search)
-    const clientSecret = params.get("client_secret") || ""
-    console.log(clientSecret)
+        checkout = await stripe?.initEmbeddedCheckout({
+            clientSecret,
+        })
 
-    if (checkout) {
-        console.log("Destroying checkout...")
-        checkout.destroy()
+        checkout?.mount(checkoutElement)
     }
-
-    checkout = await stripe?.initEmbeddedCheckout({
-        clientSecret,
-    })
-
-    if (!checkout) {
-        console.error("Checkout not initialised")
-        // return
-    }
-
-    checkout?.mount(checkoutElement)
     // })
 </script>
