@@ -14,6 +14,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
 
     let checkout: StripeEmbeddedCheckout | undefined
+    console.log("testing checkout page")
 
     document.addEventListener("astro:page-load", async () => {
         console.log("checkout script")
