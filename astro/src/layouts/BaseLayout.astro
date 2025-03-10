@@ -152,7 +152,7 @@ const {
 
         if (checkout) checkout.destroy()
 
-        if (stripe && checkoutElement && clientSecret) {
+        if (stripe && clientSecret && checkoutElement) {
             checkout = await stripe.initEmbeddedCheckout({ clientSecret })
             checkout.mount(checkoutElement)
         }
