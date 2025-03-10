@@ -16,9 +16,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     let checkout: StripeEmbeddedCheckout | undefined
 
     document.addEventListener("astro:page-load", async () => {
+        console.log(window.location.pathname)
         const checkoutElement = document.querySelector(
             "#checkout"
         ) as HTMLElement
+
         console.log(checkoutElement)
 
         if (!checkoutElement) return
