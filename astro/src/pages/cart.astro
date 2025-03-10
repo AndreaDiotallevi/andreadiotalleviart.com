@@ -284,6 +284,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         updateClientSession,
     } from "@utils/localStorage"
     import type { Currency } from "@utils/stripe"
+    import { prefetch } from "astro:prefetch"
     import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", async () => {
@@ -318,6 +319,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         if (!session) {
             clearClientSession()
+            return
         }
 
         const currency = (session?.currency || "gbp") as Currency
@@ -457,11 +459,12 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 }
             })
 
-        session &&
-            proceedToCheckoutButton.addEventListener("click", async e => {
-                e.preventDefault()
-                sendGA4BeginCheckoutEvent({ session })
-                navigate(`/checkout?client_secret=${session.client_secret}`)
-            })
+        proceedToCheckoutButton.addEventListener("click", async e => {
+            e.preventDefault()
+            sendGA4BeginCheckoutEvent({ session })
+            navigate(`/checkout?client_secret=${session.client_secret}`)
+        })
+
+        prefetch(`/checkout?client_secret=${session.client_secret}`)
     })
 </script>
