@@ -132,3 +132,29 @@ const {
         </NavigationLayout>
     </body>
 </html>
+
+<script>
+    import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
+
+    let checkout: StripeEmbeddedCheckout | undefined
+
+    document.addEventListener("astro:page-load", async () => {
+        const checkoutElement = document.querySelector(
+            "#checkout"
+        ) as HTMLElement
+
+        const stripe = await loadStripe(
+            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
+        )
+
+        const params = new URLSearchParams(window.location.search)
+        const clientSecret = params.get("client_secret")
+
+        if (checkout) checkout.destroy()
+
+        if (stripe && checkoutElement && clientSecret) {
+            checkout = await stripe.initEmbeddedCheckout({ clientSecret })
+            checkout.mount(checkoutElement)
+        }
+    })
+</script>
