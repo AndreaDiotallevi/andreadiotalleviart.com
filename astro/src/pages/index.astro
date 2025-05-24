@@ -31,7 +31,11 @@ Astro.response.headers.set(
         <div
             class="flex flex-col-reverse md:flex-row justify-between w-full max-w-screen-xl h-full px-4"
         >
-            <div id="sketch" class="w-full md:w-1/2 h-full"></div>
+            <div
+                id="sketch"
+                class="w-full md:w-1/2 h-[calc(100dvh-80px-80px-128px)] md:h-full"
+            >
+            </div>
             <div
                 class="flex flex-col items-center justify-center w-full md:w-1/2 text-white mb-8 md:mb-0"
             >
@@ -39,12 +43,8 @@ Astro.response.headers.set(
                     <h1
                         class="text-2xl md:text-5xl text-center md:text-left font-bold mb-4 md:mb-6"
                     >
-                        <!-- Generative Artist -->
                         I make art with code
                     </h1>
-                    <!-- <p class="text-center md:text-left mb-2 md:mb-4">
-                    I make art with code
-                </p> -->
                     <BackToLink
                         href={import.meta.env.CONTEXT === "production"
                             ? "/portfolio"
@@ -113,10 +113,7 @@ Astro.response.headers.set(
 
             p5.windowResized = () => {
                 const newElement = document.querySelector("#sketch")!
-                p5.resizeCanvas(
-                    newElement?.clientWidth,
-                    newElement?.clientHeight
-                )
+                p5.resizeCanvas(newElement.clientWidth, newElement.clientHeight)
                 t = 0
                 p5.draw()
             }
