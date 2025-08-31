@@ -1,21 +1,21 @@
 import Stripe from "stripe"
-import type { Currency, StripePrice } from "./stripe"
+import type { Currency, StripeProduct } from "./stripe"
 
-export const getStripePrices = async (): Promise<StripePrice[]> => {
+export const getStripeProducts = async (): Promise<StripeProduct[]> => {
     try {
         const response = await fetch(
-            import.meta.env.PUBLIC_API_URL + `/prices`,
+            import.meta.env.PUBLIC_API_URL + `/products`,
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
-            },
+            }
         )
 
         if (response.ok) {
             const data = (await response.json()) as {
-                prices: StripePrice[]
+                products: StripeProduct[]
             }
-            return data.prices
+            return data.products
         } else {
             console.error(response)
             return []
@@ -39,7 +39,7 @@ export const createCheckoutSession = async (params: {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(params),
-            },
+            }
         )
 
         const { session, error } = (await response.json()) as {
@@ -64,7 +64,7 @@ export const retrieveCheckoutSession = async (params: {
             {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
-            },
+            }
         )
 
         const { session, error } = (await response.json()) as {
@@ -90,7 +90,7 @@ export const newsletterCreateContact = async (params: {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(params),
-            },
+            }
         )
 
         const { success, error } = (await response.json()) as {

@@ -63,7 +63,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                     Template: {
                         TemplateName: "OrderConfirmationEmailTemplate",
                         TemplateData: JSON.stringify({
-                            name: session.customer_details?.name || "",
+                            name: session.shipping_details?.name || "",
                             addressLine1: address.line1 || "",
                             addressLine2: address.line2 || "",
                             postcode: address.postal_code || "",

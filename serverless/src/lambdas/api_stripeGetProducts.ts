@@ -1,13 +1,13 @@
 import { APIGatewayProxyResult } from "aws-lambda"
 
-import { getPrices } from "../actions/stripe_getPrices"
+import { getProducts } from "../actions/stripe_getProducts"
 
 export const handler = async (): Promise<APIGatewayProxyResult> => {
-    const prices = await getPrices()
+    const products = await getProducts()
 
     return {
         statusCode: 200,
-        body: JSON.stringify({ prices }),
+        body: JSON.stringify({ products }),
         headers: {
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Allow-Origin": "*",

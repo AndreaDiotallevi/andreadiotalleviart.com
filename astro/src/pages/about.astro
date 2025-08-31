@@ -1,6 +1,7 @@
 ---
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { transformImage } from "@utils/cloudinary"
 
 const aboutImageSrc = transformImage("about-page-image_bldpak")
@@ -33,6 +34,10 @@ Astro.response.headers.set(
                 width={735}
                 height={735}
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
+                breakpoints={imageBreakpoints({
+                    maxWidth: 608,
+                    assetWidth: 735,
+                })}
                 loading="eager"
                 fetchpriority="high"
             />

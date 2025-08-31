@@ -2,6 +2,7 @@
 import { Image } from "@unpic/astro"
 import { getCollection } from "astro:content"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { transformImage } from "@utils/cloudinary"
 
 const artworks = (await getCollection("artworks")).map(artwork => ({
@@ -30,14 +31,14 @@ Astro.response.headers.set(
         "Processing",
         "Procedural",
     ]}
-    newsletter={true}
+    newsletter={false}
 >
     <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl md:text-5xl font-bold mb-4 md:mb-6">
+        <div class="text-center mb-4 md:mb-6">
+            <h1 class="text-2xl md:text-5xl font-bold mb-2 md:mb-5">
                 Portfolio
             </h1>
-            <p class="max-w-[600px] mx-auto">
+            <p class="max-w-[600px] mx-auto text-sm md:text-base">
                 Experimentations with generative art patterns and algorithms as
                 a dynamic dialogue between human and computer
             </p>
@@ -56,6 +57,10 @@ Astro.response.headers.set(
                             width={750}
                             height={750}
                             sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 294px"
+                            breakpoints={imageBreakpoints({
+                                maxWidth: 294,
+                                assetWidth: 750,
+                            })}
                             loading={index < 8 ? "eager" : "lazy"}
                             fetchpriority={index < 8 ? "high" : "low"}
                         />

@@ -1,7 +1,7 @@
 ---
-import { Image } from "@unpic/astro"
 import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import Carousel from "@components/Carousel.astro"
 
 import { getCollection } from "astro:content"
 import { transformImage } from "@utils/cloudinary"
@@ -38,7 +38,7 @@ Astro.response.headers.set(
     title={`${artwork.name} | Andrea Diotallevi Art`}
     description={artwork.description}
     image={artwork.images[0]}
-    newsletter={true}
+    newsletter={false}
 >
     <div
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
@@ -50,42 +50,7 @@ Astro.response.headers.set(
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
             </h1>
-            <div class={`${artwork.images.length > 1 ? "mb-5" : "0"} relative`}>
-                {
-                    artwork.images.map((src, index) => (
-                        <Image
-                            id={`main-image-${index}`}
-                            alt={artwork.name}
-                            src={src}
-                            width={750}
-                            height={750}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 608px"
-                            class={`${index === 0 ? "" : "absolute top-0 opacity-0"}`}
-                            loading={index === 0 ? "eager" : "lazy"}
-                            fetchpriority={index === 0 ? "high" : "low"}
-                        />
-                    ))
-                }
-            </div>
-            {
-                artwork.images.length > 1 ? (
-                    <div class="grid grid-cols-4 gap-4">
-                        {artwork.images.map((img, index) => (
-                            <Image
-                                id={`thumbnail-${index}`}
-                                alt={`Thumbnail ${index + 1}`}
-                                src={img}
-                                width={300}
-                                height={300}
-                                sizes="(max-width: 768px) 25vw, (max-width: 1280px) 11vw, 140px"
-                                class="cursor-pointer"
-                                loading="eager"
-                                fetchpriority="high"
-                            />
-                        ))}
-                    </div>
-                ) : null
-            }
+            <Carousel images={artwork.images} width={750} height={750} />
         </div>
 
         <div class="w-full md:w-1/2">
@@ -95,41 +60,10 @@ Astro.response.headers.set(
 
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-2xl font-bold mb-2">Description</h2>
+                    <!-- <h2 class="text-2xl font-bold mb-2">Description</h2> -->
                     <p>{artwork.description}</p>
                 </div>
             </div>
         </div>
     </div>
 </BaseLayout>
-
-<script>
-    document.addEventListener("astro:page-load", () => {
-        const mainImages = document.querySelectorAll('[id^="main-image-"]')
-        const thumbnails = document.querySelectorAll('[id^="thumbnail-"]')
-
-        if (!mainImages.length || !thumbnails.length) return
-
-        let selectedThumbnail = thumbnails[0]
-        // selectedThumbnail.classList.replace("border-white", "border-black")
-
-        thumbnails.forEach((thumbnail, index) => {
-            thumbnail.addEventListener("click", () => {
-                mainImages.forEach((img, i) => {
-                    if (i === index) {
-                        img.classList.remove("absolute", "top-0", "opacity-0")
-                    } else {
-                        img.classList.add("absolute", "top-0", "opacity-0")
-                    }
-                })
-
-                // selectedThumbnail.classList.replace(
-                //     "border-black",
-                //     "border-white"
-                // )
-                // thumbnail.classList.replace("border-white", "border-black")
-                selectedThumbnail = thumbnail
-            })
-        })
-    })
-</script>

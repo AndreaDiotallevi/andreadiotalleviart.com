@@ -9,34 +9,3 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 >
     <div id="checkout" class="px-4 py-8"></div>
 </BaseLayout>
-
-<script>
-    import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
-
-    let checkout: StripeEmbeddedCheckout | undefined
-
-    document.addEventListener("astro:page-load", async () => {
-        const checkoutElement = document.querySelector(
-            "#checkout"
-        ) as HTMLElement
-
-        if (!checkoutElement) return
-
-        const stripe = await loadStripe(
-            import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
-        )
-
-        const params = new URLSearchParams(window.location.search)
-        const clientSecret = params.get("client_secret") || ""
-
-        if (checkout) {
-            checkout.destroy()
-        }
-
-        checkout = await stripe?.initEmbeddedCheckout({
-            clientSecret,
-        })
-
-        checkout?.mount(checkoutElement)
-    })
-</script>
