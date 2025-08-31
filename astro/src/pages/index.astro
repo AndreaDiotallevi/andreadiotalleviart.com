@@ -112,7 +112,8 @@ Astro.response.headers.set(
             }
 
             p5.windowResized = () => {
-                const newElement = document.querySelector("#sketch")!
+                const newElement = document.querySelector("#sketch")
+                if (!newElement) return
                 p5.resizeCanvas(newElement.clientWidth, newElement.clientHeight)
                 t = 0
                 p5.draw()
