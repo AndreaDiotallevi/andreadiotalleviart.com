@@ -10,5 +10,5 @@ export async function getProducts(): Promise<StripeProduct[]> {
         expand: ["data.default_price", "data.default_price.currency_options"],
     })
 
-    return response.data as unknown as StripeProduct[]
+    return response.data.filter(product => product.metadata.category == "prints") as unknown as StripeProduct[]
 }
