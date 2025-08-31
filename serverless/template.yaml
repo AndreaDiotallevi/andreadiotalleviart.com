@@ -323,8 +323,8 @@ Resources:
                                 <p>You can download your receipt <a href="{{receiptPdf}}">here</a>.</p>
                             {{/if}}
                             <p>For any questions regarding your order, just reply to this email.</p>
-                            <h3>Thank you</h3>
-                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
+                            <h3>With gratitude</h3>
+                            <p>Andrea</p>
                         </body>
                     </html>
                 SubjectPart: "Your order"
