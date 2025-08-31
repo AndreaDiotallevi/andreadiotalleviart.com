@@ -276,6 +276,9 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
+                            <style>
+                                .address-block a { color: inherit !important; text-decoration: none !important; }
+                            </style>
                             <h3>Dear {{name}},</h3>
                             <p>Thanks for your order!</p>
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
@@ -295,7 +298,7 @@ Resources:
                                 </tbody>
                             </table>
                             <h3>Delivery address</h3>
-                            <div>
+                            <div class="address-block">
                                 {{name}}<br>
                                 {{addressLine1}}<br>
                                 {{#if addressLine2}}
@@ -334,6 +337,9 @@ Resources:
                 HtmlPart: !Sub |
                     <html>
                         <body>
+                            <style>
+                                .address-block a { color: inherit !important; text-decoration: none !important; }
+                            </style>
                             <h3>Dear {{name}},</h3>
                             <p>Your order has been shipped and is now on its way!</p>
                             <h3>Shipment details</h3>
@@ -353,7 +359,7 @@ Resources:
                                 <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
                             </div>
                             <h3>Delivery address</h3>
-                              <div>
+                              <div class="address-block">
                                 {{name}}<br>
                                 {{addressLine1}}<br>
                                 {{#if addressLine2}}
