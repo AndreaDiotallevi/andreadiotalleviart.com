@@ -4,6 +4,7 @@ import { getProducts } from "../actions/stripe_getProducts"
 
 export const handler = async (): Promise<APIGatewayProxyResult> => {
     const products = await getProducts()
+    console.log(JSON.stringify(products))
 
     return {
         statusCode: 200,
