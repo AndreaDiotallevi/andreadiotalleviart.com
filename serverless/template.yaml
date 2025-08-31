@@ -888,13 +888,13 @@ Resources:
                 Name: SNSDestination
                 Enabled: true
                 MatchingEventTypes:
-                    - send
+                    # - send
                     - reject
                     - bounce
                     - complaint
-                    - delivery
-                    - open
-                    - click
+                    # - delivery
+                    # - open
+                    # - click
                     - renderingFailure
                 SnsDestination:
                     TopicARN: !Ref SNSNotificationTopic
