@@ -150,9 +150,9 @@ const {
         const params = new URLSearchParams(window.location.search)
         const clientSecret = params.get("client_secret")
 
-        if (checkout) checkout.destroy()
-
+        
         if (stripe && clientSecret && checkoutElement) {
+            if (checkout) checkout.destroy()
             checkout = await stripe.initEmbeddedCheckout({ clientSecret })
             checkout.mount(checkoutElement)
         }
