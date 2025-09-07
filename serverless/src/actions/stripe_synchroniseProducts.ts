@@ -165,7 +165,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "A3",
             slug: "marble-lake",
-            sku: "print-marbleLake-A3",
+            sku: "print:marble-lake:A3",
         },
         images: [
             transformImage("marble-lake_WEB_MOCKUP_WITHOUT_BORDER_b4p8fc"),
@@ -190,7 +190,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "A3",
             slug: "flames",
-            sku: "print-flames-A3",
+            sku: "print:flames:A3",
         },
         images: [
             transformImage("flames-mockup_gzj45v"),
@@ -215,7 +215,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-1",
-            sku: "print-moonlight1-A3",
+            sku: "print:moonlight-1:A3",
         },
         images: [
             transformImage("moonlight-1_MOCKUP_xul3pi"),
@@ -240,7 +240,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "A3",
             slug: "moonlight-2",
-            sku: "print-moonlight2-A3",
+            sku: "print:moonlight-2:A3",
         },
         images: [
             transformImage("moonlight-2_WEB_MOCKUP_WITHOUT_BORDER_aenrjl"),
@@ -265,7 +265,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "50x70cm",
             slug: "nebulae-1",
-            sku: "nebulae-1-50x70",
+            sku: "print:nebulae-1:50x70",
         },
         images: [
             transformImage("nebulae-mockup-paper-1_gvzthk"),
@@ -291,7 +291,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "50x70cm",
             slug: "nebulae-2",
-            sku: "nebulae-2-50x70",
+            sku: "print:nebulae-2:50x70",
         },
         images: [
             transformImage("nebulae-mockup-paper-2_mynxf0"),
@@ -317,7 +317,7 @@ const products: ProductInput[] = [
             orientation: "portrait",
             size: "50x70cm",
             slug: "nebulae-3",
-            sku: "nebulae-3-50x70",
+            sku: "print:nebulae-3:50x70",
         },
         images: [
             transformImage("nebulae-mockup-paper-3_kq6yok"),
