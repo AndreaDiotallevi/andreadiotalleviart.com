@@ -48,7 +48,7 @@ Resources:
                       Resource:
                           - !Sub "arn:aws:s3:::${Bucket}/*"
 
-    ## EVENTS
+    # EVENTS
     EventBus:
         Type: AWS::Events::EventBus
         Properties:
