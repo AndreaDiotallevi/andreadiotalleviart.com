@@ -143,6 +143,8 @@ const {
             "#checkout"
         ) as HTMLElement
 
+        // if (!checkoutElement) return
+
         const stripe = await loadStripe(
             import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
         )
