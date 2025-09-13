@@ -52,7 +52,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
     ]}
     newsletter={false}
 >
-    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
+    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8 text-gray-800">
         <div class="text-center mb-4 md:mb-6">
             <h1 class="text-2xl md:text-5xl font-bold mb-2 md:mb-5">Shop</h1>
             <p class="max-w-[400px] mx-auto text-sm md:text-base">
@@ -74,7 +74,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     .map((product, index) => (
                         <a
                             href={`/shop/${product.metadata.category}/${product.metadata.slug}`}
-                            class="flex flex-col no-underline text-black md:hover:opacity-70 transition-opacity duration-300"
+                            class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                         >
                             <div class="bg-gray-100 p-6 sm:p-10 md:p-12 flex items-center justify-center">
                                 <Image

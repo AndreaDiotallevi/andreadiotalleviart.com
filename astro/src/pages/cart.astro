@@ -105,7 +105,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                         price.product.metadata
                                                             .displayName
                                                     }
-                                                    <span class="hidden md:block text-base pt-2">
+                                                    <span class="hidden md:block text-base pt-2 text-sm">
                                                         {
                                                             price.product
                                                                 .description
@@ -226,7 +226,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                             : "add-promotion-code-button"
                                     }
                                     type="submit"
-                                    class="w-40 px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:text-gray-600 text-center font-bold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
+                                    class="w-40 px-4 py-3 text-gray-800 bg-white rounded-lg border border-black md:hover:text-gray-600 text-center font-bold max-w-lg transition-colors duration-300 ml-2 text-nowrap"
                                 >
                                     <span class="md:pb-1">
                                         {coupon ? "Remove" : "Apply"}
@@ -243,7 +243,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         </div>
                         <a
                             href="/shop"
-                            class="w-full px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:bg-black md:hover:text-white text-center font-bold max-w-lg transition-colors duration-300"
+                            class="w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-black md:hover:bg-gray-800 md:hover:text-white text-center font-bold max-w-lg transition-colors duration-300"
                         >
                             Explore more prints
                         </a>
@@ -259,7 +259,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     <p class="text-center mb-4">Your cart is empty.</p>
                     <a
                         href="/shop"
-                        class="block w-full px-4 py-3 text-black bg-white rounded-lg border border-black md:hover:bg-black md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"
+                        class="block w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-black md:hover:bg-gray-800 md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"
                     >
                         Explore prints
                     </a>
