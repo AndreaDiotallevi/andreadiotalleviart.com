@@ -35,7 +35,10 @@ const success = !!(session && currency && shippingDetails)
                             Your order was successful
                         </h1>
                         <div class="space-y-6">
-                            <div>
+                            <div class="space-y-2">
+                                <p>
+                                    Thanks for your order!
+                                </p>
                                 <p>
                                     You will receive a confirmation email with
                                     the details of your order.
@@ -45,24 +48,26 @@ const success = !!(session && currency && shippingDetails)
                                 <h2 class="text-xl font-bold mb-2">
                                     Delivery address
                                 </h2>
-                                <p>{shippingDetails.name}</p>
-                                <p>
-                                    {shippingDetails.address?.line1
-                                        ? `${shippingDetails.address?.line1}, `
-                                        : ""}
-                                    {shippingDetails.address?.line2
-                                        ? `${shippingDetails.address?.line2}, `
-                                        : ""}
-                                    {shippingDetails.address?.postal_code
-                                        ? `${shippingDetails.address?.postal_code}, `
-                                        : ""}
-                                    {shippingDetails.address?.city
-                                        ? `${shippingDetails.address?.city}, `
-                                        : ""}
-                                    {shippingDetails.address?.country
-                                        ? `${shippingDetails.address?.country}`
-                                        : ""}
-                                </p>
+                                <div class="space-y-2">
+                                    <p>{shippingDetails.name}</p>
+                                    <p>
+                                        {shippingDetails.address?.line1
+                                            ? `${shippingDetails.address?.line1}, `
+                                            : ""}
+                                        {shippingDetails.address?.line2
+                                            ? `${shippingDetails.address?.line2}, `
+                                            : ""}
+                                        {shippingDetails.address?.postal_code
+                                            ? `${shippingDetails.address?.postal_code}, `
+                                            : ""}
+                                        {shippingDetails.address?.city
+                                            ? `${shippingDetails.address?.city}, `
+                                            : ""}
+                                        {shippingDetails.address?.country
+                                            ? `${shippingDetails.address?.country}`
+                                            : ""}
+                                    </p>
+                                </div>
                             </div>
                             <div>
                                 <h2 class="text-xl font-bold mb-2">Items</h2>
