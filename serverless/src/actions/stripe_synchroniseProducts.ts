@@ -142,6 +142,7 @@ type ProductInput = Pick<
         StripePrice["product"]["metadata"],
         | "category"
         | "displayName"
+        | "displaySubtitle"
         | "displayOrder"
         | "orientation"
         | "size"
@@ -162,6 +163,7 @@ const products: ProductInput[] = [
             category: "prints",
             displayName: "Marble Lake",
             displayOrder: "20",
+            displaySubtitle: "",
             orientation: "portrait",
             size: "A3",
             slug: "marble-lake",
@@ -179,21 +181,22 @@ const products: ProductInput[] = [
         },
     },
     {
-        active: false,
+        active: true,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
             "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Flames",
-            displayOrder: "21",
+            displaySubtitle: "",
+            displayOrder: "4",
             orientation: "portrait",
             size: "A3",
             slug: "flames",
             sku: "print_flames_A3",
         },
         images: [
-            transformImage("flames-mockup_gzj45v"),
+            // transformImage("flames-mockup_gzj45v"),
             transformImage("flames-artwork_ioxny4"),
             transformImage("A116-flames_voptyx"),
         ],
@@ -211,6 +214,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Moonlight 1",
+            displaySubtitle: "",
             displayOrder: "22",
             orientation: "portrait",
             size: "A3",
@@ -236,6 +240,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
+            displaySubtitle: "",
             displayOrder: "23",
             orientation: "portrait",
             size: "A3",
@@ -261,6 +266,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 1",
+            displaySubtitle: "First of a series of 3",
             displayOrder: "1",
             orientation: "portrait",
             size: "50x70cm",
@@ -288,6 +294,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 2",
+            displaySubtitle: "Second of a series of 3",
             displayOrder: "2",
             orientation: "portrait",
             size: "50x70cm",
@@ -315,6 +322,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 3",
+            displaySubtitle: "Third of a series of 3",
             displayOrder: "3",
             orientation: "portrait",
             size: "50x70cm",

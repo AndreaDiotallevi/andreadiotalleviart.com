@@ -79,20 +79,20 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                 <BackToLink href="/shop" text="Back to shop" />
             </div>
             <div class="mb-4 md:hidden">
-                <h1 class="text-2xl font-bold mb-1">
+                <h1 class="text-2xl font-bold">
                     {product.metadata.displayName}
                 </h1>
-                <p class="text-sm">Part of a series of 3</p>
+                {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
             <Carousel images={product.images} width={1429} height={2000} />
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
             <div class="mb-6 hidden md:block">
-                <h1 class="text-5xl font-bold mb-2">
+                <h1 class="text-5xl font-bold">
                     {product.metadata.displayName}
                 </h1>
-                <p class="font-normal">Part of a series of 3</p>
+                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
 
             <div class="space-y-6">
