@@ -96,7 +96,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
             </div>
 
             <div class="space-y-6">
-                <div>
+                {product.metadata.displayName.startsWith("Nebulae") ? <div>
                     <h2 class="text-2xl font-bold mb-2">Story</h2>
                     <div class="space-y-2">
                         <p>
@@ -113,7 +113,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             colours, giving the artwork depth and movement.
                         </p>
                     </div>
-                </div>
+                </div> : null}
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
                         <label for="price-id">Size</label>
