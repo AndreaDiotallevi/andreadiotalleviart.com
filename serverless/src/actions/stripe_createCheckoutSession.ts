@@ -81,10 +81,10 @@ const countriesArray: Stripe.Checkout.SessionCreateParams.ShippingAddressCollect
         "SK", // Slovakia
 
         // EEA / Other European Countries
-        "NO", // Norway
-        "IS", // Iceland
-        "LI", // Liechtenstein
-        "CH", // Switzerland
+        // "NO", // Norway
+        // "IS", // Iceland
+        // "LI", // Liechtenstein
+        // "CH", // Switzerland
 
         // Other countries (commented out for now)
         // "AC", // Ascension Island
