@@ -268,10 +268,11 @@ const products: ProductInput[] = [
             sku: "print_nebulae-1_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-1_gvzthk"),
+            // transformImage("nebulae-mockup-paper-1_gvzthk"),
             transformImage("nebulae1_tiboq3"),
-            transformImage("IMG_5220_cizhq8"),
+            transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5220_cizhq8"),
         ],
         currencyOptions: {
             gbp: 8500,
@@ -294,10 +295,11 @@ const products: ProductInput[] = [
             sku: "print_nebulae-2_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-2_mynxf0"),
+            // transformImage("nebulae-mockup-paper-2_mynxf0"),
             transformImage("nebulae2_unlnm2"),
-            transformImage("IMG_5224_fqexh6"),
+            transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5224_fqexh6"),
         ],
         currencyOptions: {
             gbp: 8500,
@@ -320,10 +322,12 @@ const products: ProductInput[] = [
             sku: "print_nebulae-3_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-3_kq6yok"),
+            // transformImage("nebulae-mockup-paper-3_kq6yok"),
             transformImage("nebulae3_y5qb1g"),
-            transformImage("IMG_5198_pzut4l"),
+            transformImage('nebulae-mockup-with-border-3-portrait_adkdeh'),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5198_pzut4l"),
+            // transformImage("nebulae-3_closeup_or5o0e")
         ],
         currencyOptions: {
             gbp: 8500,
