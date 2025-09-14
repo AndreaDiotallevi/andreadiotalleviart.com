@@ -62,7 +62,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
         </div>
 
         <div
-            class="grid grid-cols-2 gap-x-2 gap-y-8 md:grid-cols-3 md:gap-x-4 md:gap-y-8"
+            class="grid grid-cols-2 gap-x-2 gap-y-8"
         >
             {
                 products
@@ -76,7 +76,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                             href={`/shop/${product.metadata.category}/${product.metadata.slug}`}
                             class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                         >
-                            <div class="bg-gray-100 p-6 sm:p-10 md:p-12 flex items-center justify-center">
+                            <div class="bg-gray-100 p-6 sm:p-10 md:p-15 lg:p-20 flex items-center justify-center">
                                 <Image
                                     alt={product.name}
                                     src={product.images[0]}
