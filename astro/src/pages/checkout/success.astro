@@ -24,7 +24,7 @@ const success = !!(session && currency && shippingDetails)
 >
     <div
         id="success-page-content"
-        class="max-w-screen-sm mx-auto px-4 py-8 pt-0 md:pt-8"
+        class="max-w-screen-sm mx-auto px-4 py-8 pt-0 md:pt-8 text-gray-800"
         data-session={JSON.stringify(session)}
     >
         {
@@ -35,7 +35,10 @@ const success = !!(session && currency && shippingDetails)
                             Your order was successful
                         </h1>
                         <div class="space-y-6">
-                            <div>
+                            <div class="space-y-2">
+                                <p>
+                                    Thanks for your order!
+                                </p>
                                 <p>
                                     You will receive a confirmation email with
                                     the details of your order.
@@ -45,24 +48,26 @@ const success = !!(session && currency && shippingDetails)
                                 <h2 class="text-xl font-bold mb-2">
                                     Delivery address
                                 </h2>
-                                <p>{shippingDetails.name}</p>
-                                <p>
-                                    {shippingDetails.address?.line1
-                                        ? `${shippingDetails.address?.line1}, `
-                                        : ""}
-                                    {shippingDetails.address?.line2
-                                        ? `${shippingDetails.address?.line2}, `
-                                        : ""}
-                                    {shippingDetails.address?.postal_code
-                                        ? `${shippingDetails.address?.postal_code}, `
-                                        : ""}
-                                    {shippingDetails.address?.city
-                                        ? `${shippingDetails.address?.city}, `
-                                        : ""}
-                                    {shippingDetails.address?.country
-                                        ? `${shippingDetails.address?.country}`
-                                        : ""}
-                                </p>
+                                <div class="space-y-2">
+                                    <p>{shippingDetails.name}</p>
+                                    <p>
+                                        {shippingDetails.address?.line1
+                                            ? `${shippingDetails.address?.line1}, `
+                                            : ""}
+                                        {shippingDetails.address?.line2
+                                            ? `${shippingDetails.address?.line2}, `
+                                            : ""}
+                                        {shippingDetails.address?.postal_code
+                                            ? `${shippingDetails.address?.postal_code}, `
+                                            : ""}
+                                        {shippingDetails.address?.city
+                                            ? `${shippingDetails.address?.city}, `
+                                            : ""}
+                                        {shippingDetails.address?.country
+                                            ? `${shippingDetails.address?.country}`
+                                            : ""}
+                                    </p>
+                                </div>
                             </div>
                             <div>
                                 <h2 class="text-xl font-bold mb-2">Items</h2>
@@ -140,7 +145,7 @@ const success = !!(session && currency && shippingDetails)
                         <div class="mt-6">
                             <a
                                 href="/shop"
-                                class="block w-full px-4 py-3 text-white bg-black rounded-lg md:hover:bg-gray-800 text-center font-bold transition-colors duration-300"
+                                class="block w-full px-4 py-3 text-white bg-gray-800 rounded-lg md:hover:bg-gray-800 text-center font-bold transition-colors duration-300"
                             >
                                 Discover more
                             </a>

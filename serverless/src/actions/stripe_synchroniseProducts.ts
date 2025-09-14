@@ -142,6 +142,7 @@ type ProductInput = Pick<
         StripePrice["product"]["metadata"],
         | "category"
         | "displayName"
+        | "displaySubtitle"
         | "displayOrder"
         | "orientation"
         | "size"
@@ -162,6 +163,7 @@ const products: ProductInput[] = [
             category: "prints",
             displayName: "Marble Lake",
             displayOrder: "20",
+            displaySubtitle: "",
             orientation: "portrait",
             size: "A3",
             slug: "marble-lake",
@@ -179,21 +181,22 @@ const products: ProductInput[] = [
         },
     },
     {
-        active: false,
+        active: true,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
             "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Flames",
-            displayOrder: "21",
+            displaySubtitle: "",
+            displayOrder: "4",
             orientation: "portrait",
             size: "A3",
             slug: "flames",
             sku: "print_flames_A3",
         },
         images: [
-            transformImage("flames-mockup_gzj45v"),
+            // transformImage("flames-mockup_gzj45v"),
             transformImage("flames-artwork_ioxny4"),
             transformImage("A116-flames_voptyx"),
         ],
@@ -211,6 +214,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Moonlight 1",
+            displaySubtitle: "",
             displayOrder: "22",
             orientation: "portrait",
             size: "A3",
@@ -236,6 +240,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
+            displaySubtitle: "",
             displayOrder: "23",
             orientation: "portrait",
             size: "A3",
@@ -261,6 +266,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 1",
+            displaySubtitle: "First of a series of 3",
             displayOrder: "1",
             orientation: "portrait",
             size: "50x70cm",
@@ -268,10 +274,11 @@ const products: ProductInput[] = [
             sku: "print_nebulae-1_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-1_gvzthk"),
+            // transformImage("nebulae-mockup-paper-1_gvzthk"),
             transformImage("nebulae1_tiboq3"),
-            transformImage("IMG_5220_cizhq8"),
+            transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5220_cizhq8"),
         ],
         currencyOptions: {
             gbp: 8500,
@@ -287,6 +294,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 2",
+            displaySubtitle: "Second of a series of 3",
             displayOrder: "2",
             orientation: "portrait",
             size: "50x70cm",
@@ -294,10 +302,11 @@ const products: ProductInput[] = [
             sku: "print_nebulae-2_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-2_mynxf0"),
+            // transformImage("nebulae-mockup-paper-2_mynxf0"),
             transformImage("nebulae2_unlnm2"),
-            transformImage("IMG_5224_fqexh6"),
+            transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5224_fqexh6"),
         ],
         currencyOptions: {
             gbp: 8500,
@@ -313,6 +322,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebulae 3",
+            displaySubtitle: "Third of a series of 3",
             displayOrder: "3",
             orientation: "portrait",
             size: "50x70cm",
@@ -320,10 +330,12 @@ const products: ProductInput[] = [
             sku: "print_nebulae-3_50x70",
         },
         images: [
-            transformImage("nebulae-mockup-paper-3_kq6yok"),
+            // transformImage("nebulae-mockup-paper-3_kq6yok"),
             transformImage("nebulae3_y5qb1g"),
-            transformImage("IMG_5198_pzut4l"),
+            transformImage('nebulae-mockup-with-border-3-portrait_adkdeh'),
             transformImage("mockup-series-vertical_hpqksb"),
+            transformImage("IMG_5198_pzut4l"),
+            // transformImage("nebulae-3_closeup_or5o0e")
         ],
         currencyOptions: {
             gbp: 8500,

@@ -72,43 +72,48 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
     newsletter={false}
 >
     <div
-        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto"
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <div class="md:hidden mb-4">
                 <BackToLink href="/shop" text="Back to shop" />
             </div>
             <div class="mb-4 md:hidden">
-                <h1 class="text-2xl font-bold mb-1">
+                <h1 class="text-2xl font-bold">
                     {product.metadata.displayName}
                 </h1>
-                <h4 class="text-sm">Part of a series of 3</h4>
+                {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
             <Carousel images={product.images} width={1429} height={2000} />
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
             <div class="mb-6 hidden md:block">
-                <h1 class="text-5xl font-bold mb-2">
+                <h1 class="text-5xl font-bold">
                     {product.metadata.displayName}
                 </h1>
-                <h4 class="font-normal">Part of a series of 3</h4>
+                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
 
             <div class="space-y-6">
-                <div>
-                    <!-- <h2 class="text-2xl font-bold mb-2">Story</h2> -->
-                    <p>
-                        This series is extra special to me because it was
-                        created for my friend Alessandro, who wanted bold,
-                        saturated colours to bring life and energy to his dark
-                        living room. Each artwork is composed by the same
-                        overlapping circles that grow in size, with the
-                        background hue warming up as the series progresses. The
-                        transparency of the circles creates a stunning blend of
-                        colours, giving the artwork depth and movement.
-                    </p>
-                </div>
+                {product.metadata.displayName.startsWith("Nebulae") ? <div>
+                    <h2 class="text-2xl font-bold mb-2">Story</h2>
+                    <div class="space-y-2">
+                        <p>
+                            This series is extra special to me because it was
+                            created for my friend Alessandro, who wanted bold,
+                            saturated colours to bring life and energy to his dark
+                            living room.
+                        </p>
+                        <p>
+                            Each artwork is composed by the same
+                            overlapping circles that grow in size, with the
+                            background hue warming up as the series progresses. The
+                            transparency of the circles creates a stunning blend of
+                            colours, giving the artwork depth and movement.
+                        </p>
+                    </div>
+                </div> : null}
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
                         <label for="price-id">Size</label>
@@ -117,7 +122,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         id="price-id"
                         name="price-id"
                         data-currency={currency}
-                        class="w-full px-3 py-3 border border-black rounded-md mb-2 font-bold appearance-none"
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2 font-bold appearance-none"
                     >
                         <option value={product.default_price.id}>
                             {sizeToDescription[product.metadata.size]} - {
@@ -138,59 +143,80 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold mb-2">Fine art printing</h2>
-                    <p>
-                        I partner with
-                        <a
+                    <div class="space-y-2">
+                        <p>
+                            I partner with
+                            <a
                             href="https://uk.trustpilot.com/review/www.point101.com"
                             class="font-bold text-blue-700 hover:text-blue-500 transition-colors duration-300"
                             target="_blank">Point101</a
-                        >, London's top printing service, known for their
-                        exceptional quality and customer satisfaction. They use
-                        <span class="">Giclée printing</span>, a premium
-                        technique that sprays ink onto the paper to achieve
-                        vivid, lifelike colors and incredible detail. This means
-                        your print will capture every nuance of the original
-                        artwork, bringing its bold, vibrant energy into your
-                        home.
-                    </p>
+                            >, London's top printing service, known for their
+                            exceptional quality and customer satisfaction. They use
+                            <span class="">Giclée printing</span>, a premium
+                            technique that sprays ink onto the paper to achieve
+                            vivid, lifelike colors and incredible detail.
+                        </p>
+                        <p>
+                            This means
+                            your print will capture every nuance of the original
+                            artwork, bringing its bold, vibrant energy into your
+                            home.
+                        </p>
+                    </div>
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
                         Premium paper quality
                     </h2>
-                    <p>
-                        The print is on <span class=""
+                    <div class="space-y-2">
+                        <p>
+                            The print is on <span class=""
                             >Hahnemühle Photo Rag 308gsm</span
-                        >, a museum-grade, acid-free cotton paper known for its
-                        rich texture and depth. Its smooth, soft surface brings
-                        out details and tones, giving the print a
-                        three-dimensional feel. The paper's exceptional ink
-                        absorption preserves colors with remarkable depth and
-                        precision, ensuring they stay vibrant for over 100
-                        years.
-                    </p>
+                            >, a museum-grade, acid-free cotton paper known for its
+                            rich texture and depth.
+                        </p>
+                        <p>
+                            Its smooth, soft surface brings
+                            out details and tones, giving the print a
+                            three-dimensional feel. The paper's exceptional ink
+                            absorption preserves colors with remarkable depth and
+                            precision, ensuring they stay vibrant for over 100
+                            years.
+                        </p>
+                    </div>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold mb-2">Framing advice</h2>
-                    <p class="mb-1">
-                        I recommend a <span class=""
+                    <h2 class="text-2xl font-bold mb-2">Framing</h2>
+                    <div class="space-y-2">
+                        <p>
+                            I recommend a <span class=""
                             >simple white frame (50x70cm)</span
-                        > with a frame width no wider than 20mm. This clean style
-                        lets the artwork shine, with the print fitting directly into
-                        the frame — no extra mounting needed. If you're buying this
-                        artwork alone (not as part of the series), you can add a
-                        5cm mount and use a larger frame (60x80cm) for a bold and
-                        elegant look.
-                    </p>
+                            > with a frame width no wider than 20mm. This clean style
+                            lets the artwork shine, with the print fitting directly into
+                            the frame — no extra mounting needed.
+                        </p>
+                        <p>
+                            If you're buying this
+                            artwork alone (not as part of the series), you can add a
+                            5cm mount and use a larger frame (60x80cm) for a bold and
+                            elegant look.
+                        </p>
+                    </div>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold mb-2">Free shipping</h2>
-                    <p>
-                        I offer free shipping with top-quality packaging to
-                        ensure your artwork arrives in perfect condition. The
-                        print will be delivered to your doorstep in about a week
-                        within the UK, and 2-3 weeks if outside the UK.
-                    </p>
+                    <h2 class="text-2xl font-bold mb-2">Shipping</h2>
+                    <div class="space-y-2">
+                        <p>
+                            I offer free shipping with top-quality packaging to
+                            ensure your artwork arrives in perfect condition.
+                            The print will be delivered to your doorstep in about 1-2 weeks
+                            within the UK, and 2-3 weeks if outside the UK.
+                        </p>
+                        <p>
+                            For international orders, customs duties and taxes are not
+                            collected at checkout and may be payable by the customer upon delivery.
+                        </p>
+                    </div>
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold mb-2">

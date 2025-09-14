@@ -21,12 +21,12 @@ const {
 <button
     id={id}
     type="submit"
-    class={`flex items-center justify-center w-full rounded-lg px-4 py-3 ${variant === "primary" ? "bg-black text-white md:hover:bg-gray-800" : "bg-white text-black md:hover:bg-gray-100 border border-black"} transition-colors duration-300` +
+    class={`flex items-center justify-center w-full rounded-lg px-4 py-3 ${variant === "primary" ? "bg-gray-800 text-white md:hover:bg-gray-800" : "bg-white text-gray-800 md:hover:bg-gray-100 border border-gray-800"} transition-colors duration-300` +
         ` ${additionalClass}`}
 >
     <svg
         id="loading-spinner"
-        class={`mr-3 h-5 w-5 animate-spin ${variant === "primary" ? "text-white" : "text-black"} hidden`}
+        class={`mr-3 h-5 w-5 animate-spin ${variant === "primary" ? "text-white" : "text-gray-800"} hidden`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -36,10 +36,10 @@ const {
             cx="12"
             cy="12"
             r="10"
-            stroke={variant === "primary" ? "white" : "black"}
+            stroke={variant === "primary" ? "white" : "#1F2937"}
             stroke-width="4"></circle>
         <path
-            fill={variant === "primary" ? "white" : "black"}
+            fill={variant === "primary" ? "white" : "#1F2937"}
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         ></path>
     </svg>

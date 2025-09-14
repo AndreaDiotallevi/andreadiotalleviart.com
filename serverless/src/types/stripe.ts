@@ -4,6 +4,7 @@ import { z } from "zod"
 export type ProductMetadata = {
     category: string
     displayName: string
+    displaySubtitle: string
     displayOrder: string
     orientation: string
     size: string
@@ -22,6 +23,7 @@ const CurrencySchema = z.enum(["gbp", "eur", "usd"])
 const metadataSchema = z.object({
     category: z.string(),
     displayName: z.string(),
+    displaySubtitle: z.string(),
     displayOrder: z.string(),
     orientation: z.string(),
     size: z.string(),

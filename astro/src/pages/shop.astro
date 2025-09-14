@@ -52,17 +52,17 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
     ]}
     newsletter={false}
 >
-    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8">
+    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8 text-gray-800">
         <div class="text-center mb-4 md:mb-6">
             <h1 class="text-2xl md:text-5xl font-bold mb-2 md:mb-5">Shop</h1>
-            <h4 class="max-w-[400px] mx-auto text-sm md:text-base">
+            <p class="max-w-[400px] mx-auto text-sm md:text-base">
                 Museum-quality prints on premium cotton paper delivered with
                 free shipping
-            </h4>
+            </p>
         </div>
 
         <div
-            class="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-8 md:gap-y-16"
+            class="grid grid-cols-2 gap-x-2 gap-y-8"
         >
             {
                 products
@@ -74,31 +74,38 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                     .map((product, index) => (
                         <a
                             href={`/shop/${product.metadata.category}/${product.metadata.slug}`}
-                            class="flex flex-col no-underline text-black md:hover:opacity-70 transition-opacity duration-300"
+                            class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                         >
-                            <Image
-                                alt={product.name}
-                                src={product.images[0]}
-                                width={1429}
-                                height={2000}
-                                sizes="(max-width: 1280px) 200vw, 100vw"
-                                breakpoints={imageBreakpoints({
-                                    maxWidth: 735,
-                                    assetWidth: 1414,
-                                })}
-                                loading={index < 4 ? "eager" : "lazy"}
-                                fetchpriority={index < 4 ? "high" : "low"}
-                            />
-                            <h2 class="font-bold md:text-2xl mt-2 md:mt-4">
+                            <div class="bg-gray-100 p-6 sm:p-10 md:p-15 lg:p-20 flex items-center justify-center">
+                                <Image
+                                    alt={product.name}
+                                    src={product.images[0]}
+                                    width={1429}
+                                    height={2000}
+                                    sizes="(max-width: 1280px) 200vw, 100vw"
+                                    breakpoints={imageBreakpoints({
+                                        maxWidth: 735,
+                                        assetWidth: 1414,
+                                    })}
+                                    loading={index < 4 ? "eager" : "lazy"}
+                                    fetchpriority={index < 4 ? "high" : "low"}
+                                    class="shadow-md max-h-[500px] object-contain"
+                                />
+                            </div>
+                            <p class="font-bold md:text-2xl mt-2 md:mt-4">
                                 {product.metadata.displayName}
-                            </h2>
+                            </p>
                            
-                            <p class="font-bold md:mt-1">
+                            <p class="text-sm md:text-base md:mt-1">
                                 {formatCurrency({
                                     value: product.default_price
                                         .currency_options[currency].unit_amount,
                                     currency,
                                 })}
+                            </p>
+
+                             <p class="text-sm md:text-base md:mt-1 italic">
+                                {product.metadata.size}
                             </p>
                         </a>
                     ))

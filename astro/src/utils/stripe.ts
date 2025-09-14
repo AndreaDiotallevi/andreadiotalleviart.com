@@ -4,6 +4,7 @@ import { z } from "zod"
 export type ProductMetadata = {
     category: string
     displayName: string
+    displaySubtitle: string
     displayOrder: string
     orientation: string
     size: string
@@ -22,6 +23,7 @@ const CurrencySchema = z.enum(["gbp", "eur", "usd"])
 const metadataSchema = z.object({
     category: z.string(),
     displayName: z.string(),
+    displaySubtitle: z.string(),
     displayOrder: z.string(),
     orientation: z.string(),
     size: z.string(),
@@ -37,10 +39,10 @@ const currencyOptionsSchema = z
         z.object({
             unit_amount: z.number(),
             unit_amount_decimal: z.string(),
-        })
+        }),
     )
     .refine((obj): obj is Required<typeof obj> =>
-        CurrencySchema.options.every(key => obj[key] != null)
+        CurrencySchema.options.every(key => obj[key] != null),
     )
 
 const stripePriceSchema = z.object({

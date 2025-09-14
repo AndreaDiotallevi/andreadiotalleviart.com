@@ -32,7 +32,7 @@ export async function GET() {
                     url => `
                     <url>
                         <loc>${url}</loc>
-                    </url>`
+                    </url>`,
                 )
                 .join("")}
         </urlset>`
