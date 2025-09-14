@@ -339,6 +339,9 @@ Resources:
                 TemplateName: OrderShippedEmailTemplate
                 HtmlPart: !Sub |
                     <html>
+                        <head>
+                            <meta name="format-detection" content="email=no" />
+                        </head>
                         <body>
                             <style>
                                 .address-block a { color: inherit !important; text-decoration: none !important; }
@@ -357,12 +360,22 @@ Resources:
                                 {{/if}}
                             </div>
                             <h3>Items</h3>
-                            <div>
-                                {{productDisplayName}} {{productDescription}}<br><br>
-                                <img src="{{productImageSource}}" alt="{{productDisplayName}}" style="max-width: 500px; width: 100%;">
-                            </div>
+                            <table>
+                                <tbody>
+                                    {{#each item}}
+                                        <tr style="margin-bottom: 8px;">
+                                            <td width="20%">
+                                                <img src="{{imageSource}}" alt="{{displayName}}" style="width: 100%; height: auto;">
+                                            </td>
+                                            <td width="80%" style="vertical-align: top; padding-left: 12px;">
+                                                {{quantity}} x {{displayName}} - {{description}}
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
                             <h3>Delivery address</h3>
-                              <div class="address-block">
+                            <span class="address-block">
                                 {{name}}<br>
                                 {{addressLine1}}<br>
                                 {{#if addressLine2}}
@@ -375,7 +388,7 @@ Resources:
                                     {{town}}<br>
                                 {{/if}}
                                 {{country}}<br>
-                            </div>
+                            </span>
                             <p>For any questions regarding your order, you can reply to this email.</p>
                             <h3>Thank you</h3>
                             <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
@@ -624,6 +637,38 @@ Resources:
                 Target: "es2020"
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.ts
+
+    SendOrderShippedEmailFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
+            Handler: src/lambdas/api_sendOrderShippedEmail.handler
+            Environment:
+                Variables:
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
+            Policies:
+                - Statement:
+                      - Sid: sendOrderShippedEmail
+                        Effect: Allow
+                        Action:
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
+                        Resource: "*"
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_sendOrderShippedEmail.ts
 
     SendContactPageEmailFunction:
         Type: AWS::Serverless::Function
