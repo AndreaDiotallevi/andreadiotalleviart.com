@@ -275,6 +275,9 @@ Resources:
                 TemplateName: OrderConfirmationEmailTemplate
                 HtmlPart: !Sub |
                     <html>
+                        <head>
+                            <meta name="format-detection" content="email=no" />
+                        </head>
                         <body>
                             <style>
                                 .address-block a { color: inherit !important; text-decoration: none !important; }
@@ -298,7 +301,7 @@ Resources:
                                 </tbody>
                             </table>
                             <h3>Delivery address</h3>
-                            <div class="address-block">
+                            <span class="address-block">
                                 {{name}}<br>
                                 {{addressLine1}}<br>
                                 {{#if addressLine2}}
@@ -311,7 +314,7 @@ Resources:
                                     {{town}}<br>
                                 {{/if}}
                                 {{country}}<br>
-                            </div>
+                            </span>
                             <h3>Payment summary</h3>
                             <div>
                                 Subtotal: {{amountSubtotal}}<br>
