@@ -8,12 +8,15 @@
     "@aws-sdk/s3-request-presigner": "^3.515.0",
     "@netlify/functions": "^2.8.2",
     "cloudinary": "^2.5.0",
+    "crypto": "^1.0.1",
     "esbuild": "^0.19.11",
+    "ksuid": "^3.0.0",
     "sharp": "^0.33.3",
     "stripe": "^16.10.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.131",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "zod": "^3.23.8"
