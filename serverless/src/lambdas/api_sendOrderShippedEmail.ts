@@ -73,6 +73,10 @@ export const handler = async (event: {
 
     const charge = invoice.charge as Stripe.Charge | null
 
+    if (!session.metadata?.orderNumber) {
+        throw new Error("No order number")
+    }
+
     await sendEmail({
         FromEmailAddress: emailSource,
         Destination: {
@@ -114,6 +118,7 @@ export const handler = async (event: {
                             quantity: item.quantity,
                         }
                     }),
+                    orderNumber: session.metadata.orderNumber,
                     carrierName,
                     carrierService,
                     trackingNumber,

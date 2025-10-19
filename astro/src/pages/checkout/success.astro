@@ -36,9 +36,7 @@ const success = !!(session && currency && shippingDetails)
                         </h1>
                         <div class="space-y-6">
                             <div class="space-y-2">
-                                <p>
-                                    Thanks for your order!
-                                </p>
+                                <p>Order number: <span class="font-bold">{session.metadata?.orderNumber}</span>.</p>
                                 <p>
                                     You will receive a confirmation email with
                                     the details of your order.
@@ -133,11 +131,11 @@ const success = !!(session && currency && shippingDetails)
                                         currency,
                                     })}
                                     <br />
-                                    Total:{" "}
+                                    <span class="font-bold">Total:{" "}
                                     {formatCurrency({
                                         value: session.amount_total!,
                                         currency,
-                                    })}
+                                    })}</span>
                                 </p>
                             </div>
                         </div>

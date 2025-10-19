@@ -54,6 +54,10 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
             const charge = invoice.charge as Stripe.Charge | null
 
+            if (!session.metadata?.orderNumber) {
+                throw new Error("No order number")
+            }
+
             await sendEmail({
                 FromEmailAddress: emailSource,
                 Destination: {
@@ -86,7 +90,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                             }),
                             receiptPdf: charge?.receipt_url?.replace(
                                 "?",
-                                "/pdf?"
+                                "/pdf?",
                             ),
                             item: items.map(item => {
                                 const product = item.price
@@ -99,6 +103,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                                     quantity: item.quantity,
                                 }
                             }),
+                            orderNumber: session.metadata.orderNumber,
                         }),
                     },
                 },

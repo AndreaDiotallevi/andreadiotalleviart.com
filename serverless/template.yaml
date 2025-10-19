@@ -282,6 +282,7 @@ Resources:
                             <style>
                                 .address-block a { color: inherit !important; text-decoration: none !important; }
                             </style>
+                            <p>Order number: {{orderNumber}}.</p>
                             <h3>Dear {{name}},</h3>
                             <p>Thanks for your order!</p>
                             <p>As soon as the package is on its way, you will receive a shipping confirmation email, with details on how to track your delivery.</p>
@@ -330,7 +331,7 @@ Resources:
                             <p>Andrea</p>
                         </body>
                     </html>
-                SubjectPart: "Your order"
+                SubjectPart: "Your order - {{orderNumber}}"
 
     OrderShippedEmailTemplate:
         Type: AWS::SES::Template
@@ -346,6 +347,7 @@ Resources:
                             <style>
                                 .address-block a { color: inherit !important; text-decoration: none !important; }
                             </style>
+                            <p>Order number: {{orderNumber}}.</p>
                             <h3>Dear {{name}},</h3>
                             <p>Your order has been shipped and is now on its way!</p>
                             <h3>Shipment details</h3>
@@ -391,10 +393,10 @@ Resources:
                             </span>
                             <p>For any questions regarding your order, you can reply to this email.</p>
                             <h3>Thank you</h3>
-                            <a href="https://andreadiotalleviart.com/shop">www.andreadiotalleviart.com</a>
+                            <p>Andrea</p>
                         </body>
                     </html>
-                SubjectPart: "Your order has been shipped"
+                SubjectPart: "Your order {{orderNumber}} has been shipped"
 
     ContactPageEmailTemplate:
         Type: AWS::SES::Template
