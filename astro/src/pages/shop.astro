@@ -7,6 +7,7 @@ import { imageBreakpoints } from "@utils/breakpoints"
 import { getStripeProducts } from "@utils/serverless"
 import { combinedCountries, getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
+import { sizeToDescription } from "@utils/sizes"
 
 const products = await getStripeProducts()
 
@@ -36,9 +37,10 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 
 <BaseLayout
     title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
-    description="Museum quality fine art prints on premium cotton paper delivered with carbon-neutral free shipping."
+    description="Generative giclée fine art prints on Hahnemühle Photo Rag 308gsm. Museum-quality, archival inks. Free carbon‑neutral shipping."
     image={products[0] ? products[0].images[0] : undefined}
     tags={[
+        "Generative art prints",
         "Generative art",
         "p5.js",
         "Processing",
@@ -46,7 +48,10 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
         "Prints",
         "Fine art",
         "Giclee",
+        "Abstract art",
+        "Geometric art",
         "Hahnemühle photo rag",
+        "Archival inks",
         "Carbon neutral",
         "Free shipping",
     ]}
@@ -96,7 +101,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 {product.metadata.displayName}
                             </p>
                            
-                            <p class="text-sm md:text-base md:mt-1">
+                            <p class="font-semibold text-sm md:text-base md:mt-1">
                                 {formatCurrency({
                                     value: product.default_price
                                         .currency_options[currency].unit_amount,
@@ -104,8 +109,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 })}
                             </p>
 
-                             <p class="text-sm md:text-base md:mt-1 italic">
-                                {product.metadata.size}
+                             <p class="text-sm md:text-base md:mt-1 text-gray-600">
+                                {sizeToDescription[product.metadata.size]}
                             </p>
                         </a>
                     ))
