@@ -7,6 +7,7 @@ import { imageBreakpoints } from "@utils/breakpoints"
 import { getStripeProducts } from "@utils/serverless"
 import { combinedCountries, getLocalCurrency } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
+import { sizeToDescription } from "@utils/sizes"
 
 const products = await getStripeProducts()
 
@@ -96,7 +97,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 {product.metadata.displayName}
                             </p>
                            
-                            <p class="text-sm md:text-base md:mt-1">
+                            <p class="font-semibold text-sm md:text-base md:mt-1">
                                 {formatCurrency({
                                     value: product.default_price
                                         .currency_options[currency].unit_amount,
@@ -104,8 +105,8 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                                 })}
                             </p>
 
-                             <p class="text-sm md:text-base md:mt-1 italic">
-                                {product.metadata.size}
+                             <p class="text-sm md:text-base md:mt-1 text-gray-600">
+                                {sizeToDescription[product.metadata.size]}
                             </p>
                         </a>
                     ))

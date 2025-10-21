@@ -56,7 +56,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                 <th class="text-right md:min-w-36">Subtotal</th>
                             </tr>
                         </thead>
-                        <tbody class="md:text-xl">
+                        <tbody>
                             {session.line_items?.data
                                 .sort((a, b) =>
                                     (
@@ -72,7 +72,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
                                     return (
                                         <tr>
-                                            <td class="py-2 md:py-4 pr-1 md:pr-8 flex items-center">
+                                            <td class="py-2 md:py-4 pr-1 md:pr-8 flex">
                                                 <a
                                                     href={`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                                                     class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
@@ -100,18 +100,20 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                         fetchpriority="high"
                                                     />
                                                 </a>
-                                                <span class="hidden md:block pl-4">
-                                                    {
-                                                        price.product.metadata
-                                                            .displayName
-                                                    }
-                                                    <span class="hidden md:block text-base pt-2 text-sm">
+                                                <div class="hidden md:block pl-4">
+                                                    <span class="font-semibold">
+                                                        {
+                                                            price.product.metadata
+                                                                .displayName
+                                                        }
+                                                    </span>
+                                                    <span class="hidden md:block pt-1 text-sm">
                                                         {
                                                             price.product
                                                                 .description
                                                         }
                                                     </span>
-                                                </span>
+                                                </div>
                                             </td>
                                             <td class="py-2 md:py-4 px-0 md:px-8 hidden md:table-cell">
                                                 {formatCurrency({
