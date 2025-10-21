@@ -44,21 +44,27 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
 
 <BaseLayout
     title={`${product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
-    description={product.description}
+    description={`${product.metadata.displayName} — generative giclée fine art print on Hahnemühle Photo Rag 308gsm. Museum-quality archival inks. ${sizeToDescription[product.metadata.size]}. Free carbon‑neutral shipping.`}
     image={product.images[0]}
     type="product"
     amount={(product.default_price.unit_amount / 100).toFixed(2)}
     currency="gbp"
     tags={[
         product.metadata.displayName,
+        product.metadata.category,
         "Generative art",
+        "Generative art prints",
         "p5.js",
         "Processing",
         "Procedural",
         "Prints",
         "Fine art",
         "Giclee",
-        "Hahnemühle photo rag",
+        sizeToDescription[product.metadata.size],
+        "Abstract art",
+        "Geometric art",
+        "Hahnemühle Photo Rag 308gsm",
+        "Archival inks",
         "Carbon neutral",
         "Free shipping",
     ]}
