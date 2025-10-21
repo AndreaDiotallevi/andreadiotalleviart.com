@@ -338,7 +338,7 @@ const products: ProductInput[] = [
             // transformImage("nebulae-3_closeup_or5o0e")
         ],
         currencyOptions: {
-            gbp: 8500,
+            gbp: 100,
             eur: 9900,
             usd: 10900,
         },
