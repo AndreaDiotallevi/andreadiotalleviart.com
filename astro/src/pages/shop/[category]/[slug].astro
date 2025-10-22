@@ -10,6 +10,7 @@ import { getLocalCurrency, combinedCountries } from "@utils/currency"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { getStripeProducts } from "@utils/serverless"
+import { productsData } from "@utils/productsData"
 
 const { slug } = Astro.params
 const products = await getStripeProducts()
@@ -98,20 +99,9 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                 <div>
                     <h2 class="text-2xl font-bold mb-2">About the artwork</h2>
                     <div class="space-y-2">
-                        <p>
-                            This generative artwork is built from overlapping circles that grow in size,
-                            layered to create depth and movement. A gently warming background hue ties
-                            the series together as it progresses.
-                        </p>
-                        <p>
-                            The transparency of the circles creates nuanced colour blends and a sense of motion,
-                            preserving fine detail that feels alive from any viewing distance.
-                        </p>
-                        <p>
-                            Originally created for a dear friend, Alessandro, who wanted bold, saturated colours to bring life and
-                            energy into a darker living room — ideal if you're looking to brighten your space with
-                            vibrant, uplifting tones.
-                        </p>
+                        {(productsData[product.metadata.sku]?.about ?? [product.description]).map(p => (
+                            <p>{p}</p>
+                        ))}
                     </div>
                 </div>
                 <div>
@@ -176,21 +166,16 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                         </p>
                     </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-bold mb-2">Framing</h2>
-                    <div class="space-y-2">
-                        <p>
-                            A <span class="">simple white frame (50x70cm)</span>
-                            with a frame width no wider than 20mm is recommended. This clean style
-                            lets the artwork shine, with the print fitting directly into the frame —
-                            no extra mounting needed.
-                        </p>
-                        <p>
-                            If you're buying this artwork alone (not as part of the series), you can add a
-                            5cm mount and use a larger frame (60x80cm) for a bold and elegant look.
-                        </p>
+                {productsData[product.metadata.sku]?.framing?.length ? (
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2">Framing</h2>
+                        <div class="space-y-2">
+                            {productsData[product.metadata.sku].framing.map(p => (
+                                <p>{p}</p>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                ) : <></>}
                 <div>
                     <h2 class="text-2xl font-bold mb-2">Shipping</h2>
                     <div class="space-y-2">
