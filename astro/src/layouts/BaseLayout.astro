@@ -31,6 +31,7 @@ interface Props {
     darkTheme?: boolean
     hideFooter?: boolean
     newsletter?: boolean
+    noIndex?: boolean
 }
 
 const {
@@ -44,6 +45,7 @@ const {
     darkTheme = false,
     hideFooter = false,
     newsletter = false,
+    noIndex = false,
 } = Astro.props
 ---
 
@@ -60,6 +62,8 @@ const {
             href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&display=swap"
         /> -->
         <title>{title}</title>
+
+        {noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
 
         <meta name="keywords" content={tags.join(", ")} />
         {image ? <meta name="image" content={image} /> : null}
