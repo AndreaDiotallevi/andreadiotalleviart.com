@@ -6,7 +6,7 @@ Globals:
     Function:
         CodeUri: ./
         Timeout: 100
-        Runtime: nodejs20.x
+        Runtime: nodejs22.x
         MemorySize: 1024
         Tracing: Active
         Architectures:
