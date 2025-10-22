@@ -46,12 +46,8 @@ Astro.response.headers.set(
                         I make art with code
                     </h1>
                     <BackToLink
-                        href={import.meta.env.CONTEXT === "production"
-                            ? "/portfolio"
-                            : "/shop"}
-                        text={import.meta.env.CONTEXT === "production"
-                            ? "Explore"
-                            : "Explore prints"}
+                        href="/shop"
+                        text="Explore prints"
                         towardsRight={true}
                         darkMode={true}
                     />

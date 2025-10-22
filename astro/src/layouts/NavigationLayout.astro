@@ -26,18 +26,14 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
                 <a href="/">andreadiotalleviart</a>
             </div>
             <div class="flex items-center">
-                {
-                    import.meta.env.CONTEXT === "production" ? null : (
-                        <a
-                            id="cart-link-mobile"
-                            href="/cart"
-                            class="md:hidden pr-4"
-                            aria-label="See shopping cart"
-                        >
-                            <ShoppingCart darkTheme={darkTheme} />
-                        </a>
-                    )
-                }
+                    <a
+                        id="cart-link-mobile"
+                        href="/cart"
+                        class="md:hidden pr-4"
+                        aria-label="See shopping cart"
+                    >
+                        <ShoppingCart darkTheme={darkTheme} />
+                    </a>
                 <!-- Hamburger icon -->
                 <button
                     id="menu-toggle"
@@ -61,16 +57,10 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 
             <!-- Links for larger screens -->
             <nav class="hidden md:flex space-x-7">
-                {
-                    import.meta.env.CONTEXT === "production" ? null : (
-                        <a
-                            href="/shop"
-                            class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
-                        >
-                            shop
-                        </a>
-                    )
-                }
+                <a
+                    href="/shop"
+                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    >shop</a>
                 <a
                     href="/about"
                     class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
@@ -86,17 +76,13 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
                     class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >portfolio</a
                 >
-                {
-                    import.meta.env.CONTEXT === "production" ? null : (
-                        <a
-                            id="cart-link-desktop"
-                            href="/cart"
-                            aria-label="See shopping cart"
-                        >
-                            <ShoppingCart darkTheme={darkTheme} />
-                        </a>
-                    )
-                }
+                <a
+                    id="cart-link-desktop"
+                    href="/cart"
+                    aria-label="See shopping cart"
+                >
+                    <ShoppingCart darkTheme={darkTheme} />
+                </a>
             </nav>
         </div>
     </header>
@@ -111,13 +97,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             class="absolute top-[14px] right-[16px] text-white text-5xl h-11 w-11"
             >&times;</button
         >
-        {
-            import.meta.env.CONTEXT === "production" ? null : (
-                <a href="/shop" class="mb-6">
-                    Shop
-                </a>
-            )
-        }
+        <a href="/shop" class="mb-6">Shop</a>
         <a href="/about" class="mb-6">About</a>
         <a href="/contact" class="mb-6">Contact</a>
         <a href="/portfolio" class="mb-6">Portfolio</a>
