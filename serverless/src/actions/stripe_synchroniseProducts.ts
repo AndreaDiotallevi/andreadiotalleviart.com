@@ -260,18 +260,18 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebulae 1 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula 1 - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebulae 1",
+            displayName: "Nebula 1",
             displaySubtitle: "First of a series of 3",
             displayOrder: "1",
             orientation: "portrait",
             size: "50x70cm",
-            slug: "nebulae-1",
-            sku: "print_nebulae-1_50x70",
+            slug: "nebula-1",
+            sku: "print_nebula-1_50x70",
         },
         images: [
             // transformImage("nebulae-mockup-paper-1_gvzthk"),
@@ -288,18 +288,18 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebulae 2 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula 2 - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebulae 2",
+            displayName: "Nebula 2",
             displaySubtitle: "Second of a series of 3",
             displayOrder: "2",
             orientation: "portrait",
             size: "50x70cm",
-            slug: "nebulae-2",
-            sku: "print_nebulae-2_50x70",
+            slug: "nebula-2",
+            sku: "print_nebula-2_50x70",
         },
         images: [
             // transformImage("nebulae-mockup-paper-2_mynxf0"),
@@ -316,18 +316,18 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebulae 3 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula 3 - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebulae 3",
+            displayName: "Nebula 3",
             displaySubtitle: "Third of a series of 3",
             displayOrder: "3",
             orientation: "portrait",
             size: "50x70cm",
-            slug: "nebulae-3",
-            sku: "print_nebulae-3_50x70",
+            slug: "nebula-3",
+            sku: "print_nebula-3_50x70",
         },
         images: [
             // transformImage("nebulae-mockup-paper-3_kq6yok"),
