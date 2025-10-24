@@ -3,7 +3,7 @@ export type ProductExtraData = {
     framing: string[]
 }
 
-const nebulaeShared: ProductExtraData = {
+const nebulaShared: ProductExtraData = {
     about: [
         "This generative artwork is built from overlapping circles that grow in size, layered to create depth and movement. A gently warming background hue ties the series together as it progresses.",
         "The transparency of the circles creates nuanced colour blends and a sense of motion, preserving fine detail that feels alive from any viewing distance.",
@@ -27,9 +27,9 @@ export const productsData: Record<string, ProductExtraData> = {
         //     "If you prefer a mounted look, use a 40 x 50 cm frame with a 3-5 cm mount opening cut to A3 — this adds breathing room while keeping the piece bold and elegant.",
         // ],
     },
-    "print_nebulae-1_50x70": nebulaeShared,
-    "print_nebulae-2_50x70": nebulaeShared,
-    "print_nebulae-3_50x70": nebulaeShared,
+    "print_nebula-1_50x70": nebulaShared,
+    "print_nebula-2_50x70": nebulaShared,
+    "print_nebula-3_50x70": nebulaShared,
 }
 
 export default productsData
