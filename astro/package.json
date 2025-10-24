@@ -13,6 +13,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/netlify": "^6.5.10",
     "@astrojs/tailwind": "^6.0.2",
+    "@sentry/astro": "^10.21.0",
     "@stripe/stripe-js": "^4.4.0",
     "@unpic/astro": "^0.0.47",
     "astro": "^5.13.7",

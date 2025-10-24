@@ -17,6 +17,7 @@ interface ImportMetaEnv {
     readonly PUBLIC_STRIPE_PUBLISHABLE_KEY: string
     readonly PUBLIC_API_URL: string
     readonly PUBLIC_API_KEY: string
+    readonly PUBLIC_ENV: "sandbox" | "staging" | "production"
     readonly STRIPE_SECRET_KEY: string
 }
 
