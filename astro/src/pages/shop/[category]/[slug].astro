@@ -76,8 +76,16 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
         imageUrls: product.images,
         sku: product.metadata.sku,
         material: "Giclée print on archival cotton rag paper",
-        widthCm: product.metadata.size === "A3" ? 29.7 : product.metadata.size === "A2" ? 42 : product.metadata.size === "A1" ? 59.4 : product.metadata.size === "50x70cm" ? 50 : undefined,
-        heightCm: product.metadata.size === "A3" ? 42 : product.metadata.size === "A2" ? 59.4 : product.metadata.size === "A1" ? 84.1 : product.metadata.size === "50x70cm" ? 70 : undefined,
+        offers: [
+            {
+                price: product.default_price.currency_options[currency].unit_amount / 100,
+                priceCurrency: currency.toUpperCase(),
+                sku: product.metadata.sku,
+                size: product.metadata.size,
+                widthCm: product.metadata.size === "A3" ? 29.7 : product.metadata.size === "A2" ? 42 : product.metadata.size === "A1" ? 59.4 : product.metadata.size === "50x70cm" ? 50 : undefined,
+                heightCm: product.metadata.size === "A3" ? 42 : product.metadata.size === "A2" ? 59.4 : product.metadata.size === "A1" ? 84.1 : product.metadata.size === "50x70cm" ? 70 : undefined,
+            },
+        ],
     }}
 >
     <div

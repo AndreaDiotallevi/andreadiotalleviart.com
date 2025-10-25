@@ -3,6 +3,7 @@ import { ClientRouter } from "astro:transitions"
 
 import type { Currency } from "@utils/stripe"
 import { generateStructuredData } from "@utils/structuredData"
+import type { OfferInput } from "@utils/structuredData"
 import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
@@ -42,6 +43,7 @@ interface Props {
         material?: string
         widthCm?: number
         heightCm?: number
+        offers?: OfferInput[]
     }
 }
 
@@ -135,7 +137,25 @@ const {
                         pageUrl: cleanedUrl,
                         pageTitle: title,
                         includeProduct: type === "product" && Boolean(productJsonLd),
-                        product: productJsonLd,
+                        product:
+                            type === "product" && productJsonLd
+                                ? {
+                                      ...productJsonLd,
+                                      offers:
+                                          productJsonLd?.offers && productJsonLd.offers.length
+                                              ? productJsonLd.offers.map(o => ({ ...o, url: o.url || cleanedUrl }))
+                                              : amount
+                                              ? [
+                                                    {
+                                                        url: cleanedUrl,
+                                                        price: amount,
+                                                        priceCurrency: currency.toUpperCase(),
+                                                        sku: productJsonLd.sku,
+                                                    },
+                                                ]
+                                              : undefined,
+                                  }
+                                : undefined,
                     })
                 )}
             ></script>

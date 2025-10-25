@@ -1,3 +1,14 @@
+export interface OfferInput {
+    url?: string
+    price: number | string
+    priceCurrency: string
+    availability?: string
+    sku?: string
+    size?: string
+    widthCm?: number
+    heightCm?: number
+}
+
 export interface ProductJsonLdInput {
     name: string
     description: string
@@ -6,6 +17,7 @@ export interface ProductJsonLdInput {
     material?: string
     widthCm?: number
     heightCm?: number
+    offers?: OfferInput[]
 }
 
 export interface GenerateStructuredDataOptions {
@@ -72,12 +84,9 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
                 brand: { "@type": "Brand", name: "Andrea Diotallevi Art" },
                 additionalType: "https://schema.org/VisualArtwork",
                 material: product.material,
-                width: product.widthCm
-                    ? { "@type": "QuantitativeValue", value: product.widthCm, unitText: "cm" }
-                    : undefined,
-                height: product.heightCm
-                    ? { "@type": "QuantitativeValue", value: product.heightCm, unitText: "cm" }
-                    : undefined,
+                ...(product.offers && product.offers.length
+                    ? buildOffers(product.offers)
+                    : {}),
             }
         )
     }
@@ -85,5 +94,81 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
     return {
         "@context": "https://schema.org",
         "@graph": graph,
+    }
+}
+
+function buildOffers(offers: OfferInput[]) {
+    if (!offers.length) return {}
+
+    if (offers.length === 1) {
+        const [o] = offers
+        return {
+            offers: toOffer(o),
+        }
+    }
+
+    const numericPrices = offers
+        .map(o => (typeof o.price === "string" ? parseFloat(o.price) : o.price))
+        .filter(p => Number.isFinite(p)) as number[]
+
+    const lowPrice = Math.min(...numericPrices)
+    const highPrice = Math.max(...numericPrices)
+    const priceCurrency = offers[0]?.priceCurrency
+
+    return {
+        offers: {
+            "@type": "AggregateOffer",
+            offerCount: offers.length,
+            lowPrice,
+            highPrice,
+            priceCurrency,
+            offers: offers.map(toOffer),
+        },
+    }
+}
+
+function toOffer(o: OfferInput) {
+    return {
+        "@type": "Offer",
+        url: o.url,
+        price: typeof o.price === "string" ? o.price : o.price.toFixed(2),
+        priceCurrency: o.priceCurrency,
+        availability: o.availability || "https://schema.org/InStock",
+        sku: o.sku,
+        itemOffered:
+            o.size || o.widthCm || o.heightCm
+                ? {
+                      "@type": "Product",
+                      ...(o.size
+                          ? {
+                                additionalProperty: [
+                                    {
+                                        "@type": "PropertyValue",
+                                        name: "Size",
+                                        value: o.size,
+                                    },
+                                ],
+                            }
+                          : {}),
+                      ...(o.widthCm
+                          ? {
+                                width: {
+                                    "@type": "QuantitativeValue",
+                                    value: o.widthCm,
+                                    unitText: "cm",
+                                },
+                            }
+                          : {}),
+                      ...(o.heightCm
+                          ? {
+                                height: {
+                                    "@type": "QuantitativeValue",
+                                    value: o.heightCm,
+                                    unitText: "cm",
+                                },
+                            }
+                          : {}),
+                  }
+                : undefined,
     }
 }
