@@ -86,6 +86,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
                 heightCm: product.metadata.size === "A3" ? 42 : product.metadata.size === "A2" ? 59.4 : product.metadata.size === "A1" ? 84.1 : product.metadata.size === "50x70cm" ? 70 : undefined,
                 shippingDetails: {
                     shippingRate: { value: 0, currency: currency.toUpperCase() },
+                    handlingTimeDays: { min: 1, max: 3 },
                     deliveryTimeDays: { min: 7, max: 21 },
                     shippingDestinationCountry: "GB",
                 },

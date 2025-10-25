@@ -10,6 +10,7 @@ export interface OfferInput {
     itemOfferedName?: string
     shippingDetails?: {
         shippingRate?: { value: number | string; currency: string }
+        handlingTimeDays?: { min?: number; max?: number }
         deliveryTimeDays?: { min?: number; max?: number }
         shippingDestinationCountry?: string
     }
@@ -157,20 +158,38 @@ function toOffer(o: OfferInput) {
                                 },
                             }
                           : {}),
-                      ...(o.shippingDetails.deliveryTimeDays
+                      ...((o.shippingDetails.deliveryTimeDays || o.shippingDetails.handlingTimeDays)
                           ? {
                                 deliveryTime: {
                                     "@type": "ShippingDeliveryTime",
-                                    transitTime: {
-                                        "@type": "QuantitativeValue",
-                                        ...(o.shippingDetails.deliveryTimeDays.min !== undefined
-                                            ? { minValue: o.shippingDetails.deliveryTimeDays.min }
-                                            : {}),
-                                        ...(o.shippingDetails.deliveryTimeDays.max !== undefined
-                                            ? { maxValue: o.shippingDetails.deliveryTimeDays.max }
-                                            : {}),
-                                        unitCode: "d",
-                                    },
+                                    ...(o.shippingDetails.handlingTimeDays
+                                        ? {
+                                              handlingTime: {
+                                                  "@type": "QuantitativeValue",
+                                                  ...(o.shippingDetails.handlingTimeDays.min !== undefined
+                                                      ? { minValue: o.shippingDetails.handlingTimeDays.min }
+                                                      : {}),
+                                                  ...(o.shippingDetails.handlingTimeDays.max !== undefined
+                                                      ? { maxValue: o.shippingDetails.handlingTimeDays.max }
+                                                      : {}),
+                                                  unitCode: "d",
+                                              },
+                                          }
+                                        : {}),
+                                    ...(o.shippingDetails.deliveryTimeDays
+                                        ? {
+                                              transitTime: {
+                                                  "@type": "QuantitativeValue",
+                                                  ...(o.shippingDetails.deliveryTimeDays.min !== undefined
+                                                      ? { minValue: o.shippingDetails.deliveryTimeDays.min }
+                                                      : {}),
+                                                  ...(o.shippingDetails.deliveryTimeDays.max !== undefined
+                                                      ? { maxValue: o.shippingDetails.deliveryTimeDays.max }
+                                                      : {}),
+                                                  unitCode: "d",
+                                              },
+                                          }
+                                        : {}),
                                 },
                             }
                           : {}),
