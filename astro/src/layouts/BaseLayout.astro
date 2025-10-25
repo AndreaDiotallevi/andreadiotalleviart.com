@@ -143,7 +143,7 @@ const {
                                       ...productJsonLd,
                                       offers:
                                           productJsonLd?.offers && productJsonLd.offers.length
-                                              ? productJsonLd.offers.map(o => ({ ...o, url: o.url || cleanedUrl }))
+                                              ? productJsonLd.offers.map(o => ({ ...o, url: o.url || cleanedUrl, itemOfferedName: productJsonLd.name }))
                                               : amount
                                               ? [
                                                     {
@@ -151,6 +151,7 @@ const {
                                                         price: amount,
                                                         priceCurrency: currency.toUpperCase(),
                                                         sku: productJsonLd.sku,
+                                                        itemOfferedName: productJsonLd.name,
                                                     },
                                                 ]
                                               : undefined,

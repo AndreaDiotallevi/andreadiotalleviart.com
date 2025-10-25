@@ -7,6 +7,12 @@ export interface OfferInput {
     size?: string
     widthCm?: number
     heightCm?: number
+    itemOfferedName?: string
+    shippingDetails?: {
+        shippingRate?: { value: number | string; currency: string }
+        deliveryTimeDays?: { min?: number; max?: number }
+        shippingDestinationCountry?: string
+    }
 }
 
 export interface ProductJsonLdInput {
@@ -139,6 +145,7 @@ function toOffer(o: OfferInput) {
             o.size || o.widthCm || o.heightCm
                 ? {
                       "@type": "Product",
+                      ...(o.itemOfferedName ? { name: o.itemOfferedName } : {}),
                       ...(o.size
                           ? {
                                 additionalProperty: [
@@ -170,5 +177,48 @@ function toOffer(o: OfferInput) {
                           : {}),
                   }
                 : undefined,
+        ...(o.shippingDetails
+            ? {
+                  shippingDetails: {
+                      "@type": "OfferShippingDetails",
+                      ...(o.shippingDetails.shippingRate
+                          ? {
+                                shippingRate: {
+                                    "@type": "MonetaryAmount",
+                                    value: typeof o.shippingDetails.shippingRate.value === "string"
+                                        ? o.shippingDetails.shippingRate.value
+                                        : o.shippingDetails.shippingRate.value.toFixed(2),
+                                    currency: o.shippingDetails.shippingRate.currency,
+                                },
+                            }
+                          : {}),
+                      ...(o.shippingDetails.deliveryTimeDays
+                          ? {
+                                deliveryTime: {
+                                    "@type": "ShippingDeliveryTime",
+                                    transitTime: {
+                                        "@type": "QuantitativeValue",
+                                        ...(o.shippingDetails.deliveryTimeDays.min !== undefined
+                                            ? { minValue: o.shippingDetails.deliveryTimeDays.min }
+                                            : {}),
+                                        ...(o.shippingDetails.deliveryTimeDays.max !== undefined
+                                            ? { maxValue: o.shippingDetails.deliveryTimeDays.max }
+                                            : {}),
+                                        unitCode: "d",
+                                    },
+                                },
+                            }
+                          : {}),
+                      ...(o.shippingDetails.shippingDestinationCountry
+                          ? {
+                                shippingDestination: {
+                                    "@type": "DefinedRegion",
+                                    addressCountry: o.shippingDetails.shippingDestinationCountry,
+                                },
+                            }
+                          : {}),
+                  },
+              }
+            : {}),
     }
 }
