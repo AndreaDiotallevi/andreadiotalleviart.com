@@ -2,11 +2,13 @@
 import { ClientRouter } from "astro:transitions"
 
 import type { Currency } from "@utils/stripe"
+import { generateStructuredData } from "@utils/structuredData"
 import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
 
 const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const siteOrigin = canonicalURL.origin
 
 function removeHtmlExtension(url: string) {
     if (url.endsWith(".html")) {
@@ -32,6 +34,15 @@ interface Props {
     hideFooter?: boolean
     newsletter?: boolean
     noIndex?: boolean
+    productJsonLd?: {
+        name: string
+        description: string
+        imageUrls: string[]
+        sku: string
+        material?: string
+        widthCm?: number
+        heightCm?: number
+    }
 }
 
 const {
@@ -46,6 +57,7 @@ const {
     hideFooter = false,
     newsletter = false,
     noIndex = false,
+    productJsonLd,
 } = Astro.props
 ---
 
@@ -112,44 +124,21 @@ const {
             name="google-site-verification"
             content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
         />
-        <!-- JSON-LD Structured Data: WebSite and Organization -->
-        {import.meta.env.PUBLIC_ENV === "production" ? (
-            <script type="application/ld+json" is:inline>
-                {
-                    "@context": "https://schema.org",
-                    "@graph": [
-                        {
-                            "@type": "WebSite",
-                            "@id": "https://www.andreadiotalleviart.com/#website",
-                            "name": "Andrea Diotallevi Art",
-                            "url": "https://www.andreadiotalleviart.com",
-                            "publisher": { "@id": "https://www.andreadiotalleviart.com/#organization" }
-                        },
-                        {
-                            "@type": "Organization",
-                            "@id": "https://www.andreadiotalleviart.com/#organization",
-                            "name": "Andrea Diotallevi Art",
-                            "url": "https://www.andreadiotalleviart.com",
-                            "logo": {
-                                "@type": "ImageObject",
-                                "url": "https://www.andreadiotalleviart.com/logo.png",
-                                "width": 750,
-                                "height": 750
-                            },
-                            "sameAs": [
-                                "https://twitter.com/adiotalleviart",
-                                "https://www.instagram.com/andreadiotalleviart",
-                                "https://andreadiotalleviart.tumblr.com"
-                            ],
-                            "contactPoint": {
-                                "@type": "ContactPoint",
-                                "url": "https://www.andreadiotalleviart.com/contact",
-                                "contactType": "Customer Support"
-                            }
-                        }
-                    ]
-                }
-            </script>
+        <!-- JSON-LD Structured Data: WebSite, Organization, and optionally WebPage/Product -->
+        {import.meta.env.PUBLIC_ENV !== "production" ? (
+            <script
+                is:inline
+                type="application/ld+json"
+                set:html={JSON.stringify(
+                    generateStructuredData({
+                        siteOrigin,
+                        pageUrl: cleanedUrl,
+                        pageTitle: title,
+                        includeProduct: type === "product" && Boolean(productJsonLd),
+                        product: productJsonLd,
+                    })
+                )}
+            ></script>
         ) : null}
         
         <!-- Google tag (gtag.js) -->
@@ -167,6 +156,7 @@ const {
                 window.gtag("config", ga4TrackingID)
             })
         </script>
+
         <ClientRouter />
     </head>
     <body class="min-w-[320px]">
