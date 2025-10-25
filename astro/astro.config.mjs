@@ -10,11 +10,7 @@ export default defineConfig({
     adapter: netlify(),
     trailingSlash: "never",
     build: { format: "file" },
-    integrations: [tailwind(), sentry({
-        org: process.env.PUBLIC_SENTRY_ORG,
-        project: process.env.PUBLIC_SENTRY_PROJECT,
-        authToken: process.env.PUBLIC_SENTRY_AUTH_TOKEN,
-    })],
+    integrations: [tailwind(), sentry({ telemetry: false })],
     prefetch: { defaultStrategy: "load", prefetchAll: false },
     site: "https://www.andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
