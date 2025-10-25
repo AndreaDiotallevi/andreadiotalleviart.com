@@ -141,42 +141,7 @@ function toOffer(o: OfferInput) {
         priceCurrency: o.priceCurrency,
         availability: o.availability || "https://schema.org/InStock",
         sku: o.sku,
-        itemOffered:
-            o.size || o.widthCm || o.heightCm
-                ? {
-                      "@type": "Product",
-                      ...(o.itemOfferedName ? { name: o.itemOfferedName } : {}),
-                      ...(o.size
-                          ? {
-                                additionalProperty: [
-                                    {
-                                        "@type": "PropertyValue",
-                                        name: "Size",
-                                        value: o.size,
-                                    },
-                                ],
-                            }
-                          : {}),
-                      ...(o.widthCm
-                          ? {
-                                width: {
-                                    "@type": "QuantitativeValue",
-                                    value: o.widthCm,
-                                    unitText: "cm",
-                                },
-                            }
-                          : {}),
-                      ...(o.heightCm
-                          ? {
-                                height: {
-                                    "@type": "QuantitativeValue",
-                                    value: o.heightCm,
-                                    unitText: "cm",
-                                },
-                            }
-                          : {}),
-                  }
-                : undefined,
+        // Intentionally omit itemOffered to avoid creating a second Product entity
         ...(o.shippingDetails
             ? {
                   shippingDetails: {
