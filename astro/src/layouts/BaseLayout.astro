@@ -108,6 +108,43 @@ const {
             name="google-site-verification"
             content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
         />
+        <!-- JSON-LD Structured Data: WebSite and Organization -->
+        <script type="application/ld+json" is:inline>
+            {
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://www.andreadiotalleviart.com/#website",
+                        "name": "Andrea Diotallevi Art",
+                        "url": "https://www.andreadiotalleviart.com",
+                        "publisher": { "@id": "https://www.andreadiotalleviart.com/#organization" }
+                    },
+                    {
+                        "@type": "Organization",
+                        "@id": "https://www.andreadiotalleviart.com/#organization",
+                        "name": "Andrea Diotallevi Art",
+                        "url": "https://www.andreadiotalleviart.com",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://www.andreadiotalleviart.com/logo.png",
+                            "width": 750,
+                            "height": 750
+                        },
+                        "sameAs": [
+                            "https://twitter.com/adiotalleviart",
+                            "https://www.instagram.com/andreadiotalleviart",
+                            "https://andreadiotalleviart.tumblr.com"
+                        ],
+                        "contactPoint": {
+                            "@type": "ContactPoint",
+                            "url": "https://www.andreadiotalleviart.com/contact",
+                            "contactType": "Customer Support"
+                        }
+                    }
+                ]
+            }
+        </script>
         <!-- Google tag (gtag.js) -->
         <script
             is:inline
