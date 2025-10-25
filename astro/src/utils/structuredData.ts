@@ -14,6 +14,10 @@ export interface OfferInput {
         deliveryTimeDays?: { min?: number; max?: number }
         shippingDestinationCountry?: string
     }
+    /** When true, emits hasMerchantReturnPolicy as MerchantReturnNotPermitted */
+    hasMerchantReturnPolicyNo?: boolean
+    /** Number of days for finite return window; emits MerchantReturnFiniteReturnWindow */
+    merchantReturnDays?: number
 }
 
 export interface ProductJsonLdInput {
@@ -143,6 +147,22 @@ function toOffer(o: OfferInput) {
         availability: o.availability || "https://schema.org/InStock",
         sku: o.sku,
         // Intentionally omit itemOffered to avoid creating a second Product entity
+        ...(o.hasMerchantReturnPolicyNo
+            ? {
+                  hasMerchantReturnPolicy: {
+                      "@type": "MerchantReturnPolicy",
+                      returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+                  },
+              }
+            : typeof o.merchantReturnDays === "number"
+            ? {
+                  hasMerchantReturnPolicy: {
+                      "@type": "MerchantReturnPolicy",
+                      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+                      merchantReturnDays: o.merchantReturnDays,
+                  },
+              }
+            : {}),
         ...(o.shippingDetails
             ? {
                   shippingDetails: {
