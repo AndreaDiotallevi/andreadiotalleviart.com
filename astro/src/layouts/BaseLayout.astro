@@ -52,7 +52,9 @@ const {
 <!doctype html>
 <html lang="en">
     <head>
-        <link rel="sitemap" href="/sitemap.xml" />
+        {import.meta.env.PUBLIC_ENV === "production" ? (
+            <link rel="sitemap" href="/sitemap.xml" />
+        ) : null}
         <meta charset="UTF-8" />
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,7 +65,9 @@ const {
         /> -->
         <title>{title}</title>
 
-        {noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
+        {noIndex || import.meta.env.PUBLIC_ENV !== "production" ? (
+            <meta name="robots" content="noindex, nofollow" />
+        ) : null}
 
         <meta name="keywords" content={tags.join(", ")} />
         {image ? <meta name="image" content={image} /> : null}
