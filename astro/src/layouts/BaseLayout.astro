@@ -125,7 +125,7 @@ const {
             content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
         />
         <!-- JSON-LD Structured Data: WebSite, Organization, and optionally WebPage/Product -->
-        {import.meta.env.PUBLIC_ENV !== "production" ? (
+        {import.meta.env.PUBLIC_ENV === "production" ? (
             <script
                 is:inline
                 type="application/ld+json"
