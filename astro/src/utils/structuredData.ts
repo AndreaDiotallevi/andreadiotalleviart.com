@@ -73,13 +73,21 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
                 brand: { "@type": "Brand", name: "Andrea Diotallevi Art" },
                 additionalType: "https://schema.org/VisualArtwork",
                 material: product.material,
+                width: {
+                    "@type": "QuantitativeValue",
+                    value: product.widthCm,
+                    unitText: "cm",
+                },
+                height: {
+                    "@type": "QuantitativeValue",
+                    value: product.heightCm,
+                    unitText: "cm",
+                },
                 offers: buildSingleOffer({
                     url: pageUrl,
                     price: offerPrice,
                     priceCurrency: offerCurrency,
                     sku: product.sku,
-                    widthCm: product.widthCm,
-                    heightCm: product.heightCm,
                 }),
             }
         )
@@ -91,7 +99,7 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
     }
 }
 
-function buildSingleOffer(params: { url: string; price: number | string; priceCurrency: string; sku: string; widthCm?: number; heightCm?: number }) {
+function buildSingleOffer(params: { url: string; price: number | string; priceCurrency: string; sku: string }) {
     const normalizedPrice = typeof params.price === "string" ? params.price : params.price.toFixed(2)
     const currency = params.priceCurrency.toUpperCase()
 
@@ -102,19 +110,6 @@ function buildSingleOffer(params: { url: string; price: number | string; priceCu
         priceCurrency: currency,
         availability: "https://schema.org/InStock",
         sku: params.sku,
-        itemOffered: {
-            "@type": "Product",
-            width: {
-                "@type": "QuantitativeValue",
-                value: params.widthCm,
-                unitText: "cm",
-            },
-            height: {
-                "@type": "QuantitativeValue",
-                value: params.heightCm,
-                unitText: "cm",
-            },
-        },
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
             returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
