@@ -1,25 +1,3 @@
-export interface OfferInput {
-    url?: string
-    price: number | string
-    priceCurrency: string
-    availability?: string
-    sku?: string
-    size?: string
-    widthCm?: number
-    heightCm?: number
-    itemOfferedName?: string
-    shippingDetails?: {
-        shippingRate?: { value: number | string; currency: string }
-        handlingTimeDays?: { min?: number; max?: number }
-        deliveryTimeDays?: { min?: number; max?: number }
-        shippingDestinationCountry?: string
-    }
-    /** When true, emits hasMerchantReturnPolicy as MerchantReturnNotPermitted */
-    hasMerchantReturnPolicyNo?: boolean
-    /** Number of days for finite return window; emits MerchantReturnFiniteReturnWindow */
-    merchantReturnDays?: number
-}
-
 export interface ProductJsonLdInput {
     name: string
     description: string
@@ -28,19 +6,19 @@ export interface ProductJsonLdInput {
     material?: string
     widthCm?: number
     heightCm?: number
-    offers?: OfferInput[]
 }
 
 export interface GenerateStructuredDataOptions {
     siteOrigin: string
     pageUrl: string
     pageTitle: string
-    includeProduct: boolean
     product?: ProductJsonLdInput
+    offerPrice: number | string
+    offerCurrency: string
 }
 
 export function generateStructuredData(options: GenerateStructuredDataOptions) {
-    const { siteOrigin, pageUrl, pageTitle, includeProduct, product } = options
+    const { siteOrigin, pageUrl, pageTitle, product, offerPrice, offerCurrency } = options
 
     const graph: unknown[] = [
         {
@@ -74,7 +52,7 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
         },
     ]
 
-    if (includeProduct && product) {
+    if (product) {
         graph.push(
             {
                 "@type": "WebPage",
@@ -95,9 +73,14 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
                 brand: { "@type": "Brand", name: "Andrea Diotallevi Art" },
                 additionalType: "https://schema.org/VisualArtwork",
                 material: product.material,
-                ...(product.offers && product.offers.length
-                    ? buildOffers(product.offers)
-                    : {}),
+                offers: buildSingleOffer({
+                    url: pageUrl,
+                    price: offerPrice,
+                    priceCurrency: offerCurrency,
+                    sku: product.sku,
+                    widthCm: product.widthCm,
+                    heightCm: product.heightCm,
+                }),
             }
         )
     }
@@ -108,121 +91,44 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
     }
 }
 
-function buildOffers(offers: OfferInput[]) {
-    if (!offers.length) return {}
+function buildSingleOffer(params: { url: string; price: number | string; priceCurrency: string; sku: string; widthCm?: number; heightCm?: number }) {
+    const normalizedPrice = typeof params.price === "string" ? params.price : params.price.toFixed(2)
+    const currency = params.priceCurrency.toUpperCase()
 
-    if (offers.length === 1) {
-        const [o] = offers
-        return {
-            offers: toOffer(o),
-        }
-    }
-
-    const numericPrices = offers
-        .map(o => (typeof o.price === "string" ? parseFloat(o.price) : o.price))
-        .filter(p => Number.isFinite(p)) as number[]
-
-    const lowPrice = Math.min(...numericPrices)
-    const highPrice = Math.max(...numericPrices)
-    const priceCurrency = offers[0]?.priceCurrency
-
-    return {
-        offers: {
-            "@type": "AggregateOffer",
-            offerCount: offers.length,
-            lowPrice,
-            highPrice,
-            priceCurrency,
-            offers: offers.map(toOffer),
-        },
-    }
-}
-
-function toOffer(o: OfferInput) {
     return {
         "@type": "Offer",
-        url: o.url,
-        price: typeof o.price === "string" ? o.price : o.price.toFixed(2),
-        priceCurrency: o.priceCurrency,
-        availability: o.availability || "https://schema.org/InStock",
-        sku: o.sku,
-        // Intentionally omit itemOffered to avoid creating a second Product entity
-        ...(o.hasMerchantReturnPolicyNo
-            ? {
-                  hasMerchantReturnPolicy: {
-                      "@type": "MerchantReturnPolicy",
-                      returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-                  },
-              }
-            : typeof o.merchantReturnDays === "number"
-            ? {
-                  hasMerchantReturnPolicy: {
-                      "@type": "MerchantReturnPolicy",
-                      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-                      merchantReturnDays: o.merchantReturnDays,
-                  },
-              }
-            : {}),
-        ...(o.shippingDetails
-            ? {
-                  shippingDetails: {
-                      "@type": "OfferShippingDetails",
-                      ...(o.shippingDetails.shippingRate
-                          ? {
-                                shippingRate: {
-                                    "@type": "MonetaryAmount",
-                                    value: typeof o.shippingDetails.shippingRate.value === "string"
-                                        ? o.shippingDetails.shippingRate.value
-                                        : o.shippingDetails.shippingRate.value.toFixed(2),
-                                    currency: o.shippingDetails.shippingRate.currency,
-                                },
-                            }
-                          : {}),
-                      ...((o.shippingDetails.deliveryTimeDays || o.shippingDetails.handlingTimeDays)
-                          ? {
-                                deliveryTime: {
-                                    "@type": "ShippingDeliveryTime",
-                                    ...(o.shippingDetails.handlingTimeDays
-                                        ? {
-                                              handlingTime: {
-                                                  "@type": "QuantitativeValue",
-                                                  ...(o.shippingDetails.handlingTimeDays.min !== undefined
-                                                      ? { minValue: o.shippingDetails.handlingTimeDays.min }
-                                                      : {}),
-                                                  ...(o.shippingDetails.handlingTimeDays.max !== undefined
-                                                      ? { maxValue: o.shippingDetails.handlingTimeDays.max }
-                                                      : {}),
-                                                  unitCode: "d",
-                                              },
-                                          }
-                                        : {}),
-                                    ...(o.shippingDetails.deliveryTimeDays
-                                        ? {
-                                              transitTime: {
-                                                  "@type": "QuantitativeValue",
-                                                  ...(o.shippingDetails.deliveryTimeDays.min !== undefined
-                                                      ? { minValue: o.shippingDetails.deliveryTimeDays.min }
-                                                      : {}),
-                                                  ...(o.shippingDetails.deliveryTimeDays.max !== undefined
-                                                      ? { maxValue: o.shippingDetails.deliveryTimeDays.max }
-                                                      : {}),
-                                                  unitCode: "d",
-                                              },
-                                          }
-                                        : {}),
-                                },
-                            }
-                          : {}),
-                      ...(o.shippingDetails.shippingDestinationCountry
-                          ? {
-                                shippingDestination: {
-                                    "@type": "DefinedRegion",
-                                    addressCountry: o.shippingDetails.shippingDestinationCountry,
-                                },
-                            }
-                          : {}),
-                  },
-              }
-            : {}),
+        url: params.url,
+        price: normalizedPrice,
+        priceCurrency: currency,
+        availability: "https://schema.org/InStock",
+        sku: params.sku,
+        itemOffered: {
+            "@type": "Product",
+            width: {
+                "@type": "QuantitativeValue",
+                value: params.widthCm,
+                unitText: "cm",
+            },
+            height: {
+                "@type": "QuantitativeValue",
+                value: params.heightCm,
+                unitText: "cm",
+            },
+        },
+        hasMerchantReturnPolicy: {
+            "@type": "MerchantReturnPolicy",
+            returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+            merchantReturnDays: 14,
+        },
+        shippingDetails: {
+            "@type": "OfferShippingDetails",
+            shippingRate: { "@type": "MonetaryAmount", value: "0.00", currency },
+            deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "d" },
+                transitTime: { "@type": "QuantitativeValue", minValue: 7, maxValue: 21, unitCode: "d" },
+            },
+            shippingDestination: { "@type": "DefinedRegion", addressCountry: "GB" },
+        },
     }
 }
