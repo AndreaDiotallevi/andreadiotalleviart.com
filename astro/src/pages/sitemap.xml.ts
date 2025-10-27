@@ -4,7 +4,7 @@ import { getCollection } from "astro:content"
 export async function GET() {
     const products = await getStripeProducts()
     const artworks = await getCollection("artworks")
-    const baseUrl = "https://www.andreadiotalleviart.com"
+    const baseUrl = "https://andreadiotalleviart.com"
 
     const urls = [
         `${baseUrl}`,

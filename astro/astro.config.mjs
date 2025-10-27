@@ -12,6 +12,6 @@ export default defineConfig({
     build: { format: "file" },
     integrations: [tailwind(), sentry({ telemetry: false })],
     prefetch: { defaultStrategy: "load", prefetchAll: false },
-    site: "https://www.andreadiotalleviart.com",
+    site: "https://andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
 })
