@@ -43,7 +43,7 @@ export async function GET() {
       <g:price>${price}</g:price>
       <g:brand>${escapeXml(brand)}</g:brand>
       <g:identifier_exists>false</g:identifier_exists>
-      <g:google_product_category>Arts &amp; Entertainment &gt; Hobbies &amp; Creative Arts &gt; Artwork &gt; Posters &amp; Prints</g:google_product_category>
+      <g:google_product_category>500044</g:google_product_category>
     </item>`
         })
         .join("")}
