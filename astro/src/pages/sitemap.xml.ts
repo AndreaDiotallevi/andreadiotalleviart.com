@@ -10,6 +10,7 @@ export async function GET() {
         `${baseUrl}`,
         `${baseUrl}/about`,
         `${baseUrl}/contact`,
+        `${baseUrl}/return-policy`,
         `${baseUrl}/portfolio`,
         `${baseUrl}/shop`,
         ...products.map(
