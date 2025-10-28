@@ -120,8 +120,8 @@ function buildSingleOffer(params: { url: string; price: number | string; priceCu
             shippingRate: { "@type": "MonetaryAmount", value: "0.00", currency },
             deliveryTime: {
                 "@type": "ShippingDeliveryTime",
-                handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "d" },
-                transitTime: { "@type": "QuantitativeValue", minValue: 7, maxValue: 21, unitCode: "d" },
+                handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "d" },
+                transitTime: { "@type": "QuantitativeValue", minValue: 7, maxValue: 14, unitCode: "d" },
             },
             shippingDestination: { "@type": "DefinedRegion", addressCountry: "GB" },
         },
