@@ -1,22 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro"
 
-const siteOrigin = "https://andreadiotalleviart.com"
-
-const returnPolicyJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "MerchantReturnPolicy",
-    name: "Returns & Refunds Policy",
-    url: `${siteOrigin}/return-policy`,
-    merchantReturnDays: 14,
-    returnPolicyCategory:
-        "https://schema.org/MerchantReturnFiniteReturnWindow",
-    applicableCountry: ["GB", "EU", "US"],
-    refundType: "https://schema.org/RefundByPaymentMethod",
-    returnMethod: "https://schema.org/ReturnByMail",
-    returnFees: "https://schema.org/OriginalShippingFeesAndReturnShippingFees",
-}
-
 Astro.response.headers.set(
     "cache-control",
     "public, max-age=0, must-revalidate"
@@ -32,63 +16,21 @@ Astro.response.headers.set(
     description="Read about returns, refunds, and exchanges for giclée prints."
     tags={["Returns", "Refunds", "Policy"]}
 >
-    <script type="application/ld+json">
-        {JSON.stringify(returnPolicyJsonLd)}
-    </script>
-
     <div
         class="flex flex-col items-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
     >
         <div class="w-full md:w-3/4 lg:w-2/3">
             <h1 class="text-2xl md:text-5xl font-bold mb-4">Returns & Refunds</h1>
-            <p class="text-sm md:text-base mb-8">
-                I want you to love your artwork. If there’s a problem, I’m here to help.
+            <p class="text-sm md:text-base mb-6">
+                I do not accept returns.
             </p>
-
-            <section class="mb-8">
-                <h2 class="text-xl md:text-2xl font-bold mb-2">Return window</h2>
-                <p>
-                    You can request a return within <strong>14 days</strong> of delivery.
-                    Please contact me first so I can provide return instructions.
-                </p>
-            </section>
-
-            <section class="mb-8">
-                <h2 class="text-xl md:text-2xl font-bold mb-2">Eligibility</h2>
-                <ul class="list-disc ml-5 space-y-2">
-                    <li>Items must be unused and in original packaging.</li>
-                    <li>Made-to-order giclée prints are returnable if undamaged.</li>
-                    <li>Damaged or defective items will be replaced or refunded.</li>
-                </ul>
-            </section>
-
-            <section class="mb-8">
-                <h2 class="text-xl md:text-2xl font-bold mb-2">How to start a return</h2>
-                <ol class="list-decimal ml-5 space-y-2">
-                    <li>Contact me via the <a class="underline" href="/contact">contact page</a> with your order number.</li>
-                    <li>Pack the item securely in the original packaging.</li>
-                    <li>Ship using a tracked service and share the tracking number.</li>
-                </ol>
-            </section>
-
-            <section class="mb-8">
-                <h2 class="text-xl md:text-2xl font-bold mb-2">Refunds</h2>
-                <p>
-                    Once I receive and inspect the return, I’ll process a refund to your original payment method. This typically takes <strong>5–10 business days</strong> after receipt.
-                </p>
-            </section>
-
-            <section class="mb-8">
-                <h2 class="text-xl md:text-2xl font-bold mb-2">Return shipping costs</h2>
-                <p>
-                    If you change your mind, you’ll be responsible for return shipping costs. If the item arrived damaged or defective, I’ll cover the replacement or refund.
-                </p>
-            </section>
-
+            <p class="text-sm md:text-base mb-8">
+                If your order arrives <strong>damaged or defective</strong>, I will issue a refund. Please <a class="underline" href="/contact">contact me</a> with your order number and clear photos so I can help right away.
+            </p>
             <section>
                 <h2 class="text-xl md:text-2xl font-bold mb-2">Questions</h2>
                 <p>
-                    If you’re unsure whether your order qualifies for a return, please <a class="underline" href="/contact">get in touch</a> and I’ll help right away.
+                    If you need assistance, please <a class="underline" href="/contact">get in touch</a> and I’ll respond as soon as possible.
                 </p>
             </section>
         </div>

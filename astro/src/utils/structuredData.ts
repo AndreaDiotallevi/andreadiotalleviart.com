@@ -112,8 +112,7 @@ function buildSingleOffer(params: { url: string; price: number | string; priceCu
         sku: params.sku,
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
-            returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-            merchantReturnDays: 14,
+            returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
         },
         shippingDetails: {
             "@type": "OfferShippingDetails",
