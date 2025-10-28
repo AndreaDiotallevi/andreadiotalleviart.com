@@ -11,241 +11,243 @@ interface Props {
 const { images, width, height } = Astro.props
 ---
 
-<div class="embla">
-    <div class="embla__viewport">
-        <div class="embla__container">
+<div class="relative" data-carousel>
+    <div
+        class="w-full overflow-x-auto snap-x snap-mandatory flex scroll-smooth relative"
+        data-carousel-viewport
+        role="region"
+        aria-label="Image carousel"
+        tabindex="0"
+    >
+        {
+            images.map((src, index) => (
+                <div
+                    id={`carousel-slide-${index}`}
+                    data-carousel-slide
+                    class="flex-none min-w-full snap-center snap-always flex items-center justify-center"
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`Slide ${index + 1} of ${images.length}`}
+                    aria-hidden={index === 0 ? "false" : "true"}
+                >
+                    <Image
+                        id={`product-image-index-${index}`}
+                        alt={`Product image index ${index}`}
+                        src={src}
+                        width={width}
+                        height={height}
+                        loading={"eager"}
+                        fetchpriority={"high"}
+                        sizes="100vw"
+                        breakpoints={imageBreakpoints({
+                            maxWidth: 1500,
+                            assetWidth: width,
+                        })}
+                        class="w-full max-w-full h-auto block"
+                    />
+                </div>
+            ))
+        }
+    </div>
+
+    {images.length > 1 ? (
+        <>
+            <button
+                type="button"
+                class="absolute left-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/80 hover:bg-white shadow p-2 focus:outline-none focus:ring-2 focus:ring-gray-800"
+                data-carousel-prev
+                aria-label="Previous slide"
+            >
+                <span aria-hidden="true" class="block w-5 h-5">‹</span>
+            </button>
+            <button
+                type="button"
+                class="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/80 hover:bg-white shadow p-2 focus:outline-none focus:ring-2 focus:ring-gray-800"
+                data-carousel-next
+                aria-label="Next slide"
+            >
+                <span aria-hidden="true" class="block w-5 h-5">›</span>
+            </button>
+        </>
+    ) : (
+        <></>
+    )}
+
+    <div class={`mt-2 ${images.length === 1 ? "hidden" : ""}`}>
+        <div class="flex gap-2 overflow-x-auto pb-2" data-carousel-thumbs>
             {
                 images.map((src, index) => (
-                    <div class="embla__slide">
-                        <div class="embla__slide__number">
-                            <Image
-                                id={`product-image-index-${index}`}
-                                alt={`Product image index ${index}`}
-                                src={src}
-                                width={width}
-                                height={height}
-                                loading={"eager"}
-                                fetchpriority={"high"}
-                                sizes="(max-width: 768px) 200vw, 100vw"
-                                breakpoints={imageBreakpoints({
-                                    maxWidth: 1500,
-                                    assetWidth: width,
-                                })}
-                            />
-                        </div>
-                    </div>
+                    <button
+                        type="button"
+                        class={`thumbnail-button relative rounded-md overflow-hidden focus:outline-none focus:ring-2 focus:ring-gray-800 flex-none`}
+                        data-carousel-thumb
+                        data-index={index}
+                        aria-label={`Go to slide ${index + 1}`}
+                        aria-controls={`carousel-slide-${index}`}
+                        aria-selected={index === 0 ? "true" : "false"}
+                    >
+                        <Image
+                            id={`product-thumbnail-index-${index}`}
+                            alt={`Product thumbnail index ${index}`}
+                            src={src}
+                            width={Math.round(width / 6)}
+                            height={Math.round(height / 6)}
+                            loading="eager"
+                            fetchpriority="high"
+                            sizes="150px"
+                            breakpoints={imageBreakpoints({
+                                maxWidth: 600,
+                                assetWidth: width,
+                            })}
+                            class="block"
+                        />
+                    </button>
                 ))
             }
         </div>
     </div>
-    <div class={`embla-thumbs ${images.length === 1 ? "hidden" : ""}`}>
-        <div class="embla-thumbs__viewport">
-            <div class="embla-thumbs__container">
-                {
-                    images.map((src, index) => (
-                        <div
-                            class={`embla-thumbs__slide ${index === 0 ? "embla-thumbs__slide--selected" : ""}`}
-                        >
-                            <button
-                                type="button"
-                                class="embla-thumbs__slide__number"
-                            >
-                                <Image
-                                    id={`product-thumbnail-index-${index}`}
-                                    alt={`Product thumbnail index ${index}`}
-                                    src={src}
-                                    width={width}
-                                    height={height}
-                                    loading="eager"
-                                    fetchpriority="high"
-                                    sizes="600px"
-                                    breakpoints={imageBreakpoints({
-                                        maxWidth: 600,
-                                        assetWidth: width,
-                                    })}
-                                />
-                            </button>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
-    </div>
+
+    <p class="sr-only" aria-live="polite" data-carousel-status>
+        {`Slide 1 of ${images.length}`}
+    </p>
 
     <style>
-        .embla {
-            --slide-size: 100%;
+        [data-carousel-viewport] {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory; /* enforce snap in Safari/iOS */
         }
-        .embla__viewport {
-            overflow: hidden;
+        [data-carousel-viewport]::-webkit-scrollbar {
+            display: none;
         }
-        .embla__container {
-            display: flex;
-            touch-action: pan-y pinch-zoom;
-            margin-left: calc(var(--slide-spacing) * -1);
+        [data-carousel-slide] {
+            scroll-snap-align: center; /* ensure center snapping across browsers */
+            scroll-snap-stop: always;
         }
-        .embla__slide {
-            transform: translate3d(0, 0, 0);
-            flex: 0 0 var(--slide-size);
-            min-width: 0;
-            padding-left: var(--slide-spacing);
+        
+        /* Thumbnail styling to match original Embla carousel */
+        [data-carousel-thumbs] {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .embla__slide__number {
-            border-radius: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
+        [data-carousel-thumbs]::-webkit-scrollbar {
+            display: none;
         }
-        .embla-thumbs {
-            --thumbs-slide-spacing: 0.8rem;
-            --thumbs-slide-height: 8rem;
-            margin-top: var(--thumbs-slide-spacing);
-        }
-        .embla-thumbs__viewport {
-            overflow: hidden;
-        }
-        .embla-thumbs__container {
-            display: flex;
-            flex-direction: row;
-            margin-left: calc(var(--thumbs-slide-spacing) * -1);
-        }
-        .embla-thumbs__slide {
-            flex: 0 0 25%;
-            min-width: 0;
-            padding-left: var(--thumbs-slide-spacing);
-        }
-        .embla-thumbs__slide__number {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: transparent;
-            touch-action: manipulation;
-            display: inline-flex;
+        .thumbnail-button {
+            width: 25%;
+            max-width: 200px;
+            min-width: 100px;
             cursor: pointer;
             border: 0;
             padding: 0;
             margin: 0;
+            background-color: transparent;
+            touch-action: manipulation;
             display: flex;
             align-items: center;
             justify-content: center;
             padding-bottom: 2px;
-            border-bottom: 4px solid white;
+            border-bottom: 4px solid transparent;
+            transition: border-color 0.2s;
         }
-        .embla-thumbs__slide--selected .embla-thumbs__slide__number {
-            /* opacity: 0.65; */
-            border-bottom: 4px solid #1F2937;
-            /* border-bottom: 4px solid rgb(220, 38, 38); */
+        .thumbnail-button[aria-selected="true"] {
+            border-bottom-color: #1F2937;
+        }
+        .thumbnail-button:hover:not([aria-selected="true"]) {
+            border-bottom-color: #9CA3AF;
+        }
+        .thumbnail-button img {
+            width: 100%;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .thumbnail-button {
+                width: 33.333%;
+            }
         }
     </style>
 
     <script>
-        import EmblaCarousel, {
-            type EmblaCarouselType,
-            type EmblaOptionsType,
-        } from "embla-carousel"
-
-        document.addEventListener("astro:page-load", async () => {
-            const OPTIONS: EmblaOptionsType = {}
-            const OPTIONS_THUMBS: EmblaOptionsType = {
-                containScroll: "keepSnaps",
-                dragFree: true,
-            }
-
-            const viewportNodeMainCarousel = document.querySelector(
-                ".embla__viewport"
-            ) as HTMLElement
-            const viewportNodeThumbCarousel = document.querySelector(
-                ".embla-thumbs__viewport"
-            ) as HTMLElement
-
-            if (!viewportNodeMainCarousel || !viewportNodeThumbCarousel) return
-
-            const addThumbBtnsClickHandlers = (
-                emblaApiMain: EmblaCarouselType,
-                emblaApiThumb: EmblaCarouselType
-            ): (() => void) => {
-                const slidesThumbs = emblaApiThumb.slideNodes()
-
-                const scrollToIndex = slidesThumbs.map(
-                    (_, index) => (): void => emblaApiMain.scrollTo(index)
+        document.addEventListener("astro:page-load", () => {
+            const carousels = document.querySelectorAll<HTMLElement>('[data-carousel]')
+            carousels.forEach((root: HTMLElement) => {
+                const viewport = root.querySelector<HTMLElement>('[data-carousel-viewport]')
+                const slideNodes = Array.from(
+                    root.querySelectorAll<HTMLElement>('[data-carousel-slide]')
                 )
+                const thumbButtons = Array.from(
+                    root.querySelectorAll<HTMLButtonElement>('[data-carousel-thumb]')
+                )
+                const prevBtn = root.querySelector<HTMLButtonElement>('[data-carousel-prev]')
+                const nextBtn = root.querySelector<HTMLButtonElement>('[data-carousel-next]')
+                const status = root.querySelector<HTMLElement>('[data-carousel-status]')
 
-                slidesThumbs.forEach((slideNode, index) => {
-                    slideNode.addEventListener(
-                        "click",
-                        scrollToIndex[index],
-                        false
-                    )
+                if (!viewport || slideNodes.length === 0) return
+
+                let currentIndex = 0
+
+                const setSelected = (index: number) => {
+                    currentIndex = Math.max(0, Math.min(index, slideNodes.length - 1))
+                    slideNodes.forEach((el, i) => {
+                        el.setAttribute('aria-hidden', i === currentIndex ? 'false' : 'true')
+                    })
+                    thumbButtons.forEach((btn, i) => {
+                        btn.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false')
+                    })
+                    if (status) status.textContent = `Slide ${currentIndex + 1} of ${slideNodes.length}`
+                }
+
+                const scrollToIndex = (index: number) => {
+                    const target = slideNodes[index]
+                    if (!target) return
+                    viewport.scrollTo({ left: target.offsetLeft, behavior: 'smooth' })
+                    setSelected(index)
+                }
+
+                prevBtn?.addEventListener('click', () => scrollToIndex(currentIndex - 1))
+                nextBtn?.addEventListener('click', () => scrollToIndex(currentIndex + 1))
+                thumbButtons.forEach((btn, i) => {
+                    btn.addEventListener('click', () => scrollToIndex(i))
                 })
 
-                return (): void => {
-                    slidesThumbs.forEach((slideNode, index) => {
-                        slideNode.removeEventListener(
-                            "click",
-                            scrollToIndex[index],
-                            false
-                        )
+                let raf = false
+                const onScroll = () => {
+                    // Find nearest slide by offset
+                    let nearestIndex = 0
+                    let minDist = Infinity
+                    const scrollLeft = viewport.scrollLeft
+                    slideNodes.forEach((el, i) => {
+                        const d = Math.abs(el.offsetLeft - scrollLeft)
+                        if (d < minDist) {
+                            minDist = d
+                            nearestIndex = i
+                        }
                     })
+                    if (nearestIndex !== currentIndex) setSelected(nearestIndex)
                 }
-            }
+                viewport.addEventListener('scroll', () => {
+                    if (raf) return
+                    raf = true
+                    requestAnimationFrame(() => {
+                        raf = false
+                        onScroll()
+                    })
+                })
 
-            const addToggleThumbBtnsActive = (
-                emblaApiMain: EmblaCarouselType,
-                emblaApiThumb: EmblaCarouselType
-            ): (() => void) => {
-                const slidesThumbs = emblaApiThumb.slideNodes()
+                root.addEventListener('keydown', (e: KeyboardEvent) => {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault()
+                        scrollToIndex(currentIndex - 1)
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault()
+                        scrollToIndex(currentIndex + 1)
+                    }
+                })
 
-                const toggleThumbBtnsState = (): void => {
-                    emblaApiThumb.scrollTo(emblaApiMain.selectedScrollSnap())
-                    const previous = emblaApiMain.previousScrollSnap()
-                    const selected = emblaApiMain.selectedScrollSnap()
-                    slidesThumbs[previous].classList.remove(
-                        "embla-thumbs__slide--selected"
-                    )
-                    slidesThumbs[selected].classList.add(
-                        "embla-thumbs__slide--selected"
-                    )
-                }
-
-                emblaApiMain.on("select", toggleThumbBtnsState)
-                emblaApiThumb.on("init", toggleThumbBtnsState)
-
-                return (): void => {
-                    const selected = emblaApiMain.selectedScrollSnap()
-                    slidesThumbs[selected].classList.remove(
-                        "embla-thumbs__slide--selected"
-                    )
-                }
-            }
-
-            const emblaApiMain = EmblaCarousel(
-                viewportNodeMainCarousel,
-                OPTIONS
-            )
-            const emblaApiThumb = EmblaCarousel(
-                viewportNodeThumbCarousel,
-                OPTIONS_THUMBS
-            )
-
-            const removeThumbBtnsClickHandlers = addThumbBtnsClickHandlers(
-                emblaApiMain,
-                emblaApiThumb
-            )
-            const removeToggleThumbBtnsActive = addToggleThumbBtnsActive(
-                emblaApiMain,
-                emblaApiThumb
-            )
-
-            emblaApiMain
-                .on("destroy", removeThumbBtnsClickHandlers)
-                .on("destroy", removeToggleThumbBtnsActive)
-
-            emblaApiThumb
-                .on("destroy", removeThumbBtnsClickHandlers)
-                .on("destroy", removeToggleThumbBtnsActive)
+                // Init
+                setSelected(0)
+            })
         })
     </script>
-
-    <!-- https://www.embla-carousel.com/examples/predefined/ -->
-    <!-- https://codesandbox.io/p/sandbox/3n5r7x?file=%2Fsrc%2Fjs%2Findex.ts%3A1%2C8-1%2C21 -->
 </div>
