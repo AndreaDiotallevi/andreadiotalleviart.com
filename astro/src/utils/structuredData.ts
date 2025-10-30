@@ -113,6 +113,7 @@ function buildSingleOffer(params: { url: string; price: number | string; priceCu
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
             returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+            refundType: "https://schema.org/FullRefund",
         },
         shippingDetails: {
             "@type": "OfferShippingDetails",
