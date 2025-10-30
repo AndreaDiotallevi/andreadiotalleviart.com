@@ -23,7 +23,7 @@ export const handler = async (
         FromEmailAddress: myEmail,
         Destination: {
             ToAddresses: [myEmail],
-            CcAddresses: [email],
+            // CcAddresses: [email],
         },
         Content: {
             Template: {
