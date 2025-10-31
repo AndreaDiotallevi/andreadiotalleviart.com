@@ -9,8 +9,6 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
     ...artwork.data,
     images: artwork.data.images.map(image => transformImage(image)),
 }))
-
- 
 ---
 
 <BaseLayout
