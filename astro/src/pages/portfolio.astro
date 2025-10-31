@@ -10,14 +10,7 @@ const artworks = (await getCollection("artworks")).map(artwork => ({
     images: artwork.data.images.map(image => transformImage(image)),
 }))
 
-Astro.response.headers.set(
-    "cache-control",
-    "public, max-age=0, must-revalidate"
-)
-Astro.response.headers.set(
-    "netlify-cdn-cache-control",
-    "public, durable, s-maxage=31536000"
-)
+ 
 ---
 
 <BaseLayout

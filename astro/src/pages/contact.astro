@@ -6,15 +6,6 @@ import { imageBreakpoints } from "@utils/breakpoints"
 import { transformImage } from "@utils/cloudinary"
 
 const contactImageSrc = transformImage("contact-page-image_dczqrw")
-
-Astro.response.headers.set(
-    "cache-control",
-    "public, max-age=0, must-revalidate"
-)
-Astro.response.headers.set(
-    "netlify-cdn-cache-control",
-    "public, durable, s-maxage=31536000"
-)
 ---
 
 <BaseLayout
