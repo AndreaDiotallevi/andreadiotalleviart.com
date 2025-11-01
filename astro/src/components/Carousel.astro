@@ -6,9 +6,10 @@ interface Props {
     images: string[]
     width: number
     height: number
+    altBase?: string
 }
 
-const { images, width, height } = Astro.props
+const { images, width, height, altBase } = Astro.props
 ---
 
 <div class="embla">
@@ -20,7 +21,7 @@ const { images, width, height } = Astro.props
                         <div class="embla__slide__number">
                             <Image
                                 id={`product-image-index-${index}`}
-                                alt={`Product image index ${index}`}
+                                alt={altBase ? `${altBase} - ${index + 1}` : `Product image ${index + 1}`}
                                 src={src}
                                 width={width}
                                 height={height}
@@ -52,7 +53,7 @@ const { images, width, height } = Astro.props
                             >
                                 <Image
                                     id={`product-thumbnail-index-${index}`}
-                                    alt={`Product thumbnail index ${index}`}
+                                    alt={altBase ? `Thumbnail of ${altBase} - ${index + 1}` : `Product thumbnail ${index + 1}`}
                                     src={src}
                                     width={width}
                                     height={height}
