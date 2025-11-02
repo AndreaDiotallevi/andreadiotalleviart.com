@@ -33,7 +33,7 @@ const currency = getLocalCurrency(
 
 Astro.response.headers.set(
     "cache-control",
-    "public, max-age=0, must-revalidate"
+    "public, max-age=300, must-revalidate"
 )
 Astro.response.headers.set(
     "netlify-cdn-cache-control",
