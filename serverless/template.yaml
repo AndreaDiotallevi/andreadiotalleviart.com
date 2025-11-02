@@ -520,6 +520,9 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeGetProducts
             Handler: src/lambdas/api_stripeGetProducts.handler
+            Environment:
+                Variables:
+                    BUCKET: !Ref Bucket
             Events:
                 Root:
                     Type: Api
@@ -535,6 +538,14 @@ Resources:
                             - SSM:GetParameter
                         Resource:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                - Statement:
+                      - Sid: s3CacheReadWrite
+                        Effect: Allow
+                        Action:
+                            - s3:GetObject
+                            - s3:PutObject
+                        Resource:
+                            - !Sub arn:aws:s3:::${Bucket}/*
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -582,6 +593,7 @@ Resources:
                     IMAGES_DOMAIN: "{{resolve:ssm:IMAGES_DOMAIN}}"
                     CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
                     CLOUDINARY_CLOUD_NAME: "{{resolve:ssm:CLOUDINARY_CLOUD_NAME}}"
+                    BUCKET: !Ref Bucket
             Policies:
                 - Statement:
                       - Sid: readParameterStore
@@ -594,6 +606,13 @@ Resources:
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_ACCESS_TOKEN
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/NETLIFY_SITE_ID
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CORS_ALLOW_ORIGIN
+                - Statement:
+                      - Sid: s3CacheDelete
+                        Effect: Allow
+                        Action:
+                            - s3:DeleteObject
+                        Resource:
+                            - !Sub arn:aws:s3:::${Bucket}/*
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
