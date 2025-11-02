@@ -27,9 +27,32 @@ export const productsData: Record<string, ProductExtraData> = {
         //     "If you prefer a mounted look, use a 40 x 50 cm frame with a 3-5 cm mount opening cut to A3 — this adds breathing room while keeping the piece bold and elegant.",
         // ],
     },
-    "print_nebula-1_50x70": nebulaShared,
-    "print_nebula-2_50x70": nebulaShared,
-    "print_nebula-3_50x70": nebulaShared,
+    "print_nebula-1_50x70": {
+        about: [
+            "In this first artwork from the Nebula series, the nebula is at the origin of its formation. The circles are still small, and you can see the overall shape beginning to emerge.",
+            "The background is a soft yellow and still quite light, giving the piece an airy, open feel.",
+            "The transparency of the circles creates nuanced colour blends and a sense of motion, preserving fine detail that feels alive from any viewing distance.",
+        ],
+        framing: nebulaShared.framing,
+    },
+    "print_nebula-2_50x70": {
+        about: [
+            "This is the second and middle artwork in the series. The same circular forms from Nebula 1 are now exactly double the size, occupying more of the composition.",
+            "Individual circles cluster to suggest a larger sphere, with surrounding circles gathering around it.",
+            "The background shifts slightly darker toward orange, creating a warm, well-balanced feel.",
+            "The transparency of the overlapping circles continues to generate unexpected colour blends and a sense of motion.",
+        ],
+        framing: nebulaShared.framing,
+    },
+    "print_nebula-3_50x70": {
+        about: [
+            "This is the third and final artwork in the series. The circles are exactly double the size of Nebula 2 (four times Nebula 1).",
+            "Most circles extend beyond the frame, filling the composition so that the overall image feels markedly different from the previous pieces.",
+            "The background deepens to a dark orange-red, adding strong character and striking contrast against the circle colours.",
+            "The transparency of the overlapping circles generates unexpected colour blends — a signature effect across the series.",
+        ],
+        framing: nebulaShared.framing,
+    },
 }
 
 export default productsData
