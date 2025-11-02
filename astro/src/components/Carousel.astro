@@ -25,8 +25,8 @@ const { images, width, height, altBase } = Astro.props
                                 src={src}
                                 width={width}
                                 height={height}
-                                loading={"eager"}
-                                fetchpriority={"high"}
+                                loading={index === 0 ? "eager" : "lazy"}
+                                fetchpriority={index === 0 ? "high" : "low"}
                                 sizes="(max-width: 768px) 200vw, 100vw"
                                 breakpoints={imageBreakpoints({
                                     maxWidth: 1500,
