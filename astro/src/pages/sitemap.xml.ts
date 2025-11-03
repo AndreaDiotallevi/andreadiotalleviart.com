@@ -5,6 +5,7 @@ export async function GET() {
     const products = await getStripeProducts()
     const artworks = await getCollection("artworks")
     const baseUrl = "https://andreadiotalleviart.com"
+    const currencies = ["gbp", "eur", "usd"]
 
     const urls = [
         `${baseUrl}`,
@@ -12,11 +13,16 @@ export async function GET() {
         `${baseUrl}/contact`,
         `${baseUrl}/return-policy`,
         `${baseUrl}/portfolio`,
-        `${baseUrl}/shop`,
-        ...products.map(
-            product =>
-                `${baseUrl}/shop/${product.metadata.category}/${product.metadata.slug}`,
+        // Currency-prefixed shop listings
+        ...currencies.map(currency => `${baseUrl}/${currency}/shop`),
+        // Currency-prefixed product pages
+        ...products.flatMap(product =>
+            currencies.map(
+                currency =>
+                    `${baseUrl}/${currency}/shop/${product.metadata.category}/${product.metadata.slug}`,
+            ),
         ),
+        // Portfolio items
         ...artworks.map(artwork => `${baseUrl}/portfolio/${artwork.data.slug}`),
     ]
 
