@@ -22,6 +22,31 @@ function removeHtmlExtension(url: string) {
 
 const cleanedUrl = removeHtmlExtension(canonicalURL.href)
 
+const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
+const pathParts = Astro.url.pathname.split("/").filter(Boolean)
+const currentCurrencyFromPath = (supportedCurrencies as string[]).includes(
+    pathParts[0] ?? "",
+)
+    ? (pathParts[0] as Currency)
+    : null
+const restPath = currentCurrencyFromPath
+    ? "/" + pathParts.slice(1).join("/")
+    : null
+const hreflangMap: Record<Currency, string> = {
+    gbp: "en-gb",
+    eur: "en",
+    usd: "en-us",
+}
+const alternateLinks = currentCurrencyFromPath
+    ? supportedCurrencies.map(c => ({
+          hreflang: hreflangMap[c],
+          href: removeHtmlExtension(new URL(`/${c}${restPath}`, Astro.site).href),
+      }))
+    : []
+const xDefaultLink = currentCurrencyFromPath
+    ? removeHtmlExtension(new URL(`/gbp${restPath}`, Astro.site).href)
+    : null
+
 interface Props {
     title: string
     description: string
@@ -86,6 +111,16 @@ const {
 
         <!-- Open Graph Meta Tags -->
         <link rel="canonical" href={cleanedUrl} />
+        {alternateLinks.length ? (
+            <>
+                {alternateLinks.map(link => (
+                    <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+                ))}
+                {xDefaultLink ? (
+                    <link rel="alternate" hreflang="x-default" href={xDefaultLink} />
+                ) : null}
+            </>
+        ) : null}
         <meta property="og:url" content={cleanedUrl} />
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
