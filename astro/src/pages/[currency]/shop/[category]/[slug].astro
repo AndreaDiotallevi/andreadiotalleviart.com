@@ -1,0 +1,246 @@
+---
+export const prerender = true
+
+import BackToLink from "@components/BackToLink.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/Button.astro"
+import Carousel from "@components/Carousel.astro"
+
+import { formatCurrency } from "@utils/intl"
+import { sizeToDescription } from "@utils/sizes"
+import { getStripeProducts } from "@utils/serverless"
+import { productsData } from "@utils/productsData"
+
+export async function getStaticPaths() {
+    const products = await getStripeProducts()
+    const currencies = ["gbp", "eur", "usd"]
+    return products.flatMap(product =>
+        currencies.map(currency => ({
+            params: {
+                currency,
+                category: product.metadata.category,
+                slug: product.metadata.slug,
+            },
+        })),
+    )
+}
+
+const { slug, currency } = Astro.params
+const products = await getStripeProducts()
+
+const product = products.filter(product => product.metadata.slug === slug)[0]
+
+if (!product) return Astro.redirect("/404")
+---
+
+<BaseLayout
+    title={`${product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
+    description={`${product.metadata.displayName} — generative giclée fine art print on Hahnemühle Photo Rag 308gsm. Museum-quality archival inks. ${sizeToDescription[product.metadata.size]}. Free carbon‑neutral shipping.`}
+    image={product.images[0]}
+    type="product"
+    amount={(product.default_price.currency_options[currency].unit_amount / 100).toFixed(2)}
+    currency={currency}
+    tags={[
+        product.metadata.displayName,
+        product.metadata.category,
+        "Generative art",
+        "Generative art prints",
+        "p5.js",
+        "Processing",
+        "Procedural",
+        "Prints",
+        "Fine art",
+        "Giclee",
+        sizeToDescription[product.metadata.size],
+        "Abstract art",
+        "Geometric art",
+        "Hahnemühle Photo Rag 308gsm",
+        "Archival inks",
+        "Carbon neutral",
+        "Free shipping",
+    ]}
+    newsletter={false}
+    productJsonLd={{
+        name: `${product.metadata.displayName} (Giclée Print, ${product.metadata.size})`,
+        description: `High-quality giclée fine art print of the original artwork '${product.metadata.displayName}'. Printed on archival cotton rag paper using pigment inks. ${sizeToDescription[product.metadata.size]}.`,
+        imageUrls: product.images,
+        sku: product.metadata.sku,
+        material: "Giclée print on archival cotton rag paper",
+        widthCm: product.metadata.size === "A3" ? 29.7 : product.metadata.size === "A2" ? 42 : product.metadata.size === "A1" ? 59.4 : product.metadata.size === "50x70cm" ? 50 : undefined,
+        heightCm: product.metadata.size === "A3" ? 42 : product.metadata.size === "A2" ? 59.4 : product.metadata.size === "A1" ? 84.1 : product.metadata.size === "50x70cm" ? 70 : undefined,
+    }}
+>
+    <div
+        class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
+    >
+        <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
+            <div class="md:hidden mb-4">
+                <BackToLink href={`/${currency}/shop`} text="Back to shop" />
+            </div>
+            <div class="mb-4 md:hidden">
+                <h1 class="text-2xl font-bold">
+                    {product.metadata.displayName}
+                </h1>
+                {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
+            </div>
+            <Carousel images={product.images} width={1429} height={2000} altBase={product.metadata.displayName} />
+        </div>
+
+        <form id="price-form" class="w-full md:w-1/2">
+            <div class="mb-6 hidden md:block">
+                <h1 class="text-5xl font-bold">
+                    {product.metadata.displayName}
+                </h1>
+                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">About the artwork</h2>
+                    <div class="space-y-2">
+                        {(productsData[product.metadata.sku]?.about ?? [product.description]).map(p => (
+                            <p>{p}</p>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">
+                        <label for="price-id">Size</label>
+                    </h2>
+                    <select
+                        id="price-id"
+                        name="price-id"
+                        data-currency={currency}
+                        class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2 font-semibold appearance-none"
+                    >
+                        <option value={product.default_price.id}>
+                            {sizeToDescription[product.metadata.size]} - {
+                                formatCurrency({
+                                    value: product.default_price
+                                        .currency_options[currency].unit_amount,
+                                    currency,
+                                })
+                            }
+                        </option>
+                    </select>
+                    <p class="mb-1">
+                        The image is <span class=""
+                            >printed full bleed with no border</span
+                        >. Any frames shown in images are for display purposes
+                        only.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Fine art printing</h2>
+                    <div class="space-y-2">
+                        <p>
+                            Your print is produced using <span class="">Giclée printing</span>,
+                            a premium technique that sprays microscopic droplets of archival ink onto the paper
+                            to achieve vivid, lifelike colour and exceptional detail.
+                        </p>
+                        <p>
+                            This ensures your print captures every nuance of the original artwork,
+                            bringing its bold, vibrant energy into your space.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">
+                        Premium paper quality
+                    </h2>
+                    <div class="space-y-2">
+                        <p>
+                            The print is on <span class=""
+                            >Hahnemühle Photo Rag 308gsm</span
+                            >, a museum-grade, acid-free cotton paper known for its
+                            rich texture and depth.
+                        </p>
+                        <p>
+                            Its smooth, soft surface brings
+                            out details and tones, giving the print a
+                            three-dimensional feel. The paper's exceptional ink
+                            absorption preserves colors with remarkable depth and
+                            precision, ensuring they stay vibrant for over 100
+                            years.
+                        </p>
+                    </div>
+                </div>
+                {productsData[product.metadata.sku]?.framing?.length ? (
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2">Framing</h2>
+                        <div class="space-y-2">
+                            {productsData[product.metadata.sku].framing.map(p => (
+                                <p>{p}</p>
+                            ))}
+                        </div>
+                    </div>
+                ) : <></>}
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">
+                        {
+                            formatCurrency({
+                                value: product.default_price.currency_options[
+                                    currency
+                                ].unit_amount,
+                                currency,
+                            })
+                        }
+                    </h2>
+                    <p>Apply promotion codes in the cart page.</p>
+                </div>
+                <Button
+                    id="submit-button"
+                    buttonText="Add to cart"
+                    errorMessage="There was an error creating your session. Please try again."
+                />
+            </div>
+        </form>
+    </div>
+</BaseLayout>
+
+<script>
+    import type { Currency } from "@utils/stripe"
+    import { addToCart } from "@scripts/cart"
+
+    document.addEventListener("astro:page-load", async () => {
+        const priceForm = document.querySelector("#price-form") as HTMLElement
+
+        if (!priceForm) return
+
+        const button = priceForm.querySelector(
+            "#submit-button"
+        ) as HTMLButtonElement
+
+        const spinner = priceForm.querySelector("#loading-spinner")!
+        const errorMessage = priceForm.querySelector("#error-message")!
+
+        spinner.classList.add("hidden")
+        button.disabled = false
+
+        priceForm.addEventListener("submit", async e => {
+            e.preventDefault()
+
+            button.disabled = true
+            spinner.classList.remove("hidden")
+            errorMessage.classList.add("hidden")
+
+            const priceIdElement = document.querySelector(
+                "#price-id"
+            ) as HTMLInputElement
+
+            const priceId = priceIdElement.value
+            const currency = priceIdElement.dataset.currency as Currency
+
+            const response = await addToCart({ priceId, currency })
+
+            if (response?.error) {
+                errorMessage.classList.remove("hidden")
+                spinner.classList.add("hidden")
+                button.disabled = false
+                return
+            }
+        })
+    })
+</script>
+
+
