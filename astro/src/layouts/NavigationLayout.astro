@@ -203,7 +203,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
     document.addEventListener("astro:page-load", () => {
         if (
             window.location.pathname === "/checkout/success" ||
-            (window.location.pathname === "/cart" &&
+            (window.location.pathname.endsWith("/cart") &&
                 !window.location.search.includes("session_id="))
         ) {
             clearClientSession()
@@ -244,8 +244,11 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
         const { sessionId, totalQuantity } = getClientSession()
 
         cartLinks.forEach(link => {
-            sessionId &&
-                link.setAttribute("href", `/cart?session_id=${sessionId}`)
+            if (sessionId) {
+                link.setAttribute("href", `/${currentCurrency}/cart?session_id=${sessionId}`)
+            } else {
+                link.setAttribute("href", `/${currentCurrency}/cart`)
+            }
 
             const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
 

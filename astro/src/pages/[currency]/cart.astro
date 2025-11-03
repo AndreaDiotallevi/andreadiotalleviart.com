@@ -14,6 +14,7 @@ import type { Currency, StripePrice } from "@utils/stripe"
 import type Stripe from "stripe"
 
 const sessionId = Astro.url.searchParams.get("session_id")
+const { currency } = Astro.params
 
 let session: Stripe.Checkout.Session | null = null
 
@@ -22,9 +23,7 @@ if (sessionId) {
     session = response.session ?? null
 }
 
-const currency =
-    (session?.currency as Currency) ||
-    getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
+const pageCurrency = (currency as Currency) || (session?.currency as Currency) || getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
 
 const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 ---
@@ -90,7 +89,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         <tr>
                                             <td class="py-2 md:py-4 pr-1 md:pr-8 flex">
                                                 <a
-                                                    href={`/${currency}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                                                    href={`/${pageCurrency}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                                                     class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
                                                 >
                                                     <Image
@@ -135,13 +134,13 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                                 {formatCurrency({
                                                     value: price
                                                         .currency_options[
-                                                        currency
+                                                        pageCurrency
                                                     ].unit_amount,
-                                                    currency,
+                                                    currency: pageCurrency,
                                                 })}
                                             </td>
                                             <td class="py-2 md:py-4 px-0 md:px-8 text-center">
-                                                <div class="border border-gray-800 rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
+                                                <div class="border border-gray-300 rounded-lg h-12 flex items-center justify-center w-fit mx-auto">
                                                     <button
                                                         class="flex items-center justify-center text-4xl w-12 h-12 md:hover:text-gray-600 transition-colors duration-300"
                                                         data-price-id={price.id}
@@ -170,7 +169,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                             <td class="text-right">
                                                 {formatCurrency({
                                                     value: item.amount_subtotal,
-                                                    currency,
+                                                    currency: pageCurrency,
                                                 })}
                                             </td>
                                         </tr>
@@ -186,7 +185,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                     <td class="text-right md:py-1 min-w-36">
                                         {formatCurrency({
                                             value: session.amount_subtotal!,
-                                            currency,
+                                            currency: pageCurrency,
                                         })}
                                     </td>
                                 </tr>
@@ -202,7 +201,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         {formatCurrency({
                                             value: session.total_details
                                                 ?.amount_discount!,
-                                            currency,
+                                            currency: pageCurrency,
                                         })}
                                     </td>
                                 </tr>
@@ -211,7 +210,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                     <td class="text-right md:py-1 min-w-36 font-bold">
                                         {formatCurrency({
                                             value: session.amount_total!,
-                                            currency,
+                                            currency: pageCurrency,
                                         })}
                                     </td>
                                 </tr>
@@ -222,7 +221,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         <div class="w-full max-w-lg">
                             <form id="promotion-code-form" class="flex h-12">
                                 {coupon ? (
-                                    <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 font-bold overflow-x-auto overflow-y-hidden">
+                                    <p class="w-full px-3 py-3 flex items-center h-12 text-nowrap border border-gray-200 rounded-md bg-gray-200 mr-2 overflow-x-auto overflow-y-hidden">
                                         {coupon.name} ({coupon.percent_off}%
                                         off)
                                     </p>
@@ -231,7 +230,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         id="promotion-code-value"
                                         name="promotion-code-value"
                                         type="text"
-                                        class="w-full px-3 py-3 border border-gray-800 rounded-md mr-2 h-12"
+                                        class="w-full px-3 py-3 border border-gray-300 rounded-md mr-2 h-12"
                                         placeholder="Discount code"
                                         autocomplete="off"
                                         required
@@ -260,7 +259,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                             </div>
                         </div>
                         <a
-                            href={`/${currency}/shop`}
+                            href={`/${pageCurrency}/shop`}
                             class="w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-800 md:hover:bg-gray-800 md:hover:text-white text-center font-bold max-w-lg transition-colors duration-300"
                         >
                             Explore more prints
@@ -276,7 +275,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 <div class="flex flex-col items-center">
                     <p class="text-center mb-4">Your cart is empty.</p>
                     <a
-                        href={`/${currency}/shop`}
+                        href={`/${pageCurrency}/shop`}
                         class="block w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-800 md:hover:bg-gray-800 md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"
                     >
                         Explore prints
@@ -294,8 +293,8 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         removeFromCart,
         addPromotionCode,
         removePromotionCode,
+        recreateSessionWithCurrency,
     } from "@scripts/cart"
-    import { recreateSessionWithCurrency } from "@scripts/cart"
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
     import {
         clearClientSession,
@@ -324,14 +323,14 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             clientSession.sessionId &&
             session.id !== clientSession.sessionId
         ) {
-            navigate(`/cart?session_id=${clientSession.sessionId}`, {
+            navigate(`/[currency]/cart?session_id=${clientSession.sessionId}`.replace("[currency]", (window.location.pathname.split("/")[1] || "gbp").toLowerCase()), {
                 history: "replace",
             })
             return
         }
 
         if (session?.id && !clientSession.sessionId) {
-            navigate("/cart", { history: "replace" })
+            navigate(`/[currency]/cart`.replace("[currency]", (window.location.pathname.split("/")[1] || "gbp").toLowerCase()), { history: "replace" })
             return
         }
 
@@ -340,7 +339,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        const currency = (session?.currency || "gbp") as Currency
+        const currency = ((window.location.pathname.split("/")[1] || "gbp").toLowerCase()) as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -428,7 +427,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                         promotionCode: code,
                     })
-                    navigate(`/cart?session_id=${session.id}`, {
+                    navigate(`/[currency]/cart?session_id=${session.id}`.replace("[currency]", currency), {
                         history: "replace",
                     })
                 } else {
@@ -463,7 +462,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     updateClientSession({
                         session,
                     })
-                    navigate(`/cart?session_id=${session.id}`, {
+                    navigate(`/[currency]/cart?session_id=${session.id}`.replace("[currency]", currency), {
                         history: "replace",
                     })
                 } else {
@@ -499,9 +498,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     await recreateSessionWithCurrency({ currency })
                     const updated = getClientSession()
                     if (updated.sessionId) {
-                        navigate(`/cart?session_id=${updated.sessionId}`, { history: "replace" })
+                        navigate(`/[currency]/cart?session_id=${updated.sessionId}`.replace("[currency]", currency), { history: "replace" })
                     } else {
-                        navigate(`/cart`, { history: "replace" })
+                        navigate(`/[currency]/cart`.replace("[currency]", currency), { history: "replace" })
                     }
                 })
             })

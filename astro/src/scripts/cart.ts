@@ -42,8 +42,8 @@ export const addToCart = async ({
     if (!session) return { error }
 
     updateClientSession({ session, promotionCode })
-    navigate(`/cart?session_id=${session.id}`, {
-        history: window.location.pathname === "/cart" ? "replace" : "push",
+    navigate(`/${currency}/cart?session_id=${session.id}`, {
+        history: (window.location.pathname.endsWith("/cart") || /\/([a-z]{3})\/cart$/.test(window.location.pathname)) ? "replace" : "push",
     })
 }
 
@@ -74,7 +74,7 @@ export const removeFromCart = async ({
 
     if (newLineItems.filter(item => item.quantity).length === 0) {
         clearClientSession()
-        navigate(`/cart`, { history: "replace" })
+        navigate(`/${currency}/cart`, { history: "replace" })
         return
     }
 
@@ -88,7 +88,7 @@ export const removeFromCart = async ({
     if (!session) return
 
     updateClientSession({ session, promotionCode })
-    navigate(`/cart?session_id=${session.id}`, { history: "replace" })
+    navigate(`/${currency}/cart?session_id=${session.id}`, { history: "replace" })
 }
 
 export const addPromotionCode = async ({
