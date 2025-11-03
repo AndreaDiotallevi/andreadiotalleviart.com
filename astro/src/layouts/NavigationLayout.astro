@@ -209,11 +209,37 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             clearClientSession()
         }
 
+        // Currency handling and session invalidation on mismatch
+        const supportedCurrencies = ["gbp", "eur", "usd"]
+        const firstPathSegment = window.location.pathname
+            .split("/")[1]
+            ?.toLowerCase()
+
+        const storedCurrency = localStorage.getItem("currency") || "gbp"
+        const pathCurrency = supportedCurrencies.includes(firstPathSegment)
+            ? firstPathSegment
+            : ""
+
+        if (pathCurrency && pathCurrency !== storedCurrency) {
+            // Currency changed via URL: clear any existing checkout session
+            clearClientSession()
+            localStorage.setItem("currency", pathCurrency)
+        }
+
+        const currentCurrency = pathCurrency || storedCurrency || "gbp"
+
+        // Rewrite Shop links to keep currency
+        const shopAnchors = document.querySelectorAll(
+            'a[href="/shop"], a[href="/shop/"]'
+        ) as NodeListOf<HTMLAnchorElement>
+        shopAnchors.forEach(a => {
+            a.href = `/${currentCurrency}/shop`
+        })
+
+        // Update cart links and badge after potential session clear
         const cartLinks = document.querySelectorAll(
             '[id^="cart-link-"]'
         ) as NodeListOf<HTMLAnchorElement>
-
-        if (!cartLinks.length) return
 
         const { sessionId, totalQuantity } = getClientSession()
 
