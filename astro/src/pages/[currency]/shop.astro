@@ -118,7 +118,7 @@ const products = await getStripeProducts()
 </BaseLayout>
 
 <script>
-    import { clearClientSession } from "@utils/localStorage"
+    import { recreateSessionWithCurrency } from "@scripts/cart"
     import { navigate } from "astro:transitions/client"
 
     document.addEventListener("astro:page-load", () => {
@@ -130,14 +130,12 @@ const products = await getStripeProducts()
         selectors.forEach(sel => (sel.value = initial))
 
         selectors.forEach(sel => {
-            sel.addEventListener("change", () => {
+            sel.addEventListener("change", async () => {
                 const currency = sel.value
                 localStorage.setItem("currency", currency)
-                clearClientSession()
+                await recreateSessionWithCurrency({ currency: currency as any })
                 navigate(`/${currency}/shop`)
             })
         })
     })
     </script>
-
-

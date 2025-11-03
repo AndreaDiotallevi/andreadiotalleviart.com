@@ -219,7 +219,7 @@ if (!product) return Astro.redirect("/404")
 
 <script>
     import type { Currency } from "@utils/stripe"
-    import { addToCart } from "@scripts/cart"
+    import { addToCart, recreateSessionWithCurrency } from "@scripts/cart"
     import { clearClientSession } from "@utils/localStorage"
     import { navigate } from "astro:transitions/client"
 
@@ -270,12 +270,12 @@ if (!product) return Astro.redirect("/404")
             currencySelectors.forEach(sel => (sel.value = initial))
 
             currencySelectors.forEach(sel => {
-                sel.addEventListener("change", () => {
+                sel.addEventListener("change", async () => {
                     const currency = sel.value
                     const category = sel.dataset.category
                     const slug = sel.dataset.slug
                     localStorage.setItem("currency", currency)
-                    clearClientSession()
+                    await recreateSessionWithCurrency({ currency: currency as any })
                     if (category && slug) {
                         navigate(`/${currency}/shop/${category}/${slug}`)
                     } else {
@@ -286,5 +286,3 @@ if (!product) return Astro.redirect("/404")
         }
     })
 </script>
-
-

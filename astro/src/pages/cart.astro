@@ -40,9 +40,24 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         data-session={JSON.stringify(session)}
         class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8"
     >
-        <h1 class="text-center text-2xl md:text-5xl font-bold mb-4 md:mb-6">
-            Cart
-        </h1>
+        <div class="relative mb-4 md:mb-6">
+            <h1 class="text-center text-2xl md:text-5xl font-bold">
+                Cart
+            </h1>
+            <div class="absolute right-0 top-0 flex items-center">
+                <label for="currency-selector-cart" class="sr-only">Currency</label>
+                <select
+                    id="currency-selector-cart"
+                    aria-label="Currency"
+                    data-currency-selector
+                    class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                >
+                    <option value="gbp">GBP (£)</option>
+                    <option value="eur">EUR (€)</option>
+                    <option value="usd">USD ($)</option>
+                </select>
+            </div>
+        </div>
         {
             session ? (
                 <>
@@ -280,6 +295,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         addPromotionCode,
         removePromotionCode,
     } from "@scripts/cart"
+    import { recreateSessionWithCurrency } from "@scripts/cart"
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
     import {
         clearClientSession,
@@ -468,5 +484,27 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         })
 
         prefetch(`/checkout?client_secret=${session.client_secret}`)
+
+        // Currency selector on cart page
+        const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
+        if (currencySelectors.length) {
+            const currentCurrency = (session?.currency || localStorage.getItem("currency") || "gbp").toLowerCase()
+            const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
+            currencySelectors.forEach(sel => (sel.value = initial))
+
+            currencySelectors.forEach(sel => {
+                sel.addEventListener("change", async () => {
+                    const currency = sel.value as any
+                    localStorage.setItem("currency", currency)
+                    await recreateSessionWithCurrency({ currency })
+                    const updated = getClientSession()
+                    if (updated.sessionId) {
+                        navigate(`/cart?session_id=${updated.sessionId}`, { history: "replace" })
+                    } else {
+                        navigate(`/cart`, { history: "replace" })
+                    }
+                })
+            })
+        }
     })
 </script>

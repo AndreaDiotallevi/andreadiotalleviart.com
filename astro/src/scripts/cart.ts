@@ -129,3 +129,24 @@ export const removePromotionCode = async ({
 
     return { session, error }
 }
+
+export const recreateSessionWithCurrency = async ({
+    currency,
+}: {
+    currency: Currency
+}) => {
+    const { lineItems, promotionCode } = getClientSession()
+
+    if (!lineItems.length) return
+
+    const { session } = await createCheckoutSession({
+        line_items: lineItems,
+        success_url: `${window.location.origin}/checkout/success`,
+        currency,
+        promotion_code: promotionCode || undefined,
+    })
+
+    if (session) {
+        updateClientSession({ session, promotionCode })
+    }
+}
