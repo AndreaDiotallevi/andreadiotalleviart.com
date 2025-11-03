@@ -13,7 +13,7 @@ const { href, text, towardsRight, darkMode } = Astro.props
     href={href}
     class="inline-flex items-center justify-center h-[48px] md:hover:opacity-70 transition-opacity duration-300"
 >
-    {towardsRight ? <span class="font-bold pr-2">{text}</span> : null}
+    {towardsRight ? <span class="text-sm md:text-base font-semibold pr-2">{text}</span> : null}
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="32"
@@ -26,5 +26,5 @@ const { href, text, towardsRight, darkMode } = Astro.props
             points="12.718 4.707 11.305 3.292 2.585 12 11.305 20.707 12.718 19.292 6.417 13 20 13 20 11 6.416 11 12.718 4.707"
         ></polygon>
     </svg>
-    {towardsRight ? null : <span class="font-bold pl-2">{text}</span>}
+    {towardsRight ? null : <span class="text-sm md:text-base font-semibold pl-2">{text}</span>}
 </a>

@@ -43,21 +43,21 @@ const products = await getStripeProducts()
         <div class="relative mb-2 md:mb-3 text-center">
             <h1 class="text-2xl md:text-5xl font-bold">Shop</h1>
         </div>
-        <p class="max-w-[400px] mx-auto text-center text-sm md:text-base mt-2 mb-5 md:mb-3">
+        <p class="max-w-[400px] mx-auto text-center text-sm md:text-base mt-2 mb-3">
             Museum-quality prints on premium cotton paper delivered with
             free shipping
         </p>
         <div class="flex md:hidden items-center justify-end mb-3">
-            <label class="mr-2 font-semibold text-sm">Currency:</label>
-            <select data-currency-selector class="border border-gray-300 rounded px-2 py-1 text-sm">
+            <label for="currency-selector-mobile" class="sr-only">Currency</label>
+            <select id="currency-selector-mobile" aria-label="Currency" data-currency-selector class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold">
                 <option value="gbp">GBP (£)</option>
                 <option value="eur">EUR (€)</option>
                 <option value="usd">USD ($)</option>
             </select>
         </div>
         <div class="hidden md:flex items-center justify-end mb-4">
-            <label class="mr-2 font-semibold text-sm md:text-base">Currency:</label>
-            <select data-currency-selector class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base">
+            <label for="currency-selector-desktop" class="sr-only">Currency</label>
+            <select id="currency-selector-desktop" aria-label="Currency" data-currency-selector class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold">
                 <option value="gbp">GBP (£)</option>
                 <option value="eur">EUR (€)</option>
                 <option value="usd">USD ($)</option>

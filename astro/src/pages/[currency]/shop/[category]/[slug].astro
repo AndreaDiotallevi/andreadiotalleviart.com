@@ -74,8 +74,16 @@ if (!product) return Astro.redirect("/404")
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-            <div class="md:hidden mb-4">
+            <div class="md:hidden flex items-center justify-between mb-4">
                 <BackToLink href={`/${currency}/shop`} text="Back to shop" />
+                <div class="flex items-center">
+                    <label for="currency-selector-mobile" class="sr-only">Currency</label>
+                    <select id="currency-selector-mobile" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold">
+                        <option value="gbp">GBP (£)</option>
+                        <option value="eur">EUR (€)</option>
+                        <option value="usd">USD ($)</option>
+                    </select>
+                </div>
             </div>
             <div class="mb-4 md:hidden">
                 <h1 class="text-2xl font-bold">
@@ -87,20 +95,21 @@ if (!product) return Astro.redirect("/404")
         </div>
 
         <form id="price-form" class="w-full md:w-1/2">
-            <div class="flex items-center justify-end mb-4">
-                <label for="currency-selector" class="mr-2 font-semibold text-sm md:text-base">Currency:</label>
-                <select id="currency-selector" data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base">
-                    <option value="gbp">GBP (£)</option>
-                    <option value="eur">EUR (€)</option>
-                    <option value="usd">USD ($)</option>
-                </select>
-            </div>
-            
-            <div class="mb-6 hidden md:block">
-                <h1 class="text-5xl font-bold">
-                    {product.metadata.displayName}
-                </h1>
-                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+            <div class="hidden md:flex items-start justify-between mb-6">
+                <div>
+                    <h1 class="text-5xl font-bold">
+                        {product.metadata.displayName}
+                    </h1>
+                    {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+                </div>
+                <div class="flex items-center">
+                    <label for="currency-selector-desktop" class="sr-only">Currency</label>
+                    <select id="currency-selector-desktop" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold">
+                        <option value="gbp">GBP (£)</option>
+                        <option value="eur">EUR (€)</option>
+                        <option value="usd">USD ($)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="space-y-6">
@@ -120,7 +129,7 @@ if (!product) return Astro.redirect("/404")
                         id="price-id"
                         name="price-id"
                         data-currency={currency}
-                        class="w-full px-3 py-3 border border-gray-800 rounded-md mb-2 font-semibold appearance-none"
+                        class="w-full px-3 py-3 border border-gray-300 rounded-md mb-2 appearance-none font-semibold"
                     >
                         <option value={product.default_price.id}>
                             {sizeToDescription[product.metadata.size]} - {
@@ -253,23 +262,26 @@ if (!product) return Astro.redirect("/404")
             }
         })
 
-        // Currency selector
-        const currencySel = document.querySelector("#currency-selector") as HTMLSelectElement
-        if (currencySel) {
+        // Currency selectors (mobile + desktop)
+        const currencySelectors = document.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
+        if (currencySelectors.length) {
             const currentCurrency = (window.location.pathname.split("/")[1] || "gbp").toLowerCase()
-            currencySel.value = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
+            const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
+            currencySelectors.forEach(sel => (sel.value = initial))
 
-            currencySel.addEventListener("change", () => {
-                const currency = currencySel.value
-                const category = currencySel.dataset.category
-                const slug = currencySel.dataset.slug
-                localStorage.setItem("currency", currency)
-                clearClientSession()
-                if (category && slug) {
-                    navigate(`/${currency}/shop/${category}/${slug}`)
-                } else {
-                    navigate(`/${currency}/shop`)
-                }
+            currencySelectors.forEach(sel => {
+                sel.addEventListener("change", () => {
+                    const currency = sel.value
+                    const category = sel.dataset.category
+                    const slug = sel.dataset.slug
+                    localStorage.setItem("currency", currency)
+                    clearClientSession()
+                    if (category && slug) {
+                        navigate(`/${currency}/shop/${category}/${slug}`)
+                    } else {
+                        navigate(`/${currency}/shop`)
+                    }
+                })
             })
         }
     })
