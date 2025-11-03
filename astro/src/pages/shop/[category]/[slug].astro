@@ -1,46 +1,34 @@
 ---
-export const prerender = false
+export const prerender = true
 
 import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
 
-import { getLocalCurrency, combinedCountries } from "@utils/currency"
+ 
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { getStripeProducts } from "@utils/serverless"
 import { productsData } from "@utils/productsData"
 
+export async function getStaticPaths() {
+    const products = await getStripeProducts()
+    return products.map(product => ({
+        params: {
+            category: product.metadata.category,
+            slug: product.metadata.slug,
+        },
+    }))
+}
+
 const { slug } = Astro.params
 const products = await getStripeProducts()
 
 const product = products.filter(product => product.metadata.slug === slug)[0]
-
 if (!product) return Astro.redirect("/404")
 
-if (
-    import.meta.env.CONTEXT === "production" ||
-    import.meta.env.CONTEXT === "staging"
-) {
-    console.log(Astro.url.href)
-    console.log(JSON.stringify(Astro.locals.netlify.context.geo))
-}
-
-const currency = getLocalCurrency(
-    Astro.locals.netlify.context.geo.country?.code
-)
-
-Astro.response.headers.set(
-    "cache-control",
-    "public, max-age=300, must-revalidate"
-)
-Astro.response.headers.set(
-    "netlify-cdn-cache-control",
-    "public, durable, s-maxage=31536000, stale-while-revalidate=60"
-)
-Astro.response.headers.set("netlify-vary", `country=${combinedCountries}`)
-Astro.response.headers.set("netlify-cache-tag", "stripe")
+const currency = "gbp"
 ---
 
 <BaseLayout
@@ -48,7 +36,7 @@ Astro.response.headers.set("netlify-cache-tag", "stripe")
     description={`${product.metadata.displayName} — generative giclée fine art print on Hahnemühle Photo Rag 308gsm. Museum-quality archival inks. ${sizeToDescription[product.metadata.size]}. Free carbon‑neutral shipping.`}
     image={product.images[0]}
     type="product"
-    amount={(product.default_price.unit_amount / 100).toFixed(2)}
+    amount={(product.default_price.currency_options["gbp"].unit_amount / 100).toFixed(2)}
     currency="gbp"
     tags={[
         product.metadata.displayName,
