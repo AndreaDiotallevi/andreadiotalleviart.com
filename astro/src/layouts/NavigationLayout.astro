@@ -254,6 +254,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 
             if (totalQuantity > 0) {
                 cartItemsSpan.textContent = `${totalQuantity}`
+                cartItemsSpan.classList.remove("hidden")
             } else {
                 cartItemsSpan.classList.add("hidden")
             }
