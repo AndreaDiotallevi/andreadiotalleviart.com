@@ -14,7 +14,6 @@ import type { Currency, StripePrice } from "@utils/stripe"
 import type Stripe from "stripe"
 
 const sessionId = Astro.url.searchParams.get("session_id")
-const { currency } = Astro.params
 
 let session: Stripe.Checkout.Session | null = null
 
@@ -23,7 +22,7 @@ if (sessionId) {
     session = response.session ?? null
 }
 
-const pageCurrency = (currency as Currency) || (session?.currency as Currency) || getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
+const pageCurrency = (session?.currency as Currency) || getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
 
 const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 ---
@@ -323,14 +322,14 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             clientSession.sessionId &&
             session.id !== clientSession.sessionId
         ) {
-            navigate(`/[currency]/cart?session_id=${clientSession.sessionId}`.replace("[currency]", (window.location.pathname.split("/")[1] || "gbp").toLowerCase()), {
+            navigate(`/cart?session_id=${clientSession.sessionId}`, {
                 history: "replace",
             })
             return
         }
 
         if (session?.id && !clientSession.sessionId) {
-            navigate(`/[currency]/cart`.replace("[currency]", (window.location.pathname.split("/")[1] || "gbp").toLowerCase()), { history: "replace" })
+            navigate(`/cart`, { history: "replace" })
             return
         }
 
@@ -339,7 +338,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        const currency = ((window.location.pathname.split("/")[1] || "gbp").toLowerCase()) as Currency
+        const currency = ((localStorage.getItem("currency") || session?.currency || "gbp").toLowerCase()) as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -427,7 +426,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                         promotionCode: code,
                     })
-                    navigate(`/[currency]/cart?session_id=${session.id}`.replace("[currency]", currency), {
+                    navigate(`/cart?session_id=${session.id}`, {
                         history: "replace",
                     })
                 } else {
@@ -462,7 +461,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     updateClientSession({
                         session,
                     })
-                    navigate(`/[currency]/cart?session_id=${session.id}`.replace("[currency]", currency), {
+                    navigate(`/cart?session_id=${session.id}`, {
                         history: "replace",
                     })
                 } else {
@@ -498,12 +497,14 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     await recreateSessionWithCurrency({ currency })
                     const updated = getClientSession()
                     if (updated.sessionId) {
-                        navigate(`/[currency]/cart?session_id=${updated.sessionId}`.replace("[currency]", currency), { history: "replace" })
+                        navigate(`/cart?session_id=${updated.sessionId}`, { history: "replace" })
                     } else {
-                        navigate(`/[currency]/cart`.replace("[currency]", currency), { history: "replace" })
+                        navigate(`/cart`, { history: "replace" })
                     }
                 })
             })
         }
     })
 </script>
+
+

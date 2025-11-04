@@ -245,9 +245,9 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 
         cartLinks.forEach(link => {
             if (sessionId) {
-                link.setAttribute("href", `/${currentCurrency}/cart?session_id=${sessionId}`)
+                link.setAttribute("href", `/cart?session_id=${sessionId}`)
             } else {
-                link.setAttribute("href", `/${currentCurrency}/cart`)
+                link.setAttribute("href", `/cart`)
             }
 
             const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
