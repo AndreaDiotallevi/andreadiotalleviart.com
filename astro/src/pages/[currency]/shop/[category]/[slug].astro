@@ -79,9 +79,9 @@ if (!product) return Astro.redirect("/404")
                 <div class="flex items-center">
                     <label for="currency-selector-mobile" class="sr-only">Currency</label>
                     <select id="currency-selector-mobile" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold">
-                        <option value="gbp">GBP (£)</option>
-                        <option value="eur">EUR (€)</option>
-                        <option value="usd">USD ($)</option>
+                        <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
+                        <option value="eur" selected={currency === "eur"}>EUR (€)</option>
+                        <option value="usd" selected={currency === "usd"}>USD ($)</option>
                     </select>
                 </div>
             </div>
@@ -105,9 +105,9 @@ if (!product) return Astro.redirect("/404")
                 <div class="flex items-center">
                     <label for="currency-selector-desktop" class="sr-only">Currency</label>
                     <select id="currency-selector-desktop" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold">
-                        <option value="gbp">GBP (£)</option>
-                        <option value="eur">EUR (€)</option>
-                        <option value="usd">USD ($)</option>
+                        <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
+                        <option value="eur" selected={currency === "eur"}>EUR (€)</option>
+                        <option value="usd" selected={currency === "usd"}>USD ($)</option>
                     </select>
                 </div>
             </div>
