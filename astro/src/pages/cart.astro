@@ -334,6 +334,45 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         }
 
         if (!session) {
+            // Allow currency change on empty cart
+            const currencySelectors = cartPageContent.querySelectorAll(
+                '[data-currency-selector]'
+            ) as NodeListOf<HTMLSelectElement>
+
+            if (currencySelectors.length) {
+                const currentCurrency = (
+                    localStorage.getItem("currency") || "gbp"
+                ).toLowerCase()
+                const initial = ["gbp", "eur", "usd"].includes(
+                    currentCurrency,
+                )
+                    ? currentCurrency
+                    : "gbp"
+                currencySelectors.forEach(sel => (sel.value = initial))
+
+                const updateLocalShopLinks = (cur: string) => {
+                    const localShopAnchors = cartPageContent.querySelectorAll(
+                        'a[href$="/shop"], a[href*="/shop"]',
+                    ) as NodeListOf<HTMLAnchorElement>
+                    localShopAnchors.forEach(a => {
+                        a.href = `/${cur}/shop`
+                    })
+                }
+
+                updateLocalShopLinks(initial)
+
+                currencySelectors.forEach(sel => {
+                    sel.addEventListener("change", e => {
+                        // Prevent handlers from other pages (kept alive by transitions) from firing
+                        e.stopImmediatePropagation()
+                        const currency = sel.value as any
+                        localStorage.setItem("currency", currency)
+                        updateLocalShopLinks(currency)
+                        navigate(`/cart`, { history: "replace" })
+                    })
+                })
+            }
+
             clearClientSession()
             return
         }
