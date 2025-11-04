@@ -491,7 +491,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             currencySelectors.forEach(sel => (sel.value = initial))
 
             currencySelectors.forEach(sel => {
-                sel.addEventListener("change", async () => {
+                sel.addEventListener("change", async (e) => {
+                    // Prevent any previously-attached listeners (e.g., from shop/product pages via transitions) from also handling this event
+                    e.stopImmediatePropagation()
                     const currency = sel.value as any
                     localStorage.setItem("currency", currency)
                     await recreateSessionWithCurrency({ currency })
@@ -506,5 +508,3 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         }
     })
 </script>
-
-

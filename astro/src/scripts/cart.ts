@@ -74,7 +74,7 @@ export const removeFromCart = async ({
 
     if (newLineItems.filter(item => item.quantity).length === 0) {
         clearClientSession()
-        navigate(`/${currency}/cart`, { history: "replace" })
+        navigate(`/cart`, { history: "replace" })
         return
     }
 
