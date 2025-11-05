@@ -208,6 +208,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 
 <script>
     import { clearClientSession, getClientSession, updateClientSession, getStoredCurrency, setStoredCurrency, updateCurrencyFromSession } from "@utils/localStorage"
+    import { recreateSessionWithCurrency } from "@scripts/cart"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {
@@ -231,9 +232,16 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             : ""
 
         if (pathCurrency && pathCurrency !== storedCurrency) {
-            // Currency changed via URL: clear any existing checkout session
-            clearClientSession()
+            // Currency changed via URL: persist new currency and, if a local session exists, recreate it in the new currency
             setStoredCurrency(pathCurrency as any)
+            try {
+                const { lineItems } = getClientSession()
+                if (lineItems.length) {
+                    await recreateSessionWithCurrency({ currency: pathCurrency as any })
+                }
+            } catch (_) {
+                // ignore network errors; UI will reflect stored state
+            }
         }
 
         const currentCurrency = pathCurrency || storedCurrency || "gbp"
