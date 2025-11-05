@@ -1,4 +1,5 @@
 import type Stripe from "stripe"
+import type { Currency } from "./stripe"
 
 const clientSessionKey = "andreadiotalleviart"
 
@@ -72,4 +73,31 @@ export const updateClientSession = ({
 
 export const clearClientSession = () => {
     localStorage.removeItem(clientSessionKey)
+}
+
+// --- Currency helpers (kept separate from client session) ---
+
+const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
+const currencyKey = "currency"
+
+export const getStoredCurrency = (): Currency => {
+    const value = (localStorage.getItem(currencyKey) || "").toLowerCase()
+    return (supportedCurrencies as string[]).includes(value)
+        ? (value as Currency)
+        : "gbp"
+}
+
+export const setStoredCurrency = (currency: Currency) => {
+    localStorage.setItem(currencyKey, currency.toLowerCase())
+}
+
+export const clearStoredCurrency = () => {
+    localStorage.removeItem(currencyKey)
+}
+
+export const updateCurrencyFromSession = (session: Stripe.Checkout.Session) => {
+    const c = (session.currency as string | undefined)?.toLowerCase()
+    if (c && (supportedCurrencies as string[]).includes(c)) {
+        localStorage.setItem(currencyKey, c)
+    }
 }

@@ -207,7 +207,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 </script>
 
 <script>
-    import { clearClientSession, getClientSession, updateClientSession } from "@utils/localStorage"
+    import { clearClientSession, getClientSession, updateClientSession, getStoredCurrency, setStoredCurrency, updateCurrencyFromSession } from "@utils/localStorage"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {
@@ -225,7 +225,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             .split("/")[1]
             ?.toLowerCase()
 
-        const storedCurrency = localStorage.getItem("currency") || "gbp"
+        const storedCurrency = getStoredCurrency()
         const pathCurrency = supportedCurrencies.includes(firstPathSegment)
             ? firstPathSegment
             : ""
@@ -233,7 +233,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
         if (pathCurrency && pathCurrency !== storedCurrency) {
             // Currency changed via URL: clear any existing checkout session
             clearClientSession()
-            localStorage.setItem("currency", pathCurrency)
+            setStoredCurrency(pathCurrency as any)
         }
 
         const currentCurrency = pathCurrency || storedCurrency || "gbp"
@@ -312,9 +312,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
                 if (session) {
                     const { promotionCode } = getClientSession()
                     updateClientSession({ session, promotionCode })
-                    if (session.currency) {
-                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
-                    }
+                    updateCurrencyFromSession(session)
                 }
             } catch (e) {
                 // ignore network errors; UI will reflect stored state

@@ -299,6 +299,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         clearClientSession,
         getClientSession,
         updateClientSession,
+        getStoredCurrency,
+        setStoredCurrency,
+        updateCurrencyFromSession,
     } from "@utils/localStorage"
     import type { Currency } from "@utils/stripe"
     import { prefetch } from "astro:prefetch"
@@ -320,9 +323,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         // Ensure local client session mirrors server session so currency changes can recreate sessions reliably
         if (session?.id) {
             updateClientSession({ session, promotionCode: clientSession.promotionCode })
-            if (session.currency) {
-                localStorage.setItem("currency", (session.currency as string).toLowerCase())
-            }
+            updateCurrencyFromSession(session)
 
             // Keep URL in sync with current session id
             const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
@@ -339,9 +340,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             ) as NodeListOf<HTMLSelectElement>
 
             if (currencySelectors.length) {
-                const currentCurrency = (
-                    localStorage.getItem("currency") || "gbp"
-                ).toLowerCase()
+                const currentCurrency = getStoredCurrency()
                 const initial = ["gbp", "eur", "usd"].includes(
                     currentCurrency,
                 )
@@ -365,7 +364,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         // Prevent handlers from other pages (kept alive by transitions) from firing
                         e.stopImmediatePropagation()
                         const currency = sel.value as any
-                        localStorage.setItem("currency", currency)
+                        setStoredCurrency(currency)
                         updateLocalShopLinks(currency)
                         navigate(`/cart`)
                     })
@@ -376,7 +375,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        const currency = ((localStorage.getItem("currency") || session?.currency || "gbp").toLowerCase()) as Currency
+        const currency = ((getStoredCurrency() || session?.currency || "gbp")) as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -526,7 +525,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         // Currency selector on cart page
         const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
         if (currencySelectors.length) {
-            const currentCurrency = (session?.currency || localStorage.getItem("currency") || "gbp").toLowerCase()
+            const currentCurrency = (session?.currency || getStoredCurrency() || "gbp").toLowerCase()
             const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
             currencySelectors.forEach(sel => (sel.value = initial))
 
@@ -535,7 +534,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     // Prevent any previously-attached listeners (e.g., from shop/product pages via transitions) from also handling this event
                     e.stopImmediatePropagation()
                     const currency = sel.value as any
-                    localStorage.setItem("currency", currency)
+                    setStoredCurrency(currency)
                     await recreateSessionWithCurrency({ currency })
                     const updated = getClientSession()
                     if (updated.sessionId) {
