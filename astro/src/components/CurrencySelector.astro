@@ -1,0 +1,95 @@
+---
+interface Props {
+    id?: string
+    currency: string
+    class?: string
+    ariaLabel?: string
+    title?: string
+    dataCategory?: string
+    dataSlug?: string
+}
+
+const {
+    id,
+    currency,
+    class: className,
+    ariaLabel = "Currency",
+    title,
+    dataCategory,
+    dataSlug,
+} = Astro.props as Props
+
+---
+
+<select
+    id={id}
+    aria-label={ariaLabel}
+    title={title}
+    data-currency-selector
+    class={className}
+    data-category={dataCategory}
+    data-slug={dataSlug}
+>
+    <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
+    <option value="eur" selected={currency === "eur"}>EUR (€)</option>
+    <option value="usd" selected={currency === "usd"}>USD ($)</option>
+</select>
+
+<script>
+    import { getClientSession, setStoredCurrency } from "@utils/localStorage"
+    import { recreateSessionWithCurrency } from "@scripts/cart"
+    import type { Currency } from "@utils/stripe"
+    import { navigate } from "astro:transitions/client"
+
+    document.addEventListener("astro:page-load", () => {
+        const selectors = document.querySelectorAll('[data-currency-selector]')
+        if (!selectors.length) return
+
+        selectors.forEach(sel => {
+            if ((sel as HTMLElement).getAttribute('data-currency-bound') === '1') return
+            ;(sel as HTMLElement).setAttribute('data-currency-bound', '1')
+
+            sel.addEventListener('change', async () => {
+                const newCurrency = (sel as HTMLSelectElement).value.toLowerCase() as Currency
+                setStoredCurrency(newCurrency)
+                const { lineItems } = getClientSession()
+                if (lineItems && lineItems.length > 0) {
+                    await recreateSessionWithCurrency({ currency: newCurrency })
+                }
+
+                // Update shop links to reflect the new currency
+                const shopAnchors = document.querySelectorAll(
+                    'a[href$="/shop"], a[href$="/shop/"]'
+                )
+                shopAnchors.forEach(a => {
+                    a.setAttribute('href', `/${newCurrency}/shop`)
+                })
+
+                // Decide navigation based on first path segment
+                const parts = window.location.pathname.split("/")
+                const first = (parts[1] || "").toLowerCase()
+
+                // Cart page: redirect to /cart?session_id=<newSessionId>
+                if (first === 'cart') {
+                    const { sessionId } = getClientSession()
+                    if (sessionId) {
+                        navigate(`/cart?session_id=${sessionId}`)
+                        return
+                    } else {
+                        // Same page: simply remove focus from the selector
+                        ;(sel as HTMLSelectElement).blur()
+                        return
+                    }
+                }
+
+                // Other pages: replace first segment if it's a supported currency
+                const supported = ["gbp", "eur", "usd"]
+                if (supported.includes(first)) {
+                    parts[1] = newCurrency
+                    const newPath = parts.join("/") || "/"
+                    navigate(newPath)
+                }
+            })
+        })
+    })
+</script>

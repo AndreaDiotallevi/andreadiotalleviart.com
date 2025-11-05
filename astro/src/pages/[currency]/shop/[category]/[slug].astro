@@ -5,11 +5,13 @@ import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
+import CurrencySelector from "@components/CurrencySelector.astro"
 
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { getStripeProducts } from "@utils/serverless"
 import { productsData } from "@utils/productsData"
+import type { Currency } from "@utils/stripe"
 
 export async function getStaticPaths() {
     const products = await getStripeProducts()
@@ -25,7 +27,8 @@ export async function getStaticPaths() {
     )
 }
 
-const { slug, currency } = Astro.params
+const { slug } = Astro.params
+const currency = Astro.params.currency as Currency
 const products = await getStripeProducts()
 
 const product = products.filter(product => product.metadata.slug === slug)[0]
@@ -78,11 +81,14 @@ if (!product) return Astro.redirect("/404")
                 <BackToLink href={`/${currency}/shop`} text="Back to shop" />
                 <div class="flex items-center">
                     <label for="currency-selector-mobile" class="sr-only">Currency</label>
-                    <select id="currency-selector-mobile" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold">
-                        <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
-                        <option value="eur" selected={currency === "eur"}>EUR (€)</option>
-                        <option value="usd" selected={currency === "usd"}>USD ($)</option>
-                    </select>
+                    <CurrencySelector
+                        id="currency-selector-mobile"
+                        ariaLabel="Currency"
+                        currency={currency}
+                        dataCategory={Astro.params.category}
+                        dataSlug={Astro.params.slug}
+                        class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold"
+                    />
                 </div>
             </div>
             <div class="mb-4 md:hidden">
@@ -104,11 +110,14 @@ if (!product) return Astro.redirect("/404")
                 </div>
                 <div class="flex items-center">
                     <label for="currency-selector-desktop" class="sr-only">Currency</label>
-                    <select id="currency-selector-desktop" aria-label="Currency" data-currency-selector data-category={Astro.params.category} data-slug={Astro.params.slug} class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold">
-                        <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
-                        <option value="eur" selected={currency === "eur"}>EUR (€)</option>
-                        <option value="usd" selected={currency === "usd"}>USD ($)</option>
-                    </select>
+                    <CurrencySelector
+                        id="currency-selector-desktop"
+                        ariaLabel="Currency"
+                        currency={currency}
+                        dataCategory={Astro.params.category}
+                        dataSlug={Astro.params.slug}
+                        class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                    />
                 </div>
             </div>
 
@@ -262,25 +271,14 @@ if (!product) return Astro.redirect("/404")
             }
         })
 
-        // Currency selectors (mobile + desktop)
+        // Currency selectors (mobile + desktop) — UI only, no side effects
         const currencySelectors = document.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
         if (currencySelectors.length) {
             const currentCurrency = (window.location.pathname.split("/")[1] || "gbp").toLowerCase()
             const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
             currencySelectors.forEach(sel => (sel.value = initial))
 
-            currencySelectors.forEach(sel => {
-                // Use capture phase and stop propagation to prevent stale listeners (e.g., from the shop page) from hijacking navigation
-                sel.addEventListener("change", async (e) => {
-                    e.stopPropagation()
-                    const currency = sel.value
-                    const category = sel.dataset.category as string
-                    const slug = sel.dataset.slug as string
-                    setStoredCurrency(currency as any)
-                    await recreateSessionWithCurrency({ currency: currency as any })
-                    navigate(`/${currency}/shop/${category}/${slug}`)
-                }, { capture: true })
-            })
+            // No event listeners: UI only
         }
     })
 </script>

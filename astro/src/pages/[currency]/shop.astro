@@ -3,6 +3,7 @@ export const prerender = true
 
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import CurrencySelector from "@components/CurrencySelector.astro"
 import { imageBreakpoints } from "@utils/breakpoints"
 import { getStripeProducts } from "@utils/serverless"
 import { formatCurrency } from "@utils/intl"
@@ -45,11 +46,13 @@ const products = await getStripeProducts()
             <h1 class="text-2xl md:text-5xl font-bold">Shop</h1>
             <div class="absolute right-0 top-0 flex items-center">
                 <label for="currency-selector-shop" class="sr-only">Currency</label>
-                <select id="currency-selector-shop" aria-label="Currency" title="Currency" data-currency-selector class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold">
-                    <option value="gbp" selected={currency === "gbp"}>GBP (£)</option>
-                    <option value="eur" selected={currency === "eur"}>EUR (€)</option>
-                    <option value="usd" selected={currency === "usd"}>USD ($)</option>
-                </select>
+                <CurrencySelector
+                    id="currency-selector-shop"
+                    ariaLabel="Currency"
+                    title="Currency"
+                    currency={currency}
+                    class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                />
             </div>
         </div>
         <p class="max-w-[400px] mx-auto text-center text-sm md:text-base mt-2 mb-5 md:mb-6">
@@ -110,27 +113,3 @@ const products = await getStripeProducts()
         </div>
     </div>
 </BaseLayout>
-
-<script>
-    import { recreateSessionWithCurrency } from "@scripts/cart"
-    import { navigate } from "astro:transitions/client"
-    import { setStoredCurrency } from "@utils/localStorage"
-
-    document.addEventListener("astro:page-load", () => {
-        const selectors = document.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
-        if (!selectors.length) return
-
-        const currentCurrency = (window.location.pathname.split("/")[1] || "gbp").toLowerCase()
-        const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
-        selectors.forEach(sel => (sel.value = initial))
-
-        selectors.forEach(sel => {
-            sel.addEventListener("change", async () => {
-                const currency = sel.value
-                setStoredCurrency(currency as any)
-                await recreateSessionWithCurrency({ currency: currency as any })
-                navigate(`/${currency}/shop`)
-            })
-        })
-    })
-    </script>

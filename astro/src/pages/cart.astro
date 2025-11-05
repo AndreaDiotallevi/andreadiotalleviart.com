@@ -2,6 +2,7 @@
 export const prerender = false
 
 import Button from "@components/Button.astro"
+import CurrencySelector from "@components/CurrencySelector.astro"
 import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
@@ -43,16 +44,12 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             </h1>
             <div class="absolute right-0 top-0 flex items-center">
                 <label for="currency-selector-cart" class="sr-only">Currency</label>
-                <select
+                <CurrencySelector
                     id="currency-selector-cart"
-                    aria-label="Currency"
-                    data-currency-selector
+                    ariaLabel="Currency"
+                    currency={pageCurrency}
                     class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
-                >
-                    <option value="gbp" selected={pageCurrency === "gbp"}>GBP (£)</option>
-                    <option value="eur" selected={pageCurrency === "eur"}>EUR (€)</option>
-                    <option value="usd" selected={pageCurrency === "usd"}>USD ($)</option>
-                </select>
+                />
             </div>
         </div>
         {
@@ -347,27 +344,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     : "gbp"
                 currencySelectors.forEach(sel => (sel.value = initial))
 
-                const updateLocalShopLinks = (cur: string) => {
-                    const localShopAnchors = cartPageContent.querySelectorAll(
-                        'a[href$="/shop"], a[href*="/shop"]',
-                    ) as NodeListOf<HTMLAnchorElement>
-                    localShopAnchors.forEach(a => {
-                        a.href = `/${cur}/shop`
-                    })
-                }
-
-                updateLocalShopLinks(initial)
-
-                currencySelectors.forEach(sel => {
-                    sel.addEventListener("change", e => {
-                        // Prevent handlers from other pages (kept alive by transitions) from firing
-                        e.stopImmediatePropagation()
-                        const currency = sel.value as any
-                        setStoredCurrency(currency)
-                        updateLocalShopLinks(currency)
-                        navigate(`/cart`)
-                    }, { capture: true })
-                })
+                // No event listeners: UI only
             }
 
             clearClientSession()
@@ -521,28 +498,12 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         prefetch(`/checkout?client_secret=${session.client_secret}`)
 
-        // Currency selector on cart page
+        // Currency selector on cart page: set initial value only. Component handles change.
         const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
         if (currencySelectors.length) {
             const currentCurrency = ((session?.currency as string) || getStoredCurrency()).toLowerCase()
             const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
             currencySelectors.forEach(sel => (sel.value = initial))
-
-            currencySelectors.forEach(sel => {
-                sel.addEventListener("change", async (e) => {
-                    // Prevent any previously-attached listeners (e.g., from shop/product pages via transitions) from also handling this event
-                    e.stopImmediatePropagation()
-                    const currency = sel.value as any
-                    setStoredCurrency(currency)
-                    await recreateSessionWithCurrency({ currency })
-                    const updated = getClientSession()
-                    if (updated.sessionId) {
-                        navigate(`/cart?session_id=${updated.sessionId}`)
-                    } else {
-                        navigate(`/cart`)
-                    }
-                }, { capture: true })
-            })
         }
     })
 </script>
