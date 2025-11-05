@@ -10,22 +10,22 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/netlify": "^6.5.10",
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/netlify": "^6.6.0",
     "@astrojs/tailwind": "^6.0.2",
-    "@sentry/astro": "^10.21.0",
-    "@stripe/stripe-js": "^4.4.0",
+    "@sentry/astro": "^10.22.0",
+    "@stripe/stripe-js": "^4.10.0",
     "@unpic/astro": "^0.0.47",
-    "astro": "^5.13.7",
-    "cloudinary": "^2.5.0",
-    "embla-carousel": "^8.5.1",
-    "p5": "^1.10.0",
-    "stripe": "^16.10.0",
-    "tailwindcss": "^3.4.10",
-    "typescript": "^5.5.4"
+    "astro": "^5.15.3",
+    "cloudinary": "^2.8.0",
+    "embla-carousel": "^8.6.0",
+    "p5": "^1.11.11",
+    "stripe": "^16.12.0",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/gtag.js": "^0.0.20",
-    "@types/p5": "^1.7.6"
+    "@types/p5": "^1.7.7"
   }
 }
