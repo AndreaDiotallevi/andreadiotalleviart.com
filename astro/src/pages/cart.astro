@@ -6,7 +6,6 @@ import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
 import { imageBreakpoints } from "@utils/breakpoints"
-import { getLocalCurrency } from "@utils/currency"
 
 import { formatCurrency } from "@utils/intl"
 import { retrieveCheckoutSession } from "@utils/serverless"
@@ -22,7 +21,7 @@ if (sessionId) {
     session = response.session ?? null
 }
 
-const pageCurrency = (session?.currency as Currency) || getLocalCurrency(Astro.locals.netlify.context.geo.country?.code)
+const pageCurrency: Currency = (session?.currency as Currency) || "gbp"
 
 const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 ---
