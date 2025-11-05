@@ -3,6 +3,7 @@ import {
     clearClientSession,
     getClientSession,
     updateClientSession,
+    setStoredCurrency,
 } from "@utils/localStorage"
 import { navigate } from "astro:transitions/client"
 import type { Currency } from "@utils/stripe"
@@ -44,7 +45,7 @@ export const addToCart = async ({
     updateClientSession({ session, promotionCode })
     // Ensure currency in local storage matches the created session
     if (session.currency) {
-        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+        setStoredCurrency((session.currency as string).toLowerCase() as any)
     }
     navigate(`/cart?session_id=${session.id}`)
 }
@@ -91,7 +92,7 @@ export const removeFromCart = async ({
 
     updateClientSession({ session, promotionCode })
     if (session.currency) {
-        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+        setStoredCurrency((session.currency as string).toLowerCase() as any)
     }
     navigate(`/cart?session_id=${session.id}`)
 }
@@ -153,6 +154,6 @@ export const recreateSessionWithCurrency = async ({
 
     if (session) {
         updateClientSession({ session, promotionCode })
-        localStorage.setItem("currency", currency as string)
+        setStoredCurrency(currency as any)
     }
 }
