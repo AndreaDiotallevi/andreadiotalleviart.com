@@ -198,9 +198,19 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 </script>
 
 <script>
-    import { clearClientSession, getClientSession } from "@utils/localStorage"
-
+    // Track previous and current path for smarter history decisions
     document.addEventListener("astro:page-load", () => {
+        const current = sessionStorage.getItem("currentPathname") || ""
+        sessionStorage.setItem("prevPathname", current)
+        sessionStorage.setItem("currentPathname", window.location.pathname)
+    })
+</script>
+
+<script>
+    import { clearClientSession, getClientSession, updateClientSession } from "@utils/localStorage"
+    import { retrieveCheckoutSession } from "@utils/serverless"
+
+    document.addEventListener("astro:page-load", async () => {
         if (
             window.location.pathname === "/checkout/success" ||
             (window.location.pathname.endsWith("/cart") &&
@@ -236,28 +246,82 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             a.href = `/${currentCurrency}/shop`
         })
 
-        // Update cart links and badge after potential session clear
-        const cartLinks = document.querySelectorAll(
-            '[id^="cart-link-"]'
-        ) as NodeListOf<HTMLAnchorElement>
+        let isSyncingFromUrl = false
+        let previousBadgeValue: string | null = null
 
-        const { sessionId, totalQuantity } = getClientSession()
+        const updateCartLinksAndBadge = () => {
+            const cartLinks = document.querySelectorAll(
+                '[id^="cart-link-"]'
+            ) as NodeListOf<HTMLAnchorElement>
 
-        cartLinks.forEach(link => {
-            if (sessionId) {
-                link.setAttribute("href", `/cart?session_id=${sessionId}`)
-            } else {
-                link.setAttribute("href", `/cart`)
+            const { sessionId, totalQuantity } = getClientSession()
+
+            // Prefer URL session id for href to avoid flicker on back/forward
+            const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
+            const effectiveSessionId = urlSessionId || sessionId
+
+            cartLinks.forEach(link => {
+                if (effectiveSessionId) {
+                    link.setAttribute("href", `/cart?session_id=${effectiveSessionId}`)
+                } else {
+                    link.setAttribute("href", `/cart`)
+                }
+
+                const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
+
+                // Smooth transition: avoid hiding immediately on transient 0 during session changes
+                const existingTimeout = (cartItemsSpan as any)._hideTimeout as number | undefined
+                if (existingTimeout) {
+                    clearTimeout(existingTimeout)
+                    ;(cartItemsSpan as any)._hideTimeout = undefined
+                }
+
+                if (totalQuantity > 0) {
+                    cartItemsSpan.textContent = `${totalQuantity}`
+                    previousBadgeValue = `${totalQuantity}`
+                    cartItemsSpan.classList.remove("hidden")
+                } else {
+                    // If we're syncing from URL session, keep previous value visible until sync completes
+                    if (isSyncingFromUrl && previousBadgeValue) {
+                        cartItemsSpan.textContent = previousBadgeValue
+                        cartItemsSpan.classList.remove("hidden")
+                        return
+                    }
+
+                    ;(cartItemsSpan as any)._hideTimeout = window.setTimeout(() => {
+                        cartItemsSpan.classList.add("hidden")
+                        ;(cartItemsSpan as any)._hideTimeout = undefined
+                    }, 400)
+                }
+            })
+        }
+
+        // If URL contains a session_id different from local storage, sync from server then update UI
+        const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
+        const { sessionId: storedSessionId } = getClientSession()
+
+        // Initial paint
+        updateCartLinksAndBadge()
+
+        if (urlSessionId && urlSessionId !== storedSessionId) {
+            isSyncingFromUrl = true
+            // Paint again using URL session id for href and keeping previous badge visible
+            updateCartLinksAndBadge()
+            try {
+                const { session } = await retrieveCheckoutSession({ sessionId: urlSessionId })
+                if (session) {
+                    const { promotionCode } = getClientSession()
+                    updateClientSession({ session, promotionCode })
+                    if (session.currency) {
+                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+                    }
+                }
+            } catch (e) {
+                // ignore network errors; UI will reflect stored state
+            } finally {
+                isSyncingFromUrl = false
+                updateCartLinksAndBadge()
             }
-
-            const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
-
-            if (totalQuantity > 0) {
-                cartItemsSpan.textContent = `${totalQuantity}`
-                cartItemsSpan.classList.remove("hidden")
-            } else {
-                cartItemsSpan.classList.add("hidden")
-            }
-        })
+        }
     })
 </script>

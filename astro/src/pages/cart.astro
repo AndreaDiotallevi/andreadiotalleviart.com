@@ -317,20 +317,19 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         const clientSession = getClientSession()
 
-        if (
-            session &&
-            clientSession.sessionId &&
-            session.id !== clientSession.sessionId
-        ) {
-            navigate(`/cart?session_id=${clientSession.sessionId}`, {
-                history: "replace",
-            })
-            return
-        }
+        // Ensure local client session mirrors server session so currency changes can recreate sessions reliably
+        if (session?.id) {
+            updateClientSession({ session, promotionCode: clientSession.promotionCode })
+            if (session.currency) {
+                localStorage.setItem("currency", (session.currency as string).toLowerCase())
+            }
 
-        if (session?.id && !clientSession.sessionId) {
-            navigate(`/cart`, { history: "replace" })
-            return
+            // Keep URL in sync with current session id
+            const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
+            if (urlSessionId !== session.id) {
+                navigate(`/cart?session_id=${session.id}`)
+                return
+            }
         }
 
         if (!session) {
@@ -368,7 +367,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         const currency = sel.value as any
                         localStorage.setItem("currency", currency)
                         updateLocalShopLinks(currency)
-                        navigate(`/cart`, { history: "replace" })
+                        navigate(`/cart`)
                     })
                 })
             }
@@ -465,9 +464,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                         promotionCode: code,
                     })
-                    navigate(`/cart?session_id=${session.id}`, {
-                        history: "replace",
-                    })
+                    if (session.currency) {
+                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+                    }
+                    navigate(`/cart?session_id=${session.id}`)
                 } else {
                     addPromotionCodeButton
                         .querySelector("span")
@@ -500,9 +500,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     updateClientSession({
                         session,
                     })
-                    navigate(`/cart?session_id=${session.id}`, {
-                        history: "replace",
-                    })
+                    if (session.currency) {
+                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+                    }
+                    navigate(`/cart?session_id=${session.id}`)
                 } else {
                     addPromotionCodeButton
                         .querySelector("span")
@@ -538,9 +539,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     await recreateSessionWithCurrency({ currency })
                     const updated = getClientSession()
                     if (updated.sessionId) {
-                        navigate(`/cart?session_id=${updated.sessionId}`, { history: "replace" })
+                        navigate(`/cart?session_id=${updated.sessionId}`)
                     } else {
-                        navigate(`/cart`, { history: "replace" })
+                        navigate(`/cart`)
                     }
                 })
             })
