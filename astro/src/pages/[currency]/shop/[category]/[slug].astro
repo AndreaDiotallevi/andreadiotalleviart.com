@@ -228,9 +228,7 @@ if (!product) return Astro.redirect("/404")
 
 <script>
     import type { Currency } from "@utils/stripe"
-    import { addToCart, recreateSessionWithCurrency } from "@scripts/cart"
-    import { clearClientSession, setStoredCurrency } from "@utils/localStorage"
-    import { navigate } from "astro:transitions/client"
+    import { addToCart } from "@scripts/cart"
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
@@ -270,15 +268,5 @@ if (!product) return Astro.redirect("/404")
                 return
             }
         })
-
-        // Currency selectors (mobile + desktop) — UI only, no side effects
-        const currencySelectors = document.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
-        if (currencySelectors.length) {
-            const currentCurrency = (window.location.pathname.split("/")[1] || "gbp").toLowerCase()
-            const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
-            currencySelectors.forEach(sel => (sel.value = initial))
-
-            // No event listeners: UI only
-        }
     })
 </script>
