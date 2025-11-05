@@ -375,7 +375,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        const currency = ((getStoredCurrency() || session?.currency || "gbp")) as Currency
+        const currency = (getStoredCurrency() || "gbp") as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -464,7 +464,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         promotionCode: code,
                     })
                     if (session.currency) {
-                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+                        setStoredCurrency((session.currency as string).toLowerCase() as any)
                     }
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
@@ -500,7 +500,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                     })
                     if (session.currency) {
-                        localStorage.setItem("currency", (session.currency as string).toLowerCase())
+                        setStoredCurrency((session.currency as string).toLowerCase() as any)
                     }
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
@@ -525,7 +525,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         // Currency selector on cart page
         const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
         if (currencySelectors.length) {
-            const currentCurrency = (session?.currency || getStoredCurrency() || "gbp").toLowerCase()
+            const currentCurrency = (getStoredCurrency() || "gbp").toLowerCase()
             const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
             currencySelectors.forEach(sel => (sel.value = initial))
 
