@@ -367,7 +367,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         setStoredCurrency(currency)
                         updateLocalShopLinks(currency)
                         navigate(`/cart`)
-                    })
+                    }, { capture: true })
                 })
             }
 
@@ -375,7 +375,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             return
         }
 
-        const currency = (getStoredCurrency() || "gbp") as Currency
+        const currency = ((session?.currency as Currency) || getStoredCurrency()) as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -525,7 +525,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         // Currency selector on cart page
         const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
         if (currencySelectors.length) {
-            const currentCurrency = (getStoredCurrency() || "gbp").toLowerCase()
+            const currentCurrency = ((session?.currency as string) || getStoredCurrency()).toLowerCase()
             const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
             currencySelectors.forEach(sel => (sel.value = initial))
 
@@ -542,7 +542,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     } else {
                         navigate(`/cart`)
                     }
-                })
+                }, { capture: true })
             })
         }
     })
