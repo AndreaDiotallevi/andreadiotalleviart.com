@@ -270,18 +270,16 @@ if (!product) return Astro.redirect("/404")
             currencySelectors.forEach(sel => (sel.value = initial))
 
             currencySelectors.forEach(sel => {
-                sel.addEventListener("change", async () => {
+                // Use capture phase and stop propagation to prevent stale listeners (e.g., from the shop page) from hijacking navigation
+                sel.addEventListener("change", async (e) => {
+                    e.stopPropagation()
                     const currency = sel.value
-                    const category = sel.dataset.category
-                    const slug = sel.dataset.slug
+                    const category = sel.dataset.category as string
+                    const slug = sel.dataset.slug as string
                     localStorage.setItem("currency", currency)
                     await recreateSessionWithCurrency({ currency: currency as any })
-                    if (category && slug) {
-                        navigate(`/${currency}/shop/${category}/${slug}`)
-                    } else {
-                        navigate(`/${currency}/shop`)
-                    }
-                })
+                    navigate(`/${currency}/shop/${category}/${slug}`)
+                }, { capture: true })
             })
         }
     })
