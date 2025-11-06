@@ -3,6 +3,7 @@ export const prerender = false
 
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import { currencyToLocale, defaultLocale } from "@utils/currency"
 
 import { imageBreakpoints } from "@utils/breakpoints"
 import { formatCurrency } from "@utils/intl"
@@ -13,6 +14,7 @@ const sessionId = Astro.url.searchParams.get("session_id") || ""
 const { session } = await retrieveCheckoutSession({ sessionId })
 
 const currency = session?.currency
+const locale = currency ? currencyToLocale[(currency as string).toLowerCase() as keyof typeof currencyToLocale] : defaultLocale
 const shippingDetails = session?.shipping_details
 
 const success = !!(session && currency && shippingDetails)
@@ -143,7 +145,7 @@ const success = !!(session && currency && shippingDetails)
 
                         <div class="mt-6">
                             <a
-                                href={`/${currency}/shop`}
+                                href={`/${locale}/shop`}
                                 class="block w-full px-4 py-3 text-white bg-gray-800 rounded-lg md:hover:bg-gray-800 text-center font-bold transition-colors duration-300"
                             >
                                 Discover more
