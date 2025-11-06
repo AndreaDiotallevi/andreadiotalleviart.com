@@ -1,5 +1,14 @@
 ---
 export const prerender = true
 
-return Astro.redirect("/gbp/shop")
+import { getStripeProducts } from "@utils/serverless"
+import type { Currency } from "@utils/stripe"
+import { defaultLocale, localeToCurrency } from "@utils/currency"
+import ShopView from "@components/shop/ShopView.astro"
+
+const locale = defaultLocale
+const currency = localeToCurrency[locale] as Currency
+const products = await getStripeProducts()
 ---
+
+<ShopView locale={locale} currency={currency} products={products} />

@@ -30,7 +30,7 @@ const {
 
 <script>
     import { navigate } from "astro:transitions/client"
-    import { supportedLocales, localeToCurrency } from "@utils/currency"
+    import { supportedLocales, defaultLocale, localeToCurrency } from "@utils/currency"
     import { getClientSession, setStoredLocale, getStoredLocale } from "@utils/localStorage"
     import { recreateSessionWithCurrency } from "@scripts/cart"
 
@@ -63,14 +63,6 @@ const {
                     await recreateSessionWithCurrency({ currency: newCurrency })
                 }
 
-                // Update Shop links in-page to new locale
-                const shopAnchors = document.querySelectorAll(
-                    'a[href$="/shop"], a[href$="/shop/"]'
-                )
-                shopAnchors.forEach(a => {
-                    a.setAttribute('href', `/${newLocale}/shop`)
-                })
-
                 // Decide navigation based on first path segment
                 const parts = window.location.pathname.split("/")
                 const first = (parts[1] || "").toLowerCase()
@@ -87,12 +79,20 @@ const {
                     }
                 }
 
-                // Other pages: replace or insert first segment with the new locale
+                // Other pages: replace/insert/remove locale segment with default-locale handling
                 const firstSeg = first
-                if ((supportedLocales as unknown as string[]).includes(firstSeg)) {
-                    parts[1] = newLocale
+                const isLocalePrefixed = (supportedLocales as unknown as string[]).includes(firstSeg)
+                if (isLocalePrefixed) {
+                    if (newLocale === defaultLocale) {
+                        // remove locale segment
+                        parts.splice(1, 1)
+                    } else {
+                        parts[1] = newLocale
+                    }
                 } else {
-                    parts.splice(1, 0, newLocale)
+                    if (newLocale !== defaultLocale) {
+                        parts.splice(1, 0, newLocale)
+                    }
                 }
                 const newPath = parts.join("/") || "/"
                 navigate(newPath)

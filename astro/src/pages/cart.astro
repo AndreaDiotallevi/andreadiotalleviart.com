@@ -3,7 +3,7 @@ export const prerender = false
 
 import Button from "@components/Button.astro"
 import LocaleSelector from "@components/LocaleSelector.astro"
-import { defaultLocale, currencyToLocale } from "@utils/currency"
+import { defaultLocale, currencyToLocale, buildLocaleUrl } from "@utils/currency"
 import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
@@ -86,7 +86,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         <tr>
                                             <td class="py-2 md:py-4 pr-1 md:pr-8 flex">
                                                 <a
-                                                    href={`/${pageLocale}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                                                    href={buildLocaleUrl(`/shop/${price.product.metadata.category}/${price.product.metadata.slug}`, pageLocale)}
                                                     class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
                                                 >
                                                     <Image
@@ -256,7 +256,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                             </div>
                         </div>
                         <a
-                            href={`/${pageLocale}/shop`}
+                            href={buildLocaleUrl(`/shop`, pageLocale)}
                             class="w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white text-center font-bold max-w-lg transition-colors duration-300"
                         >
                             Explore more prints
@@ -272,7 +272,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 <div class="flex flex-col items-center">
                     <p class="text-center mb-4">Your cart is empty.</p>
                     <a
-                        href={`/${pageLocale}/shop`}
+                        href={buildLocaleUrl(`/shop`, pageLocale)}
                         class="block w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"
                     >
                         Explore prints

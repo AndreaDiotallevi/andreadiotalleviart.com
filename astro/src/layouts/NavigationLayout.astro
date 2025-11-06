@@ -1,7 +1,7 @@
 ---
 import Newsletter from "@components/Newsletter.astro"
 import ShoppingCart from "@components/ShoppingCart.astro"
-import { defaultLocale } from "@utils/currency"
+import { defaultLocale, buildLocaleUrl } from "@utils/currency"
 
 interface Props {
     darkTheme?: boolean
@@ -16,7 +16,7 @@ const pathParts = Astro.url.pathname.split("/").filter(Boolean)
 const firstSeg = (pathParts[0] || "").toLowerCase()
 import { supportedLocales } from "@utils/currency"
 const currentLocale = ((supportedLocales as unknown as string[]).includes(firstSeg) ? firstSeg : defaultLocale) as string
-const shopHref = `/${currentLocale}/shop`
+const shopHref = buildLocaleUrl('/shop', currentLocale as any)
 ---
 
 <div
@@ -215,7 +215,7 @@ const shopHref = `/${currentLocale}/shop`
 </script>
 
 <script>
-    import { clearClientSession, getClientSession, updateClientSession } from "@utils/localStorage"
+    import { clearClientSession, getClientSession, updateClientSession, getStoredLocale } from "@utils/localStorage"
     import { supportedLocales, defaultLocale } from "@utils/currency"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
@@ -232,13 +232,13 @@ const shopHref = `/${currentLocale}/shop`
 
         // Determine current locale from URL and rewrite Shop links to keep it
         const firstSegment = (window.location.pathname.split("/")[1] || "").toLowerCase()
-        const currentLocale = (supportedLocales as unknown as string[]).includes(firstSegment) ? firstSegment : defaultLocale
+        const currentLocale = (supportedLocales as unknown as string[]).includes(firstSegment) ? firstSegment : getStoredLocale()
         // Rewrite Shop links to keep locale
         const shopAnchors = document.querySelectorAll(
             'a[href="/shop"], a[href="/shop/"]'
         ) as NodeListOf<HTMLAnchorElement>
         shopAnchors.forEach(a => {
-            a.href = `/${currentLocale}/shop`
+            a.href = currentLocale === 'en-gb' ? '/shop' : `/${currentLocale}/shop`
         })
 
         let isSyncingFromUrl = false

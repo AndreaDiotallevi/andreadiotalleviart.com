@@ -1,6 +1,6 @@
 import { getStripeProducts } from "@utils/serverless"
 import { getCollection } from "astro:content"
-import { supportedLocales } from "@utils/currency"
+import { supportedLocales, defaultLocale } from "@utils/currency"
 
 export async function GET() {
     const products = await getStripeProducts()
@@ -14,15 +14,21 @@ export async function GET() {
         `${baseUrl}/contact`,
         `${baseUrl}/return-policy`,
         `${baseUrl}/portfolio`,
-        // Locale-prefixed shop listings
-        ...locales.map(locale => `${baseUrl}/${locale}/shop`),
-        // Locale-prefixed product pages
-        ...products.flatMap(product =>
-            locales.map(
-                locale =>
-                    `${baseUrl}/${locale}/shop/${product.metadata.category}/${product.metadata.slug}`,
-            ),
-        ),
+        // Shop listings
+        `${baseUrl}/shop`,
+        ...locales
+            .filter(locale => locale !== defaultLocale)
+            .map(locale => `${baseUrl}/${locale}/shop`),
+        // Product pages
+        ...products.flatMap(product => [
+            `${baseUrl}/shop/${product.metadata.category}/${product.metadata.slug}`,
+            ...locales
+                .filter(locale => locale !== defaultLocale)
+                .map(
+                    locale =>
+                        `${baseUrl}/${locale}/shop/${product.metadata.category}/${product.metadata.slug}`,
+                ),
+        ]),
         // Portfolio items
         ...artworks.map(artwork => `${baseUrl}/portfolio/${artwork.data.slug}`),
     ]

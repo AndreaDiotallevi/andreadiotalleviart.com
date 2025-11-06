@@ -1,7 +1,10 @@
 ---
 export const prerender = true
 
+import ProductView from "@components/shop/ProductView.astro"
 import { getStripeProducts } from "@utils/serverless"
+import type { Currency } from "@utils/stripe"
+import { defaultLocale, localeToCurrency } from "@utils/currency"
 
 export async function getStaticPaths() {
     const products = await getStripeProducts()
@@ -13,6 +16,12 @@ export async function getStaticPaths() {
     }))
 }
 
-const { category, slug } = Astro.params
-return Astro.redirect(`/gbp/shop/${category}/${slug}`)
+const { slug } = Astro.params
+const currency = localeToCurrency[defaultLocale] as Currency
+const products = await getStripeProducts()
+const product = products.filter(product => product.metadata.slug === slug)[0]
+
+if (!product) return Astro.redirect("/404")
 ---
+
+<ProductView locale={defaultLocale} currency={currency} product={product} />

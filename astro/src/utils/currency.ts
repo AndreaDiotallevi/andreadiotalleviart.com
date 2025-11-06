@@ -80,16 +80,23 @@ export const getLocalCurrency = (countryCode?: string): Currency => {
 export const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
 
 export const supportedLocales = ["en-gb", "en-us", "en"] as const
-export type SupportedLocale = typeof supportedLocales[number]
-export const defaultLocale: SupportedLocale = "en-gb"
-export const localeToCurrency: Record<SupportedLocale, Currency> = {
+export type Locale = typeof supportedLocales[number]
+export const defaultLocale: Locale = "en-gb"
+export const localeToCurrency: Record<Locale, Currency> = {
     "en-gb": "gbp",
     "en-us": "usd",
     en: "eur",
 }
 
-export const currencyToLocale: Record<Currency, SupportedLocale> = {
+export const currencyToLocale: Record<Currency, Locale> = {
     gbp: "en-gb",
     usd: "en-us",
     eur: "en",
+}
+
+// Build a locale-aware URL path. Default locale (en-gb) omits the prefix.
+export function buildLocaleUrl(path: string, locale: Locale): string {
+    const normalized = (path || "/").startsWith("/") ? path : `/${path}`
+    if (locale === defaultLocale) return normalized
+    return `/${locale}${normalized}`
 }

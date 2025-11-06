@@ -1,18 +1,15 @@
 ---
 export const prerender = true
 
-import { Image } from "@unpic/astro"
-import BaseLayout from "@layouts/BaseLayout.astro"
-import LocaleSelector from "@components/LocaleSelector.astro"
-import { imageBreakpoints } from "@utils/breakpoints"
 import { getStripeProducts } from "@utils/serverless"
-import { formatCurrency } from "@utils/intl"
-import { sizeToDescription } from "@utils/sizes"
 import type { Currency } from "@utils/stripe"
-import { supportedLocales, localeToCurrency } from "@utils/currency"
+import { supportedLocales, defaultLocale, localeToCurrency } from "@utils/currency"
+import ShopView from "@components/shop/ShopView.astro"
 
 export async function getStaticPaths() {
-    return supportedLocales.map(locale => ({ params: { locale } }))
+    return supportedLocales
+        .filter(locale => locale !== defaultLocale)
+        .map(locale => ({ params: { locale } }))
 }
 
 const locale = Astro.params.locale as keyof typeof localeToCurrency
@@ -20,99 +17,4 @@ const currency = localeToCurrency[locale] as Currency
 const products = await getStripeProducts()
 ---
 
-<BaseLayout
-    title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
-    description="Generative giclée fine art prints on Hahnemühle Photo Rag 308gsm. Museum-quality, archival inks. Free carbon‑neutral shipping."
-    image={products[0] ? products[0].images[0] : undefined}
-    currency={currency}
-    tags={[
-        "Generative art prints",
-        "Generative art",
-        "p5.js",
-        "Processing",
-        "Procedural",
-        "Prints",
-        "Fine art",
-        "Giclee",
-        "Abstract art",
-        "Geometric art",
-        "Hahnemühle photo rag",
-        "Archival inks",
-        "Carbon neutral",
-        "Free shipping",
-    ]}
-    newsletter={false}
->
-    <div class="max-w-screen-xl mx-auto px-4 py-8 pt-0 md:pt-8 text-gray-800">
-        <div class="relative mb-2 md:mb-3 text-center">
-            <h1 class="text-2xl md:text-5xl font-bold">Shop</h1>
-            <div class="absolute right-0 top-0 flex items-center">
-                <label for="locale-selector-shop" class="sr-only">Region / language</label>
-                <LocaleSelector
-                    id="locale-selector-shop"
-                    ariaLabel="Region / language"
-                    locale={locale}
-                    class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
-                />
-            </div>
-        </div>
-        <p class="max-w-[400px] mx-auto text-center text-sm md:text-base mt-2 mb-5 md:mb-6">
-            Museum-quality prints on premium cotton paper delivered with
-            free shipping
-        </p>
-        
-
-        <div
-            class="grid grid-cols-2 gap-x-2 gap-y-8"
-        >
-            {
-                products
-                    .sort(
-                        (a, b) =>
-                            parseInt(a.metadata.displayOrder) -
-                            parseInt(b.metadata.displayOrder)
-                    )
-                    .map((product, index) => (
-                        <a
-                            href={`/${locale}/shop/${product.metadata.category}/${product.metadata.slug}`}
-                            class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
-                        >
-                            <div class="bg-gray-100 p-6 sm:p-10 md:p-15 lg:p-20 flex items-center justify-center">
-                                <Image
-                                    alt={product.name}
-                                    src={product.images[0]}
-                                    width={1429}
-                                    height={2000}
-                                    sizes="(max-width: 1280px) 200vw, 100vw"
-                                    breakpoints={imageBreakpoints({
-                                        maxWidth: 735,
-                                        assetWidth: 1414,
-                                    })}
-                                    loading={index < 4 ? "eager" : "lazy"}
-                                    fetchpriority={index < 4 ? "high" : "low"}
-                                    class="shadow-md max-h-[500px] object-contain"
-                                />
-                            </div>
-                            <p class="font-bold md:text-2xl mt-2 md:mt-4">
-                                {product.metadata.displayName}
-                            </p>
-                           
-                            <p class="font-semibold text-sm md:text-base md:mt-1">
-                                {formatCurrency({
-                                    value: product.default_price
-                                        .currency_options[currency].unit_amount,
-                                    currency,
-                                })}
-                            </p>
-
-                             <p class="text-sm md:text-base md:mt-1 text-gray-600">
-                                {sizeToDescription[product.metadata.size]}
-                            </p>
-                        </a>
-                    ))
-            }
-        </div>
-    </div>
-</BaseLayout>
-
-
+<ShopView locale={String(locale)} currency={currency} products={products} />
