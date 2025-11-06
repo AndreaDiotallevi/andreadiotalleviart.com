@@ -76,3 +76,20 @@ export const getLocalCurrency = (countryCode?: string): Currency => {
         countryCodeToCurrency[countryCode?.toLocaleLowerCase() || ""] || "gbp"
     )
 }
+
+export const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
+
+export const supportedLocales = ["en-gb", "en-us", "en"] as const
+export type SupportedLocale = typeof supportedLocales[number]
+export const defaultLocale: SupportedLocale = "en-gb"
+export const localeToCurrency: Record<SupportedLocale, Currency> = {
+    "en-gb": "gbp",
+    "en-us": "usd",
+    en: "eur",
+}
+
+export const currencyToLocale: Record<Currency, SupportedLocale> = {
+    gbp: "en-gb",
+    usd: "en-us",
+    eur: "en",
+}

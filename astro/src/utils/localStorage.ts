@@ -1,7 +1,8 @@
 import type Stripe from "stripe"
-import type { Currency } from "./stripe"
-
-const clientSessionKey = "andreadiotalleviart"
+import type { SupportedLocale } from "./currency"
+import { supportedLocales } from "./currency"
+ 
+const clientSessionKey = "session"
 
 interface ClientSession {
     sessionId: string
@@ -75,29 +76,19 @@ export const clearClientSession = () => {
     localStorage.removeItem(clientSessionKey)
 }
 
-// --- Currency helpers (kept separate from client session) ---
+const localeKey = "locale"
 
-const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
-const currencyKey = "currency"
-
-export const getStoredCurrency = (): Currency => {
-    const value = (localStorage.getItem(currencyKey) || "").toLowerCase()
-    return (supportedCurrencies as string[]).includes(value)
-        ? (value as Currency)
-        : "gbp"
+export const getStoredLocale = (): SupportedLocale => {
+    const value = (localStorage.getItem(localeKey) || "").toLowerCase()
+    return ((supportedLocales as unknown as string[]).includes(value)
+        ? (value as SupportedLocale)
+        : ("en-gb" as SupportedLocale))
 }
 
-export const setStoredCurrency = (currency: Currency) => {
-    localStorage.setItem(currencyKey, currency.toLowerCase())
+export const setStoredLocale = (locale: SupportedLocale) => {
+    localStorage.setItem(localeKey, locale)
 }
 
-export const clearStoredCurrency = () => {
-    localStorage.removeItem(currencyKey)
-}
-
-export const updateCurrencyFromSession = (session: Stripe.Checkout.Session) => {
-    const c = (session.currency as string | undefined)?.toLowerCase()
-    if (c && (supportedCurrencies as string[]).includes(c)) {
-        localStorage.setItem(currencyKey, c)
-    }
+export const clearStoredLocale = () => {
+    localStorage.removeItem(localeKey)
 }

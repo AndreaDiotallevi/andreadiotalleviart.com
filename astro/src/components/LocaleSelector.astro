@@ -1,0 +1,104 @@
+---
+interface Props {
+    id?: string
+    locale: string
+    class?: string
+    ariaLabel?: string
+    title?: string
+}
+
+const {
+    id,
+    locale,
+    class: className,
+    ariaLabel = "Region / language",
+    title,
+} = Astro.props as Props
+---
+
+<select
+    id={id}
+    aria-label={ariaLabel}
+    title={title}
+    data-locale-selector
+    class={className}
+>
+    <option value="en-gb" selected={locale === "en-gb"}>United Kingdom</option>
+    <option value="en-us" selected={locale === "en-us"}>United States</option>
+    <option value="en" selected={locale === "en"}>Europe</option>
+</select>
+
+<script>
+    import { navigate } from "astro:transitions/client"
+    import { supportedLocales, defaultLocale, localeToCurrency } from "@utils/currency"
+    import { getClientSession, setStoredLocale, getStoredLocale } from "@utils/localStorage"
+    import { recreateSessionWithCurrency } from "@scripts/cart"
+
+    document.addEventListener("astro:page-load", () => {
+        const selectors = document.querySelectorAll('[data-locale-selector]')
+        if (!selectors.length) return
+
+        selectors.forEach(sel => {
+            if ((sel as HTMLElement).getAttribute('data-locale-bound') === '1') return
+            ;(sel as HTMLElement).setAttribute('data-locale-bound', '1')
+
+            // Initialise from current URL
+            const parts = window.location.pathname.split("/")
+            const first = (parts[1] || "").toLowerCase()
+            const current = (supportedLocales as unknown as string[]).includes(first)
+                ? first
+                : getStoredLocale()
+            ;(sel as HTMLSelectElement).value = current
+
+            sel.addEventListener('change', async () => {
+                const newLocale = (sel as HTMLSelectElement).value.toLowerCase()
+                const newCurrency = localeToCurrency[newLocale as keyof typeof localeToCurrency]
+
+                // Persist locale immediately for client-side consumers
+                setStoredLocale(newLocale as any)
+
+                // Recreate session if there are items
+                const { lineItems } = getClientSession()
+                if (lineItems && lineItems.length > 0) {
+                    await recreateSessionWithCurrency({ currency: newCurrency })
+                }
+
+                // Update Shop links in-page to new locale
+                const shopAnchors = document.querySelectorAll(
+                    'a[href$="/shop"], a[href$="/shop/"]'
+                )
+                shopAnchors.forEach(a => {
+                    a.setAttribute('href', `/${newLocale}/shop`)
+                })
+
+                // Decide navigation based on first path segment
+                const parts = window.location.pathname.split("/")
+                const first = (parts[1] || "").toLowerCase()
+
+                // Cart page: redirect to /cart?session_id=<newSessionId> if present, else blur
+                if (first === 'cart') {
+                    const { sessionId } = getClientSession()
+                    if (sessionId) {
+                        navigate(`/cart?session_id=${sessionId}`)
+                        return
+                    } else {
+                        ;(sel as HTMLSelectElement).blur()
+                        return
+                    }
+                }
+
+                // Other pages: replace or insert first segment with the new locale
+                const firstSeg = first
+                if ((supportedLocales as unknown as string[]).includes(firstSeg)) {
+                    parts[1] = newLocale
+                } else {
+                    parts.splice(1, 0, newLocale)
+                }
+                const newPath = parts.join("/") || "/"
+                navigate(newPath)
+            })
+        })
+    })
+</script>
+
+

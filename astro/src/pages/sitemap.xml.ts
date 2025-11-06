@@ -1,11 +1,12 @@
 import { getStripeProducts } from "@utils/serverless"
 import { getCollection } from "astro:content"
+import { supportedLocales } from "@utils/currency"
 
 export async function GET() {
     const products = await getStripeProducts()
     const artworks = await getCollection("artworks")
     const baseUrl = "https://andreadiotalleviart.com"
-    const currencies = ["gbp", "eur", "usd"]
+    const locales = supportedLocales
 
     const urls = [
         `${baseUrl}`,
@@ -13,13 +14,13 @@ export async function GET() {
         `${baseUrl}/contact`,
         `${baseUrl}/return-policy`,
         `${baseUrl}/portfolio`,
-        // Currency-prefixed shop listings
-        ...currencies.map(currency => `${baseUrl}/${currency}/shop`),
-        // Currency-prefixed product pages
+        // Locale-prefixed shop listings
+        ...locales.map(locale => `${baseUrl}/${locale}/shop`),
+        // Locale-prefixed product pages
         ...products.flatMap(product =>
-            currencies.map(
-                currency =>
-                    `${baseUrl}/${currency}/shop/${product.metadata.category}/${product.metadata.slug}`,
+            locales.map(
+                locale =>
+                    `${baseUrl}/${locale}/shop/${product.metadata.category}/${product.metadata.slug}`,
             ),
         ),
         // Portfolio items

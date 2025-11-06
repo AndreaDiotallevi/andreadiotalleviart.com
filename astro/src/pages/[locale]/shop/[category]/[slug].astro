@@ -5,21 +5,21 @@ import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
-import CurrencySelector from "@components/CurrencySelector.astro"
+import LocaleSelector from "@components/LocaleSelector.astro"
 
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { getStripeProducts } from "@utils/serverless"
 import { productsData } from "@utils/productsData"
 import type { Currency } from "@utils/stripe"
+import { supportedLocales, localeToCurrency } from "@utils/currency"
 
 export async function getStaticPaths() {
     const products = await getStripeProducts()
-    const currencies = ["gbp", "eur", "usd"]
     return products.flatMap(product =>
-        currencies.map(currency => ({
+        supportedLocales.map(locale => ({
             params: {
-                currency,
+                locale,
                 category: product.metadata.category,
                 slug: product.metadata.slug,
             },
@@ -28,7 +28,8 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params
-const currency = Astro.params.currency as Currency
+const locale = Astro.params.locale as keyof typeof localeToCurrency
+const currency = localeToCurrency[locale] as Currency
 const products = await getStripeProducts()
 
 const product = products.filter(product => product.metadata.slug === slug)[0]
@@ -78,15 +79,13 @@ if (!product) return Astro.redirect("/404")
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <div class="md:hidden flex items-center justify-between mb-4">
-                <BackToLink href={`/${currency}/shop`} text="Back to shop" />
+                <BackToLink href={`/${locale}/shop`} text="Back to shop" />
                 <div class="flex items-center">
-                    <label for="currency-selector-mobile" class="sr-only">Currency</label>
-                    <CurrencySelector
-                        id="currency-selector-mobile"
-                        ariaLabel="Currency"
-                        currency={currency}
-                        dataCategory={Astro.params.category}
-                        dataSlug={Astro.params.slug}
+                    <label for="locale-selector-mobile" class="sr-only">Region / language</label>
+                    <LocaleSelector
+                        id="locale-selector-mobile"
+                        ariaLabel="Region / language"
+                        locale={locale}
                         class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold"
                     />
                 </div>
@@ -109,13 +108,11 @@ if (!product) return Astro.redirect("/404")
                     {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
                 </div>
                 <div class="flex items-center">
-                    <label for="currency-selector-desktop" class="sr-only">Currency</label>
-                    <CurrencySelector
-                        id="currency-selector-desktop"
-                        ariaLabel="Currency"
-                        currency={currency}
-                        dataCategory={Astro.params.category}
-                        dataSlug={Astro.params.slug}
+                    <label for="locale-selector-desktop" class="sr-only">Region / language</label>
+                    <LocaleSelector
+                        id="locale-selector-desktop"
+                        ariaLabel="Region / language"
+                        locale={locale}
                         class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
                     />
                 </div>
@@ -270,3 +267,5 @@ if (!product) return Astro.redirect("/404")
         })
     })
 </script>
+
+

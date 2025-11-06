@@ -5,6 +5,7 @@ import type { Currency } from "@utils/stripe"
 import { generateStructuredData } from "@utils/structuredData"
 import GlobalStyles from "@components/GlobalStyles.astro"
 import NavigationLayout from "./NavigationLayout.astro"
+import { supportedLocales, defaultLocale, localeToCurrency } from "@utils/currency"
 
 const ga4TrackingID: string = import.meta.env.GA4_TRACKING_ID
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
@@ -22,29 +23,23 @@ function removeHtmlExtension(url: string) {
 
 const cleanedUrl = removeHtmlExtension(canonicalURL.href)
 
-const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
 const pathParts = Astro.url.pathname.split("/").filter(Boolean)
-const currentCurrencyFromPath = (supportedCurrencies as string[]).includes(
+const currentLocaleFromPath = (supportedLocales as unknown as string[]).includes(
     pathParts[0] ?? "",
 )
-    ? (pathParts[0] as Currency)
+    ? (pathParts[0] as keyof typeof localeToCurrency)
     : null
-const restPath = currentCurrencyFromPath
+const restPath = currentLocaleFromPath
     ? "/" + pathParts.slice(1).join("/")
     : null
-const hreflangMap: Record<Currency, string> = {
-    gbp: "en-gb",
-    eur: "en",
-    usd: "en-us",
-}
-const alternateLinks = currentCurrencyFromPath
-    ? supportedCurrencies.map(c => ({
-          hreflang: hreflangMap[c],
-          href: removeHtmlExtension(new URL(`/${c}${restPath}`, Astro.site).href),
+const alternateLinks = currentLocaleFromPath
+    ? supportedLocales.map(l => ({
+          hreflang: l,
+          href: removeHtmlExtension(new URL(`/${l}${restPath}`, Astro.site).href),
       }))
     : []
-const xDefaultLink = currentCurrencyFromPath
-    ? removeHtmlExtension(new URL(`/gbp${restPath}`, Astro.site).href)
+const xDefaultLink = currentLocaleFromPath
+    ? removeHtmlExtension(new URL(`/${defaultLocale}${restPath}`, Astro.site).href)
     : null
 
 interface Props {
@@ -77,13 +72,16 @@ const {
     tags = [],
     type = "website",
     amount,
-    currency = "gbp",
+    currency,
     darkTheme = false,
     hideFooter = false,
     newsletter = false,
     noIndex = false,
     productJsonLd,
 } = Astro.props
+
+const currencyFromPath = currentLocaleFromPath ? localeToCurrency[currentLocaleFromPath] : undefined
+const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
 ---
 
 <!doctype html>
@@ -130,12 +128,12 @@ const {
         <meta property="og:locale" content="en_GB" />
 
         {
-            type === "product" && amount ? (
+            type === "product" && amount && (currency || currencyFromPath) ? (
                 <>
                     <meta property="og:price:amount" content={amount} />
                     <meta
                         property="og:price:currency"
-                        content={currency.toUpperCase()}
+                        content={effectiveCurrency.toUpperCase()}
                     />
                     <meta
                         property="og:availability"
@@ -171,7 +169,7 @@ const {
                         pageTitle: title,
                         product: type === "product" && productJsonLd ? productJsonLd : undefined,
                         offerPrice: amount ?? "0",
-                        offerCurrency: currency,
+                        offerCurrency: effectiveCurrency,
                     })
                 )}
             ></script>

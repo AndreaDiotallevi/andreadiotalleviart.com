@@ -2,7 +2,8 @@
 export const prerender = false
 
 import Button from "@components/Button.astro"
-import CurrencySelector from "@components/CurrencySelector.astro"
+import LocaleSelector from "@components/LocaleSelector.astro"
+import { defaultLocale, currencyToLocale } from "@utils/currency"
 import LoadingSpinner from "@components/LoadingSpinner.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { Image } from "@unpic/astro"
@@ -23,6 +24,7 @@ if (sessionId) {
 }
 
 const pageCurrency: Currency = (session?.currency as Currency) || "gbp"
+const pageLocale = currencyToLocale[pageCurrency]
 
 const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 ---
@@ -43,11 +45,11 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 Cart
             </h1>
             <div class="absolute right-0 top-0 flex items-center">
-                <label for="currency-selector-cart" class="sr-only">Currency</label>
-                <CurrencySelector
-                    id="currency-selector-cart"
-                    ariaLabel="Currency"
-                    currency={pageCurrency}
+                <label for="locale-selector-cart" class="sr-only">Region / language</label>
+                <LocaleSelector
+                    id="locale-selector-cart"
+                    ariaLabel="Region / language"
+                    locale={defaultLocale}
                     class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
                 />
             </div>
@@ -84,7 +86,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                                         <tr>
                                             <td class="py-2 md:py-4 pr-1 md:pr-8 flex">
                                                 <a
-                                                    href={`/${pageCurrency}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
+                                                    href={`/${pageLocale}/shop/${price.product.metadata.category}/${price.product.metadata.slug}`}
                                                     class="max-w-[60px] min-w-[60px] md:hover:opacity-70 transition-opacity duration-300"
                                                 >
                                                     <Image
@@ -254,7 +256,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                             </div>
                         </div>
                         <a
-                            href={`/${pageCurrency}/shop`}
+                            href={`/${pageLocale}/shop`}
                             class="w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white text-center font-bold max-w-lg transition-colors duration-300"
                         >
                             Explore more prints
@@ -270,7 +272,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 <div class="flex flex-col items-center">
                     <p class="text-center mb-4">Your cart is empty.</p>
                     <a
-                        href={`/${pageCurrency}/shop`}
+                        href={`/${pageLocale}/shop`}
                         class="block w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"
                     >
                         Explore prints
@@ -295,11 +297,11 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         clearClientSession,
         getClientSession,
         updateClientSession,
-        getStoredCurrency,
-        setStoredCurrency,
-        updateCurrencyFromSession,
+        getStoredLocale,
+        setStoredLocale,
     } from "@utils/localStorage"
     import type { Currency } from "@utils/stripe"
+    import { supportedLocales, localeToCurrency, currencyToLocale } from "@utils/currency"
     import { prefetch } from "astro:prefetch"
     import { navigate } from "astro:transitions/client"
 
@@ -316,10 +318,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         const clientSession = getClientSession()
 
-        // Ensure local client session mirrors server session so currency changes can recreate sessions reliably
+        // Ensure local client session mirrors server session
         if (session?.id) {
             updateClientSession({ session, promotionCode: clientSession.promotionCode })
-            updateCurrencyFromSession(session)
 
             // Keep URL in sync with current session id
             const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
@@ -330,28 +331,14 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         }
 
         if (!session) {
-            // Allow currency change on empty cart
-            const currencySelectors = cartPageContent.querySelectorAll(
-                '[data-currency-selector]'
-            ) as NodeListOf<HTMLSelectElement>
-
-            if (currencySelectors.length) {
-                const currentCurrency = getStoredCurrency()
-                const initial = ["gbp", "eur", "usd"].includes(
-                    currentCurrency,
-                )
-                    ? currentCurrency
-                    : "gbp"
-                currencySelectors.forEach(sel => (sel.value = initial))
-
-                // No event listeners: UI only
-            }
-
             clearClientSession()
             return
         }
 
-        const currency = ((session?.currency as Currency) || getStoredCurrency()) as Currency
+        // Derive currency from session or from locale
+        const firstSeg = (window.location.pathname.split("/")[1] || "").toLowerCase()
+        const currentLocale = ((supportedLocales as unknown as string[]).includes(firstSeg) ? firstSeg : getStoredLocale()) as keyof typeof localeToCurrency
+        const currency = ((session?.currency as Currency) || (localeToCurrency as any)[currentLocale]) as Currency
 
         const proceedToCheckoutButton = cartPageContent.querySelector(
             "#proceed-to-checkout-button"
@@ -439,8 +426,10 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                         promotionCode: code,
                     })
+                    // Keep stored locale in sync with session currency
                     if (session.currency) {
-                        setStoredCurrency((session.currency as string).toLowerCase() as any)
+                        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
+                        setStoredLocale(currencyToLocale[c] as any)
                     }
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
@@ -476,7 +465,8 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                     })
                     if (session.currency) {
-                        setStoredCurrency((session.currency as string).toLowerCase() as any)
+                        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
+                        setStoredLocale(currencyToLocale[c] as any)
                     }
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
@@ -498,12 +488,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
 
         prefetch(`/checkout?client_secret=${session.client_secret}`)
 
-        // Currency selector on cart page: set initial value only. Component handles change.
-        const currencySelectors = cartPageContent.querySelectorAll('[data-currency-selector]') as NodeListOf<HTMLSelectElement>
-        if (currencySelectors.length) {
-            const currentCurrency = ((session?.currency as string) || getStoredCurrency()).toLowerCase()
-            const initial = ["gbp", "eur", "usd"].includes(currentCurrency) ? currentCurrency : "gbp"
-            currencySelectors.forEach(sel => (sel.value = initial))
-        }
+        
     })
 </script>

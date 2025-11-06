@@ -1,9 +1,10 @@
 export const prerender = true
 
 import { getStripeProducts } from "@utils/serverless"
+import { localeToCurrency, supportedLocales } from "@utils/currency"
 
 export async function getStaticPaths() {
-    return ["gbp", "eur", "usd"].map(currency => ({ params: { currency } }))
+    return supportedLocales.map(locale => ({ params: { locale } }))
 }
 
 function escapeXml(value: string): string {
@@ -15,10 +16,11 @@ function escapeXml(value: string): string {
         .replace(/'/g, "&apos;")
 }
 
-export async function GET({ params }: { params: { currency: "gbp" | "eur" | "usd" } }) {
+export async function GET({ params }: { params: { locale: keyof typeof localeToCurrency } }) {
     const baseUrl = "https://andreadiotalleviart.com"
     const brand = "Andrea Diotallevi Art"
-    const currency = params.currency
+    const locale = params.locale
+    const currency = localeToCurrency[locale]
     const currencyUpper = currency.toUpperCase()
 
     const products = await getStripeProducts()
@@ -34,7 +36,7 @@ export async function GET({ params }: { params: { currency: "gbp" | "eur" | "usd
             const imageLink = product.images?.[0] ?? ""
             const priceMinorUnits = product.default_price.currency_options[currency].unit_amount
             const price = (priceMinorUnits / 100).toFixed(2) + ` ${currencyUpper}`
-            const link = `${baseUrl}/${currency}/shop/${product.metadata.category}/${product.metadata.slug}`
+            const link = `${baseUrl}/${locale}/shop/${product.metadata.category}/${product.metadata.slug}`
             const title = product.metadata.displayName || product.name
             const description = product.description || title
 
@@ -64,3 +66,5 @@ export async function GET({ params }: { params: { currency: "gbp" | "eur" | "usd
         },
     })
 }
+
+

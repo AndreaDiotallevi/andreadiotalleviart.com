@@ -1,6 +1,7 @@
 ---
 import Newsletter from "@components/Newsletter.astro"
 import ShoppingCart from "@components/ShoppingCart.astro"
+import { defaultLocale } from "@utils/currency"
 
 interface Props {
     darkTheme?: boolean
@@ -9,6 +10,13 @@ interface Props {
 }
 
 const { darkTheme, hideFooter, newsletter } = Astro.props
+
+// Determine current locale from path for SSR hrefs
+const pathParts = Astro.url.pathname.split("/").filter(Boolean)
+const firstSeg = (pathParts[0] || "").toLowerCase()
+import { supportedLocales } from "@utils/currency"
+const currentLocale = ((supportedLocales as unknown as string[]).includes(firstSeg) ? firstSeg : defaultLocale) as string
+const shopHref = `/${currentLocale}/shop`
 ---
 
 <div
@@ -58,7 +66,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             <!-- Links for larger screens -->
             <nav class="hidden md:flex space-x-7">
                 <a
-                    href="/shop"
+                    href={shopHref}
                     class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >shop</a>
                 <a
@@ -97,7 +105,7 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             class="absolute top-[14px] right-[16px] text-white text-5xl h-11 w-11"
             >&times;</button
         >
-        <a href="/shop" class="mb-6">Shop</a>
+        <a href={shopHref} class="mb-6">Shop</a>
         <a href="/about" class="mb-6">About</a>
         <a href="/contact" class="mb-6">Contact</a>
         <a href="/portfolio" class="mb-6">Portfolio</a>
@@ -207,7 +215,8 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
 </script>
 
 <script>
-    import { clearClientSession, getClientSession, updateClientSession, getStoredCurrency, setStoredCurrency, updateCurrencyFromSession } from "@utils/localStorage"
+    import { clearClientSession, getClientSession, updateClientSession } from "@utils/localStorage"
+    import { supportedLocales, defaultLocale } from "@utils/currency"
     import { recreateSessionWithCurrency } from "@scripts/cart"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
@@ -220,38 +229,17 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
             clearClientSession()
         }
 
-        // Currency handling and session invalidation on mismatch
-        const supportedCurrencies = ["gbp", "eur", "usd"]
-        const firstPathSegment = window.location.pathname
-            .split("/")[1]
-            ?.toLowerCase()
+        // Locale-based navigation; currency is decided server-side from locale
 
-        const storedCurrency = getStoredCurrency()
-        const pathCurrency = supportedCurrencies.includes(firstPathSegment)
-            ? firstPathSegment
-            : ""
-
-        if (pathCurrency && pathCurrency !== storedCurrency) {
-            // Currency changed via URL: persist new currency and, if a local session exists, recreate it in the new currency
-            setStoredCurrency(pathCurrency as any)
-            try {
-                const { lineItems } = getClientSession()
-                if (lineItems.length) {
-                    await recreateSessionWithCurrency({ currency: pathCurrency as any })
-                }
-            } catch (_) {
-                // ignore network errors; UI will reflect stored state
-            }
-        }
-
-        const currentCurrency = pathCurrency || storedCurrency || "gbp"
-
-        // Rewrite Shop links to keep currency
+        // Determine current locale from URL and rewrite Shop links to keep it
+        const firstSegment = (window.location.pathname.split("/")[1] || "").toLowerCase()
+        const currentLocale = (supportedLocales as unknown as string[]).includes(firstSegment) ? firstSegment : defaultLocale
+        // Rewrite Shop links to keep locale
         const shopAnchors = document.querySelectorAll(
             'a[href="/shop"], a[href="/shop/"]'
         ) as NodeListOf<HTMLAnchorElement>
         shopAnchors.forEach(a => {
-            a.href = `/${currentCurrency}/shop`
+            a.href = `/${currentLocale}/shop`
         })
 
         let isSyncingFromUrl = false
@@ -320,7 +308,6 @@ const { darkTheme, hideFooter, newsletter } = Astro.props
                 if (session) {
                     const { promotionCode } = getClientSession()
                     updateClientSession({ session, promotionCode })
-                    updateCurrencyFromSession(session)
                 }
             } catch (e) {
                 // ignore network errors; UI will reflect stored state
