@@ -4,8 +4,6 @@ export interface ProductJsonLdInput {
     imageUrls: string[]
     sku: string
     material?: string
-    widthCm?: number
-    heightCm?: number
 }
 
 export interface GenerateStructuredDataOptions {
@@ -73,16 +71,6 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
                 brand: { "@type": "Brand", name: "Andrea Diotallevi Art" },
                 additionalType: "https://schema.org/VisualArtwork",
                 material: product.material,
-                width: {
-                    "@type": "QuantitativeValue",
-                    value: product.widthCm,
-                    unitText: "cm",
-                },
-                height: {
-                    "@type": "QuantitativeValue",
-                    value: product.heightCm,
-                    unitText: "cm",
-                },
                 offers: buildSingleOffer({
                     url: pageUrl,
                     price: offerPrice,
