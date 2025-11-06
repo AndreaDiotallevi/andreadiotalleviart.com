@@ -134,6 +134,14 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
                 </div>
             ) : <></>}
             <div>
+                <h2 class="text-2xl font-bold mb-2">Shipping</h2>
+                <div class="space-y-2">
+                    <p>Enjoy free shipping with top-quality packaging to ensure your artwork arrives in perfect condition.</p>
+                    <p>Your print will be delivered to your doorstep in about 1–2 weeks within the UK, and 2–3 weeks if outside the UK.</p>
+                    <p>If you're ordering from outside the UK, your shipment may be subject to import duties, taxes and fees. These aren't collected at checkout and will be payable by you upon delivery.</p>
+                </div>
+            </div>
+            <div>
                 <h2 class="text-2xl font-bold mb-2">{
                     formatCurrency({ value: product.default_price.currency_options[currency].unit_amount, currency })
                 }</h2>

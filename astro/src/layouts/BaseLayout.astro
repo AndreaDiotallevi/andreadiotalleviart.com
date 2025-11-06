@@ -160,24 +160,24 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
             name="google-site-verification"
             content="L9kVJc3DVgxLFGpwKd4inoCjGO9kEnixH9fUaC4DEYY"
         />
-        <!-- JSON-LD Structured Data: WebSite, Organization, and optionally WebPage/Product -->
-        {import.meta.env.PUBLIC_ENV === "production" ? (
-            <script
-                is:inline
-                type="application/ld+json"
-                set:html={JSON.stringify(
-                    generateStructuredData({
-                        siteOrigin,
-                        pageUrl: cleanedUrl,
-                        pageTitle: title,
-                        product: type === "product" && productJsonLd ? productJsonLd : undefined,
-                        offerPrice: amount ?? "0",
-                        offerCurrency: effectiveCurrency,
-                    })
-                )}
-            ></script>
-        ) : null}
         
+        <!-- JSON-LD Structured Data: WebSite, Organization, and optionally WebPage/Product -->
+        <script
+            is:inline
+            type="application/ld+json"
+            set:html={JSON.stringify(
+                generateStructuredData({
+                    siteOrigin,
+                    pageUrl: cleanedUrl,
+                    pageTitle: title,
+                    product: type === "product" && productJsonLd ? productJsonLd : undefined,
+                    offerPrice: amount ?? "0",
+                    offerCurrency: effectiveCurrency,
+                    pageLocale: (currentLocaleFromPath || defaultLocale) as string,
+                })
+            )}
+        ></script>
+
         <!-- Google tag (gtag.js) -->
         <script
             is:inline

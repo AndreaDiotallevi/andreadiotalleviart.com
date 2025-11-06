@@ -77,6 +77,11 @@ export const getLocalCurrency = (countryCode?: string): Currency => {
     )
 }
 
+// Export list of ISO country codes (uppercased) that we treat as EUR destinations
+export const eurCountryCodes: string[] = Object.entries(countryCodeToCurrency)
+    .filter(([, currency]) => currency === "eur")
+    .map(([code]) => code.toUpperCase())
+
 export const supportedCurrencies: Currency[] = ["gbp", "eur", "usd"]
 
 export const supportedLocales = ["en-gb", "en-us", "en"] as const
