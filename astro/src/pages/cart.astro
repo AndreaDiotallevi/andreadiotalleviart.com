@@ -290,7 +290,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         removeFromCart,
         addPromotionCode,
         removePromotionCode,
-        recreateSessionWithCurrency,
     } from "@scripts/cart"
     import { sendGA4BeginCheckoutEvent } from "@utils/ga4"
     import {
@@ -426,11 +425,6 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                         session,
                         promotionCode: code,
                     })
-                    // Keep stored locale in sync with session currency
-                    if (session.currency) {
-                        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
-                        setStoredLocale(currencyToLocale[c] as any)
-                    }
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
                     addPromotionCodeButton
@@ -464,10 +458,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                     updateClientSession({
                         session,
                     })
-                    if (session.currency) {
-                        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
-                        setStoredLocale(currencyToLocale[c] as any)
-                    }
+                    // Stored locale alignment handled by updateClientSession
                     navigate(`/cart?session_id=${session.id}`)
                 } else {
                     addPromotionCodeButton

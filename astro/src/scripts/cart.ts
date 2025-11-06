@@ -3,11 +3,9 @@ import {
     clearClientSession,
     getClientSession,
     updateClientSession,
-    setStoredLocale,
 } from "@utils/localStorage"
 import { navigate } from "astro:transitions/client"
 import type { Currency } from "@utils/stripe"
-import { currencyToLocale } from "@utils/currency"
 
 export const addToCart = async ({
     priceId,
@@ -44,11 +42,6 @@ export const addToCart = async ({
     if (!session) return { error }
 
     updateClientSession({ session, promotionCode })
-    // Ensure locale in local storage matches the created session's currency
-    if (session.currency) {
-        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
-        setStoredLocale(currencyToLocale[c] as any)
-    }
     navigate(`/cart?session_id=${session.id}`)
 }
 
@@ -93,10 +86,7 @@ export const removeFromCart = async ({
     if (!session) return
 
     updateClientSession({ session, promotionCode })
-    if (session.currency) {
-        const c = (session.currency as string).toLowerCase() as keyof typeof currencyToLocale
-        setStoredLocale(currencyToLocale[c] as any)
-    }
+    // Stored locale alignment is handled in updateClientSession
     navigate(`/cart?session_id=${session.id}`)
 }
 
@@ -157,7 +147,5 @@ export const recreateSessionWithCurrency = async ({
 
     if (session) {
         updateClientSession({ session, promotionCode })
-        const c = (currency as string).toLowerCase() as keyof typeof currencyToLocale
-        setStoredLocale(currencyToLocale[c] as any)
     }
 }

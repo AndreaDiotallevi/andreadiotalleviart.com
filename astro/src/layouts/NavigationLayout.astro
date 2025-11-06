@@ -217,7 +217,6 @@ const shopHref = `/${currentLocale}/shop`
 <script>
     import { clearClientSession, getClientSession, updateClientSession } from "@utils/localStorage"
     import { supportedLocales, defaultLocale } from "@utils/currency"
-    import { recreateSessionWithCurrency } from "@scripts/cart"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {

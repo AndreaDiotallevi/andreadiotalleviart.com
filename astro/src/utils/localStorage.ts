@@ -1,6 +1,6 @@
 import type Stripe from "stripe"
 import type { SupportedLocale } from "./currency"
-import { supportedLocales } from "./currency"
+import { supportedLocales, currencyToLocale } from "./currency"
  
 const clientSessionKey = "session"
 
@@ -70,6 +70,13 @@ export const updateClientSession = ({
     }
 
     localStorage.setItem(clientSessionKey, JSON.stringify(clientSession))
+
+    // Keep stored locale aligned with session currency
+    const sessionCurrency = (session.currency as string | undefined)?.toLowerCase()
+    if (sessionCurrency && (currencyToLocale as any)[sessionCurrency]) {
+        const locale = (currencyToLocale as any)[sessionCurrency] as SupportedLocale
+        setStoredLocale(locale)
+    }
 }
 
 export const clearClientSession = () => {
@@ -87,8 +94,4 @@ export const getStoredLocale = (): SupportedLocale => {
 
 export const setStoredLocale = (locale: SupportedLocale) => {
     localStorage.setItem(localeKey, locale)
-}
-
-export const clearStoredLocale = () => {
-    localStorage.removeItem(localeKey)
 }
