@@ -44,15 +44,17 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             <h1 class="text-center text-2xl md:text-5xl font-bold">
                 Cart
             </h1>
-            <div class="absolute right-0 top-0 flex items-center">
-                <label for="locale-selector-cart" class="sr-only">Region / language</label>
-                <LocaleSelector
-                    id="locale-selector-cart"
-                    ariaLabel="Region / language"
-                    locale={defaultLocale}
-                    class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
-                />
-            </div>
+            {session ? (
+                <div class="absolute right-0 top-0 flex items-center">
+                    <label for="locale-selector-cart" class="sr-only">Region / language</label>
+                    <LocaleSelector
+                        id="locale-selector-cart"
+                        ariaLabel="Region / language"
+                        locale={defaultLocale}
+                        class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                    />
+                </div>
+            ) : null}
         </div>
         {
             session ? (
