@@ -1,7 +1,9 @@
 ---
 import BackToLink from "@components/BackToLink.astro"
+import LocaleSelector from "@components/LocaleSelector.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Carousel from "@components/Carousel.astro"
+import { defaultLocale } from "@utils/currency"
 
 import { getCollection } from "astro:content"
 import { transformImage } from "@utils/cloudinary"
@@ -35,8 +37,17 @@ const { artwork } = Astro.props
         class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
     >
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
-            <div class="md:hidden mb-4">
+            <div class="md:hidden flex items-center justify-between mb-4">
                 <BackToLink href="/portfolio" text="Back to portfolio" />
+                <div class="flex items-center">
+                    <label for="locale-selector-portfolio-mobile" class="sr-only">Region / language</label>
+                    <LocaleSelector
+                        id="locale-selector-portfolio-mobile"
+                        ariaLabel="Region / language"
+                        locale={defaultLocale}
+                        class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold"
+                    />
+                </div>
             </div>
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
@@ -45,13 +56,23 @@ const { artwork } = Astro.props
         </div>
 
         <div class="w-full md:w-1/2">
-            <h1 class="text-5xl font-bold mb-6 hidden md:block">
-                {artwork.name}
-            </h1>
+            <div class="hidden md:flex items-start justify-between mb-6">
+                <h1 class="text-5xl font-bold">
+                    {artwork.name}
+                </h1>
+                <div class="flex items-center">
+                    <label for="locale-selector-portfolio" class="sr-only">Region / language</label>
+                    <LocaleSelector
+                        id="locale-selector-portfolio"
+                        ariaLabel="Region / language"
+                        locale={defaultLocale}
+                        class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                    />
+                </div>
+            </div>
 
             <div class="space-y-6">
                 <div>
-                    <!-- <h2 class="text-2xl font-bold mb-2">Description</h2> -->
                     <p>{artwork.description}</p>
                 </div>
             </div>

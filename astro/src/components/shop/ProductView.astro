@@ -3,6 +3,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 import BackToLink from "@components/BackToLink.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
+import LocaleSelector from "@components/LocaleSelector.astro"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { productsData } from "@utils/productsData"
@@ -60,6 +61,15 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
     <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
         <div class="md:hidden flex items-center justify-between mb-4">
             <BackToLink href={shopHref} text="Back to shop" />
+            <div class="flex items-center">
+                <label for="locale-selector-product-mobile" class="sr-only">Region / language</label>
+                <LocaleSelector
+                    id="locale-selector-product-mobile"
+                    ariaLabel="Region / language"
+                    locale={locale}
+                    class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold"
+                />
+            </div>
         </div>
         <div class="mb-4 md:hidden">
             <h1 class="text-2xl font-bold">{product.metadata.displayName}</h1>
@@ -73,6 +83,15 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             <div>
                 <h1 class="text-5xl font-bold">{product.metadata.displayName}</h1>
                 {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+            </div>
+            <div class="flex items-center">
+                <label for="locale-selector-product" class="sr-only">Region / language</label>
+                <LocaleSelector
+                    id="locale-selector-product"
+                    ariaLabel="Region / language"
+                    locale={locale}
+                    class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
+                />
             </div>
         </div>
 
