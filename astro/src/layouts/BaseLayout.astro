@@ -24,23 +24,26 @@ function removeHtmlExtension(url: string) {
 const cleanedUrl = removeHtmlExtension(canonicalURL.href)
 
 const pathParts = Astro.url.pathname.split("/").filter(Boolean)
-const currentLocaleFromPath = (supportedLocales as unknown as string[]).includes(
-    pathParts[0] ?? "",
+const firstSeg = (pathParts[0] || "").toLowerCase()
+const isPrefixed = (supportedLocales as unknown as string[]).includes(firstSeg)
+const currentLocaleFromPath = isPrefixed ? (firstSeg as keyof typeof localeToCurrency) : null
+const restSegments = isPrefixed ? pathParts.slice(1) : pathParts
+const restPath = restSegments.join("/") // no leading slash
+
+const makeLocalizedPath = (locale: string) => {
+    if (!restPath) {
+        return locale === defaultLocale ? "/" : `/${locale}`
+    }
+    return locale === defaultLocale ? `/${restPath}` : `/${locale}/${restPath}`
+}
+
+const alternateLinks = (supportedLocales as unknown as string[]).map(l => ({
+    hreflang: l,
+    href: removeHtmlExtension(new URL(makeLocalizedPath(l), Astro.site).href),
+}))
+const xDefaultLink = removeHtmlExtension(
+    new URL(makeLocalizedPath(defaultLocale), Astro.site).href,
 )
-    ? (pathParts[0] as keyof typeof localeToCurrency)
-    : null
-const restPath = currentLocaleFromPath
-    ? "/" + pathParts.slice(1).join("/")
-    : null
-const alternateLinks = currentLocaleFromPath
-    ? supportedLocales.map(l => ({
-          hreflang: l,
-          href: removeHtmlExtension(new URL(`/${l}${restPath}`, Astro.site).href),
-      }))
-    : []
-const xDefaultLink = currentLocaleFromPath
-    ? removeHtmlExtension(new URL(`/${defaultLocale}${restPath}`, Astro.site).href)
-    : null
 
 interface Props {
     title: string
