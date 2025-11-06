@@ -204,3 +204,16 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
         </NavigationLayout>
     </body>
 </html>
+
+<script>
+    import { setStoredLocale } from "@utils/localStorage"
+    import { supportedLocales, defaultLocale } from "@utils/currency"
+
+    document.addEventListener("astro:page-load", () => {
+        const firstSeg = (window.location.pathname.split("/")[1] || "").toLowerCase()
+        const newLocale = (supportedLocales as unknown as string[]).includes(firstSeg)
+            ? firstSeg
+            : defaultLocale
+        setStoredLocale(newLocale as any)
+    })
+</script>

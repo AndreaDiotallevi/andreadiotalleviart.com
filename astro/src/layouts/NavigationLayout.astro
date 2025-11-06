@@ -215,20 +215,11 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
 </script>
 
 <script>
-    import { clearClientSession, getClientSession, updateClientSession, getStoredLocale } from "@utils/localStorage"
-    import { supportedLocales, defaultLocale } from "@utils/currency"
+    import { getClientSession, updateClientSession, getStoredLocale } from "@utils/localStorage"
+    import { supportedLocales } from "@utils/currency"
     import { retrieveCheckoutSession } from "@utils/serverless"
 
     document.addEventListener("astro:page-load", async () => {
-        if (
-            window.location.pathname.endsWith("/cart") &&
-            !window.location.search.includes("session_id=")
-        ) {
-            clearClientSession()
-        }
-
-        // Locale-based navigation; currency is decided server-side from locale
-
         // Determine current locale from URL and rewrite Shop links to keep it
         const firstSegment = (window.location.pathname.split("/")[1] || "").toLowerCase()
         const currentLocale = (supportedLocales as unknown as string[]).includes(firstSegment) ? firstSegment : getStoredLocale()
@@ -239,8 +230,6 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
         shopAnchors.forEach(a => {
             a.href = currentLocale === 'en-gb' ? '/shop' : `/${currentLocale}/shop`
         })
-
-        let isSyncingFromUrl = false
 
         const updateCartLinks = () => {
             const cartLinks = document.querySelectorAll(
@@ -266,13 +255,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
         const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
         const { sessionId: storedSessionId } = getClientSession()
 
-        // Initial paint
-        updateCartLinks()
-
         if (urlSessionId && urlSessionId !== storedSessionId) {
-            isSyncingFromUrl = true
-            // Paint again using URL session id for href and keeping previous badge visible
-            updateCartLinks()
             try {
                 const { session } = await retrieveCheckoutSession({ sessionId: urlSessionId })
                 if (session) {
@@ -281,10 +264,8 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 }
             } catch (e) {
                 // ignore network errors; UI will reflect stored state
-            } finally {
-                isSyncingFromUrl = false
-                updateCartLinks()
             }
         }
+        updateCartLinks()
     })
 </script>
