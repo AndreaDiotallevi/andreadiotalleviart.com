@@ -31,7 +31,7 @@ const {
 <script>
     import { navigate } from "astro:transitions/client"
     import { supportedLocales, defaultLocale, localeToCurrency } from "@utils/currency"
-    import { getClientSession, setStoredLocale, getStoredLocale } from "@utils/localStorage"
+    import { getClientSession, setStoredLocale } from "@utils/localStorage"
     import { recreateSessionWithCurrency } from "@scripts/cart"
 
     document.addEventListener("astro:page-load", () => {
@@ -39,17 +39,6 @@ const {
         if (!selectors.length) return
 
         selectors.forEach(sel => {
-            if ((sel as HTMLElement).getAttribute('data-locale-bound') === '1') return
-            ;(sel as HTMLElement).setAttribute('data-locale-bound', '1')
-
-            // Initialise from current URL
-            const parts = window.location.pathname.split("/")
-            const first = (parts[1] || "").toLowerCase()
-            const current = (supportedLocales as unknown as string[]).includes(first)
-                ? first
-                : getStoredLocale()
-            ;(sel as HTMLSelectElement).value = current
-
             sel.addEventListener('change', async () => {
                 const newLocale = (sel as HTMLSelectElement).value.toLowerCase()
                 const newCurrency = localeToCurrency[newLocale as keyof typeof localeToCurrency]
@@ -100,5 +89,3 @@ const {
         })
     })
 </script>
-
-
