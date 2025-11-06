@@ -221,9 +221,8 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
 
     document.addEventListener("astro:page-load", async () => {
         if (
-            window.location.pathname === "/checkout/success" ||
-            (window.location.pathname.endsWith("/cart") &&
-                !window.location.search.includes("session_id="))
+            window.location.pathname.endsWith("/cart") &&
+            !window.location.search.includes("session_id=")
         ) {
             clearClientSession()
         }
@@ -242,14 +241,13 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
         })
 
         let isSyncingFromUrl = false
-        let previousBadgeValue: string | null = null
 
-        const updateCartLinksAndBadge = () => {
+        const updateCartLinks = () => {
             const cartLinks = document.querySelectorAll(
                 '[id^="cart-link-"]'
             ) as NodeListOf<HTMLAnchorElement>
 
-            const { sessionId, totalQuantity } = getClientSession()
+            const { sessionId } = getClientSession()
 
             // Prefer URL session id for href to avoid flicker on back/forward
             const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
@@ -261,33 +259,6 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 } else {
                     link.setAttribute("href", `/cart`)
                 }
-
-                const cartItemsSpan = link.querySelector("span") as HTMLSpanElement
-
-                // Smooth transition: avoid hiding immediately on transient 0 during session changes
-                const existingTimeout = (cartItemsSpan as any)._hideTimeout as number | undefined
-                if (existingTimeout) {
-                    clearTimeout(existingTimeout)
-                    ;(cartItemsSpan as any)._hideTimeout = undefined
-                }
-
-                if (totalQuantity > 0) {
-                    cartItemsSpan.textContent = `${totalQuantity}`
-                    previousBadgeValue = `${totalQuantity}`
-                    cartItemsSpan.classList.remove("hidden")
-                } else {
-                    // If we're syncing from URL session, keep previous value visible until sync completes
-                    if (isSyncingFromUrl && previousBadgeValue) {
-                        cartItemsSpan.textContent = previousBadgeValue
-                        cartItemsSpan.classList.remove("hidden")
-                        return
-                    }
-
-                    ;(cartItemsSpan as any)._hideTimeout = window.setTimeout(() => {
-                        cartItemsSpan.classList.add("hidden")
-                        ;(cartItemsSpan as any)._hideTimeout = undefined
-                    }, 400)
-                }
             })
         }
 
@@ -296,12 +267,12 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
         const { sessionId: storedSessionId } = getClientSession()
 
         // Initial paint
-        updateCartLinksAndBadge()
+        updateCartLinks()
 
         if (urlSessionId && urlSessionId !== storedSessionId) {
             isSyncingFromUrl = true
             // Paint again using URL session id for href and keeping previous badge visible
-            updateCartLinksAndBadge()
+            updateCartLinks()
             try {
                 const { session } = await retrieveCheckoutSession({ sessionId: urlSessionId })
                 if (session) {
@@ -312,7 +283,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 // ignore network errors; UI will reflect stored state
             } finally {
                 isSyncingFromUrl = false
-                updateCartLinksAndBadge()
+                updateCartLinks()
             }
         }
     })

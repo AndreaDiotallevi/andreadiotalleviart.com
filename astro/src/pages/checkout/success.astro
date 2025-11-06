@@ -166,14 +166,32 @@ const success = !!(session && currency && shippingDetails)
 <script>
     import type Stripe from "stripe"
     import { sendGA4PurchaseEvent } from "@utils/ga4"
+    import { clearClientSession } from "@utils/localStorage"
 
     document.addEventListener("astro:page-load", async () => {
+        
         const successPageContent = document.querySelector(
             "#success-page-content"
         ) as HTMLElement
-
+        
         if (!successPageContent) return
+        
+        clearClientSession()
 
+        // Ensure cart badge reflects cleared session on this page
+        const hideBadges = () => {
+            const spans = document.querySelectorAll(
+                ".shopping-cart span"
+            ) as NodeListOf<HTMLSpanElement>
+            spans.forEach(span => {
+                span.textContent = ""
+                span.classList.add("hidden")
+            })
+        }
+        // Run immediately and once more after other listeners
+        hideBadges()
+        setTimeout(hideBadges, 0)
+        
         const session = JSON.parse(
             successPageContent.dataset.session!
         ) as Stripe.Checkout.Session

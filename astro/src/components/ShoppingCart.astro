@@ -6,7 +6,7 @@ interface Props {
 const { darkTheme } = Astro.props
 ---
 
-<div class="relative">
+<div class="relative shopping-cart">
     <svg
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
@@ -36,3 +36,34 @@ const { darkTheme } = Astro.props
         class="absolute bottom-5 right-[-8px] bg-red-600 text-white font-bold rounded-full px-2 hidden"
     ></span>
 </div>
+<script>
+    import { getClientSession } from "@utils/localStorage"
+
+    const updateCartBadges = () => {
+        const { totalQuantity } = getClientSession()
+        const spans = document.querySelectorAll(
+            ".shopping-cart span"
+        ) as NodeListOf<HTMLSpanElement>
+
+        spans.forEach(span => {
+            const existingTimeout = (span as any)._hideTimeout as number | undefined
+            if (existingTimeout) {
+                clearTimeout(existingTimeout)
+                ;(span as any)._hideTimeout = undefined
+            }
+
+            if (totalQuantity > 0) {
+                span.textContent = `${totalQuantity}`
+                span.classList.remove("hidden")
+            } else {
+                ;(span as any)._hideTimeout = window.setTimeout(() => {
+                    span.classList.add("hidden")
+                    ;(span as any)._hideTimeout = undefined
+                }, 300)
+            }
+        })
+    }
+
+    // Update only on page load navigation events
+    document.addEventListener("astro:page-load", updateCartBadges)
+</script>
