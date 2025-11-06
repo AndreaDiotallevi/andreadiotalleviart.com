@@ -478,6 +478,8 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
             navigate(`/checkout?client_secret=${session.client_secret}`)
         })
 
-        prefetch(`/checkout?client_secret=${session.client_secret}`)
+        if (session) {
+            prefetch(`/checkout?client_secret=${session.client_secret}`)
+        }
     })
 </script>
