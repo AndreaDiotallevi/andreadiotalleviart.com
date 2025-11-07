@@ -301,7 +301,7 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
         getStoredLocale,
     } from "@utils/localStorage"
     import type { Currency } from "@utils/stripe"
-    import { supportedLocales, localeToCurrency, currencyToLocale } from "@utils/currency"
+    import { supportedLocales, localeToCurrency } from "@utils/currency"
     import { prefetch } from "astro:prefetch"
     import { navigate } from "astro:transitions/client"
 

@@ -20,7 +20,12 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const items = products
         .map(product => {
-            const imageLink = product.images?.[0] ?? ""
+            const imageLinks = product.images ?? []
+            const imageLink = imageLinks[0] ?? ""
+            const additionalImages = imageLinks
+                .slice(1)
+                .map(url => `\n      <g:additional_image_link>${escapeXml(url)}</g:additional_image_link>`)
+                .join("")
             const minor = product.default_price.currency_options[currency].unit_amount
             const price = (minor / 100).toFixed(2) + ` ${currencyUpper}`
             const path = buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)
@@ -35,6 +40,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
       <description>${escapeXml(description)}</description>
       <link>${escapeXml(link)}</link>
       <g:image_link>${escapeXml(imageLink)}</g:image_link>
+      ${additionalImages}
       <g:availability>in stock</g:availability>
       <g:condition>new</g:condition>
       <g:price>${price}</g:price>
