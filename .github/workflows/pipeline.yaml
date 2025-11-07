@@ -9,6 +9,7 @@ on:
         branches:
             - "main"
             - "staging"
+            - "locale-pipeline"
         paths:
             - "serverless/**"
             - .github/workflows/pipeline.yaml
