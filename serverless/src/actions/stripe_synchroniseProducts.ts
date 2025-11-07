@@ -282,8 +282,8 @@ const products: ProductInput[] = [
         ],
         currencyOptions: {
             gbp: 8500,
-            eur: 9900,
-            usd: 10900,
+            eur: 10000,
+            usd: 11000,
         },
     },
     {
@@ -310,8 +310,8 @@ const products: ProductInput[] = [
         ],
         currencyOptions: {
             gbp: 8500,
-            eur: 9900,
-            usd: 10900,
+            eur: 10000,
+            usd: 11000,
         },
     },
     {
@@ -339,8 +339,8 @@ const products: ProductInput[] = [
         ],
         currencyOptions: {
             gbp: 8500,
-            eur: 9900,
-            usd: 10900,
+            eur: 10000,
+            usd: 11000,
         },
     },
 ]
