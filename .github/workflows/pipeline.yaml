@@ -82,9 +82,11 @@ jobs:
                   aws lambda invoke \
                     --region ${STAGING_REGION} \
                     --function-name ${STAGING_STACK_NAME}-StripeSynchroniseProducts \
-                    --invocation-type Event \
                     --payload '{}' \
-                    /dev/null
+                    --log-type Tail \
+                    --query 'LogResult' \
+                    --output text \
+                    /dev/null | base64 --decode
 
     build-and-package:
         if: github.ref == 'refs/heads/main'
@@ -184,9 +186,11 @@ jobs:
                   aws lambda invoke \
                     --region ${STAGING_REGION} \
                     --function-name ${STAGING_STACK_NAME}-StripeSynchroniseProducts \
-                    --invocation-type Event \
                     --payload '{}' \
-                    /dev/null
+                    --log-type Tail \
+                    --query 'LogResult' \
+                    --output text \
+                    /dev/null | base64 --decode
 
     integration-test:
         if: github.ref == 'refs/heads/main'
@@ -239,6 +243,8 @@ jobs:
                   aws lambda invoke \
                     --region ${PROD_REGION} \
                     --function-name ${PROD_STACK_NAME}-StripeSynchroniseProducts \
-                    --invocation-type Event \
                     --payload '{}' \
-                    /dev/null
+                    --log-type Tail \
+                    --query 'LogResult' \
+                    --output text \
+                    /dev/null | base64 --decode
