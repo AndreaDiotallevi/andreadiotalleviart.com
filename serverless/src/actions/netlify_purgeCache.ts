@@ -2,7 +2,10 @@ import { purgeCache } from "@netlify/functions"
 import { getParameterValue } from "./ssm_getParameterValue"
 
 export const purgeNetlifyCache = async () => {
-    if (process.env.ENVIRONMENT === "sandbox") return
+    if (process.env.ENVIRONMENT !== "production") {
+        console.log("Skipping Netlify cache purge: non-production environment")
+        return
+    }
 
     const token = await getParameterValue<string>({
         name: "NETLIFY_ACCESS_TOKEN",
