@@ -48,9 +48,10 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 </BaseLayout>
 
 <script>
-    import p5 from "p5"
+    import type p5 from "p5"
 
     document.addEventListener("astro:page-load", async () => {
+        const { default: P5 } = await import("p5")
         const sketchElement = document.querySelector("#sketch") as HTMLElement
         const canvasWidth = sketchElement?.clientWidth || 0
         const canvasHeight = sketchElement?.clientHeight || 0
@@ -106,6 +107,6 @@ import BaseLayout from "@layouts/BaseLayout.astro"
             }
         }
 
-        new p5(sketch, sketchElement)
+        new P5(sketch, sketchElement)
     })
 </script>

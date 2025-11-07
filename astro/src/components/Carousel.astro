@@ -140,12 +140,13 @@ const { images, width, height, altBase } = Astro.props
     </style>
 
     <script>
-        import EmblaCarousel, {
-            type EmblaCarouselType,
-            type EmblaOptionsType,
+        import type {
+            EmblaCarouselType,
+            EmblaOptionsType,
         } from "embla-carousel"
 
         document.addEventListener("astro:page-load", async () => {
+            const { default: EmblaCarousel } = await import("embla-carousel")
             const OPTIONS: EmblaOptionsType = {}
             const OPTIONS_THUMBS: EmblaOptionsType = {
                 containScroll: "keepSnaps",
