@@ -45,6 +45,14 @@ const xDefaultLink = removeHtmlExtension(
     new URL(makeLocalizedPath(defaultLocale), Astro.site).href,
 )
 
+const effectivePageLocale = (currentLocaleFromPath || defaultLocale) as string
+const ogLocaleMap: Record<string, string> = {
+    "en-gb": "en_GB",
+    "en-us": "en_US",
+    en: "en",
+}
+const effectiveOgLocale = ogLocaleMap[effectivePageLocale] || "en_GB"
+
 interface Props {
     title: string
     description: string
@@ -128,7 +136,7 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
         <meta property="og:description" content={description} />
         {image ? <meta property="og:image" content={image} /> : null}
         <meta property="og:site_name" content="Andrea Diotallevi Art" />
-        <meta property="og:locale" content="en_GB" />
+        <meta property="og:locale" content={effectiveOgLocale} />
 
         {
             type === "product" && amount && (currency || currencyFromPath) ? (

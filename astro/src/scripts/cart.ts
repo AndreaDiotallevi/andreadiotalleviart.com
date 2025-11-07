@@ -86,7 +86,6 @@ export const removeFromCart = async ({
     if (!session) return
 
     updateClientSession({ session, promotionCode })
-    // Stored locale alignment is handled in updateClientSession
     navigate(`/cart?session_id=${session.id}`)
 }
 
