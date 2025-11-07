@@ -87,6 +87,11 @@ jobs:
                     --query 'LogResult' \
                     --output text \
                     /dev/null | base64 --decode
+            - name: Trigger Netlify deploy (staging)
+              if: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING != '' }}
+              run: |
+                  echo "Triggering Netlify build hook for staging..."
+                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
 
     build-and-package:
         if: github.ref == 'refs/heads/main'
@@ -191,6 +196,11 @@ jobs:
                     --query 'LogResult' \
                     --output text \
                     /dev/null | base64 --decode
+            - name: Trigger Netlify deploy (staging)
+              if: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING != '' }}
+              run: |
+                  echo "Triggering Netlify build hook for staging..."
+                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
 
     integration-test:
         if: github.ref == 'refs/heads/main'
@@ -248,3 +258,8 @@ jobs:
                     --query 'LogResult' \
                     --output text \
                     /dev/null | base64 --decode
+            - name: Trigger Netlify deploy (production)
+              if: ${{ secrets.NETLIFY_BUILD_HOOK_PROD != '' }}
+              run: |
+                  echo "Triggering Netlify build hook for production..."
+                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_PROD }}" || exit 1
