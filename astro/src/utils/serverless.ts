@@ -1,4 +1,4 @@
-import Stripe from "stripe"
+import type Stripe from "stripe"
 import type { Currency, StripeProduct } from "./stripe"
 
 export const getStripeProducts = async (): Promise<StripeProduct[]> => {

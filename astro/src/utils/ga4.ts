@@ -1,4 +1,4 @@
-import Stripe from "stripe"
+import type Stripe from "stripe"
 import type { StripePrice } from "./stripe"
 
 const getCouponField = ({ session }: { session: Stripe.Checkout.Session }) => {
