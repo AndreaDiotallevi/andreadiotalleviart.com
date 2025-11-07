@@ -8,8 +8,7 @@ on:
     push:
         branches:
             - "main"
-            - "staging"
-            - "locale-pipeline"
+            - "staging*"
         paths:
             - "serverless/**"
             - .github/workflows/pipeline.yaml
@@ -47,7 +46,7 @@ jobs:
                   # trigger the tests here
 
     build-and-deploy-staging:
-        if: github.ref == 'refs/heads/staging'
+        if: startsWith(github.ref, 'refs/heads/staging')
         needs: [test]
         runs-on: ubuntu-latest
         steps:
