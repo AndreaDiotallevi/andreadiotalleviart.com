@@ -35,6 +35,9 @@ env:
     # prod "sam package" and "sam deploy" commands.
     # PROD_IMAGE_REPOSITORY = '0123456789.dkr.ecr.region.amazonaws.com/repository-name'
     PROD_REGION: eu-west-2
+    # Optional Netlify build hooks (leave empty to skip)
+    NETLIFY_BUILD_HOOK_STAGING: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}
+    NETLIFY_BUILD_HOOK_PROD: ${{ secrets.NETLIFY_BUILD_HOOK_PROD }}
 
 jobs:
     test:
@@ -88,10 +91,10 @@ jobs:
                     --output text \
                     /dev/null | base64 --decode
             - name: Trigger Netlify deploy (staging)
-              if: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING != '' }}
+              if: ${{ env.NETLIFY_BUILD_HOOK_STAGING != '' }}
               run: |
                   echo "Triggering Netlify build hook for staging..."
-                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
+                  curl -s -X POST "${{ env.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
 
     build-and-package:
         if: github.ref == 'refs/heads/main'
@@ -197,10 +200,10 @@ jobs:
                     --output text \
                     /dev/null | base64 --decode
             - name: Trigger Netlify deploy (staging)
-              if: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING != '' }}
+              if: ${{ env.NETLIFY_BUILD_HOOK_STAGING != '' }}
               run: |
                   echo "Triggering Netlify build hook for staging..."
-                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
+                  curl -s -X POST "${{ env.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
 
     integration-test:
         if: github.ref == 'refs/heads/main'
@@ -259,7 +262,7 @@ jobs:
                     --output text \
                     /dev/null | base64 --decode
             - name: Trigger Netlify deploy (production)
-              if: ${{ secrets.NETLIFY_BUILD_HOOK_PROD != '' }}
+              if: ${{ env.NETLIFY_BUILD_HOOK_PROD != '' }}
               run: |
                   echo "Triggering Netlify build hook for production..."
-                  curl -s -X POST "${{ secrets.NETLIFY_BUILD_HOOK_PROD }}" || exit 1
+                  curl -s -X POST "${{ env.NETLIFY_BUILD_HOOK_PROD }}" || exit 1
