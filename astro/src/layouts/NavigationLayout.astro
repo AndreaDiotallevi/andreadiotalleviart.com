@@ -218,6 +218,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
     import { getClientSession, updateClientSession, getStoredLocale } from "@utils/localStorage"
     import { supportedLocales } from "@utils/currency"
     import { retrieveCheckoutSession } from "@utils/serverless"
+    import { prefetch } from "astro:prefetch"
 
     document.addEventListener("astro:page-load", async () => {
         // Determine current locale from URL and rewrite Shop links to keep it
@@ -254,6 +255,12 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
         // If URL contains a session_id different from local storage, sync from server then update UI
         const urlSessionId = new URLSearchParams(window.location.search).get("session_id")
         const { sessionId: storedSessionId } = getClientSession()
+
+        // Prefetch cart page with the best-known session id for faster nav
+        const effectiveSessionIdForPrefetch = urlSessionId || storedSessionId
+        if (effectiveSessionIdForPrefetch) {
+            prefetch(`/cart?session_id=${effectiveSessionIdForPrefetch}`)
+        }
 
         if (urlSessionId && urlSessionId !== storedSessionId) {
             try {
