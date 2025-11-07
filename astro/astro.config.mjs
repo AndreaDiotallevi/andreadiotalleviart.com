@@ -10,7 +10,7 @@ export default defineConfig({
     adapter: netlify(),
     trailingSlash: "never",
     build: { format: "file" },
-    integrations: [tailwind(), sentry({ telemetry: false })],
+    integrations: [tailwind(), sentry()],
     prefetch: { defaultStrategy: "load", prefetchAll: false },
     site: "https://andreadiotalleviart.com",
     image: { service: imageService({ placeholder: "lqip" }) },
