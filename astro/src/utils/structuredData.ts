@@ -131,13 +131,15 @@ function buildSingleOffer(params: {
         },
     }
 
-    // For EU locale, provide shipping destinations for all supported EUR countries
+    // For EU locale, restrict shipping destination to Ireland only (IE)
     const shippingDetails =
         params.destinationCountry === "EU"
-            ? (eurCountryCodes.map(code => ({
-                  ...baseShippingDetails,
-                  shippingDestination: { "@type": "DefinedRegion", addressCountry: code },
-              })) as unknown[])
+            ? ([
+                  {
+                      ...baseShippingDetails,
+                      shippingDestination: { "@type": "DefinedRegion", addressCountry: "IE" },
+                  },
+              ] as unknown[])
             : ({
                   ...baseShippingDetails,
                   shippingDestination: { "@type": "DefinedRegion", addressCountry: params.destinationCountry },
