@@ -9,3 +9,6 @@
     for = "/*"
     [context.branch-deploy.headers.values]
       X-Robots-Tag = "noindex, nofollow"
+
+[build.environment]
+  NODE_VERSION = "22.19.0"
