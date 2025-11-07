@@ -156,6 +156,7 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
 <script>
     import type { Currency } from "@utils/stripe"
     import { addToCart } from "@scripts/cart"
+    import * as Sentry from "@sentry/astro"
 
     document.addEventListener("astro:page-load", async () => {
         const priceForm = document.querySelector("#price-form") as HTMLElement
@@ -180,6 +181,19 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
 
             const response = await addToCart({ priceId, currency })
             if (response?.error) {
+                try {
+                    Sentry.captureMessage("addToCart failed", {
+                        level: "error",
+                        extra: {
+                            error: response.error,
+                            priceId,
+                            currency,
+                            pathname: window.location.pathname,
+                        },
+                    })
+                } catch (_) {
+                    // ignore Sentry errors, continue UX fallback
+                }
                 errorMessage.classList.remove("hidden")
                 spinner.classList.add("hidden")
                 button.disabled = false
