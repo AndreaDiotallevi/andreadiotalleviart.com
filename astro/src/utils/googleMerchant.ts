@@ -15,10 +15,11 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
     const brand = "Andrea Diotallevi Art"
     const currency = localeToCurrency[locale]
     const currencyUpper = currency.toUpperCase()
-    const shippingCountries = (() => {
-        if (locale === "en-gb") return ["GB"]
-        if (locale === "en-us") return ["US"]
-        return eurCountryCodes
+    const countryForLocale = (() => {
+        if (locale === "en-gb") return "GB"
+        if (locale === "en-us") return "US"
+        // EU default (request: only Italy for now)
+        return "IT"
     })()
     // Keep only shipping country + free price; avoid extra shipping details not explicitly shown on the site
 
@@ -46,13 +47,6 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
             seenBySlug.add(slug)
             const title = `${product.metadata.displayName || product.name} | Giclée Fine Art Print`
             const description = product.description || title
-            const shipping = shippingCountries
-                .map(code => {
-                    return `\n      <g:shipping><g:country>${escapeXml(code)}</g:country><g:price>${(0).toFixed(
-                        2,
-                    )} ${currencyUpper}</g:price></g:shipping>`
-                })
-                .join("")
             const itemGroupId = product.metadata.slug
             const size = product.metadata.size
             const mpn = product.metadata.sku
@@ -82,7 +76,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
       <g:availability>in stock</g:availability>
       <g:condition>new</g:condition>
       <g:price>${price}</g:price>
-      ${shipping}
+      <g:country>${escapeXml(countryForLocale)}</g:country>
       <g:brand>${escapeXml(brand)}</g:brand>
       <g:identifier_exists>false</g:identifier_exists>
       <g:google_product_category>500044</g:google_product_category>
@@ -124,12 +118,12 @@ export async function generateGoogleMerchantSupplementalXml(locale: keyof typeof
     const currency = localeToCurrency[locale]
     const currencyUpper = currency.toUpperCase()
     const products = await getStripeProducts()
-    const shippingCountries = (() => {
-        if (locale === "en-gb") return ["GB"]
-        if (locale === "en-us") return ["US"]
-        return eurCountryCodes
-    })()
     // Only override id, link, price and shipping(country+price)
+    const countries = (() => {
+        if (locale === "en") return ["IT"] // EU: just Italy for now
+        if (locale === "en-us") return ["US"]
+        return ["GB"]
+    })()
 
     const seenBySlug = new Set<string>()
     const items = products
@@ -137,28 +131,25 @@ export async function generateGoogleMerchantSupplementalXml(locale: keyof typeof
             const path = buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)
             const baseLink = `${baseUrl}${path}`
             const slug = product.metadata.slug
-            const link =
-                seenBySlug.has(slug)
-                    ? `${baseLink}?size=${encodeURIComponent(product.metadata.size)}`
-                    : baseLink
-            seenBySlug.add(slug)
             const minor = product.default_price.currency_options[currency].unit_amount
             const price = (minor / 100).toFixed(2) + ` ${currencyUpper}`
-            const shipping = shippingCountries
-                .map(code => {
-                    return `\n      <g:shipping><g:country>${escapeXml(code)}</g:country><g:price>${(0).toFixed(
-                        2,
-                    )} ${currencyUpper}</g:price></g:shipping>`
-                })
-                .join("")
 
-            return `
+            return countries
+                .map(countryCode => {
+                    const link =
+                        seenBySlug.has(slug)
+                            ? `${baseLink}?size=${encodeURIComponent(product.metadata.size)}`
+                            : baseLink
+                    seenBySlug.add(slug)
+                    return `
     <item>
       <g:id>${escapeXml(product.metadata.sku || product.id)}</g:id>
       <link>${escapeXml(link)}</link>
       <g:price>${price}</g:price>
-      ${shipping}
+      <g:country>${escapeXml(countryCode)}</g:country>
     </item>`
+                })
+                .join("")
         })
         .join("")
 
