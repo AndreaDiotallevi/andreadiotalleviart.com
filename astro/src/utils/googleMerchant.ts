@@ -15,13 +15,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
     const brand = "Andrea Diotallevi Art"
     const currency = localeToCurrency[locale]
     const currencyUpper = currency.toUpperCase()
-    const countryForLocale = (() => {
-        if (locale === "en-gb") return "GB"
-        if (locale === "en-us") return "US"
-        // EU default (request: only Italy for now)
-        return "IT"
-    })()
-    // Keep only shipping country + free price; avoid extra shipping details not explicitly shown on the site
+    // Keep only mandatory and essential attributes
 
     const products = await getStripeProducts()
 
@@ -76,7 +70,6 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
       <g:availability>in stock</g:availability>
       <g:condition>new</g:condition>
       <g:price>${price}</g:price>
-      <g:country>${escapeXml(countryForLocale)}</g:country>
       <g:brand>${escapeXml(brand)}</g:brand>
       <g:identifier_exists>false</g:identifier_exists>
       <g:google_product_category>500044</g:google_product_category>
