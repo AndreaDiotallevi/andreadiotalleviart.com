@@ -18,6 +18,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const products = await getStripeProducts()
 
+    const seenBySlug = new Set<string>()
     const items = products
         .map(product => {
             const imageLinks = product.images ?? []
@@ -29,7 +30,14 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
             const minor = product.default_price.currency_options[currency].unit_amount
             const price = (minor / 100).toFixed(2) + ` ${currencyUpper}`
             const path = buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)
-            const link = `${baseUrl}${path}`
+            const baseLink = `${baseUrl}${path}`
+            const slug = product.metadata.slug
+            // For additional sizes of the same slug, include a size query param
+            const link =
+                seenBySlug.has(slug)
+                    ? `${baseLink}?size=${encodeURIComponent(product.metadata.size)}`
+                    : baseLink
+            seenBySlug.add(slug)
             const title = `${product.metadata.displayName || product.name} | Giclée Fine Art Print`
             const description = product.description || title
 
@@ -57,6 +65,48 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
     <title>${escapeXml(brand)} Product Feed (${currencyUpper})</title>
     <link>${baseUrl}</link>
     <description>${escapeXml("Giclée fine art prints feed for Google Merchant Center")}</description>
+    ${items}
+  </channel>
+</rss>`
+
+    return rss
+}
+
+export async function generateGoogleMerchantSupplementalXml(locale: keyof typeof localeToCurrency) {
+    const baseUrl = "https://andreadiotalleviart.com"
+    const currency = localeToCurrency[locale]
+    const currencyUpper = currency.toUpperCase()
+    const products = await getStripeProducts()
+
+    const seenBySlug = new Set<string>()
+    const items = products
+        .map(product => {
+            const path = buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)
+            const baseLink = `${baseUrl}${path}`
+            const slug = product.metadata.slug
+            const link =
+                seenBySlug.has(slug)
+                    ? `${baseLink}?size=${encodeURIComponent(product.metadata.size)}`
+                    : baseLink
+            seenBySlug.add(slug)
+            const minor = product.default_price.currency_options[currency].unit_amount
+            const price = (minor / 100).toFixed(2) + ` ${currencyUpper}`
+
+            return `
+    <item>
+      <g:id>${escapeXml(product.metadata.sku || product.id)}</g:id>
+      <link>${escapeXml(link)}</link>
+      <g:price>${price}</g:price>
+    </item>`
+        })
+        .join("")
+
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>Supplemental Feed (${locale})</title>
+    <link>${baseUrl}</link>
+    <description>${escapeXml("Supplemental feed to override per-locale product links")}</description>
     ${items}
   </channel>
 </rss>`
