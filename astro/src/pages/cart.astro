@@ -17,10 +17,12 @@ import type Stripe from "stripe"
 const sessionId = Astro.url.searchParams.get("session_id")
 
 let session: Stripe.Checkout.Session | null = null
+let loadError: string | null = null
 
 if (sessionId) {
     const response = await retrieveCheckoutSession({ sessionId })
     session = response.session ?? null
+    loadError = response.error ?? null
 }
 
 const pageCurrency: Currency = (session?.currency as Currency) || "gbp"
@@ -272,7 +274,9 @@ const coupon = session?.total_details?.breakdown?.discounts[0]?.discount?.coupon
                 </>
             ) : (
                 <div class="flex flex-col items-center">
-                    <p class="text-center mb-4">Your cart is empty.</p>
+                    <p class="text-center mb-4">
+                        {loadError === "Session is expired" ? "Your session has expired." : "Your cart is empty."}
+                    </p>
                     <a
                         href={buildLocaleUrl(`/shop`, pageLocale)}
                         class="block w-full px-4 py-3 text-gray-800 bg-white rounded-lg border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white text-center font-bold max-w-lg mb-4 transition-colors duration-300"

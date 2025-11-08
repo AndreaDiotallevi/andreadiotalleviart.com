@@ -11,7 +11,12 @@ export const handler = async (
 
     console.log(JSON.stringify(session))
 
-    const statusCode = error ? 500 : 200
+    // Map known errors to appropriate HTTP status codes
+    const statusCode = error
+        ? error === "Session is expired"
+            ? 410 // Gone
+            : 400 // Bad Request for other known validation errors
+        : 200
     const body = error ? JSON.stringify({ error }) : JSON.stringify({ session })
 
     console.log("API response...")
