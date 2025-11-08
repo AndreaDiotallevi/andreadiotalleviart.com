@@ -3,7 +3,7 @@ export const prerender = false
 
 import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { currencyToLocale, defaultLocale } from "@utils/currency"
+import { currencyToLocale, defaultLocale, buildLocaleUrl } from "@utils/currency"
 
 import { imageBreakpoints } from "@utils/breakpoints"
 import { formatCurrency } from "@utils/intl"
@@ -145,7 +145,7 @@ const success = !!(session && currency && shippingDetails)
 
                         <div class="mt-6">
                             <a
-                                href={`/${locale}/shop`}
+                                href={buildLocaleUrl('/shop', locale as any)}
                                 class="block w-full px-4 py-3 text-white bg-gray-800 rounded-lg md:hover:bg-gray-800 text-center font-bold transition-colors duration-300"
                             >
                                 Discover more
