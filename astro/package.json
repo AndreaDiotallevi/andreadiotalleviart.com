@@ -18,7 +18,6 @@
     "@unpic/astro": "^0.0.47",
     "astro": "^5.15.3",
     "cloudinary": "^2.8.0",
-    "embla-carousel": "^8.6.0",
     "p5": "^1.11.11",
     "stripe": "^16.12.0",
     "tailwindcss": "^3.4.18",

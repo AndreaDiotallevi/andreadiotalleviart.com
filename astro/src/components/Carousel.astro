@@ -1,253 +1,158 @@
 ---
 import { Image } from "@unpic/astro"
+
 import { imageBreakpoints } from "@utils/breakpoints"
+import { getSelectedImageIndex, IMAGE_INDEX_QUERY_PARAM } from "@utils/gallery"
 
 interface Props {
     images: string[]
     width: number
     height: number
     altBase?: string
+    selectedIndex?: number
 }
 
-const { images, width, height, altBase } = Astro.props
+const {
+    images = [],
+    width,
+    height,
+    altBase,
+    selectedIndex: providedSelectedIndex,
+} = Astro.props as Props
+
+const totalImages = Array.isArray(images) ? images.length : 0
+const selectedImageFromUrl = getSelectedImageIndex(Astro.url, totalImages)
+const selectedImageIndex = totalImages
+    ? Math.min(
+          Math.max(
+              typeof providedSelectedIndex === "number"
+                  ? providedSelectedIndex
+                  : selectedImageFromUrl,
+              0,
+          ),
+          totalImages - 1,
+      )
+    : 0
+const displayedImage = images[selectedImageIndex]
+
+const basePath = Astro.url?.pathname ?? "/"
+const baseSearchParams = new URLSearchParams(Astro.url?.searchParams ?? undefined)
+baseSearchParams.delete(IMAGE_INDEX_QUERY_PARAM)
+
+const buildHref = (index: number): string => {
+    const params = new URLSearchParams(baseSearchParams)
+    if (index > 0) {
+        params.set(IMAGE_INDEX_QUERY_PARAM, String(index))
+    }
+    const search = params.toString()
+    return search ? `${basePath}?${search}` : basePath
+}
 ---
 
-<div class="embla">
-    <div class="embla__viewport">
-        <div class="embla__container">
-            {
-                images.map((src, index) => (
-                    <div class="embla__slide">
-                        <div class="embla__slide__number">
+{displayedImage ? (
+    <section class="product-gallery">
+        <div class="product-gallery__main" transition:name="product-image">
+            <Image
+                id={`product-image-index-${selectedImageIndex}`}
+                alt={
+                    altBase
+                        ? `${altBase} - ${selectedImageIndex + 1}`
+                        : `Product image ${selectedImageIndex + 1}`
+                }
+                src={displayedImage}
+                width={width}
+                height={height}
+                loading="eager"
+                fetchpriority="high"
+                sizes="(max-width: 768px) 200vw, 100vw"
+                breakpoints={imageBreakpoints({
+                    maxWidth: 1500,
+                    assetWidth: width,
+                })}
+            />
+        </div>
+
+        {totalImages > 1 ? (
+            <div class="product-gallery__thumbs" role="list">
+                {images.map((src, index) => {
+                    const isSelected = index === selectedImageIndex
+                    return (
+                        <a
+                            href={buildHref(index)}
+                            class={`product-gallery__thumb ${
+                                isSelected ? "product-gallery__thumb--selected" : ""
+                            }`}
+                            aria-current={isSelected ? "true" : undefined}
+                            data-astro-prefetch="hover"
+                        >
+                            <span class="sr-only">
+                                Show image {index + 1} of {totalImages}
+                            </span>
                             <Image
-                                id={`product-image-index-${index}`}
-                                alt={altBase ? `${altBase} - ${index + 1}` : `Product image ${index + 1}`}
+                                id={`product-thumbnail-index-${index}`}
+                                alt={
+                                    altBase
+                                        ? `Thumbnail of ${altBase} - ${index + 1}`
+                                        : `Product thumbnail ${index + 1}`
+                                }
                                 src={src}
                                 width={width}
                                 height={height}
-                                loading={index === 0 ? "eager" : "lazy"}
-                                fetchpriority={index === 0 ? "high" : "low"}
-                                sizes="(max-width: 768px) 200vw, 100vw"
+                                loading="lazy"
+                                fetchpriority="low"
+                                sizes="200px"
                                 breakpoints={imageBreakpoints({
-                                    maxWidth: 1500,
+                                    maxWidth: 600,
                                     assetWidth: width,
                                 })}
                             />
-                        </div>
-                    </div>
-                ))
-            }
-        </div>
-    </div>
-    <div class={`embla-thumbs ${images.length === 1 ? "hidden" : ""}`}>
-        <div class="embla-thumbs__viewport">
-            <div class="embla-thumbs__container">
-                {
-                    images.map((src, index) => (
-                        <div
-                            class={`embla-thumbs__slide ${index === 0 ? "embla-thumbs__slide--selected" : ""}`}
-                        >
-                            <button
-                                type="button"
-                                class="embla-thumbs__slide__number"
-                            >
-                                <Image
-                                    id={`product-thumbnail-index-${index}`}
-                                    alt={altBase ? `Thumbnail of ${altBase} - ${index + 1}` : `Product thumbnail ${index + 1}`}
-                                    src={src}
-                                    width={width}
-                                    height={height}
-                                    loading="eager"
-                                    fetchpriority="high"
-                                    sizes="600px"
-                                    breakpoints={imageBreakpoints({
-                                        maxWidth: 600,
-                                        assetWidth: width,
-                                    })}
-                                />
-                            </button>
-                        </div>
-                    ))
-                }
+                        </a>
+                    )
+                })}
             </div>
-        </div>
-    </div>
+        ) : null}
+    </section>
+) : null}
 
-    <style>
-        .embla {
-            --slide-size: 100%;
+<style>
+    .product-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .product-gallery__main {
+        border-radius: 1.8rem;
+        overflow: hidden;
+    }
+
+    .product-gallery__thumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .product-gallery__thumb {
+        border-radius: 1.2rem;
+        border-bottom: 4px solid transparent;
+        display: inline-flex;
+        cursor: pointer;
+        transition: border-color 150ms ease, opacity 150ms ease;
+    }
+
+    .product-gallery__thumb:hover,
+    .product-gallery__thumb:focus-visible {
+        opacity: 0.8;
+    }
+
+    .product-gallery__thumb--selected {
+        border-bottom-color: #1f2937;
+    }
+
+    @media (max-width: 768px) {
+        .product-gallery__thumbs {
+            overflow-x: auto;
+            padding-bottom: 0.25rem;
         }
-        .embla__viewport {
-            overflow: hidden;
-        }
-        .embla__container {
-            display: flex;
-            touch-action: pan-y pinch-zoom;
-            margin-left: calc(var(--slide-spacing) * -1);
-        }
-        .embla__slide {
-            transform: translate3d(0, 0, 0);
-            flex: 0 0 var(--slide-size);
-            min-width: 0;
-            padding-left: var(--slide-spacing);
-        }
-        .embla__slide__number {
-            border-radius: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-        }
-        .embla-thumbs {
-            --thumbs-slide-spacing: 0.8rem;
-            --thumbs-slide-height: 8rem;
-            margin-top: var(--thumbs-slide-spacing);
-        }
-        .embla-thumbs__viewport {
-            overflow: hidden;
-        }
-        .embla-thumbs__container {
-            display: flex;
-            flex-direction: row;
-            margin-left: calc(var(--thumbs-slide-spacing) * -1);
-        }
-        .embla-thumbs__slide {
-            flex: 0 0 25%;
-            min-width: 0;
-            padding-left: var(--thumbs-slide-spacing);
-        }
-        .embla-thumbs__slide__number {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: transparent;
-            touch-action: manipulation;
-            display: inline-flex;
-            cursor: pointer;
-            border: 0;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-bottom: 2px;
-            border-bottom: 4px solid white;
-        }
-        .embla-thumbs__slide--selected .embla-thumbs__slide__number {
-            /* opacity: 0.65; */
-            border-bottom: 4px solid #1F2937;
-            /* border-bottom: 4px solid rgb(220, 38, 38); */
-        }
-    </style>
-
-    <script>
-        import type {
-            EmblaCarouselType,
-            EmblaOptionsType,
-        } from "embla-carousel"
-
-        document.addEventListener("astro:page-load", async () => {
-            const { default: EmblaCarousel } = await import("embla-carousel")
-            const OPTIONS: EmblaOptionsType = {}
-            const OPTIONS_THUMBS: EmblaOptionsType = {
-                containScroll: "keepSnaps",
-                dragFree: true,
-            }
-
-            const viewportNodeMainCarousel = document.querySelector(
-                ".embla__viewport"
-            ) as HTMLElement
-            const viewportNodeThumbCarousel = document.querySelector(
-                ".embla-thumbs__viewport"
-            ) as HTMLElement
-
-            if (!viewportNodeMainCarousel || !viewportNodeThumbCarousel) return
-
-            const addThumbBtnsClickHandlers = (
-                emblaApiMain: EmblaCarouselType,
-                emblaApiThumb: EmblaCarouselType
-            ): (() => void) => {
-                const slidesThumbs = emblaApiThumb.slideNodes()
-
-                const scrollToIndex = slidesThumbs.map(
-                    (_, index) => (): void => emblaApiMain.scrollTo(index)
-                )
-
-                slidesThumbs.forEach((slideNode, index) => {
-                    slideNode.addEventListener(
-                        "click",
-                        scrollToIndex[index],
-                        false
-                    )
-                })
-
-                return (): void => {
-                    slidesThumbs.forEach((slideNode, index) => {
-                        slideNode.removeEventListener(
-                            "click",
-                            scrollToIndex[index],
-                            false
-                        )
-                    })
-                }
-            }
-
-            const addToggleThumbBtnsActive = (
-                emblaApiMain: EmblaCarouselType,
-                emblaApiThumb: EmblaCarouselType
-            ): (() => void) => {
-                const slidesThumbs = emblaApiThumb.slideNodes()
-
-                const toggleThumbBtnsState = (): void => {
-                    emblaApiThumb.scrollTo(emblaApiMain.selectedScrollSnap())
-                    const previous = emblaApiMain.previousScrollSnap()
-                    const selected = emblaApiMain.selectedScrollSnap()
-                    slidesThumbs[previous].classList.remove(
-                        "embla-thumbs__slide--selected"
-                    )
-                    slidesThumbs[selected].classList.add(
-                        "embla-thumbs__slide--selected"
-                    )
-                }
-
-                emblaApiMain.on("select", toggleThumbBtnsState)
-                emblaApiThumb.on("init", toggleThumbBtnsState)
-
-                return (): void => {
-                    const selected = emblaApiMain.selectedScrollSnap()
-                    slidesThumbs[selected].classList.remove(
-                        "embla-thumbs__slide--selected"
-                    )
-                }
-            }
-
-            const emblaApiMain = EmblaCarousel(
-                viewportNodeMainCarousel,
-                OPTIONS
-            )
-            const emblaApiThumb = EmblaCarousel(
-                viewportNodeThumbCarousel,
-                OPTIONS_THUMBS
-            )
-
-            const removeThumbBtnsClickHandlers = addThumbBtnsClickHandlers(
-                emblaApiMain,
-                emblaApiThumb
-            )
-            const removeToggleThumbBtnsActive = addToggleThumbBtnsActive(
-                emblaApiMain,
-                emblaApiThumb
-            )
-
-            emblaApiMain
-                .on("destroy", removeThumbBtnsClickHandlers)
-                .on("destroy", removeToggleThumbBtnsActive)
-
-            emblaApiThumb
-                .on("destroy", removeThumbBtnsClickHandlers)
-                .on("destroy", removeToggleThumbBtnsActive)
-        })
-    </script>
-
-    <!-- https://www.embla-carousel.com/examples/predefined/ -->
-    <!-- https://codesandbox.io/p/sandbox/3n5r7x?file=%2Fsrc%2Fjs%2Findex.ts%3A1%2C8-1%2C21 -->
-</div>
+    }
+</style>

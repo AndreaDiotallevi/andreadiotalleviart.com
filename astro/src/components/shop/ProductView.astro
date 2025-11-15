@@ -2,13 +2,14 @@
 import BaseLayout from "@layouts/BaseLayout.astro"
 import BackToLink from "@components/BackToLink.astro"
 import Button from "@components/Button.astro"
-import Carousel from "@components/Carousel.astro"
 import LocaleSelector from "@components/LocaleSelector.astro"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { productsData } from "@utils/productsData"
 import type { Currency } from "@utils/stripe"
 import { buildLocaleUrl } from "@utils/currency"
+import Carousel from "@components/Carousel.astro"
+import { getSelectedImageIndex } from "@utils/gallery"
 
 interface Props {
     locale: string
@@ -17,13 +18,15 @@ interface Props {
 }
 
 const { locale, currency, product } = Astro.props as Props
-const shopHref = buildLocaleUrl('/shop', locale as any)
+const shopHref = buildLocaleUrl("/shop", locale as any)
+const selectedImageIndex = getSelectedImageIndex(Astro.url, product.images.length)
+const selectedImage = product.images[selectedImageIndex] ?? product.images[0]
 ---
 
 <BaseLayout
     title={`${product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
     description={`${product.metadata.displayName} — generative giclée fine art print on Hahnemühle Photo Rag 308gsm. Museum-quality archival inks. ${sizeToDescription[product.metadata.size]}. Free carbon‑neutral shipping.`}
-    image={product.images[0]}
+    image={selectedImage}
     type="product"
     amount={(product.default_price.currency_options[currency].unit_amount / 100).toFixed(2)}
     currency={currency}
@@ -73,7 +76,13 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             <h1 class="text-2xl font-bold">{product.metadata.displayName}</h1>
             {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
         </div>
-        <Carousel images={product.images} width={1429} height={2000} altBase={product.metadata.displayName} />
+        <Carousel
+            images={product.images}
+            width={1429}
+            height={2000}
+            altBase={product.metadata.displayName}
+            selectedIndex={selectedImageIndex}
+        />
     </div>
 
     <form id="price-form" class="w-full md:w-1/2">

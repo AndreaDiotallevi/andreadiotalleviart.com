@@ -4,6 +4,7 @@ import LocaleSelector from "@components/LocaleSelector.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Carousel from "@components/Carousel.astro"
 import { defaultLocale } from "@utils/currency"
+import { getSelectedImageIndex } from "@utils/gallery"
 
 import { getCollection } from "astro:content"
 import { transformImage } from "@utils/cloudinary"
@@ -24,13 +25,15 @@ export async function getStaticPaths() {
     }))
 }
 
-const { artwork } = Astro.props 
+const { artwork } = Astro.props
+const selectedImageIndex = getSelectedImageIndex(Astro.url, artwork.images.length)
+const selectedImage = artwork.images[selectedImageIndex] ?? artwork.images[0]
 ---
 
 <BaseLayout
     title={`${artwork.name} | Andrea Diotallevi Art`}
     description={artwork.description}
-    image={artwork.images[0]}
+    image={selectedImage}
     newsletter={false}
 >
     <div
@@ -52,7 +55,13 @@ const { artwork } = Astro.props
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
             </h1>
-            <Carousel images={artwork.images} width={750} height={750} altBase={artwork.name} />
+            <Carousel
+                images={artwork.images}
+                width={750}
+                height={750}
+                altBase={artwork.name}
+                selectedIndex={selectedImageIndex}
+            />
         </div>
 
         <div class="w-full md:w-1/2">
