@@ -74,6 +74,14 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
         </div>
         <Carousel images={product.images} width={1429} height={2000} altBase={product.metadata.displayName} />
+        {/* Mobile-only submit button under images */}
+        <div class="md:hidden w-full mt-6">
+            <h2 class="text-2xl font-bold mb-2">{
+                formatCurrency({ value: product.default_price.currency_options[currency].unit_amount, currency })
+            }</h2>
+            <p class="mb-4">Apply promotion codes in the cart page.</p>
+            <Button id="submit-button-mobile" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." form="price-form" />
+        </div>
     </div>
 
     <form id="price-form" class="w-full md:w-1/2">
@@ -147,7 +155,7 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
                 }</h2>
                 <p>Apply promotion codes in the cart page.</p>
             </div>
-            <Button id="submit-button" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." />
+            <Button id="submit-button-desktop" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." />
         </div>
     </form>
 </div>
@@ -159,21 +167,35 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
     import * as Sentry from "@sentry/astro"
 
     document.addEventListener("astro:page-load", async () => {
-        const priceForm = document.querySelector("#price-form") as HTMLElement
+        const priceForm = document.querySelector("#price-form") as HTMLFormElement
         if (!priceForm) return
 
-        const button = priceForm.querySelector("#submit-button") as HTMLButtonElement
-        const spinner = priceForm.querySelector("#loading-spinner")!
-        const errorMessage = priceForm.querySelector("#error-message")!
+        const desktopButton = priceForm.querySelector("#submit-button-desktop") as HTMLButtonElement | null
+        const mobileButton = document.querySelector("#submit-button-mobile") as HTMLButtonElement | null
 
-        spinner.classList.add("hidden")
-        button.disabled = false
+        const buttons: HTMLButtonElement[] = [desktopButton, mobileButton].filter(Boolean) as HTMLButtonElement[]
+
+        const getSpinnerFor = (btn: HTMLButtonElement) => btn.querySelector("#loading-spinner") as HTMLElement
+        const getErrorFor = (btn: HTMLButtonElement) => (btn.parentElement?.querySelector("#error-message") as HTMLElement)
+
+        // initialise UI state for all buttons
+        for (const btn of buttons) {
+            const sp = getSpinnerFor(btn)
+            const err = getErrorFor(btn)
+            sp?.classList.add("hidden")
+            err?.classList.add("hidden")
+            btn.disabled = false
+        }
 
         priceForm.addEventListener("submit", async e => {
             e.preventDefault()
-            button.disabled = true
-            spinner.classList.remove("hidden")
-            errorMessage.classList.add("hidden")
+            for (const btn of buttons) {
+                btn.disabled = true
+                const sp = getSpinnerFor(btn)
+                const err = getErrorFor(btn)
+                sp?.classList.remove("hidden")
+                err?.classList.add("hidden")
+            }
 
             const priceIdElement = document.querySelector("#price-id") as HTMLInputElement
             const priceId = priceIdElement.value
@@ -194,9 +216,13 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
                 } catch (_) {
                     // ignore Sentry errors, continue UX fallback
                 }
-                errorMessage.classList.remove("hidden")
-                spinner.classList.add("hidden")
-                button.disabled = false
+                for (const btn of buttons) {
+                    const sp = getSpinnerFor(btn)
+                    const err = getErrorFor(btn)
+                    err?.classList.remove("hidden")
+                    sp?.classList.add("hidden")
+                    btn.disabled = false
+                }
                 return
             }
         })
