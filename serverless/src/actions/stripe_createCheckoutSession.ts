@@ -11,17 +11,12 @@ export const createCheckoutSession = async (params: {
     discounts: Stripe.Checkout.SessionCreateParams["discounts"]
 }): Promise<{ session?: Stripe.Checkout.Session; error?: string }> => {
     try {
-        console.time("stripe:initClient")
         const stripe = await initialiseClient()
-        console.timeEnd("stripe:initClient")
 
         const { line_items, success_url, currency, discounts } = params
 
-        console.time("stripe:prepareOrderId")
         const orderId = generateKSUID(new Date())
-        console.timeEnd("stripe:prepareOrderId")
 
-        console.time("stripe:checkout.sessions.create")
         const session = await stripe.checkout.sessions.create({
             expand: ["line_items", "line_items.data.price.product"],
             ui_mode: "embedded",
@@ -38,7 +33,6 @@ export const createCheckoutSession = async (params: {
                 orderNumber: orderId.slice(0, 8),
             },
         })
-        console.timeEnd("stripe:checkout.sessions.create")
 
         return { session }
     } catch (error) {
