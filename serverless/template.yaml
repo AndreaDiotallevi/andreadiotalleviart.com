@@ -492,6 +492,9 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
             Handler: src/lambdas/api_stripeCreateCheckoutSession.handler
+            AutoPublishAlias: live
+            ProvisionedConcurrencyConfig:
+                ProvisionedConcurrentExecutions: 1
             Events:
                 Root:
                     Type: Api
