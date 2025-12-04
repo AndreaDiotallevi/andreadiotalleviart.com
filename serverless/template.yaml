@@ -492,9 +492,7 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
             Handler: src/lambdas/api_stripeCreateCheckoutSession.handler
-            AutoPublishAlias: live
-            ProvisionedConcurrencyConfig:
-                ProvisionedConcurrentExecutions: 1
+            MemorySize: 4096
             Events:
                 Root:
                     Type: Api
@@ -562,6 +560,7 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-StripeRetrieveCheckoutSession
             Handler: src/lambdas/api_stripeRetrieveCheckoutSession.handler
+            MemorySize: 4096
             Events:
                 Root:
                     Type: Api
