@@ -36,6 +36,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
             return `
     <item>
       <g:id>${escapeXml(product.metadata.sku || product.id)}</g:id>
+      <g:item_group_id>${escapeXml(product.metadata.slug)}</g:item_group_id>
       <title>${escapeXml(title)}</title>
       <description>${escapeXml(description)}</description>
       <link>${escapeXml(link)}</link>
