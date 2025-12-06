@@ -1,6 +1,5 @@
 ---
 import BackToLink from "@components/BackToLink.astro"
-import LocaleSelector from "@components/LocaleSelector.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Carousel from "@components/Carousel.astro"
 import { defaultLocale } from "@utils/currency"
@@ -39,15 +38,6 @@ const { artwork } = Astro.props
         <div class="w-full md:w-1/2 mb-6 md:mb-0 md:mr-8">
             <div class="md:hidden flex items-center justify-between mb-4">
                 <BackToLink href="/portfolio" text="Back to portfolio" />
-                <div class="flex items-center">
-                    <label for="locale-selector-portfolio-mobile" class="sr-only">Region / language</label>
-                    <LocaleSelector
-                        id="locale-selector-portfolio-mobile"
-                        ariaLabel="Region / language"
-                        locale={defaultLocale}
-                        class="border border-gray-300 rounded px-2 py-1 text-sm font-semibold"
-                    />
-                </div>
             </div>
             <h1 class="text-2xl font-bold mb-4 md:hidden">
                 {artwork.name}
@@ -60,15 +50,6 @@ const { artwork } = Astro.props
                 <h1 class="text-5xl font-bold">
                     {artwork.name}
                 </h1>
-                <div class="flex items-center">
-                    <label for="locale-selector-portfolio" class="sr-only">Region / language</label>
-                    <LocaleSelector
-                        id="locale-selector-portfolio"
-                        ariaLabel="Region / language"
-                        locale={defaultLocale}
-                        class="border border-gray-300 rounded px-2 py-1 text-sm md:text-base font-semibold"
-                    />
-                </div>
             </div>
 
             <div class="space-y-6">
