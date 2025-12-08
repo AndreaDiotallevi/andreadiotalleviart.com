@@ -79,7 +79,7 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             <h2 class="text-2xl font-bold mb-2">{
                 formatCurrency({ value: product.default_price.currency_options[currency].unit_amount, currency })
             }</h2>
-            <p class="mb-4">Apply promotion codes in the cart page.</p>
+            <!-- <p class="mb-4">Apply promotion codes in the cart page.</p> -->
             <Button id="submit-button-mobile" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." form="price-form" />
         </div>
     </div>
@@ -122,13 +122,13 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
                         }
                     </option>
                 </select>
-                <p class="mb-1">The image is <span class="">printed full bleed with no border</span>. Any frames shown in images are for display purposes only.</p>
+                <p class="mb-1">The image is <strong>printed full bleed</strong> with <strong>no border</strong>. Any frames shown in images are for display purposes only.</p>
             </div>
             <div>
                 <h2 class="text-2xl font-bold mb-2">Fine art printing</h2>
                 <div class="space-y-2">
-                    <p>Your print is produced using <span class="">Giclée printing</span>, a premium technique that sprays microscopic droplets of archival ink onto the paper to achieve vivid, lifelike colour and exceptional detail.</p>
-                    <p>This ensures your print captures every nuance of the original artwork, bringing its bold, vibrant energy into your space.</p>
+                    <p>Your print is produced using <strong>Giclée printing</strong>, a premium technique that sprays microscopic droplets of <strong>archival ink</strong> onto the paper to achieve <em>vivid, lifelike colour and exceptional detail</em>.</p>
+                    <p>This ensures your print captures every nuance of the original artwork, bringing its <em>bold, vibrant energy</em> into your space.</p>
                 </div>
             </div>
             {productsData[product.metadata.sku]?.framing?.length ? (
@@ -144,16 +144,16 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             <div>
                 <h2 class="text-2xl font-bold mb-2">Shipping</h2>
                 <div class="space-y-2">
-                    <p>Enjoy free shipping with top-quality packaging to ensure your artwork arrives in perfect condition.</p>
-                    <p>Your print will be delivered to your doorstep in about 1–2 weeks within the UK, and 2–3 weeks if outside the UK.</p>
-                    <p>If you're ordering from outside the UK, your shipment may be subject to import duties, taxes and fees. These aren't collected at checkout and will be payable by you upon delivery.</p>
+                    <p>Enjoy <strong>free shipping</strong> with top-quality packaging to ensure your artwork arrives in perfect condition.</p>
+                    <p>Your print will be delivered to your doorstep in about <em>1–2 weeks within the UK</em>, and <em>2–3 weeks outside the UK</em>.</p>
+                    <p><em>If you're ordering from outside the UK, your shipment may be subject to import duties, taxes and fees. These aren't collected at checkout and will be payable by you upon delivery.</em></p>
                 </div>
             </div>
             <div>
                 <h2 class="text-2xl font-bold mb-2">{
                     formatCurrency({ value: product.default_price.currency_options[currency].unit_amount, currency })
                 }</h2>
-                <p>Apply promotion codes in the cart page.</p>
+                <p><em>Apply promotion codes in the cart page.</em></p>
             </div>
             <Button id="submit-button-desktop" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." />
         </div>
