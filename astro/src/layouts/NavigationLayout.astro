@@ -4,12 +4,11 @@ import ShoppingCart from "@components/ShoppingCart.astro"
 import { defaultLocale, buildLocaleUrl } from "@utils/currency"
 
 interface Props {
-    darkTheme?: boolean
     hideFooter?: boolean
     newsletter?: boolean
 }
 
-const { darkTheme, hideFooter, newsletter } = Astro.props
+const { hideFooter, newsletter } = Astro.props
 
 // Determine current locale from path for SSR hrefs
 const pathParts = Astro.url.pathname.split("/").filter(Boolean)
@@ -20,16 +19,16 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
 ---
 
 <div
-    class={`flex flex-col min-h-[100dvh] ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-gray-800"}`}
+    class="flex flex-col min-h-[100dvh] bg-white text-gray-800"
 >
     <header
-        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "" : "bg-white bg-opacity-70 backdrop-blur-md"} z-50`}
+        class="fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 bg-white bg-opacity-70 backdrop-blur-md z-50"
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
         >
             <div
-                class={`md:text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                class="md:text-2xl font-bold md:hover:text-gray-600 transition-colors duration-300"
             >
                 <a href="/">andreadiotalleviart</a>
             </div>
@@ -40,7 +39,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                         class="md:hidden pr-4"
                         aria-label="See shopping cart"
                     >
-                        <ShoppingCart darkTheme={darkTheme} />
+                        <ShoppingCart />
                     </a>
                 <!-- Hamburger icon -->
                 <button
@@ -67,21 +66,21 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
             <nav class="hidden md:flex space-x-7">
                 <a
                     href={shopHref}
-                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="text-2xl font-bold md:hover:text-gray-600 transition-colors duration-300"
                     >shop</a>
                 <a
                     href="/about"
-                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="text-2xl font-bold md:hover:text-gray-600 transition-colors duration-300"
                     >about</a
                 >
                 <a
                     href="/contact"
-                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="text-2xl font-bold md:hover:text-gray-600 transition-colors duration-300"
                     >contact</a
                 >
                 <a
                     href="/portfolio"
-                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="text-2xl font-bold md:hover:text-gray-600 transition-colors duration-300"
                     >portfolio</a
                 >
                 <a
@@ -89,7 +88,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                     href="/cart"
                     aria-label="See shopping cart"
                 >
-                    <ShoppingCart darkTheme={darkTheme} />
+                    <ShoppingCart />
                 </a>
             </nav>
         </div>
@@ -98,11 +97,11 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
     <!-- Fullscreen mobile menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg-[#38444c] min-w-[320px] text-white flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
+        class="fixed inset-0 bg-white min-w-[320px] text-gray-800 flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
     >
         <button
             id="menu-close"
-            class="absolute top-[14px] right-[16px] text-white text-5xl h-11 w-11"
+            class="absolute top-[14px] right-[16px] text-gray-800 text-5xl h-11 w-11"
             >&times;</button
         >
         <a href={shopHref} class="mb-6">Shop</a>
@@ -128,7 +127,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 <a
                     href="https://github.com/AndreaDiotallevi/andreadiotalleviart.com"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="w-12 h-12 flex items-center justify-end md:hover:text-gray-600 transition-colors duration-300"
                     aria-label="GitHub"
                 >
                     <svg
@@ -145,7 +144,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 <a
                     href="https://twitter.com/adiotalleviart"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="w-12 h-12 flex items-center justify-end md:hover:text-gray-600 transition-colors duration-300"
                     aria-label="Twitter"
                 >
                     <svg
@@ -162,7 +161,7 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 <a
                     href="https://www.instagram.com/andreadiotalleviart"
                     target="_blank"
-                    class={`w-12 h-12 flex items-center justify-end ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    class="w-12 h-12 flex items-center justify-end md:hover:text-gray-600 transition-colors duration-300"
                     aria-label="Instagram"
                 >
                     <svg

@@ -3,10 +3,9 @@ interface Props {
     href: string
     text: string
     towardsRight?: boolean
-    darkMode?: boolean
 }
 
-const { href, text, towardsRight, darkMode } = Astro.props
+const { href, text, towardsRight } = Astro.props
 ---
 
 <a
@@ -19,7 +18,7 @@ const { href, text, towardsRight, darkMode } = Astro.props
         width="32"
         height="32"
         viewBox="0 0 24 24"
-        fill={`${darkMode ? "white" : "#1F2937"}`}
+        fill="currentColor"
         class={`${towardsRight ? "transform rotate-180" : ""}`}
     >
         <polygon

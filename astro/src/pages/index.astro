@@ -5,7 +5,6 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 <BaseLayout
     title="Andrea Diotallevi | Generative Artist and Creative Coder"
     description="Generative artist and creative coder in London. I design systems with code. Museum‑quality giclée prints with free carbon‑neutral shipping."
-    darkTheme={true}
     tags={[
         "Generative art prints",
         "Generative artist",
@@ -21,18 +20,18 @@ import BaseLayout from "@layouts/BaseLayout.astro"
     ]}
 >
     <div
-        class="flex items-center justify-center h-[calc(100dvh-80px-80px)] bg-[#38444c]"
+        class="flex items-center justify-center bg-white md:min-h-[calc(100dvh-80px-80px)]"
     >
         <div
-            class="flex flex-col-reverse md:flex-row justify-between w-full max-w-screen-xl h-full px-4"
+            class="flex flex-col-reverse md:flex-row items-center md:items-start w-full max-w-screen-xl px-4"
         >
             <div
                 id="sketch"
-                class="w-full md:w-1/2 h-[calc(100dvh-80px-80px-128px)] md:h-full"
+                class="w-full md:w-1/2 h-[420px] md:h-[560px] md:mr-8"
             >
             </div>
             <div
-                class="flex flex-col items-center justify-center w-full md:w-1/2 text-white mb-8 md:mb-0"
+                class="flex flex-col items-center md:items-start justify-center w-full md:w-1/2 md:h-[560px] text-gray-800 mb-8 md:mb-0"
             >
                 <div class="flex flex-col items-center md:items-start">
                     <h1
@@ -44,9 +43,8 @@ import BaseLayout from "@layouts/BaseLayout.astro"
                         href="/shop"
                         text="Shop generative art prints"
                         towardsRight={true}
-                        darkMode={true}
                     />
-                    <div class="mt-4 md:mt-6 max-w-[36rem] text-center md:text-left text-sm md:text-base text-white/90 space-y-4 md:space-y-5">
+                    <div class="mt-4 md:mt-6 max-w-[36rem] text-left text-sm md:text-base text-gray-700 space-y-4 md:space-y-5">
                         <p>
                             Welcome — you're exploring the work of Andrea Diotallevi, a <strong>generative artist and creative coder</strong> in London.
                             If you're curious about how images can emerge from code, you're in the right place.
@@ -82,7 +80,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
             p5.setup = () => {
                 p5.createCanvas(canvasWidth, canvasHeight)
-                p5.stroke(255, 25)
+                p5.stroke(220, 38, 38, 120)
                 p5.noFill()
             }
 
@@ -93,12 +91,11 @@ import BaseLayout from "@layouts/BaseLayout.astro"
                     const a = 0.5 * p5.min(p5.width, p5.height)
                     let b = n(t) * 6
                     let c = n(t + 60) * 6
-                    p5.line(
-                        p5.cos(b) * a,
-                        p5.sin(b) * a,
-                        p5.cos(c) * a,
-                        p5.sin(c) * a
-                    )
+                    const x1 = p5.cos(b) * a
+                    const y1 = p5.sin(b) * a
+                    const x2 = p5.cos(c) * a
+                    const y2 = p5.sin(c) * a
+                    p5.line(x1, y1, x2, y2)
                 }
                 t++
             }
@@ -111,7 +108,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
                     p5.mouseY < p5.height
                 ) {
                     p5.noiseSeed(p5.random(1000))
-                    p5.background("#38444c") // (56, 68, 76)
+                    p5.background("#ffffff")
                     t = 0
                     p5.draw()
                 }
@@ -121,6 +118,7 @@ import BaseLayout from "@layouts/BaseLayout.astro"
                 const newElement = document.querySelector("#sketch")
                 if (!newElement) return
                 p5.resizeCanvas(newElement.clientWidth, newElement.clientHeight)
+                p5.background("#ffffff")
                 t = 0
                 p5.draw()
             }

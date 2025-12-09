@@ -61,7 +61,6 @@ interface Props {
     type?: "website" | "product"
     amount?: string
     currency?: Currency
-    darkTheme?: boolean
     hideFooter?: boolean
     newsletter?: boolean
     noIndex?: boolean
@@ -84,7 +83,6 @@ const {
     type = "website",
     amount,
     currency,
-    darkTheme = false,
     hideFooter = false,
     newsletter = false,
     noIndex = false,
@@ -210,7 +208,6 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
     <body class="min-w-[320px]">
         <GlobalStyles />
         <NavigationLayout
-            darkTheme={darkTheme}
             hideFooter={hideFooter}
             newsletter={newsletter}
         >
