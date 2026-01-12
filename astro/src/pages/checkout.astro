@@ -18,6 +18,8 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
 <script>
     import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
+    import { getStripeProducts, createCheckoutSession } from "@utils/serverless"
+    import { updateClientSession } from "@utils/localStorage"
 
     let checkout: StripeEmbeddedCheckout | undefined
 
@@ -31,11 +33,68 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
         const params = new URLSearchParams(window.location.search)
         const clientSecret = params.get("client_secret")
+        const productsParam = params.get("products")
+        const couponParam = params.get("coupon") || undefined
 
         if (stripe && clientSecret && checkoutElement) {
             if (checkout) checkout.destroy()
             checkout = await stripe.initEmbeddedCheckout({ clientSecret })
             checkout.mount(checkoutElement)
+            return
+        }
+
+        // If we don't yet have a client secret but products are provided, create a session and redirect
+        if (productsParam) {
+            try {
+                const items = productsParam
+                    .split(",")
+                    .map(pair => pair.split(":"))
+                    .map(([sku, qty]) => ({
+                        sku: (sku || "").trim(),
+                        quantity: Number.parseInt(qty || "1", 10) || 1,
+                    }))
+                    .filter(item => item.sku && item.quantity > 0)
+
+                if (items.length === 0) return
+
+                const products = await getStripeProducts()
+                const skuToPriceId = new Map(
+                    products.map(p => [p.metadata.sku, p.default_price.id]),
+                )
+
+                const line_items = items
+                    .map(item => {
+                        const priceId = skuToPriceId.get(item.sku)
+                        if (!priceId) return null
+                        return { price: priceId, quantity: item.quantity }
+                    })
+                    .filter(Boolean) as { price: string; quantity: number }[]
+
+                if (line_items.length === 0) return
+
+                const { session, error } = await createCheckoutSession({
+                    line_items,
+                    success_url: `${window.location.origin}/checkout/success`,
+                    currency: "gbp",
+                    promotion_code: couponParam,
+                })
+
+                if (error || !session || !session.client_secret) {
+                    console.error("Failed to create session", error)
+                    return
+                }
+
+                // Persist session locally (also syncs stored locale from session currency)
+                updateClientSession({ session, promotionCode: couponParam || "" })
+
+                const nextUrl = new URL(window.location.href)
+                nextUrl.searchParams.delete("products")
+                nextUrl.searchParams.delete("coupon")
+                nextUrl.searchParams.set("client_secret", session.client_secret)
+                window.location.replace(nextUrl.toString())
+            } catch (err) {
+                console.error("Error creating checkout session from products", err)
+            }
         }
     })
 </script>
