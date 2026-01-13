@@ -224,10 +224,15 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
     import { supportedLocales, defaultLocale } from "@utils/currency"
 
     document.addEventListener("astro:page-load", () => {
-        const firstSeg = (window.location.pathname.split("/")[1] || "").toLowerCase()
-        const newLocale = (supportedLocales as unknown as string[]).includes(firstSeg)
-            ? firstSeg
-            : defaultLocale
+        const parts = window.location.pathname.split("/").filter(Boolean)
+        const firstSeg = (parts[0] || "").toLowerCase()
+        const isPrefixed = (supportedLocales as unknown as string[]).includes(firstSeg)
+        const section = (parts[isPrefixed ? 1 : 0] || "").toLowerCase()
+
+        // Only update stored locale when on shop pages
+        if (section !== "shop") return
+
+        const newLocale = isPrefixed ? firstSeg : defaultLocale
         setStoredLocale(newLocale as any)
     })
 </script>

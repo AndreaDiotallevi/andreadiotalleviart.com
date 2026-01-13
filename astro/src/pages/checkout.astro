@@ -19,7 +19,8 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 <script>
     import { loadStripe, type StripeEmbeddedCheckout } from "@stripe/stripe-js"
     import { getStripeProducts, createCheckoutSession } from "@utils/serverless"
-    import { updateClientSession } from "@utils/localStorage"
+    import { updateClientSession, getStoredLocale } from "@utils/localStorage"
+    import { localeToCurrency } from "@utils/currency"
 
     let checkout: StripeEmbeddedCheckout | undefined
 
@@ -72,10 +73,13 @@ import BaseLayout from "@layouts/BaseLayout.astro"
 
                 if (line_items.length === 0) return
 
+                const storedLocale = getStoredLocale()
+                const selectedCurrency = localeToCurrency[storedLocale]
+
                 const { session, error } = await createCheckoutSession({
                     line_items,
                     success_url: `${window.location.origin}/checkout/success`,
-                    currency: "gbp",
+                    currency: selectedCurrency,
                     promotion_code: couponParam,
                 })
 
@@ -84,7 +88,6 @@ import BaseLayout from "@layouts/BaseLayout.astro"
                     return
                 }
 
-                // Persist session locally (also syncs stored locale from session currency)
                 updateClientSession({ session, promotionCode: couponParam || "" })
 
                 const nextUrl = new URL(window.location.href)
