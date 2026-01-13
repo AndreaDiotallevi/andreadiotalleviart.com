@@ -25,7 +25,6 @@ const footerLinks = [
     { label: "Cart", href: "/cart", id: "cart-link-footer" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
-    { label: "Checkout", href: "/checkout" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Returns & Refunds", href: "/return-policy" },
@@ -45,7 +44,7 @@ const footerLinks = [
     class={`flex flex-col min-h-[100dvh] ${darkTheme ? "bg-[#38444c] text-white" : "bg-white text-gray-800"}`}
 >
     <header
-        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "" : "bg-white bg-opacity-70 backdrop-blur-md"} z-50`}
+        class={`fixed top-0 flex items-center justify-center w-full min-w-[320px] h-20 ${darkTheme ? "bg-[#38444c] bg-opacity-70 backdrop-blur-md" : "bg-white bg-opacity-70 backdrop-blur-md"} z-50`}
     >
         <div
             class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
