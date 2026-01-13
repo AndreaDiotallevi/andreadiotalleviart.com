@@ -30,8 +30,8 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
             const price = (minor / 100).toFixed(2) + ` ${currencyUpper}`
             const path = buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)
             const link = `${baseUrl}${path}`
-            const title = `${product.metadata.displayName || product.name} | Giclée Fine Art Print`
-            const description = product.description || title
+            const title = product.name
+            const description = product.description
 
             return `
     <item>
