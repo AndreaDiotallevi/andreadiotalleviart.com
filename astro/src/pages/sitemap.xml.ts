@@ -13,6 +13,7 @@ export async function GET() {
         `${baseUrl}/about`,
         `${baseUrl}/contact`,
         `${baseUrl}/return-policy`,
+        `${baseUrl}/privacy-policy`,
         `${baseUrl}/portfolio`,
         // Shop listings
         `${baseUrl}/shop`,

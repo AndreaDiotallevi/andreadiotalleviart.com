@@ -1,0 +1,142 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+    title="Privacy Policy | Andrea Diotallevi Art"
+    description="Learn how your personal data is collected, used, and protected. No accounts, simple checkout, optional newsletter, and basic analytics."
+    tags={["Privacy", "Policy", "Data Protection"]}
+>
+    <div
+        class="flex flex-col items-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
+    >
+        <div class="w-full md:w-3/4 lg:w-2/3">
+            <h1 class="text-2xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+            <p class="mb-6">
+                I respect your privacy and keep things simple. I do <strong>not</strong> offer user
+                accounts or sign-ins. I only collect the information needed to process your order,
+                respond to enquiries, and, if you choose, send occasional updates.
+            </p>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Who I am</h2>
+                <p>
+                    This website is operated by Andrea&nbsp;Diotallevi. For any privacy questions,
+                    please use the <a class="underline" href="/contact">contact page</a>.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Data I collect</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>
+                        <strong>Orders (via Stripe Checkout)</strong>: name, email, shipping address, order
+                        details. Payment details are handled securely by Stripe and are <em>not</em> stored
+                        on this site.
+                    </li>
+                    <li>
+                        <strong>Contact form</strong>: name, email, and your message so I can reply.
+                    </li>
+                    <li>
+                        <strong>Newsletter (optional)</strong>: your email address if you subscribe. You can
+                        unsubscribe anytime via the link in emails.
+                    </li>
+                    <li>
+                        <strong>Analytics and usage</strong>: basic site analytics (e.g. Google Analytics 4)
+                        to understand page views and improve the site. This may use cookies or similar
+                        technologies.
+                    </li>
+                    <li>
+                        <strong>Local preferences</strong>: limited data like your locale or cart/session
+                        information to make the shopping experience work smoothly.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">How I use your data</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>To process and deliver your orders and provide customer support.</li>
+                    <li>To respond to messages you send via the contact page.</li>
+                    <li>To send optional newsletter updates if you’ve subscribed.</li>
+                    <li>To maintain, secure, and improve the website.</li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Legal bases</h2>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Contract</strong>: processing orders and customer service.</li>
+                    <li><strong>Consent</strong>: sending newsletters; certain analytics/cookies where required.</li>
+                    <li><strong>Legitimate interests</strong>: basic analytics, site security, and fraud prevention.</li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Sharing and processors</h2>
+                <p class="mb-2">
+                    I share data only with trusted service providers to run the site and fulfil orders:
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Stripe</strong> for secure payments.</li>
+                    <li><strong>Printing and fulfilment partners</strong> to produce and ship your order.</li>
+                    <li><strong>Hosting and infrastructure</strong> providers to operate this website.</li>
+                    <li><strong>Email services</strong> for order and contact communications, and newsletters if you opt in.</li>
+                    <li><strong>Analytics</strong> to understand site performance and improve content.</li>
+                </ul>
+                <p class="mt-2">
+                    I do not sell your personal data.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">International transfers</h2>
+                <p>
+                    Some providers may process data outside your country. I rely on their safeguards
+                    (such as standard contractual clauses) and industry-standard security to protect your data.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Retention</h2>
+                <p>
+                    Order records are kept for as long as necessary for accounting, tax, and legal
+                    obligations. Contact messages and newsletter data are retained only as long as
+                    needed to provide the service or until you ask me to delete them.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Your rights</h2>
+                <p class="mb-2">
+                    You may have rights to access, correct, delete, or restrict your personal data. To
+                    exercise these rights, please use the <a class="underline" href="/contact">contact page</a>.
+                </p>
+                <p>
+                    For newsletters, use the unsubscribe link at the bottom of any email.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Cookies</h2>
+                <p>
+                    This site uses essential cookies (for cart/session and preferences) and may use
+                    analytics cookies (e.g. GA4) to measure traffic. You can adjust your browser settings
+                    to manage cookies.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Contact</h2>
+                <p>
+                    Questions about this policy or your data? Please <a class="underline" href="/contact">get in touch</a>.
+                </p>
+            </section>
+
+            <p class="text-sm text-gray-600">
+                Last updated: {new Date().toLocaleDateString("en-GB")}
+            </p>
+        </div>
+    </div>
+</BaseLayout>
+
