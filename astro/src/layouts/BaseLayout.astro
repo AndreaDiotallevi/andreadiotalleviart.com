@@ -65,6 +65,7 @@ interface Props {
     hideFooter?: boolean
     newsletter?: boolean
     noIndex?: boolean
+    isHomePage?: boolean
     productJsonLd?: {
         name: string
         description: string
@@ -88,6 +89,7 @@ const {
     hideFooter = false,
     newsletter = false,
     noIndex = false,
+    isHomePage = false,
     productJsonLd,
 } = Astro.props
 
@@ -213,6 +215,7 @@ const effectiveCurrency = (currency || currencyFromPath || "gbp") as Currency
             darkTheme={darkTheme}
             hideFooter={hideFooter}
             newsletter={newsletter}
+            isHomePage={isHomePage}
         >
             <slot />
         </NavigationLayout>

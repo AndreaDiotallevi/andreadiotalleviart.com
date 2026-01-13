@@ -7,9 +7,10 @@ interface Props {
     darkTheme?: boolean
     hideFooter?: boolean
     newsletter?: boolean
+    isHomePage?: boolean
 }
 
-const { darkTheme, hideFooter, newsletter } = Astro.props
+const { darkTheme, hideFooter, newsletter, isHomePage } = Astro.props
 
 // Determine current locale from path for SSR hrefs
 const pathParts = Astro.url.pathname.split("/").filter(Boolean)
@@ -17,6 +18,27 @@ const firstSeg = (pathParts[0] || "").toLowerCase()
 import { supportedLocales } from "@utils/currency"
 const currentLocale = ((supportedLocales as unknown as string[]).includes(firstSeg) ? firstSeg : defaultLocale) as string
 const shopHref = buildLocaleUrl('/shop', currentLocale as any)
+
+const footerLinks = [
+    { label: "Home", href: "/" },
+    { label: "Shop", href: shopHref },
+    { label: "Cart", href: "/cart", id: "cart-link-footer" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+    { label: "Checkout", href: "/checkout" },
+    { label: "Portfolio", href: "/portfolio" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Returns & Refunds", href: "/return-policy" },
+].sort((a, b) => {
+    // Custom precedence: Shop before Home; Portfolio before Checkout
+    if (a.label === "Shop" && b.label === "Home") return -1
+    if (a.label === "Home" && b.label === "Shop") return 1
+    if (a.label === "Portfolio" && b.label === "Checkout") return -1
+    if (a.label === "Checkout" && b.label === "Portfolio") return 1
+    const lenDiff = a.label.length - b.label.length
+    if (lenDiff !== 0) return lenDiff
+    return a.label.localeCompare(b.label)
+})
 ---
 
 <div
@@ -118,12 +140,12 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
     {newsletter && <Newsletter />}
 
     <footer
-        class={`flex items-center justify-center h-20 ${hideFooter ? "hidden md:flex" : ""}`}
+        class={`flex flex-col items-center justify-center ${hideFooter ? "hidden" : ""}`}
     >
         <div
-            class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4"
+            class="max-w-screen-xl mx-auto flex items-center justify-between w-full px-4 h-20"
         >
-            <p class="text-sm">© 2025 Andrea&nbsp;Diotallevi</p>
+            <p class="text-sm">© 2026 Andrea&nbsp;Diotallevi</p>
             <div class="flex space-x-0 md:space-x-2">
                 <a
                     href="https://github.com/AndreaDiotallevi/andreadiotalleviart.com"
@@ -182,6 +204,24 @@ const shopHref = buildLocaleUrl('/shop', currentLocale as any)
                 </a>
             </div>
         </div>
+        
+        {!isHomePage && (
+            <div class="w-full bg-gray-100 text-gray-800">
+                <div class="max-w-screen-xl mx-auto w-full px-4 py-6">
+                    <nav class="flex flex-col space-y-1">
+                        {footerLinks.map(link => (
+                            <a
+                                href={link.href}
+                                id={link.id}
+                                class={`text-sm ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                            >
+                                {link.label}
+                            </a>
+                        ))}
+                    </nav>
+                </div>
+            </div>
+        )}
     </footer>
 </div>
 
