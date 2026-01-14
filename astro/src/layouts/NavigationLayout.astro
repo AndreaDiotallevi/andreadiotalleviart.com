@@ -139,9 +139,8 @@ const footerLinks = [
     {newsletter && <Newsletter />}
 
     <footer
-        class={`flex flex-col items-center justify-center ${hideFooter ? "hidden" : ""}`}
+        class={`flex flex-col items-center justify-center bg-gray-100 text-gray-800 ${hideFooter ? "hidden" : ""}`}
     >
-        <div class={`w-full ${darkTheme ? "border-gray-700" : "border-gray-200"} border-t`}></div>
         <div
             class="hidden max-w-screen-xl mx-auto flex items-center justify-between w-full px-4 h-20"
         >
