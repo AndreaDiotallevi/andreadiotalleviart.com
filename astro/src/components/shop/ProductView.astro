@@ -27,25 +27,6 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
     type="product"
     amount={(product.default_price.currency_options[currency].unit_amount / 100).toFixed(2)}
     currency={currency}
-    tags={[
-        product.metadata.displayName,
-        product.metadata.category,
-        "Generative art",
-        "Generative art prints",
-        "p5.js",
-        "Processing",
-        "Procedural",
-        "Prints",
-        "Fine art",
-        "Giclee",
-        sizeToDescription[product.metadata.size],
-        "Abstract art",
-        "Geometric art",
-        "Hahnemühle Photo Rag 308gsm",
-        "Archival inks",
-        "Carbon neutral",
-        "Free shipping",
-    ]}
     newsletter={false}
     productJsonLd={{
         name: `${product.metadata.displayName} (Giclée Print, ${product.metadata.size})`,
