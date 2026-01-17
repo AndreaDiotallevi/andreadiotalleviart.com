@@ -139,7 +139,7 @@ const footerLinks = [
     {newsletter && <Newsletter />}
 
     <footer
-        class={`flex flex-col items-center justify-center bg-gray-100 text-gray-800 ${hideFooter ? "hidden" : ""}`}
+        class={`flex flex-col items-center justify-center ${isHomePage ? "bg-[#38444c] text-white" : "bg-gray-100 text-gray-800"} ${hideFooter ? "hidden" : ""}`}
     >
         <div
             class="hidden max-w-screen-xl mx-auto flex items-center justify-between w-full px-4 h-20"
