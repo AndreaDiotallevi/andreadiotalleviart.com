@@ -119,17 +119,21 @@ const footerLinks = [
     <!-- Fullscreen mobile menu -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 bg-[#38444c] min-w-[320px] text-white flex flex-col items-center pt-20 px-5 text-4xl hidden z-50"
+        class="fixed inset-0 bg-white min-w-[320px] text-gray-800 flex flex-col items-center pt-20 px-5 text-2xl hidden z-50"
     >
         <button
             id="menu-close"
-            class="absolute top-[14px] right-[16px] text-white text-5xl h-11 w-11"
+            class="absolute top-[14px] right-[16px] text-gray-800 text-5xl h-11 w-11"
             >&times;</button
         >
-        <a href={shopHref} class="mb-6">Shop</a>
-        <a href="/about" class="mb-6">About</a>
-        <a href="/contact" class="mb-6">Contact</a>
-        <a href="/portfolio" class="mb-6">Portfolio</a>
+        <a href="/" class="mb-4 font-bold">Home</a>
+        <a href={shopHref} class="mb-4 font-bold">Shop</a>
+        <a id="cart-link-mobile-menu" href="/cart" class="mb-4 font-bold">Cart</a>
+        <a href="/about" class="mb-4 font-bold">About</a>
+        <a href="/contact" class="mb-4 font-bold">Contact</a>
+        <a href="/portfolio" class="mb-4 font-bold">Portfolio</a>
+        <a href="/privacy-policy" class="mb-4 font-bold">Privacy Policy</a>
+        <a href="/return-policy" class="mb-4 font-bold">Returns &amp; Refunds</a>
     </div>
 
     <main class="flex-grow pt-[80px] pb-12 md:pb-16">
