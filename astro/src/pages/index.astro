@@ -1,6 +1,5 @@
 ---
 import { Image } from "@unpic/astro"
-import BackToLink from "@components/BackToLink.astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { transformImage } from "@utils/cloudinary"
 import { imageBreakpoints } from "@utils/breakpoints"
@@ -8,6 +7,7 @@ import { imageBreakpoints } from "@utils/breakpoints"
 <BaseLayout
     title="Andrea Diotallevi | Generative Artist and Creative Coder"
     description="Generative artist and creative coder in London. I design systems with code. Museum‑quality giclée prints with free carbon‑neutral shipping."
+    image={transformImage("IMG_9666_ug9iqn")}
     tags={[
         "Generative art prints",
         "Generative artist",
@@ -38,18 +38,34 @@ import { imageBreakpoints } from "@utils/breakpoints"
 
     <section class="w-full">
         <div class="max-w-screen-xl mx-auto px-4 pt-10 md:pt-14 pb-0">
-            <div class="flex flex-col items-center md:items-start">
+            <div class="flex flex-col items-center">
                 <h1
-                    class="text-2xl md:text-5xl text-center md:text-left font-bold mb-4 md:mb-6"
+                    class="text-2xl md:text-5xl text-center font-bold mb-4 md:mb-6"
                 >
-                    I make art with code
+                    Andrea Diotallevi
+                    <span class="block md:block text-sm md:text-base font-normal">
+                        Generative artist and creative coder in London
+                    </span>
                 </h1>
-                <BackToLink
-                    href="/shop"
-                    text="Shop generative art prints"
-                    towardsRight={true}
-                />
-                <div class="mt-4 md:mt-6 max-w-[36rem] text-center md:text-left text-sm md:text-base space-y-4 md:space-y-5">
+                <div class="w-full max-w-[36rem] mx-auto mt-3 md:mt-4">
+                    <div class="flex flex-col md:flex-row gap-3 w-full">
+                        <a
+                            href="/shop"
+                            role="button"
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-gray-800 text-white md:hover:bg-gray-800 transition-colors duration-300 w-full md:flex-1"
+                        >
+                            <span class="font-semibold">Shop generative art prints</span>
+                        </a>
+                        <a
+                            href="/contact"
+                            role="button"
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-white text-gray-800 border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white transition-colors duration-300 w-full md:flex-1"
+                        >
+                            <span class="font-semibold">Contact me</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-6 md:mt-8 max-w-[36rem] text-center md:text-center text-sm md:text-base space-y-4 md:space-y-5">
                     <p>
                         Welcome — you're exploring the work of Andrea Diotallevi, a <strong>generative artist and creative coder</strong> in London.
                         If you're curious about how images can emerge from code, you're in the right place.
