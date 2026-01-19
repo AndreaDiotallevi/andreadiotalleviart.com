@@ -64,16 +64,17 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
         },
     ]
 
+    graph.push({
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: pageTitle,
+        isPartOf: { "@id": `${siteOrigin}/#website` },
+        about: { "@id": `${siteOrigin}/#organization` },
+    })
+
     if (product) {
         graph.push(
-            {
-                "@type": "WebPage",
-                "@id": `${pageUrl}#webpage`,
-                url: pageUrl,
-                name: pageTitle,
-                isPartOf: { "@id": `${siteOrigin}/#website` },
-                about: { "@id": `${siteOrigin}/#organization` },
-            },
             {
                 "@type": "Product",
                 "@id": `${pageUrl}#product`,
