@@ -198,6 +198,8 @@ const products: ProductInput[] = [
         images: [
             // transformImage("flames-mockup_gzj45v"),
             transformImage("flames-artwork_ioxny4"),
+            // transformImage("flames-mockup-2_veo56n"),
+            transformImage("flames-mockup-2_ysiocl"),
             transformImage("A116-flames_voptyx"),
         ],
         currencyOptions: {
