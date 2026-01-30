@@ -1,0 +1,123 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+    title="Terms & Conditions | Andrea Diotallevi Art"
+    description="Terms and conditions for using this website and purchasing giclée prints from Andrea Diotallevi Art."
+>
+    <div
+        class="flex flex-col items-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
+    >
+        <div class="w-full md:w-3/4 lg:w-2/3">
+            <h1 class="text-2xl md:text-5xl font-bold mb-4">Terms & Conditions</h1>
+            <p class="mb-6">
+                By using this website and placing an order, you agree to these terms. Please read them before purchasing.
+            </p>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Who operates this site</h2>
+                <p>
+                    This website is operated by Andrea&nbsp;Diotallevi. For any questions about these terms,
+                    please use the <a class="text-blue-700 underline font-semibold" href="/contact">contact page</a>.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Products and pricing</h2>
+                <p class="mb-2">
+                    I sell giclée fine-art prints. Prices are shown in the selected currency (e.g. GBP) and include
+                    carbon-neutral shipping where stated. I reserve the right to correct pricing errors and to change
+                    prices; if an error affects your order, I will contact you before taking payment or fulfilling it.
+                </p>
+                <p>
+                    Product images are representative; actual prints may vary slightly in colour due to screens and printing.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Orders and payment</h2>
+                <p class="mb-2">
+                    When you place an order, you are making an offer to buy. I accept payment via Stripe (card and other
+                    methods offered at checkout). Payment is taken at checkout. I will confirm your order by email. I may
+                    refuse or cancel an order (e.g. if the product is unavailable, or in case of suspected fraud or error).
+                </p>
+                <p>
+                    I do not store your card details; payment is processed securely by Stripe. Your use of the site and
+                    checkout is also subject to Stripe's terms where applicable.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Shipping and delivery</h2>
+                <p>
+                    Delivery times are indicative (e.g. 1–2 weeks within the UK, 2–3 weeks internationally). I am not
+                    liable for delays caused by carriers or customs. Risk in the goods passes to you on delivery. You are
+                    responsible for providing a correct delivery address; I cannot be held responsible for orders lost or
+                    misdelivered due to incorrect details.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Returns and refunds</h2>
+                <p>
+                    My <a class="text-blue-700 underline font-semibold" href="/return-policy">Returns & Refunds</a> page
+                    explains your rights. Full refunds are available within 14 days of delivery in the circumstances
+                    described there. By placing an order you agree to those return terms.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Use of the website</h2>
+                <p class="mb-2">
+                    You may use this site for lawful purposes only. You must not use it to transmit harmful or illegal
+                    content, attempt to gain unauthorised access, or interfere with the site or other users.
+                </p>
+                <p>
+                    All content on this site (including text, images, and artwork) is owned by Andrea&nbsp;Diotallevi or
+                    licensors and is protected by copyright. You may not copy, reproduce, or use it for commercial purposes
+                    without permission.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Limitation of liability</h2>
+                <p>
+                    To the fullest extent permitted by law, I shall not be liable for any indirect, incidental, or
+                    consequential loss arising from your use of the site or from any order. My total liability in
+                    connection with any order or these terms shall not exceed the amount you paid for the relevant
+                    order. Nothing in these terms excludes or limits liability that cannot be excluded or limited by law.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Governing law</h2>
+                <p>
+                    These terms are governed by the laws of England and Wales. Any disputes shall be subject to the
+                    exclusive jurisdiction of the courts of England and Wales, unless you are a consumer in another
+                    country, in which case you may also have rights under your local law.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Changes</h2>
+                <p>
+                    I may update these terms from time to time. The version on this page applies to your use and orders.
+                    Continued use of the site or placement of a new order after changes constitutes acceptance of the
+                    updated terms.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-xl md:text-2xl font-bold mb-2">Contact</h2>
+                <p>
+                    For questions about these terms or your order, please <a class="text-blue-700 underline font-semibold" href="/contact">get in touch</a>.
+                </p>
+            </section>
+
+            <p class="text-sm text-gray-600">
+                Last updated: {new Date().toLocaleDateString("en-GB")}
+            </p>
+        </div>
+    </div>
+</BaseLayout>

@@ -14,6 +14,7 @@ export async function GET() {
         `${baseUrl}/contact`,
         `${baseUrl}/return-policy`,
         `${baseUrl}/privacy-policy`,
+        `${baseUrl}/terms-and-conditions`,
         `${baseUrl}/portfolio`,
         // Shop listings
         `${baseUrl}/shop`,
