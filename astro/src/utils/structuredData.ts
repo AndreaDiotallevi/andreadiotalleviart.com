@@ -146,6 +146,8 @@ function buildSingleOffer(params: {
                   shippingDestination: { "@type": "DefinedRegion", addressCountry: params.destinationCountry },
               } as unknown)
 
+    const siteOrigin = new URL(params.url).origin
+    
     return {
         "@type": "Offer",
         url: params.url,
@@ -155,8 +157,10 @@ function buildSingleOffer(params: {
         sku: params.sku,
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
-            returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+            returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+            merchantReturnDays: 14,
             refundType: "https://schema.org/FullRefund",
+            merchantReturnLink: `${siteOrigin}/return-policy`,
         },
         shippingDetails,
     }
