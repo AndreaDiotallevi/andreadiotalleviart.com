@@ -28,6 +28,7 @@ const footerLinks = [
     { label: "Portfolio", href: "/portfolio" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Returns & Refunds", href: "/return-policy" },
+    { label: "Terms & Conditions", href: "/terms-and-conditions" },
 ].sort((a, b) => {
     // Custom precedence: Shop before Home; Portfolio before Checkout
     if (a.label === "Shop" && b.label === "Home") return -1
@@ -134,6 +135,7 @@ const footerLinks = [
         <a href="/portfolio" class="mb-4 font-bold">Portfolio</a>
         <a href="/privacy-policy" class="mb-4 font-bold">Privacy Policy</a>
         <a href="/return-policy" class="mb-4 font-bold">Returns &amp; Refunds</a>
+        <a href="/terms-and-conditions" class="mb-4 font-bold">Terms &amp; Conditions</a>
     </div>
 
     <main class="flex-grow pt-[80px] pb-12 md:pb-16">
