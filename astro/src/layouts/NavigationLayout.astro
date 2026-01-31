@@ -31,7 +31,9 @@ const footerLinks = [
     { label: "Returns & Refunds", href: "/return-policy" },
     { label: "Terms & Conditions", href: "/terms-and-conditions" },
 ].sort((a, b) => {
-    // Custom precedence: Shop before Home; Portfolio before Checkout
+    // Custom precedence: Cart first (shortest), then Shop, then Home, then rest by length
+    if (a.label === "Cart") return -1
+    if (b.label === "Cart") return 1
     if (a.label === "Shop" && b.label === "Home") return -1
     if (a.label === "Home" && b.label === "Shop") return 1
     if (a.label === "Portfolio" && b.label === "Checkout") return -1
@@ -98,6 +100,11 @@ const footerLinks = [
                     >about</a
                 >
                 <a
+                    href="/articles"
+                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    >articles</a
+                >
+                <a
                     href="/contact"
                     class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >contact</a
@@ -106,11 +113,6 @@ const footerLinks = [
                     href="/portfolio"
                     class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
                     >portfolio</a
-                >
-                <a
-                    href="/articles"
-                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
-                    >articles</a
                 >
                 <a
                     id="cart-link-desktop"
@@ -133,13 +135,13 @@ const footerLinks = [
             class="absolute top-[14px] right-[16px] text-gray-800 text-5xl h-11 w-11"
             >&times;</button
         >
-        <a href="/" class="mb-4 font-bold">Home</a>
-        <a href={shopHref} class="mb-4 font-bold">Shop</a>
         <a id="cart-link-mobile-menu" href="/cart" class="mb-4 font-bold">Cart</a>
+        <a href={shopHref} class="mb-4 font-bold">Shop</a>
+        <a href="/" class="mb-4 font-bold">Home</a>
         <a href="/about" class="mb-4 font-bold">About</a>
+        <a href="/articles" class="mb-4 font-bold">Articles</a>
         <a href="/contact" class="mb-4 font-bold">Contact</a>
         <a href="/portfolio" class="mb-4 font-bold">Portfolio</a>
-        <a href="/articles" class="mb-4 font-bold">Articles</a>
         <a href="/privacy-policy" class="mb-4 font-bold">Privacy Policy</a>
         <a href="/return-policy" class="mb-4 font-bold">Returns &amp; Refunds</a>
         <a href="/terms-and-conditions" class="mb-4 font-bold">Terms &amp; Conditions</a>
