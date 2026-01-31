@@ -24,6 +24,7 @@ const footerLinks = [
     { label: "Shop", href: shopHref },
     { label: "Cart", href: "/cart", id: "cart-link-footer" },
     { label: "About", href: "/about" },
+    { label: "Articles", href: "/articles" },
     { label: "Contact", href: "/contact" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "Privacy Policy", href: "/privacy-policy" },
@@ -107,6 +108,11 @@ const footerLinks = [
                     >portfolio</a
                 >
                 <a
+                    href="/articles"
+                    class={`text-2xl font-bold ${darkTheme ? "md:hover:text-gray-300" : "md:hover:text-gray-600"} transition-colors duration-300`}
+                    >articles</a
+                >
+                <a
                     id="cart-link-desktop"
                     href="/cart"
                     aria-label="See shopping cart"
@@ -133,6 +139,7 @@ const footerLinks = [
         <a href="/about" class="mb-4 font-bold">About</a>
         <a href="/contact" class="mb-4 font-bold">Contact</a>
         <a href="/portfolio" class="mb-4 font-bold">Portfolio</a>
+        <a href="/articles" class="mb-4 font-bold">Articles</a>
         <a href="/privacy-policy" class="mb-4 font-bold">Privacy Policy</a>
         <a href="/return-policy" class="mb-4 font-bold">Returns &amp; Refunds</a>
         <a href="/terms-and-conditions" class="mb-4 font-bold">Terms &amp; Conditions</a>

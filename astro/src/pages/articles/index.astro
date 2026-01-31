@@ -1,0 +1,62 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { getCollection } from "astro:content"
+
+const articles = await getCollection("articles", ({ data }) => {
+    if (import.meta.env.PROD && data.draft) return false
+    return true
+})
+const sorted = articles.sort((a, b) => {
+    const aDate = a.data.pubDate?.valueOf() ?? 0
+    const bDate = b.data.pubDate?.valueOf() ?? 0
+    return bDate - aDate
+})
+---
+
+<BaseLayout
+    title="Articles | Andrea Diotallevi Art"
+    description="Articles about generative art, process, and how the work is made."
+>
+    <div
+        class="flex flex-col items-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
+    >
+        <div class="w-full md:w-3/4 lg:w-2/3">
+            <h1 class="text-2xl md:text-5xl font-bold mb-4">Articles</h1>
+            <p class="mb-8">
+                Notes on process, algorithms, and how individual series are designed and developed.
+            </p>
+
+            <ul class="space-y-6 list-none pl-0">
+                {sorted.map((entry) => (
+                    <li>
+                        <a
+                            href={`/articles/${entry.slug}`}
+                            class="text-gray-800 no-underline hover:underline block group"
+                        >
+                            <span class="font-bold text-lg group-hover:text-blue-700">
+                                {entry.data.title}
+                            </span>
+                            {entry.data.pubDate && (
+                                <time
+                                    datetime={entry.data.pubDate.toISOString()}
+                                    class="text-gray-500 text-sm block mt-0.5"
+                                >
+                                    {entry.data.pubDate.toLocaleDateString("en-GB", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </time>
+                            )}
+                            {entry.data.description && (
+                                <p class="text-gray-600 text-sm mt-1 mb-0">
+                                    {entry.data.description}
+                                </p>
+                            )}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </div>
+</BaseLayout>

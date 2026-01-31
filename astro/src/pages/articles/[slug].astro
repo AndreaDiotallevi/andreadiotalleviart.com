@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from "astro:content"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { getCollection } from "astro:content"
+import { Image } from "@unpic/astro"
+import { getStripeProducts } from "@utils/serverless"
+import { transformImage } from "@utils/cloudinary"
+import { imageBreakpoints } from "@utils/breakpoints"
+
+export async function getStaticPaths() {
+    const articles = await getCollection("articles", ({ data }) => {
+        if (import.meta.env.PROD && data.draft) return false
+        return true
+    })
+    const sorted = articles.sort((a, b) => {
+        const aDate = a.data.pubDate?.valueOf() ?? 0
+        const bDate = b.data.pubDate?.valueOf() ?? 0
+        return bDate - aDate
+    })
+    return sorted.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }))
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"articles"> }
+const { Content } = await entry.render()
+const { title, description, pubDate, image: imageRef } = entry.data
+
+let imageUrl: string | undefined
+if (imageRef) {
+    if (imageRef === "nebula-2") {
+        const products = await getStripeProducts()
+        const nebula2 = products.find((p) => p.metadata.slug === "nebula-2")
+        imageUrl = nebula2?.images?.[0]
+    } else {
+        imageUrl = transformImage(imageRef)
+    }
+}
+---
+
+<BaseLayout
+    title={`${title} | Andrea Diotallevi Art`}
+    description={description}
+    image={imageUrl}
+    type="article"
+>
+    <div
+        class="flex flex-col items-center px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800"
+    >
+        <article class="w-full md:w-3/4 lg:w-2/3">
+            {imageUrl && (
+                <div class="w-full mb-8">
+                    <Image
+                        src={imageUrl}
+                        alt={title}
+                        width={1429}
+                        height={2000}
+                        class="w-full h-auto rounded-lg"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 75vw, 672px"
+                        breakpoints={imageBreakpoints({
+                            maxWidth: 672,
+                            assetWidth: 1429,
+                        })}
+                    />
+                </div>
+            )}
+            <h1 class="text-2xl md:text-5xl font-bold mb-4">{title}</h1>
+            {pubDate && (
+                <time datetime={pubDate.toISOString()} class="text-gray-500 text-sm block mb-6">
+                    {pubDate.toLocaleDateString("en-GB", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}
+                </time>
+            )}
+            <div class="[&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-2 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_a]:text-blue-700 [&_a]:underline [&_a]:font-semibold [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:my-4 [&_pre]:text-sm [&_pre]:bg-gray-100">
+                <Content />
+            </div>
+        </article>
+    </div>
+</BaseLayout>

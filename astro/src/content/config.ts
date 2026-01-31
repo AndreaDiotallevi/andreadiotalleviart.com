@@ -10,6 +10,18 @@ const artworksCollection = defineCollection({
     }),
 })
 
+const articlesCollection = defineCollection({
+    type: "content",
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        pubDate: z.coerce.date().optional(),
+        draft: z.boolean().optional().default(false),
+        image: z.string().optional(),
+    }),
+})
+
 export const collections = {
     artworks: artworksCollection,
+    articles: articlesCollection,
 }
