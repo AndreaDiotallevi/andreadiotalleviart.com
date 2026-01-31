@@ -53,8 +53,20 @@ export const sketch = (
 
     let frameIndex = 0
 
+    const restartSketch = () => {
+        frameIndex = 0
+        if (!p5.isLooping()) {
+            p5.loop()
+        }
+    }
+
     p5.setup = () => {
-        p5.createCanvas(width, height)
+        const renderer = p5.createCanvas(width, height)
+        const canvasElement = renderer.elt
+        if (canvasElement instanceof HTMLCanvasElement) {
+            canvasElement.addEventListener("click", restartSketch)
+            canvasElement.addEventListener("touchstart", restartSketch, { passive: true })
+        }
         p5.colorMode("hsb", HSB_MAX_HUE, HSB_MAX_SAT, HSB_MAX_BRIGHT, ALPHA_OPAQUE)
         p5.noStroke()
     }
@@ -124,20 +136,6 @@ export const sketch = (
         frameIndex++
         if (frameIndex >= totalFrames) {
             p5.noLoop()
-        }
-    }
-
-    p5.mouseClicked = () => {
-        frameIndex = 0
-        if (!p5.isLooping()) {
-            p5.loop()
-        }
-    }
-
-    p5.touchStarted = () => {
-        frameIndex = 0
-        if (!p5.isLooping()) {
-            p5.loop()
         }
     }
 }
