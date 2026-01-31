@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import BaseLayout from "@layouts/BaseLayout.astro"
+import NebulaSketch from "@components/NebulaSketch.astro"
 import { getCollection } from "astro:content"
 import { Image } from "@unpic/astro"
 import { getStripeProducts } from "@utils/serverless"
@@ -75,6 +76,7 @@ if (imageRef) {
                     })}
                 </time>
             )}
+            {entry.slug === "nebula-series" && <NebulaSketch />}
             <div class="[&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-2 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_a]:text-blue-700 [&_a]:underline [&_a]:font-semibold [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:my-4 [&_pre]:text-sm [&_pre]:bg-gray-100">
                 <Content />
             </div>

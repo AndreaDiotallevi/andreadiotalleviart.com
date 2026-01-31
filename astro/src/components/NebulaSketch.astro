@@ -1,0 +1,40 @@
+---
+---
+
+<div id="nebula-sketch-root" class="nebula-sketch-wrapper w-full my-8">
+    <!-- Canvas is inserted here by p5 -->
+</div>
+
+<script>
+    import p5 from "p5"
+    import {
+        sketch,
+        DEFAULT_CANVAS_WIDTH_EXPORT as DEFAULT_CANVAS_WIDTH,
+    } from "@scripts/nebulaSketch"
+
+    function initSketch() {
+        const root = document.getElementById("nebula-sketch-root")
+        if (!root) return
+        const width = root.clientWidth || DEFAULT_CANVAS_WIDTH
+
+        new p5(
+            (p) => sketch(p, { width }),
+            root
+        )
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => requestAnimationFrame(initSketch))
+    } else {
+        requestAnimationFrame(initSketch)
+    }
+</script>
+
+<style>
+    .nebula-sketch-wrapper canvas {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+    }
+</style>
