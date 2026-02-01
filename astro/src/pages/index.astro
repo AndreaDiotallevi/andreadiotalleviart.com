@@ -5,8 +5,8 @@ import { transformImage } from "@utils/cloudinary"
 import { imageBreakpoints } from "@utils/breakpoints"
 ---
 <BaseLayout
-    title="Home | Andrea Diotallevi Art"
-    description="Generative artist and creative coder in London. I design systems with code. Museum‑quality giclée prints with free carbon‑neutral shipping."
+    title="Andrea Diotallevi Art — Generative Art & Fine Art Prints"
+    description="Generative artist in London. Art made with code — curated fine art prints on cotton paper. Museum-quality giclée, carbon-neutral shipping."
     image={transformImage("me-with-nebula_gozzjb")}
 >
     <div class="w-full">
@@ -29,10 +29,10 @@ import { imageBreakpoints } from "@utils/breakpoints"
                 <h1
                     class="text-2xl md:text-5xl text-center font-bold"
                 >
-                    Andrea Diotallevi
+                    Andrea Diotallevi Art
                 </h1>
                 <p class="max-w-[400px] mx-auto text-center text-sm md:text-lg md:mt-2 mb-5 md:mb-6">
-                    Generative artist and creative coder
+                    Artworks made with code
                 </p>
                 <div class="w-full max-w-[36rem] mx-auto mt-3 md:mt-4">
                     <div class="flex flex-col md:flex-row gap-3 w-full">
@@ -41,7 +41,7 @@ import { imageBreakpoints } from "@utils/breakpoints"
                             role="button"
                             class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-gray-800 text-white md:hover:bg-gray-800 transition-colors duration-300 w-full md:flex-1"
                         >
-                            <span class="font-semibold">Shop art prints</span>
+                            <span class="font-semibold">Explore prints</span>
                         </a>
                         <a
                             href="/contact"
@@ -53,17 +53,30 @@ import { imageBreakpoints } from "@utils/breakpoints"
                     </div>
                 </div>
                 <div class="mt-6 md:mt-8 max-w-[36rem] text-center md:text-center text-base md:text-base space-y-4 md:space-y-5">
-                    <p>Welcome!</p>
-                    <p>This is art made with code.</p>
-                    <p>Each piece begins as an idea and a set of rules — an algorithm I shape through hours of trial, error, and conversation with the machine. I never fully know where it will lead. The code surprises me, I respond, and together we iterate until something unexpected and beautiful appears.</p>
-                    <p>For years, these works lived only on a screen. Recently, I decided to give them a physical form and built this space to share them as prints.</p>
-                    <p>Not every piece becomes a print.</p>
+                    <p>Each piece begins as an idea and a set of rules — an algorithm I shape through hours of trial, error, and conversation with the machine. I never fully know where it will lead. The code surprises me, I respond, and together we iterate until <em>something unexpected and beautiful appears</em>.</p>
+                    <p>For years, these works lived only on a screen. Recently, I decided to give them a <em>physical form</em> and built this space to share them as prints.</p>
+                    <p><em>Not every piece becomes a print.</em></p>
                     <p>Only a curated selection is released.</p>
-                    <p>Each available work is printed using a high-quality fine art process, on soft, textured cotton paper, chosen to bring out depth, detail, and subtle color. These prints are made to last and to be experienced up close.</p>
+                    <p>Each available work is printed using a high-quality fine art process, on soft, textured cotton paper, chosen to bring out depth, detail, and subtle color. These prints are <em>made to last and to be experienced up close</em>.</p>
                     <p>Why prints?</p>
-                    <p>Because for a long time, when I said “I write code and make images,” it didn’t quite land — even with my parents. But the moment they held one of these works in their hands, something shifted. It became real. They were excited. They finally understood.</p>
-                    <p>These prints sit at the intersection of engineering and artistic beauty — where code turns into something you can hold.</p>
-                    <p>Explore prints.</p>
+                    <p>Because for a long time, when I said “I write code and make images,” it didn’t quite land — even with my parents. But the moment they held one of these works in their hands, <em>something shifted</em>. It became real. They were excited. They finally understood.</p>
+                    <p>These prints sit at the intersection of engineering and artistic beauty — <em>where code turns into something you can hold</em>.</p>
+                    <div class="flex flex-col md:flex-row gap-3 w-full max-w-[36rem] mx-auto pt-4 md:pt-6">
+                        <a
+                            href="/shop"
+                            role="button"
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-gray-800 text-white md:hover:bg-gray-800 transition-colors duration-300 w-full md:flex-1"
+                        >
+                            <span class="font-semibold">Explore prints</span>
+                        </a>
+                        <a
+                            href="/contact"
+                            role="button"
+                            class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-white text-gray-800 border border-gray-300 md:hover:bg-gray-800 md:hover:border-gray-800 md:hover:text-white transition-colors duration-300 w-full md:flex-1"
+                        >
+                            <span class="font-semibold">Contact me</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
