@@ -17,8 +17,11 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
     const currencyUpper = currency.toUpperCase()
 
     const products = await getStripeProducts()
+    const sortedProducts = [...products].sort((a, b) =>
+        (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" })
+    )
 
-    const items = products
+    const items = sortedProducts
         .map(product => {
             // Exclude specific mockup image(s) and drop first image for feed
             const blockedImageSubstrings = ["mockup-series-vertical_hpqksb"]
