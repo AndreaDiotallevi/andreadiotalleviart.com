@@ -21,11 +21,9 @@ export const productsData: Record<string, ProductExtraData> = {
             "This generative artwork is created using a pixel-sorting technique applied to a source image. The algorithm reorders pixels based on their hue, sweeping colour channels into flowing ribbons.",
             "This process produces a rich, soft texture where edges dissolve into gradients, revealing subtle transitions and a tactile depth that feels both organic and computational.",
         ],
-        framing: [],
-        // framing: [
-        //     "A simple white A3 frame (297 x 420 mm) with a slim profile (≤ 20 mm) is recommended. The print is full bleed with no border, so it sits cleanly edge-to-edge.",
-        //     "If you prefer a mounted look, use a 40 x 50 cm frame with a 3-5 cm mount opening cut to A3 — this adds breathing room while keeping the piece bold and elegant.",
-        // ],
+        framing: [
+            "A wooden A2 frame with a white mat/mount is recommended; use a mount opening cut to A3 for a clean border around the print.",
+        ],
     },
     "print_nebula-1_50x70": {
         about: [
