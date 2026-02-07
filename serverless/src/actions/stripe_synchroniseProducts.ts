@@ -201,6 +201,7 @@ const products: ProductInput[] = [
             // transformImage("flames-mockup-2_veo56n"),
             transformImage("flames-mockup-2_ysiocl"),
             transformImage("A116-flames_voptyx"),
+            transformImage("flames-paper-closeup_x7sh8y")
         ],
         currencyOptions: {
             gbp: 6500,
