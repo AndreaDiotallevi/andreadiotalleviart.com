@@ -1,8 +1,10 @@
 import Stripe from "stripe"
 import crypto from "crypto"
-import KSUID from "ksuid"
 
 import { initialiseClient } from "./stripe_initialiseClient"
+
+const generateOrderNumber = (): string =>
+    crypto.randomInt(0, 100_000_000).toString().padStart(8, "0")
 
 export const createCheckoutSession = async (params: {
     line_items: Stripe.Checkout.SessionCreateParams["line_items"]
@@ -15,7 +17,7 @@ export const createCheckoutSession = async (params: {
 
         const { line_items, success_url, currency, discounts } = params
 
-        const orderId = generateKSUID(new Date())
+        const orderNumber = generateOrderNumber()
 
         const session = await stripe.checkout.sessions.create({
             expand: ["line_items", "line_items.data.price.product"],
@@ -29,8 +31,7 @@ export const createCheckoutSession = async (params: {
             currency,
             discounts,
             metadata: {
-                orderId,
-                orderNumber: orderId.slice(0, 8),
+                orderNumber,
             },
         })
 
@@ -288,7 +289,3 @@ const countriesArray: Stripe.Checkout.SessionCreateParams.ShippingAddressCollect
         // "ZZ", // Unknown or Invalid Region
     ]
 
-const generateKSUID = (timestamp: Date) => {
-    const payload = crypto.randomBytes(16)
-    return KSUID.fromParts(timestamp.getTime(), payload).string
-}
