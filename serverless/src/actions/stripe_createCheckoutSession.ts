@@ -3,7 +3,7 @@ import crypto from "crypto"
 
 import { initialiseClient } from "./stripe_initialiseClient"
 
-const generateOrderId = (): string =>
+const generateOrderNumber = (): string =>
     crypto.randomInt(0, 100_000_000).toString().padStart(8, "0")
 
 export const createCheckoutSession = async (params: {
@@ -17,7 +17,7 @@ export const createCheckoutSession = async (params: {
 
         const { line_items, success_url, currency, discounts } = params
 
-        const orderId = generateOrderId()
+        const orderNumber = generateOrderNumber()
 
         const session = await stripe.checkout.sessions.create({
             expand: ["line_items", "line_items.data.price.product"],
@@ -31,8 +31,7 @@ export const createCheckoutSession = async (params: {
             currency,
             discounts,
             metadata: {
-                orderId,
-                orderNumber: orderId,
+                orderNumber,
             },
         })
 
