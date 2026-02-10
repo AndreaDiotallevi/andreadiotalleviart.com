@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+    title="403 | Andrea Diotallevi Art"
+    description="You are not authorized to access this page."
+    noIndex={true}
+    hideFooter={true}
+>
+    <div class="max-w-screen-md mx-auto px-4 py-8 pt-0 md:pt-8">
+        <h1 class="text-2xl md:text-5xl font-bold">403</h1>
+        <p class="mt-4">You are signed in but not authorized to access this page.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+            <a
+                href="/"
+                class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-gray-800 text-white md:hover:bg-gray-700 transition-colors duration-300 font-semibold"
+            >
+                Back home
+            </a>
+            <a
+                href="/auth/logout"
+                class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-white text-gray-800 border border-gray-300 md:hover:bg-gray-100 transition-colors duration-300 font-semibold"
+            >
+                Sign out
+            </a>
+        </div>
+    </div>
+</BaseLayout>

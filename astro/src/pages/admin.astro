@@ -1,0 +1,57 @@
+---
+export const prerender = false
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+import {
+    ADMIN_SESSION_COOKIE_NAME,
+    isAdminUser,
+    shouldUseSecureCookie,
+    verifyAdminSessionToken,
+} from "@utils/auth"
+
+const sessionToken = Astro.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value
+
+if (!sessionToken) {
+    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+}
+
+const sessionClaims = await verifyAdminSessionToken(sessionToken)
+
+if (!sessionClaims) {
+    Astro.cookies.set(ADMIN_SESSION_COOKIE_NAME, "", {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: shouldUseSecureCookie(Astro.url),
+        maxAge: 0,
+    })
+
+    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+}
+
+if (!isAdminUser(sessionClaims.groups)) {
+    return Astro.redirect("/403")
+}
+---
+
+<BaseLayout
+    title="Admin | Andrea Diotallevi Art"
+    description="Admin area."
+    noIndex={true}
+    hideFooter={true}
+>
+    <div class="max-w-screen-md mx-auto px-4 py-8 pt-0 md:pt-8">
+        <h1 class="text-2xl md:text-5xl font-bold">Admin</h1>
+        <p class="mt-4">
+            You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
+        </p>
+        <div class="mt-8">
+            <a
+                href="/auth/logout"
+                class="inline-flex items-center justify-center rounded-lg px-4 py-3 bg-gray-800 text-white md:hover:bg-gray-700 transition-colors duration-300 font-semibold"
+            >
+                Sign out
+            </a>
+        </div>
+    </div>
+</BaseLayout>
