@@ -83,11 +83,11 @@ Resources:
             LogoutURLs:
                 - !If
                     - IsProduction
-                    - "https://andreadiotalleviart.com/"
+                    - "https://andreadiotalleviart.com"
                     - !If
                         - IsStaging
-                        - "https://staging--andreadiotalleviart.netlify.app/"
-                        - "http://localhost:4321/"
+                        - "https://staging--andreadiotalleviart.netlify.app"
+                        - "http://localhost:4321"
             AccessTokenValidity: 1
             IdTokenValidity: 1
             RefreshTokenValidity: 1
