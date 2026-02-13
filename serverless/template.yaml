@@ -24,8 +24,93 @@ Parameters:
 
 Conditions:
     IsProduction: !Equals [!Ref Environment, "production"]
+    IsStaging: !Equals [!Ref Environment, "staging"]
 
 Resources:
+    # AUTHENTICATION
+    CognitoUserPool:
+        Type: AWS::Cognito::UserPool
+        Properties:
+            UserPoolName: !Sub ${AWS::StackName}-${Environment}-AdminUserPool
+            UsernameAttributes:
+                - email
+            AutoVerifiedAttributes:
+                - email
+            AccountRecoverySetting:
+                RecoveryMechanisms:
+                    - Name: verified_email
+                      Priority: 1
+
+    CognitoGoogleIdentityProvider:
+        Type: AWS::Cognito::UserPoolIdentityProvider
+        Properties:
+            ProviderName: Google
+            ProviderType: Google
+            UserPoolId: !Ref CognitoUserPool
+            AttributeMapping:
+                email: email
+                given_name: given_name
+                family_name: family_name
+            ProviderDetails:
+                authorize_scopes: "openid email profile"
+                client_id: "{{resolve:ssm:GOOGLE_IDENTITY_PROVIDER_CLIENT_ID}}"
+                client_secret: "{{resolve:ssm:GOOGLE_IDENTITY_PROVIDER_CLIENT_SECRET}}"
+
+    CognitoUserPoolClient:
+        Type: AWS::Cognito::UserPoolClient
+        DependsOn: CognitoGoogleIdentityProvider
+        Properties:
+            UserPoolId: !Ref CognitoUserPool
+            ClientName: !Sub ${AWS::StackName}-${Environment}-AdminClient
+            GenerateSecret: true
+            AllowedOAuthFlowsUserPoolClient: true
+            AllowedOAuthFlows:
+                - code
+            AllowedOAuthScopes:
+                - openid
+                - email
+                - profile
+            SupportedIdentityProviders:
+                - Google
+            CallbackURLs:
+                - !If
+                    - IsProduction
+                    - "https://andreadiotalleviart.com/auth/callback"
+                    - !If
+                        - IsStaging
+                        - "https://staging--andreadiotalleviart.netlify.app/auth/callback"
+                        - "http://localhost:4321/auth/callback"
+            LogoutURLs:
+                - !If
+                    - IsProduction
+                    - "https://andreadiotalleviart.com"
+                    - !If
+                        - IsStaging
+                        - "https://staging--andreadiotalleviart.netlify.app"
+                        - "http://localhost:4321"
+            AccessTokenValidity: 1
+            IdTokenValidity: 1
+            RefreshTokenValidity: 1
+            TokenValidityUnits:
+                AccessToken: days
+                IdToken: days
+                RefreshToken: days
+            EnableTokenRevocation: true
+            PreventUserExistenceErrors: ENABLED
+
+    CognitoUserPoolDomain:
+        Type: AWS::Cognito::UserPoolDomain
+        Properties:
+            Domain: !Sub ${Environment}-andreadiotalleviart
+            UserPoolId: !Ref CognitoUserPool
+
+    CognitoAdminGroup:
+        Type: AWS::Cognito::UserPoolGroup
+        Properties:
+            UserPoolId: !Ref CognitoUserPool
+            GroupName: admin
+            Description: Admin users allowed to access /admin
+
     # BUCKETS
     Bucket:
         Type: AWS::S3::Bucket
@@ -791,10 +876,18 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-NewsletterListContacts
             Handler: src/lambdas/api_newsletterListContacts.handler
+            Events:
+                GetContacts:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /contacts
+                        Method: GET
             Environment:
                 Variables:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
                     CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
             Policies:
                 - Statement:
                       - Sid: listContacts
@@ -803,6 +896,13 @@ Resources:
                             - SES:ListContacts
                         Resource:
                             - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
+                - Statement:
+                      - Sid: readAdminApiSecret
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
@@ -975,3 +1075,24 @@ Resources:
                     - renderingFailure
                 SnsDestination:
                     TopicARN: !Ref SNSNotificationTopic
+
+Outputs:
+    AdminCognitoUserPoolId:
+        Description: Cognito User Pool ID for admin auth
+        Value: !Ref CognitoUserPool
+
+    AdminCognitoUserPoolClientId:
+        Description: Cognito User Pool App Client ID for admin auth
+        Value: !Ref CognitoUserPoolClient
+
+    AdminCognitoHostedUiDomain:
+        Description: Cognito Hosted UI base URL for admin auth
+        Value: !Sub https://${CognitoUserPoolDomain}.auth.${AWS::Region}.amazoncognito.com
+
+    AdminGoogleRedirectUri:
+        Description: Redirect URI to configure in Google OAuth client
+        Value: !Sub https://${CognitoUserPoolDomain}.auth.${AWS::Region}.amazoncognito.com/oauth2/idpresponse
+
+    AdminCognitoIssuer:
+        Description: JWT issuer used by /admin session validation
+        Value: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPool}

@@ -1,0 +1,143 @@
+---
+export const prerender = false
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+import {
+    ADMIN_SESSION_COOKIE_NAME,
+    isAdminUser,
+    shouldUseSecureCookie,
+    verifyAdminSessionToken,
+} from "@utils/auth"
+
+const sessionToken = Astro.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value
+
+if (!sessionToken) {
+    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+}
+
+const sessionClaims = await verifyAdminSessionToken(sessionToken)
+
+if (!sessionClaims) {
+    Astro.cookies.set(ADMIN_SESSION_COOKIE_NAME, "", {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: shouldUseSecureCookie(Astro.url),
+        maxAge: 0,
+    })
+
+    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+}
+
+if (!isAdminUser(sessionClaims.groups)) {
+    return Astro.redirect("/403")
+}
+
+type NewsletterContact = {
+    EmailAddress?: string
+    LastUpdatedTimestamp?: string
+    UnsubscribeAll?: boolean
+    [key: string]: unknown
+}
+
+function formatContactDate(iso?: string): string {
+    if (!iso) return "—"
+    try {
+        const d = new Date(iso)
+        return d.toLocaleDateString(undefined, { dateStyle: "short" })
+    } catch {
+        return "—"
+    }
+}
+let newsletterContacts: NewsletterContact[] = []
+const apiUrl = import.meta.env.PUBLIC_API_URL
+const adminSecret = import.meta.env.ADMIN_API_SECRET
+if (apiUrl && adminSecret) {
+    try {
+        const res = await fetch(apiUrl + "/contacts", {
+            method: "GET",
+            headers: { "X-Admin-Secret": adminSecret },
+        })
+        if (res.ok) {
+            const data = (await res.json()) as { contacts?: NewsletterContact[] }
+            const list = data.contacts ?? []
+            newsletterContacts = [...list].sort((a, b) => {
+                const ta = a.LastUpdatedTimestamp ? new Date(a.LastUpdatedTimestamp).getTime() : 0
+                const tb = b.LastUpdatedTimestamp ? new Date(b.LastUpdatedTimestamp).getTime() : 0
+                return tb - ta
+            })
+        }
+    } catch {
+        // leave list empty on error
+    }
+}
+---
+
+<BaseLayout
+    title="Admin | Andrea Diotallevi Art"
+    description="Admin area."
+    noIndex={true}
+    hideFooter={true}
+>
+    <div class="max-w-screen-md mx-auto px-4 py-8 pt-0 md:pt-8">
+        <h1 class="text-2xl md:text-5xl font-bold">Admin</h1>
+        <p class="mt-4">
+            You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
+        </p>
+        <section class="mt-10" aria-labelledby="newsletter-contacts-heading">
+            <h2 id="newsletter-contacts-heading" class="text-xl font-semibold">
+                Newsletter contacts
+                <span class="font-normal text-gray-500">({newsletterContacts.length})</span>
+            </h2>
+            {newsletterContacts.length > 0 ? (
+                <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
+                    <table class="w-full min-w-[280px] border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-white">
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Email
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Last updated
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {newsletterContacts.map((c) => (
+                                <tr class="border-b border-gray-100 last:border-b-0">
+                                    <td class="px-4 py-2 text-gray-800">
+                                        <a
+                                            href={`mailto:${c.EmailAddress ?? ""}`}
+                                            class="underline hover:text-gray-600"
+                                        >
+                                            {c.EmailAddress ?? "—"}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-600 text-sm">
+                                        {formatContactDate(c.LastUpdatedTimestamp)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    No newsletter contacts yet. If you expect contacts, ensure{" "}
+                    <code class="rounded bg-gray-200 px-1 dark:bg-gray-700">ADMIN_API_SECRET</code> is set (Netlify and
+                    SSM) and matches.
+                </p>
+            )}
+        </section>
+
+        <div class="mt-8">
+            <a
+                href="/auth/logout"
+                data-astro-reload
+                class="block w-full max-w-lg rounded-lg border border-gray-300 bg-white px-4 py-3 text-center font-bold text-gray-800 transition-colors duration-300 md:hover:border-gray-800 md:hover:bg-gray-800 md:hover:text-white"
+            >
+                Sign out
+            </a>
+        </div>
+    </div>
+</BaseLayout>
