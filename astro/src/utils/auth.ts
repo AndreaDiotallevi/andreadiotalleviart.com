@@ -96,7 +96,7 @@ export const buildCognitoAuthorizeUrl = ({
 
 export const buildCognitoLogoutUrl = ({ url }: { url: URL }): string => {
     const { clientId, cognitoBaseUrl } = getAuthConfig()
-    const logoutUrl = `${getRequestOrigin(url)}/`
+    const logoutUrl = getRequestOrigin(url)
     const params = new URLSearchParams({
         client_id: clientId,
         logout_uri: logoutUrl,
