@@ -876,10 +876,18 @@ Resources:
         Properties:
             FunctionName: !Sub ${AWS::StackName}-NewsletterListContacts
             Handler: src/lambdas/api_newsletterListContacts.handler
+            Events:
+                GetContacts:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /contacts
+                        Method: GET
             Environment:
                 Variables:
                     NEWSLETTER_CONTACT_LIST_NAME: !Ref NewsletterContactListName
                     CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
             Policies:
                 - Statement:
                       - Sid: listContacts
@@ -888,6 +896,13 @@ Resources:
                             - SES:ListContacts
                         Resource:
                             - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:contact-list/${NewsletterContactListName}
+                - Statement:
+                      - Sid: readAdminApiSecret
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
