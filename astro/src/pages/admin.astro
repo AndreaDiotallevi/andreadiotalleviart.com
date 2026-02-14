@@ -90,7 +90,7 @@ const apiUrl = import.meta.env.PUBLIC_API_URL
 const adminSecret = import.meta.env.ADMIN_API_SECRET
 if (apiUrl && adminSecret) {
     try {
-        const res = await fetch(apiUrl + "/checkout-sessions", {
+        const res = await fetch(apiUrl + "/sessions", {
             method: "GET",
             headers: { "X-Admin-Secret": adminSecret },
         })

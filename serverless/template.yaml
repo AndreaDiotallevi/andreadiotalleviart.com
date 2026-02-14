@@ -679,7 +679,7 @@ Resources:
                     Type: Api
                     Properties:
                         RestApiId: !Ref ApiGateway
-                        Path: /checkout-sessions
+                        Path: /sessions
                         Method: GET
             Environment:
                 Variables:
