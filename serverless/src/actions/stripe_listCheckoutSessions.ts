@@ -18,6 +18,7 @@ export type CheckoutSessionSummary = Pick<
     | "amount_total"
     | "currency"
 > & {
+    order_id: string | null
     amount_discount: number | null
     line_items: CheckoutSessionLineItemSummary[]
 }
@@ -55,6 +56,7 @@ export const listCheckoutSessions = async (params?: {
             return {
                 id: session.id,
                 created: session.created,
+                order_id: session.metadata?.orderNumber ?? null,
                 status: session.status,
                 payment_status: session.payment_status,
                 customer_email: session.customer_details?.email ?? session.customer_email,
