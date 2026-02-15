@@ -2,6 +2,7 @@
 export const prerender = false
 
 import BaseLayout from "@layouts/BaseLayout.astro"
+import type Stripe from "stripe"
 import {
     ADMIN_SESSION_COOKIE_NAME,
     isAdminUser,
@@ -40,19 +41,91 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
-function formatContactDate(iso?: string): string {
-    if (!iso) return "—"
+type CheckoutSessionLineItemSummary = Pick<
+    Stripe.LineItem,
+    "id" | "description" | "quantity" | "amount_total" | "currency"
+>
+
+type CheckoutSessionSummary = Pick<
+    Stripe.Checkout.Session,
+    | "id"
+    | "created"
+    | "status"
+    | "payment_status"
+    | "customer_email"
+    | "amount_subtotal"
+    | "amount_total"
+    | "currency"
+> & {
+    order_id: string | null
+    amount_discount: number | null
+    line_items: CheckoutSessionLineItemSummary[]
+}
+
+const checkoutDateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+})
+
+function formatCheckoutSessionDate(unixTimestamp?: number): string {
+    if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "—"
     try {
-        const d = new Date(iso)
-        return d.toLocaleDateString(undefined, { dateStyle: "short" })
+        const d = new Date(unixTimestamp * 1000)
+        return checkoutDateFormatter.format(d)
     } catch {
         return "—"
     }
 }
+
+function formatCheckoutSessionAmount(amount?: number | null, currency?: string | null): string {
+    if (typeof amount !== "number" || Number.isNaN(amount) || !currency) return "—"
+
+    const normalisedCurrency = currency.toUpperCase()
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: normalisedCurrency,
+        }).format(amount / 100)
+    } catch {
+        return `${(amount / 100).toFixed(2)} ${normalisedCurrency}`
+    }
+}
+
+function formatCheckoutSessionDiscount(amount?: number | null, currency?: string | null): string {
+    if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) return "—"
+    return `-${formatCheckoutSessionAmount(amount, currency)}`
+}
+
+function formatContactDate(iso?: string): string {
+    if (!iso) return "—"
+    try {
+        const d = new Date(iso)
+        return checkoutDateFormatter.format(d)
+    } catch {
+        return "—"
+    }
+}
+
+let checkoutSessions: CheckoutSessionSummary[] = []
 let newsletterContacts: NewsletterContact[] = []
 const apiUrl = import.meta.env.PUBLIC_API_URL
 const adminSecret = import.meta.env.ADMIN_API_SECRET
 if (apiUrl && adminSecret) {
+    try {
+        const res = await fetch(apiUrl + "/sessions", {
+            method: "GET",
+            headers: { "X-Admin-Secret": adminSecret },
+        })
+        if (res.ok) {
+            const data = (await res.json()) as { sessions?: CheckoutSessionSummary[] }
+            const list = data.sessions ?? []
+            checkoutSessions = [...list].sort((a, b) => (b.created ?? 0) - (a.created ?? 0))
+        }
+    } catch {
+        // leave list empty on error
+    }
+
     try {
         const res = await fetch(apiUrl + "/contacts", {
             method: "GET",
@@ -84,28 +157,162 @@ if (apiUrl && adminSecret) {
         <p class="mt-4">
             You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
         </p>
+        <section class="mt-10" aria-labelledby="checkout-sessions-heading">
+            <h2 id="checkout-sessions-heading" class="text-xl font-semibold">
+                Checkout sessions
+                <span class="font-normal text-gray-500">({checkoutSessions.length})</span>
+            </h2>
+            <p class="mt-1 text-xs text-gray-500 md:hidden">
+                Swipe horizontally to see all columns.
+            </p>
+            {checkoutSessions.length > 0 ? (
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-[1240px] w-full border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-white">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Created
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Session ID
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Order ID
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Customer
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600">
+                                    Line items
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Subtotal
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Discount
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Total
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Checkout status
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Payment status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {checkoutSessions.map((session) => (
+                                <tr class="border-b border-gray-100 last:border-b-0">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionDate(session.created)}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
+                                        {session.id}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {session.order_id ?? "—"}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
+                                        {session.customer_email ? (
+                                            <a
+                                                href={`mailto:${session.customer_email}`}
+                                                class="underline hover:text-gray-600"
+                                            >
+                                                {session.customer_email}
+                                            </a>
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm">
+                                        {session.line_items?.length ? (
+                                            <ul class="space-y-1">
+                                                {session.line_items.map((lineItem) => (
+                                                    <li class="leading-snug">
+                                                        <div class="break-words whitespace-normal">
+                                                            <span class="font-medium">
+                                                                {lineItem.quantity ?? 1}x
+                                                            </span>{" "}
+                                                            <span>{lineItem.description || "Item"}</span>
+                                                        </div>
+                                                        <div class="text-gray-500">
+                                                            {formatCheckoutSessionAmount(
+                                                                lineItem.amount_total,
+                                                                lineItem.currency
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionAmount(
+                                            session.amount_subtotal,
+                                            session.currency
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionDiscount(
+                                            session.amount_discount,
+                                            session.currency
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionAmount(
+                                            session.amount_total,
+                                            session.currency
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {session.status ?? "—"}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {session.payment_status ?? "—"}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            ) : (
+                <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    No checkout sessions yet.
+                </p>
+            )}
+        </section>
         <section class="mt-10" aria-labelledby="newsletter-contacts-heading">
             <h2 id="newsletter-contacts-heading" class="text-xl font-semibold">
                 Newsletter contacts
                 <span class="font-normal text-gray-500">({newsletterContacts.length})</span>
             </h2>
             {newsletterContacts.length > 0 ? (
-                <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
-                    <table class="w-full min-w-[280px] border-collapse">
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-[520px] w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                                    Email
-                                </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Last updated
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Email
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {newsletterContacts.map((c) => (
                                 <tr class="border-b border-gray-100 last:border-b-0">
-                                    <td class="px-4 py-2 text-gray-800">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatContactDate(c.LastUpdatedTimestamp)}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         <a
                                             href={`mailto:${c.EmailAddress ?? ""}`}
                                             class="underline hover:text-gray-600"
@@ -113,13 +320,11 @@ if (apiUrl && adminSecret) {
                                             {c.EmailAddress ?? "—"}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-2 text-gray-600 text-sm">
-                                        {formatContactDate(c.LastUpdatedTimestamp)}
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             ) : (
                 <p class="mt-2 text-gray-600 dark:text-gray-400">
