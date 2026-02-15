@@ -11,7 +11,6 @@ export type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
     | "id"
     | "created"
-    | "livemode"
     | "status"
     | "payment_status"
     | "customer_email"
@@ -56,7 +55,6 @@ export const listCheckoutSessions = async (params?: {
             return {
                 id: session.id,
                 created: session.created,
-                livemode: session.livemode,
                 status: session.status,
                 payment_status: session.payment_status,
                 customer_email: session.customer_details?.email ?? session.customer_email,

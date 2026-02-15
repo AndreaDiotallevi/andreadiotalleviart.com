@@ -50,7 +50,6 @@ type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
     | "id"
     | "created"
-    | "livemode"
     | "status"
     | "payment_status"
     | "customer_email"
@@ -97,24 +96,11 @@ function formatCheckoutSessionDiscount(amount?: number | null, currency?: string
     return `-${formatCheckoutSessionAmount(amount, currency)}`
 }
 
-function getStripeDashboardNonLivePathSegment(): string {
-    if (import.meta.env.PUBLIC_ENV === "sandbox" || import.meta.env.PUBLIC_ENV === "staging") {
-        return import.meta.env.PUBLIC_ENV
-    }
-
-    return "test"
-}
-
-function getStripeCheckoutSessionDashboardUrl(session: CheckoutSessionSummary): string {
-    const modePath = session.livemode ? "" : `${getStripeDashboardNonLivePathSegment()}/`
-    return `https://dashboard.stripe.com/${modePath}payments/checkout/sessions/${session.id}`
-}
-
 function formatContactDate(iso?: string): string {
     if (!iso) return "—"
     try {
         const d = new Date(iso)
-        return d.toLocaleDateString(undefined, { dateStyle: "short" })
+        return checkoutDateFormatter.format(d)
     } catch {
         return "—"
     }
@@ -220,14 +206,7 @@ if (apiUrl && adminSecret) {
                                         {formatCheckoutSessionDate(session.created)}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
-                                        <a
-                                            href={getStripeCheckoutSessionDashboardUrl(session)}
-                                            target="_blank"
-                                            rel="noreferrer noopener"
-                                            class="underline hover:text-gray-600"
-                                        >
-                                            {session.id}
-                                        </a>
+                                        {session.id}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         {session.customer_email ? (
@@ -307,22 +286,26 @@ if (apiUrl && adminSecret) {
                 <span class="font-normal text-gray-500">({newsletterContacts.length})</span>
             </h2>
             {newsletterContacts.length > 0 ? (
-                <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
-                    <table class="w-full min-w-[280px] border-collapse">
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-[520px] w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                                    Email
-                                </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Last updated
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Email
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {newsletterContacts.map((c) => (
                                 <tr class="border-b border-gray-100 last:border-b-0">
-                                    <td class="px-4 py-2 text-gray-800">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatContactDate(c.LastUpdatedTimestamp)}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         <a
                                             href={`mailto:${c.EmailAddress ?? ""}`}
                                             class="underline hover:text-gray-600"
@@ -330,13 +313,11 @@ if (apiUrl && adminSecret) {
                                             {c.EmailAddress ?? "—"}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-2 text-gray-600 text-sm">
-                                        {formatContactDate(c.LastUpdatedTimestamp)}
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             ) : (
                 <p class="mt-2 text-gray-600 dark:text-gray-400">
