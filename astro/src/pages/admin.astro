@@ -236,9 +236,6 @@ if (apiUrl && adminSecret) {
                 Active products
                 <span class="font-normal text-gray-500">({activeProducts.length})</span>
             </h2>
-            <p class="mt-1 text-xs text-gray-500 md:hidden">
-                Swipe horizontally to see all columns.
-            </p>
             {activeProducts.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
@@ -265,19 +262,21 @@ if (apiUrl && adminSecret) {
                                 {activeProducts.map((product) => (
                                     <tr class="border-b border-gray-100 last:border-b-0">
                                         <td class="px-3 py-2 md:px-4">
-                                            {product.images?.[0] ? (
-                                                <img
-                                                    src={product.images[0]}
-                                                    alt={`${product.metadata.displayName} thumbnail`}
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                    width="56"
-                                                    height="56"
-                                                    class="h-14 w-14 rounded border border-gray-200 bg-gray-100 object-contain"
-                                                />
-                                            ) : (
-                                                <div class="h-14 w-14 rounded border border-gray-200 bg-gray-100" />
-                                            )}
+                                            <div class="h-14 w-14 rounded border border-gray-200 bg-gray-100 p-1">
+                                                {product.images?.[0] ? (
+                                                    <img
+                                                        src={product.images[0]}
+                                                        alt={`${product.metadata.displayName} thumbnail`}
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                        width="56"
+                                                        height="56"
+                                                        class="h-full w-full rounded object-contain"
+                                                    />
+                                                ) : (
+                                                    <div class="h-full w-full rounded bg-gray-200" />
+                                                )}
+                                            </div>
                                         </td>
                                         <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm">
                                             <div class="font-medium">{product.metadata.displayName}</div>
@@ -314,9 +313,6 @@ if (apiUrl && adminSecret) {
                 Checkout sessions
                 <span class="font-normal text-gray-500">({checkoutSessions.length})</span>
             </h2>
-            <p class="mt-1 text-xs text-gray-500 md:hidden">
-                Swipe horizontally to see all columns.
-            </p>
             {checkoutSessions.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
