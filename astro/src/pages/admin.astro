@@ -41,6 +41,15 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
+type PromotionCodeSummary = {
+    id: string
+    code: string
+    discount: string
+    expires_at: number | null
+    times_redeemed: number
+    max_redemptions: number | null
+}
+
 type CheckoutSessionLineItemSummary = Pick<
     Stripe.LineItem,
     "id" | "description" | "quantity" | "amount_total" | "currency"
@@ -107,6 +116,33 @@ function formatContactDate(iso?: string): string {
     }
 }
 
+function formatPromotionCodeExpiry(unixTimestamp?: number | null): string {
+    if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "No expiry"
+    try {
+        const d = new Date(unixTimestamp * 1000)
+        return checkoutDateFormatter.format(d)
+    } catch {
+        return "—"
+    }
+}
+
+function formatPromotionCodeRedemptions(
+    timesRedeemed?: number,
+    maxRedemptions?: number | null
+): string {
+    const safeTimesRedeemed =
+        typeof timesRedeemed === "number" && !Number.isNaN(timesRedeemed)
+            ? timesRedeemed
+            : 0
+
+    if (typeof maxRedemptions === "number" && !Number.isNaN(maxRedemptions)) {
+        return `${safeTimesRedeemed} / ${maxRedemptions}`
+    }
+
+    return `${safeTimesRedeemed} / unlimited`
+}
+
+let availablePromotionCodes: PromotionCodeSummary[] = []
 let checkoutSessions: CheckoutSessionSummary[] = []
 let newsletterContacts: NewsletterContact[] = []
 const apiUrl = import.meta.env.PUBLIC_API_URL
@@ -121,6 +157,20 @@ if (apiUrl && adminSecret) {
             const data = (await res.json()) as { sessions?: CheckoutSessionSummary[] }
             const list = data.sessions ?? []
             checkoutSessions = [...list].sort((a, b) => (b.created ?? 0) - (a.created ?? 0))
+        }
+    } catch {
+        // leave list empty on error
+    }
+
+    try {
+        const res = await fetch(apiUrl + "/promotion-codes", {
+            method: "GET",
+            headers: { "X-Admin-Secret": adminSecret },
+        })
+        if (res.ok) {
+            const data = (await res.json()) as { promotionCodes?: PromotionCodeSummary[] }
+            const list = data.promotionCodes ?? []
+            availablePromotionCodes = [...list].sort((a, b) => a.code.localeCompare(b.code))
         }
     } catch {
         // leave list empty on error
@@ -287,6 +337,61 @@ if (apiUrl && adminSecret) {
                 </p>
             )}
         </section>
+        <section class="mt-10" aria-labelledby="available-coupons-heading">
+            <h2 id="available-coupons-heading" class="text-xl font-semibold">
+                Available coupons
+                <span class="font-normal text-gray-500">({availablePromotionCodes.length})</span>
+            </h2>
+            {availablePromotionCodes.length > 0 ? (
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-[560px] w-full border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-white">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Code
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Discount
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Expires
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Redemptions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {availablePromotionCodes.map((promotionCode) => (
+                                <tr class="border-b border-gray-100 last:border-b-0">
+                                    <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {promotionCode.code}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {promotionCode.discount}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatPromotionCodeExpiry(promotionCode.expires_at)}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatPromotionCodeRedemptions(
+                                            promotionCode.times_redeemed,
+                                            promotionCode.max_redemptions
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            ) : (
+                <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    No available coupons yet.
+                </p>
+            )}
+        </section>
         <section class="mt-10" aria-labelledby="newsletter-contacts-heading">
             <h2 id="newsletter-contacts-heading" class="text-xl font-semibold">
                 Newsletter contacts
@@ -294,8 +399,8 @@ if (apiUrl && adminSecret) {
             </h2>
             {newsletterContacts.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
-                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
-                    <table class="min-w-[520px] w-full border-collapse">
+                    <div class="inline-block rounded border border-gray-200 bg-white">
+                    <table class="w-max border-collapse table-auto">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -312,10 +417,10 @@ if (apiUrl && adminSecret) {
                                     <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {formatContactDate(c.LastUpdatedTimestamp)}
                                     </td>
-                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         <a
                                             href={`mailto:${c.EmailAddress ?? ""}`}
-                                            class="underline hover:text-gray-600"
+                                            class="inline-block whitespace-nowrap underline hover:text-gray-600"
                                         >
                                             {c.EmailAddress ?? "—"}
                                         </a>
