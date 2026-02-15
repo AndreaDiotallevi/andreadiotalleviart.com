@@ -97,8 +97,21 @@ function formatCheckoutSessionDiscount(amount?: number | null, currency?: string
     return `-${formatCheckoutSessionAmount(amount, currency)}`
 }
 
+function getStripeDashboardNonLivePathSegment(): string {
+    const configuredPath = import.meta.env.PUBLIC_STRIPE_DASHBOARD_NON_LIVE_PATH
+    if (configuredPath) {
+        return configuredPath.replace(/^\/+|\/+$/g, "")
+    }
+
+    if (import.meta.env.PUBLIC_ENV === "sandbox" || import.meta.env.PUBLIC_ENV === "staging") {
+        return import.meta.env.PUBLIC_ENV
+    }
+
+    return "test"
+}
+
 function getStripeCheckoutSessionDashboardUrl(session: CheckoutSessionSummary): string {
-    const modePath = session.livemode ? "" : "test/"
+    const modePath = session.livemode ? "" : `${getStripeDashboardNonLivePathSegment()}/`
     return `https://dashboard.stripe.com/${modePath}payments/checkout/sessions/${session.id}`
 }
 
