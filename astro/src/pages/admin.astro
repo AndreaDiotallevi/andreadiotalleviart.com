@@ -258,9 +258,12 @@ if (apiUrl && adminSecret) {
             {activeProducts.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
-                        <table class="min-w-[640px] w-full border-collapse">
+                        <table class="min-w-[760px] w-full border-collapse">
                             <thead>
                                 <tr class="border-b border-gray-200 bg-white">
+                                    <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                        Image
+                                    </th>
                                     <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600">
                                         Product
                                     </th>
@@ -277,6 +280,21 @@ if (apiUrl && adminSecret) {
                             <tbody>
                                 {activeProducts.map((product) => (
                                     <tr class="border-b border-gray-100 last:border-b-0">
+                                        <td class="px-3 py-2 md:px-4">
+                                            {product.images?.[0] ? (
+                                                <img
+                                                    src={product.images[0]}
+                                                    alt={`${product.metadata.displayName} thumbnail`}
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    width="56"
+                                                    height="56"
+                                                    class="h-14 w-14 rounded border border-gray-200 bg-gray-100 object-contain"
+                                                />
+                                            ) : (
+                                                <div class="h-14 w-14 rounded border border-gray-200 bg-gray-100" />
+                                            )}
+                                        </td>
                                         <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm">
                                             <div class="font-medium">{product.metadata.displayName}</div>
                                             {product.metadata.displaySubtitle ? (
