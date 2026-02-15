@@ -2,13 +2,11 @@ import Stripe from "stripe"
 
 import { initialiseClient } from "./stripe_initialiseClient"
 
-export type PromotionCodeSummary = {
-    id: string
-    code: string
+export type PromotionCodeSummary = Pick<
+    Stripe.PromotionCode,
+    "id" | "code" | "expires_at" | "times_redeemed" | "max_redemptions"
+> & {
     discount: string
-    expires_at: number | null
-    times_redeemed: number
-    max_redemptions: number | null
 }
 
 const formatAmountOff = (amountOff: number, currency: string): string => {

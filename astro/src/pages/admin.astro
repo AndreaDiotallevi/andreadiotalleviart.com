@@ -41,13 +41,11 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
-type PromotionCodeSummary = {
-    id: string
-    code: string
+type PromotionCodeSummary = Pick<
+    Stripe.PromotionCode,
+    "id" | "code" | "expires_at" | "times_redeemed" | "max_redemptions"
+> & {
     discount: string
-    expires_at: number | null
-    times_redeemed: number
-    max_redemptions: number | null
 }
 
 type CheckoutSessionLineItemSummary = Pick<
