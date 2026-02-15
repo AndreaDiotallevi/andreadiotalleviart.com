@@ -2,6 +2,7 @@
 export const prerender = false
 
 import BaseLayout from "@layouts/BaseLayout.astro"
+import type Stripe from "stripe"
 import {
     ADMIN_SESSION_COOKIE_NAME,
     isAdminUser,
@@ -40,6 +41,42 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
+type CheckoutSessionLineItemSummary = Pick<
+    Stripe.LineItem,
+    "id" | "description" | "quantity" | "amount_total" | "currency"
+>
+
+type CheckoutSessionSummary = Pick<
+    Stripe.Checkout.Session,
+    "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
+> & {
+    line_items: CheckoutSessionLineItemSummary[]
+}
+
+function formatCheckoutSessionDate(unixTimestamp?: number): string {
+    if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "—"
+    try {
+        const d = new Date(unixTimestamp * 1000)
+        return d.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })
+    } catch {
+        return "—"
+    }
+}
+
+function formatCheckoutSessionAmount(amount?: number | null, currency?: string | null): string {
+    if (typeof amount !== "number" || Number.isNaN(amount) || !currency) return "—"
+
+    const normalisedCurrency = currency.toUpperCase()
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: normalisedCurrency,
+        }).format(amount / 100)
+    } catch {
+        return `${(amount / 100).toFixed(2)} ${normalisedCurrency}`
+    }
+}
+
 function formatContactDate(iso?: string): string {
     if (!iso) return "—"
     try {
@@ -49,10 +86,26 @@ function formatContactDate(iso?: string): string {
         return "—"
     }
 }
+
+let checkoutSessions: CheckoutSessionSummary[] = []
 let newsletterContacts: NewsletterContact[] = []
 const apiUrl = import.meta.env.PUBLIC_API_URL
 const adminSecret = import.meta.env.ADMIN_API_SECRET
 if (apiUrl && adminSecret) {
+    try {
+        const res = await fetch(apiUrl + "/sessions", {
+            method: "GET",
+            headers: { "X-Admin-Secret": adminSecret },
+        })
+        if (res.ok) {
+            const data = (await res.json()) as { sessions?: CheckoutSessionSummary[] }
+            const list = data.sessions ?? []
+            checkoutSessions = [...list].sort((a, b) => (b.created ?? 0) - (a.created ?? 0))
+        }
+    } catch {
+        // leave list empty on error
+    }
+
     try {
         const res = await fetch(apiUrl + "/contacts", {
             method: "GET",
@@ -84,6 +137,107 @@ if (apiUrl && adminSecret) {
         <p class="mt-4">
             You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
         </p>
+        <section class="mt-10" aria-labelledby="checkout-sessions-heading">
+            <h2 id="checkout-sessions-heading" class="text-xl font-semibold">
+                Checkout sessions
+                <span class="font-normal text-gray-500">({checkoutSessions.length})</span>
+            </h2>
+            {checkoutSessions.length > 0 ? (
+                <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
+                    <table class="w-full min-w-[960px] border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-white">
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Created
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Session ID
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Customer
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Line items
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Total
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Checkout status
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Payment status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {checkoutSessions.map((session) => (
+                                <tr class="border-b border-gray-100 last:border-b-0">
+                                    <td class="px-4 py-2 text-gray-600 text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionDate(session.created)}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-800 font-mono text-xs md:text-sm">
+                                        {session.id}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-800">
+                                        {session.customer_email ? (
+                                            <a
+                                                href={`mailto:${session.customer_email}`}
+                                                class="underline hover:text-gray-600"
+                                            >
+                                                {session.customer_email}
+                                            </a>
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-800 text-sm">
+                                        {session.line_items?.length ? (
+                                            <ul class="space-y-1">
+                                                {session.line_items.map((lineItem) => (
+                                                    <li>
+                                                        <span class="font-medium">
+                                                            {lineItem.quantity ?? 1}x
+                                                        </span>{" "}
+                                                        <span>{lineItem.description || "Item"}</span>{" "}
+                                                        <span class="text-gray-500">
+                                                            (
+                                                            {formatCheckoutSessionAmount(
+                                                                lineItem.amount_total,
+                                                                lineItem.currency
+                                                            )}
+                                                            )
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-800 text-sm">
+                                        {formatCheckoutSessionAmount(
+                                            session.amount_total,
+                                            session.currency
+                                        )}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-600 text-sm">
+                                        {session.status ?? "—"}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-600 text-sm">
+                                        {session.payment_status ?? "—"}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    No checkout sessions yet.
+                </p>
+            )}
+        </section>
         <section class="mt-10" aria-labelledby="newsletter-contacts-heading">
             <h2 id="newsletter-contacts-heading" class="text-xl font-semibold">
                 Newsletter contacts
