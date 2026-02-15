@@ -733,6 +733,38 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_stripeListPromotionCodes.ts
 
+    StripeSetCheckoutSessionFulfilledFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeSetCheckoutSessionFulfilled
+            Handler: src/lambdas/api_stripeSetCheckoutSessionFulfilled.handler
+            Events:
+                SetCheckoutSessionFulfilled:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /sessions/{sessionId}/fulfilled
+                        Method: PATCH
+            Environment:
+                Variables:
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_stripeSetCheckoutSessionFulfilled.ts
+
     StripeSynchroniseProductsFunction:
         Type: AWS::Serverless::Function
         Properties:
