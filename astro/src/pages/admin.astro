@@ -2,6 +2,7 @@
 export const prerender = false
 
 import BaseLayout from "@layouts/BaseLayout.astro"
+import type Stripe from "stripe"
 import {
     ADMIN_SESSION_COOKIE_NAME,
     isAdminUser,
@@ -40,15 +41,10 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
-type CheckoutSessionSummary = {
-    id: string
-    created?: number
-    status?: string | null
-    payment_status?: string
-    customer_email?: string | null
-    amount_total?: number | null
-    currency?: string | null
-}
+type CheckoutSessionSummary = Pick<
+    Stripe.Checkout.Session,
+    "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
+>
 
 function formatCheckoutSessionDate(unixTimestamp?: number): string {
     if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "—"

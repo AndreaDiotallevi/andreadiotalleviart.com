@@ -1,14 +1,11 @@
+import Stripe from "stripe"
+
 import { initialiseClient } from "./stripe_initialiseClient"
 
-export type CheckoutSessionSummary = {
-    id: string
-    created: number
-    status: string | null
-    payment_status: string
-    customer_email: string | null
-    amount_total: number | null
-    currency: string | null
-}
+export type CheckoutSessionSummary = Pick<
+    Stripe.Checkout.Session,
+    "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
+>
 
 export const listCheckoutSessions = async (params?: {
     limit?: number
