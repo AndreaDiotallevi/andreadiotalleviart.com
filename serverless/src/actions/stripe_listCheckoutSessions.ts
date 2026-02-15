@@ -23,16 +23,10 @@ export const listCheckoutSessions = async (params?: {
         const stripe = await initialiseClient()
         const limit = Math.min(Math.max(params?.limit ?? 100, 1), 100)
 
-        const [openSessionsResponse, completedSessionsResponse] = await Promise.all([
-            stripe.checkout.sessions.list({
-                limit,
-                status: "open",
-            }),
-            stripe.checkout.sessions.list({
-                limit,
-                status: "complete",
-            }),
-        ])
+        const completedSessionsResponse = await stripe.checkout.sessions.list({
+            limit,
+            status: "complete",
+        })
 
         const toLineItemSummary = (
             lineItem: Stripe.LineItem
@@ -62,15 +56,7 @@ export const listCheckoutSessions = async (params?: {
             }
         }
 
-        const sessionsMap = new Map<string, Stripe.Checkout.Session>()
-        for (const session of [
-            ...openSessionsResponse.data,
-            ...completedSessionsResponse.data,
-        ]) {
-            sessionsMap.set(session.id, session)
-        }
-
-        const selectedSessions = Array.from(sessionsMap.values())
+        const selectedSessions = completedSessionsResponse.data
             .sort((a, b) => b.created - a.created)
             .slice(0, limit)
 
