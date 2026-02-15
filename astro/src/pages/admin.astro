@@ -3,6 +3,7 @@ export const prerender = false
 
 import BaseLayout from "@layouts/BaseLayout.astro"
 import type Stripe from "stripe"
+import type { Currency, StripeProduct } from "@utils/stripe"
 import {
     ADMIN_SESSION_COOKIE_NAME,
     isAdminUser,
@@ -69,6 +70,8 @@ type CheckoutSessionSummary = Pick<
     line_items: CheckoutSessionLineItemSummary[]
 }
 
+const supportedProductCurrencies: Currency[] = ["gbp", "eur", "usd"]
+
 const checkoutDateFormatter = new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
     month: "short",
@@ -102,6 +105,12 @@ function formatCheckoutSessionAmount(amount?: number | null, currency?: string |
 function formatCheckoutSessionDiscount(amount?: number | null, currency?: string | null): string {
     if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) return "—"
     return `-${formatCheckoutSessionAmount(amount, currency)}`
+}
+
+function formatProductPrice(product: StripeProduct, currency: Currency): string {
+    const unitAmount = product.default_price?.currency_options?.[currency]?.unit_amount
+    if (typeof unitAmount !== "number" || Number.isNaN(unitAmount)) return "—"
+    return formatCheckoutSessionAmount(unitAmount, currency)
 }
 
 function formatContactDate(iso?: string): string {
@@ -143,8 +152,25 @@ function formatPromotionCodeRedemptions(
 let availablePromotionCodes: PromotionCodeSummary[] = []
 let checkoutSessions: CheckoutSessionSummary[] = []
 let newsletterContacts: NewsletterContact[] = []
+let activeProducts: StripeProduct[] = []
 const apiUrl = import.meta.env.PUBLIC_API_URL
 const adminSecret = import.meta.env.ADMIN_API_SECRET
+if (apiUrl) {
+    try {
+        const res = await fetch(apiUrl + "/products", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        })
+        if (res.ok) {
+            const data = (await res.json()) as { products?: StripeProduct[] }
+            const list = data.products ?? []
+            activeProducts = list.filter(product => product.active)
+        }
+    } catch {
+        // leave list empty on error
+    }
+}
+
 if (apiUrl && adminSecret) {
     try {
         const res = await fetch(apiUrl + "/sessions", {
@@ -205,14 +231,88 @@ if (apiUrl && adminSecret) {
         <p class="mt-4">
             You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
         </p>
+        <section class="mt-10" aria-labelledby="active-products-heading">
+            <h2 id="active-products-heading" class="text-xl font-semibold">
+                Active products
+                <span class="font-normal text-gray-500">({activeProducts.length})</span>
+            </h2>
+            {activeProducts.length > 0 ? (
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                        <table class="min-w-[760px] w-full border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200 bg-white">
+                                    <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                        Image
+                                    </th>
+                                    <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600">
+                                        Product
+                                    </th>
+                                    <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                        SKU
+                                    </th>
+                                    {supportedProductCurrencies.map((currency) => (
+                                        <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                            {currency.toUpperCase()}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {activeProducts.map((product) => (
+                                    <tr class="border-b border-gray-100 last:border-b-0">
+                                        <td class="px-3 py-2 md:px-4">
+                                            <div class="h-14 w-14 rounded border border-gray-200 bg-gray-100 p-1">
+                                                {product.images?.[0] ? (
+                                                    <img
+                                                        src={product.images[0]}
+                                                        alt={`${product.metadata.displayName} thumbnail`}
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                        width="56"
+                                                        height="56"
+                                                        class="h-full w-full rounded object-contain"
+                                                    />
+                                                ) : (
+                                                    <div class="h-full w-full rounded bg-gray-200" />
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm">
+                                            <div class="font-medium">{product.metadata.displayName}</div>
+                                            {product.metadata.displaySubtitle ? (
+                                                <div class="text-gray-500 text-xs mt-0.5">
+                                                    {product.metadata.displaySubtitle}
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </td>
+                                        <td class="px-3 py-2 text-gray-600 font-mono text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                            {product.metadata.sku}
+                                        </td>
+                                        {supportedProductCurrencies.map((currency) => (
+                                            <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                                {formatProductPrice(product, currency)}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ) : (
+                <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    No active products found.
+                </p>
+            )}
+        </section>
         <section class="mt-10" aria-labelledby="checkout-sessions-heading">
             <h2 id="checkout-sessions-heading" class="text-xl font-semibold">
                 Checkout sessions
                 <span class="font-normal text-gray-500">({checkoutSessions.length})</span>
             </h2>
-            <p class="mt-1 text-xs text-gray-500 md:hidden">
-                Swipe horizontally to see all columns.
-            </p>
             {checkoutSessions.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
@@ -397,8 +497,8 @@ if (apiUrl && adminSecret) {
             </h2>
             {newsletterContacts.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
-                    <div class="inline-block rounded border border-gray-200 bg-white">
-                    <table class="w-max border-collapse table-auto">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-full w-full border-collapse table-auto">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -415,10 +515,10 @@ if (apiUrl && adminSecret) {
                                     <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {formatContactDate(c.LastUpdatedTimestamp)}
                                     </td>
-                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all whitespace-normal">
                                         <a
                                             href={`mailto:${c.EmailAddress ?? ""}`}
-                                            class="inline-block whitespace-nowrap underline hover:text-gray-600"
+                                            class="inline-block break-all whitespace-normal underline hover:text-gray-600"
                                         >
                                             {c.EmailAddress ?? "—"}
                                         </a>
