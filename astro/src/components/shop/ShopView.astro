@@ -43,13 +43,7 @@ const { locale, currency, products } = Astro.props as Props
 
     <div class="grid grid-cols-2 gap-x-2 gap-y-8">
         {
-            products
-                .sort(
-                    (a, b) =>
-                        parseInt(a.metadata.displayOrder) -
-                        parseInt(b.metadata.displayOrder)
-                )
-                .map((product, index) => (
+            products.map((product, index) => (
                     <a
                         href={buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)}
                         class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"

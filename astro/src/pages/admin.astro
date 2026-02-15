@@ -107,22 +107,6 @@ function formatCheckoutSessionDiscount(amount?: number | null, currency?: string
     return `-${formatCheckoutSessionAmount(amount, currency)}`
 }
 
-function sortProductsByDisplayOrder(a: StripeProduct, b: StripeProduct): number {
-    const orderA = Number.parseInt(a.metadata.displayOrder, 10)
-    const orderB = Number.parseInt(b.metadata.displayOrder, 10)
-    const hasOrderA = Number.isFinite(orderA)
-    const hasOrderB = Number.isFinite(orderB)
-
-    if (hasOrderA && hasOrderB && orderA !== orderB) {
-        return orderA - orderB
-    }
-
-    if (hasOrderA && !hasOrderB) return -1
-    if (!hasOrderA && hasOrderB) return 1
-
-    return a.metadata.displayName.localeCompare(b.metadata.displayName)
-}
-
 function formatProductPrice(product: StripeProduct, currency: Currency): string {
     const unitAmount = product.default_price?.currency_options?.[currency]?.unit_amount
     if (typeof unitAmount !== "number" || Number.isNaN(unitAmount)) return "—"
@@ -180,7 +164,7 @@ if (apiUrl) {
         if (res.ok) {
             const data = (await res.json()) as { products?: StripeProduct[] }
             const list = data.products ?? []
-            activeProducts = [...list].filter(product => product.active).sort(sortProductsByDisplayOrder)
+            activeProducts = list.filter(product => product.active)
         }
     } catch {
         // leave list empty on error
