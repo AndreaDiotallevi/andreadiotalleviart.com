@@ -50,6 +50,7 @@ type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
     | "id"
     | "created"
+    | "livemode"
     | "status"
     | "payment_status"
     | "customer_email"
@@ -94,6 +95,11 @@ function formatCheckoutSessionAmount(amount?: number | null, currency?: string |
 function formatCheckoutSessionDiscount(amount?: number | null, currency?: string | null): string {
     if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) return "—"
     return `-${formatCheckoutSessionAmount(amount, currency)}`
+}
+
+function getStripeCheckoutSessionDashboardUrl(session: CheckoutSessionSummary): string {
+    const modePath = session.livemode ? "" : "test/"
+    return `https://dashboard.stripe.com/${modePath}payments/checkout/sessions/${session.id}`
 }
 
 function formatContactDate(iso?: string): string {
@@ -206,7 +212,14 @@ if (apiUrl && adminSecret) {
                                         {formatCheckoutSessionDate(session.created)}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
-                                        {session.id}
+                                        <a
+                                            href={getStripeCheckoutSessionDashboardUrl(session)}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                            class="underline hover:text-gray-600"
+                                        >
+                                            {session.id}
+                                        </a>
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         {session.customer_email ? (
@@ -222,7 +235,7 @@ if (apiUrl && adminSecret) {
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[420px]">
                                         {session.line_items?.length ? (
-                                            <ul class="space-y-1 list-disc list-inside">
+                                            <ul class="space-y-1">
                                                 {session.line_items.map((lineItem) => (
                                                     <li class="leading-snug">
                                                         <div class="break-words whitespace-normal">
