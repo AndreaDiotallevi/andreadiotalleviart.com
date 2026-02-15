@@ -48,8 +48,16 @@ type CheckoutSessionLineItemSummary = Pick<
 
 type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
-    "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
+    | "id"
+    | "created"
+    | "status"
+    | "payment_status"
+    | "customer_email"
+    | "amount_subtotal"
+    | "amount_total"
+    | "currency"
 > & {
+    amount_discount: number | null
     line_items: CheckoutSessionLineItemSummary[]
 }
 
@@ -81,6 +89,11 @@ function formatCheckoutSessionAmount(amount?: number | null, currency?: string |
     } catch {
         return `${(amount / 100).toFixed(2)} ${normalisedCurrency}`
     }
+}
+
+function formatCheckoutSessionDiscount(amount?: number | null, currency?: string | null): string {
+    if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) return "—"
+    return `-${formatCheckoutSessionAmount(amount, currency)}`
 }
 
 function formatContactDate(iso?: string): string {
@@ -152,9 +165,9 @@ if (apiUrl && adminSecret) {
                 Swipe horizontally to see all columns.
             </p>
             {checkoutSessions.length > 0 ? (
-                <div class="mt-4 -mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
-                    <div class="min-w-[920px] overflow-hidden rounded border border-gray-200 bg-white">
-                    <table class="w-full border-collapse">
+                <div class="mt-4 overflow-x-auto pb-1">
+                    <div class="w-max min-w-full rounded border border-gray-200 bg-white">
+                    <table class="min-w-[1120px] w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -168,6 +181,12 @@ if (apiUrl && adminSecret) {
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600">
                                     Line items
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Subtotal
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Discount
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Total
@@ -201,9 +220,9 @@ if (apiUrl && adminSecret) {
                                             "—"
                                         )}
                                     </td>
-                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[320px] max-w-[460px]">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[420px]">
                                         {session.line_items?.length ? (
-                                            <ul class="space-y-1">
+                                            <ul class="space-y-1 list-disc list-inside">
                                                 {session.line_items.map((lineItem) => (
                                                     <li class="leading-snug">
                                                         <div class="break-words whitespace-normal">
@@ -223,6 +242,18 @@ if (apiUrl && adminSecret) {
                                             </ul>
                                         ) : (
                                             "—"
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionAmount(
+                                            session.amount_subtotal,
+                                            session.currency
+                                        )}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {formatCheckoutSessionDiscount(
+                                            session.amount_discount,
+                                            session.currency
                                         )}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">

@@ -9,8 +9,16 @@ export type CheckoutSessionLineItemSummary = Pick<
 
 export type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
-    "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
+    | "id"
+    | "created"
+    | "status"
+    | "payment_status"
+    | "customer_email"
+    | "amount_subtotal"
+    | "amount_total"
+    | "currency"
 > & {
+    amount_discount: number | null
     line_items: CheckoutSessionLineItemSummary[]
 }
 
@@ -21,7 +29,7 @@ export const listCheckoutSessions = async (params?: {
 }> => {
     try {
         const stripe = await initialiseClient()
-        const limit = Math.min(Math.max(params?.limit ?? 100, 1), 100)
+        const limit = Math.min(Math.max(params?.limit ?? 20, 1), 100)
 
         const completedSessionsResponse = await stripe.checkout.sessions.list({
             limit,
@@ -50,8 +58,10 @@ export const listCheckoutSessions = async (params?: {
                 status: session.status,
                 payment_status: session.payment_status,
                 customer_email: session.customer_details?.email ?? session.customer_email,
+                amount_subtotal: session.amount_subtotal,
                 amount_total: session.amount_total,
                 currency: session.currency,
+                amount_discount: session.total_details?.amount_discount ?? null,
                 line_items: lineItems.map(toLineItemSummary),
             }
         }
