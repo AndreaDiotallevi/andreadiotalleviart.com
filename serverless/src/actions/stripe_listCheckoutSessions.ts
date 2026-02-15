@@ -16,7 +16,10 @@ export const listCheckoutSessions = async (params?: {
         const stripe = await initialiseClient()
         const limit = Math.min(Math.max(params?.limit ?? 100, 1), 100)
 
-        const response = await stripe.checkout.sessions.list({ limit })
+        const response = await stripe.checkout.sessions.list({
+            limit,
+            status: "complete",
+        })
         const sessions = response.data
             .map((session): CheckoutSessionSummary => {
                 return {
