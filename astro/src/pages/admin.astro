@@ -57,6 +57,7 @@ type CheckoutSessionSummary = Pick<
     | "amount_total"
     | "currency"
 > & {
+    order_id: string | null
     amount_discount: number | null
     line_items: CheckoutSessionLineItemSummary[]
 }
@@ -167,7 +168,7 @@ if (apiUrl && adminSecret) {
             {checkoutSessions.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
-                    <table class="min-w-[1120px] w-full border-collapse">
+                    <table class="min-w-[1240px] w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -175,6 +176,9 @@ if (apiUrl && adminSecret) {
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Session ID
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Order ID
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Customer
@@ -207,6 +211,9 @@ if (apiUrl && adminSecret) {
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
                                         {session.id}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {session.order_id ?? "—"}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         {session.customer_email ? (
