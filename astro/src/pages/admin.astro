@@ -53,11 +53,17 @@ type CheckoutSessionSummary = Pick<
     line_items: CheckoutSessionLineItemSummary[]
 }
 
+const checkoutDateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+})
+
 function formatCheckoutSessionDate(unixTimestamp?: number): string {
     if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "—"
     try {
         const d = new Date(unixTimestamp * 1000)
-        return d.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })
+        return checkoutDateFormatter.format(d)
     } catch {
         return "—"
     }
@@ -180,7 +186,7 @@ if (apiUrl && adminSecret) {
                                     <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {formatCheckoutSessionDate(session.created)}
                                     </td>
-                                    <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                    <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
                                         {session.id}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
@@ -195,23 +201,23 @@ if (apiUrl && adminSecret) {
                                             "—"
                                         )}
                                     </td>
-                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[280px]">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[320px] max-w-[460px]">
                                         {session.line_items?.length ? (
                                             <ul class="space-y-1">
                                                 {session.line_items.map((lineItem) => (
                                                     <li class="leading-snug">
-                                                        <span class="font-medium">
-                                                            {lineItem.quantity ?? 1}x
-                                                        </span>{" "}
-                                                        <span>{lineItem.description || "Item"}</span>{" "}
-                                                        <span class="text-gray-500">
-                                                            (
+                                                        <div class="break-words whitespace-normal">
+                                                            <span class="font-medium">
+                                                                {lineItem.quantity ?? 1}x
+                                                            </span>{" "}
+                                                            <span>{lineItem.description || "Item"}</span>
+                                                        </div>
+                                                        <div class="text-gray-500">
                                                             {formatCheckoutSessionAmount(
                                                                 lineItem.amount_total,
                                                                 lineItem.currency
                                                             )}
-                                                            )
-                                                        </span>
+                                                        </div>
                                                     </li>
                                                 ))}
                                             </ul>
