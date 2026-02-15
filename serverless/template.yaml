@@ -701,6 +701,38 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_stripeListCheckoutSessions.ts
 
+    StripeListPromotionCodesFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-StripeListPromotionCodes
+            Handler: src/lambdas/api_stripeListPromotionCodes.handler
+            Events:
+                ListPromotionCodes:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /promotion-codes
+                        Method: GET
+            Environment:
+                Variables:
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_stripeListPromotionCodes.ts
+
     StripeSynchroniseProductsFunction:
         Type: AWS::Serverless::Function
         Properties:
