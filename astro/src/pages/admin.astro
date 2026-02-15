@@ -41,10 +41,17 @@ type NewsletterContact = {
     [key: string]: unknown
 }
 
+type CheckoutSessionLineItemSummary = Pick<
+    Stripe.LineItem,
+    "id" | "description" | "quantity" | "amount_total" | "currency"
+>
+
 type CheckoutSessionSummary = Pick<
     Stripe.Checkout.Session,
     "id" | "created" | "status" | "payment_status" | "customer_email" | "amount_total" | "currency"
->
+> & {
+    line_items: CheckoutSessionLineItemSummary[]
+}
 
 function formatCheckoutSessionDate(unixTimestamp?: number): string {
     if (typeof unixTimestamp !== "number" || Number.isNaN(unixTimestamp)) return "—"
@@ -137,7 +144,7 @@ if (apiUrl && adminSecret) {
             </h2>
             {checkoutSessions.length > 0 ? (
                 <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
-                    <table class="w-full min-w-[720px] border-collapse">
+                    <table class="w-full min-w-[960px] border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
@@ -148,6 +155,9 @@ if (apiUrl && adminSecret) {
                                 </th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
                                     Customer
+                                </th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                    Line items
                                 </th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
                                     Total
@@ -177,6 +187,30 @@ if (apiUrl && adminSecret) {
                                             >
                                                 {session.customer_email}
                                             </a>
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-800 text-sm">
+                                        {session.line_items?.length ? (
+                                            <ul class="space-y-1">
+                                                {session.line_items.map((lineItem) => (
+                                                    <li>
+                                                        <span class="font-medium">
+                                                            {lineItem.quantity ?? 1}x
+                                                        </span>{" "}
+                                                        <span>{lineItem.description || "Item"}</span>{" "}
+                                                        <span class="text-gray-500">
+                                                            (
+                                                            {formatCheckoutSessionAmount(
+                                                                lineItem.amount_total,
+                                                                lineItem.currency
+                                                            )}
+                                                            )
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
                                         ) : (
                                             "—"
                                         )}
