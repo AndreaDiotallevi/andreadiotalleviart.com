@@ -142,30 +142,34 @@ if (apiUrl && adminSecret) {
                 Checkout sessions
                 <span class="font-normal text-gray-500">({checkoutSessions.length})</span>
             </h2>
+            <p class="mt-1 text-xs text-gray-500 md:hidden">
+                Swipe horizontally to see all columns.
+            </p>
             {checkoutSessions.length > 0 ? (
-                <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white">
-                    <table class="w-full min-w-[960px] border-collapse">
+                <div class="mt-4 -mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+                    <div class="min-w-[920px] overflow-hidden rounded border border-gray-200 bg-white">
+                    <table class="w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Created
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Session ID
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Customer
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600">
                                     Line items
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Total
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Checkout status
                                 </th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Payment status
                                 </th>
                             </tr>
@@ -173,13 +177,13 @@ if (apiUrl && adminSecret) {
                         <tbody>
                             {checkoutSessions.map((session) => (
                                 <tr class="border-b border-gray-100 last:border-b-0">
-                                    <td class="px-4 py-2 text-gray-600 text-sm whitespace-nowrap">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {formatCheckoutSessionDate(session.created)}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-800 font-mono text-xs md:text-sm">
+                                    <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {session.id}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-800">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         {session.customer_email ? (
                                             <a
                                                 href={`mailto:${session.customer_email}`}
@@ -191,11 +195,11 @@ if (apiUrl && adminSecret) {
                                             "—"
                                         )}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-800 text-sm">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm min-w-[280px]">
                                         {session.line_items?.length ? (
                                             <ul class="space-y-1">
                                                 {session.line_items.map((lineItem) => (
-                                                    <li>
+                                                    <li class="leading-snug">
                                                         <span class="font-medium">
                                                             {lineItem.quantity ?? 1}x
                                                         </span>{" "}
@@ -215,22 +219,23 @@ if (apiUrl && adminSecret) {
                                             "—"
                                         )}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-800 text-sm">
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {formatCheckoutSessionAmount(
                                             session.amount_total,
                                             session.currency
                                         )}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-600 text-sm">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {session.status ?? "—"}
                                     </td>
-                                    <td class="px-4 py-2 text-gray-600 text-sm">
+                                    <td class="px-3 py-2 text-gray-600 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {session.payment_status ?? "—"}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             ) : (
                 <p class="mt-2 text-gray-600 dark:text-gray-400">
