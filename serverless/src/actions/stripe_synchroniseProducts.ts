@@ -299,7 +299,7 @@ const products: ProductInput[] = [
             category: "prints",
             displayName: "Nebula 2",
             displaySubtitle: "Second of a series of 3",
-            displayOrder: "2",
+            displayOrder: "3",
             orientation: "portrait",
             size: "50x70cm",
             slug: "nebula-2",
