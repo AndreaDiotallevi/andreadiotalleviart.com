@@ -1,5 +1,10 @@
 ---
+export const prerender = false
+
 import BaseLayout from "@layouts/BaseLayout.astro"
+
+Astro.response.status = 403
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive")
 ---
 
 <BaseLayout
