@@ -12,9 +12,19 @@ import {
 } from "@utils/auth"
 
 const sessionToken = Astro.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value
+const NOINDEX_ROBOTS_TAG = "noindex, nofollow, noarchive"
+
+const redirectWithNoIndex = (location: string): Response =>
+    new Response(null, {
+        status: 302,
+        headers: {
+            Location: location,
+            "X-Robots-Tag": NOINDEX_ROBOTS_TAG,
+        },
+    })
 
 if (!sessionToken) {
-    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+    return redirectWithNoIndex("/auth/login?returnTo=%2Fadmin")
 }
 
 const sessionClaims = await verifyAdminSessionToken(sessionToken)
@@ -28,12 +38,14 @@ if (!sessionClaims) {
         maxAge: 0,
     })
 
-    return Astro.redirect("/auth/login?returnTo=%2Fadmin")
+    return redirectWithNoIndex("/auth/login?returnTo=%2Fadmin")
 }
 
 if (!isAdminUser(sessionClaims.groups)) {
-    return Astro.redirect("/403")
+    return redirectWithNoIndex("/403")
 }
+
+Astro.response.headers.set("X-Robots-Tag", NOINDEX_ROBOTS_TAG)
 
 type NewsletterContact = {
     EmailAddress?: string

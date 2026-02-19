@@ -11,6 +11,7 @@ import {
 } from "@utils/auth"
 
 export const prerender = false
+const NOINDEX_ROBOTS_TAG = "noindex, nofollow, noarchive"
 
 export const GET: APIRoute = async ({ cookies, url }) => {
     const code = url.searchParams.get("code")
@@ -31,7 +32,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     })
 
     if (!code || !state || !stateFromCookie || stateFromCookie !== state) {
-        return new Response("Authentication request is invalid.", { status: 400 })
+        return new Response("Authentication request is invalid.", {
+            status: 400,
+            headers: { "X-Robots-Tag": NOINDEX_ROBOTS_TAG },
+        })
     }
 
     try {
@@ -43,7 +47,10 @@ export const GET: APIRoute = async ({ cookies, url }) => {
                 path: "/",
                 maxAge: 0,
             })
-            return new Response("Unable to verify authenticated user.", { status: 401 })
+            return new Response("Unable to verify authenticated user.", {
+                status: 401,
+                headers: { "X-Robots-Tag": NOINDEX_ROBOTS_TAG },
+            })
         }
 
         cookies.set(ADMIN_SESSION_COOKIE_NAME, idToken, {
@@ -56,9 +63,15 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
         return new Response(null, {
             status: 302,
-            headers: { Location: returnTo },
+            headers: {
+                Location: returnTo,
+                "X-Robots-Tag": NOINDEX_ROBOTS_TAG,
+            },
         })
     } catch (error) {
-        return new Response("Authentication failed.", { status: 401 })
+        return new Response("Authentication failed.", {
+            status: 401,
+            headers: { "X-Robots-Tag": NOINDEX_ROBOTS_TAG },
+        })
     }
 }

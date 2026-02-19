@@ -9,6 +9,7 @@ import {
 } from "@utils/auth"
 
 export const prerender = false
+const NOINDEX_ROBOTS_TAG = "noindex, nofollow, noarchive"
 
 export const GET: APIRoute = async ({ cookies, url }) => {
     try {
@@ -36,9 +37,15 @@ export const GET: APIRoute = async ({ cookies, url }) => {
 
         return new Response(null, {
             status: 302,
-            headers: { Location: authorizeUrl },
+            headers: {
+                Location: authorizeUrl,
+                "X-Robots-Tag": NOINDEX_ROBOTS_TAG,
+            },
         })
     } catch (error) {
-        return new Response("Authentication is not configured.", { status: 500 })
+        return new Response("Authentication is not configured.", {
+            status: 500,
+            headers: { "X-Robots-Tag": NOINDEX_ROBOTS_TAG },
+        })
     }
 }
