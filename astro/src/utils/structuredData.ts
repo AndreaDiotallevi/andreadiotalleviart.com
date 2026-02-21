@@ -18,8 +18,6 @@ export interface GenerateStructuredDataOptions {
     pageLocale?: string
 }
 
-import { eurCountryCodes } from "./currency"
-
 export function generateStructuredData(options: GenerateStructuredDataOptions) {
     const { siteOrigin, pageUrl, pageTitle, product, offerPrice, offerCurrency, pageLocale } = options
 
@@ -167,8 +165,7 @@ function buildSingleOffer(params: {
         sku: params.sku,
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
-            applicableCountry:
-                params.destinationCountry === "EU" ? ["IE"] : [params.destinationCountry],
+            applicableCountry: params.destinationCountry === "EU" ? "IE" : params.destinationCountry,
             returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
             merchantReturnDays: 14,
             returnMethod: "https://schema.org/ReturnByMail",
