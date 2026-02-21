@@ -37,7 +37,7 @@ export const productsData: Record<string, ProductExtraData> = {
     },
     "print_nebula-2_50x70": {
         about: [
-            "This is the second and middle artwork in the series. The same circular forms from Nebula 1 are now exactly double the size, occupying more of the composition.",
+            "This is the second and middle artwork in the series. The same circular forms from Nebula I are now exactly double the size, occupying more of the composition.",
             "Individual circles cluster to suggest a larger sphere, with surrounding circles gathering around it.",
             "The background shifts slightly darker toward orange, creating a warm, well-balanced feel.",
             "The transparency of the overlapping circles continues to generate unexpected colour blends and a sense of motion.",
@@ -46,7 +46,7 @@ export const productsData: Record<string, ProductExtraData> = {
     },
     "print_nebula-3_50x70": {
         about: [
-            "This is the third and final artwork in the series. The circles are exactly double the size of Nebula 2 (four times Nebula 1).",
+            "This is the third and final artwork in the series. The circles are exactly double the size of Nebula II (four times Nebula I).",
             "Most circles extend beyond the frame, filling the composition so that the overall image feels markedly different from the previous pieces.",
             "The background deepens to a dark orange-red, adding strong character and striking contrast against the circle colours.",
             "The transparency of the overlapping circles generates unexpected colour blends — a signature effect across the series.",
