@@ -18,11 +18,62 @@ interface Props {
 
 const { locale, currency, product } = Astro.props as Props
 const shopHref = buildLocaleUrl('/shop', locale as any)
+
+function normalizeSingleLine(text: string) {
+    return text.replace(/\s+/g, " ").trim()
+}
+
+function truncateText(text: string, maxLength: number) {
+    if (text.length <= maxLength) return text
+    const clipped = text.slice(0, maxLength + 1)
+    const lastSpace = clipped.lastIndexOf(" ")
+    const cutoff = lastSpace > 40 ? lastSpace : maxLength
+    return `${clipped.slice(0, cutoff).trimEnd()}...`
+}
+
+function parseProductSizeInCm(size: string): { widthCm?: number; heightCm?: number } {
+    const normalized = (size || "").trim().toLowerCase()
+
+    // Stripe metadata stores A3 as a named paper format.
+    if (normalized === "a3") {
+        return { widthCm: 29.7, heightCm: 42 }
+    }
+
+    const match = normalized.match(/^(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)(?:\s*cm)?$/i)
+    if (!match) return {}
+
+    return { widthCm: Number(match[1]), heightCm: Number(match[2]) }
+}
+
+const aboutParagraphs = (
+    productsData[product.metadata.sku]?.about ??
+    [product.description ?? ""]
+)
+    .map(paragraph => normalizeSingleLine(String(paragraph)))
+    .filter(Boolean)
+
+const sizeDescription = sizeToDescription[product.metadata.size] ?? product.metadata.size
+const primaryAboutParagraph =
+    aboutParagraphs[0] ||
+    "Generative giclee fine art print by Andrea Diotallevi."
+const schemaAboutSummary = aboutParagraphs.slice(0, 2).join(" ") || primaryAboutParagraph
+
+const metaDescription = truncateText(
+    `${product.metadata.displayName} — ${primaryAboutParagraph} Museum-quality archival inks on Hahnemuhle Photo Rag 308gsm. ${sizeDescription}. Free carbon-neutral shipping.`,
+    160,
+)
+
+const structuredDataDescription = truncateText(
+    `${product.metadata.displayName}. ${schemaAboutSummary} Printed on Hahnemuhle Photo Rag 308gsm using archival pigment inks. ${sizeDescription}. Free carbon-neutral shipping.`,
+    500,
+)
+
+const productSizeCm = parseProductSizeInCm(product.metadata.size)
 ---
 
 <BaseLayout
     title={`${product.metadata.displayName} | Giclée Fine Art Print | Andrea Diotallevi Art`}
-    description={`${product.metadata.displayName} — generative giclée fine art print on Hahnemühle Photo Rag 308gsm. Museum-quality archival inks. ${sizeToDescription[product.metadata.size]}. Free carbon‑neutral shipping.`}
+    description={metaDescription}
     image={product.images[0]}
     type="product"
     amount={(product.default_price.currency_options[currency].unit_amount / 100).toFixed(2)}
@@ -30,10 +81,16 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
     newsletter={false}
     productJsonLd={{
         name: `${product.metadata.displayName} (Giclée Print, ${product.metadata.size})`,
-        description: `High-quality giclée fine art print of the original artwork '${product.metadata.displayName}'. Printed on archival cotton rag paper using pigment inks. ${sizeToDescription[product.metadata.size]}.`,
+        description: structuredDataDescription,
         imageUrls: product.images,
         sku: product.metadata.sku,
         material: "Giclée print on archival cotton rag paper",
+        ...(typeof productSizeCm.widthCm === "number"
+            ? { widthCm: productSizeCm.widthCm }
+            : {}),
+        ...(typeof productSizeCm.heightCm === "number"
+            ? { heightCm: productSizeCm.heightCm }
+            : {}),
     }}
 >
 <div class="flex flex-col md:flex-row items-center md:items-start px-4 py-8 pt-0 md:pt-8 max-w-screen-xl mx-auto text-gray-800">
@@ -86,7 +143,7 @@ const shopHref = buildLocaleUrl('/shop', locale as any)
             <div>
                 <h2 class="text-2xl font-bold mb-2">About the artwork</h2>
                 <div class="space-y-2">
-                    {(productsData[product.metadata.sku]?.about ?? [product.description]).map(p => (
+                    {aboutParagraphs.map(p => (
                         <p>{p}</p>
                     ))}
                 </div>

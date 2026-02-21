@@ -4,6 +4,8 @@ export interface ProductJsonLdInput {
     imageUrls: string[]
     sku: string
     material?: string
+    widthCm?: number
+    heightCm?: number
 }
 
 export interface GenerateStructuredDataOptions {
@@ -81,11 +83,18 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
                 name: product.name,
                 description: product.description,
                 url: pageUrl,
+                mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
                 image: product.imageUrls,
                 sku: product.sku,
                 brand: { "@type": "Brand", name: "Andrea Diotallevi Art" },
                 additionalType: "https://schema.org/VisualArtwork",
                 material: product.material,
+                ...(typeof product.widthCm === "number"
+                    ? { width: buildDimensionQuantitativeValue(product.widthCm) }
+                    : {}),
+                ...(typeof product.heightCm === "number"
+                    ? { height: buildDimensionQuantitativeValue(product.heightCm) }
+                    : {}),
                 offers: buildSingleOffer({
                     url: pageUrl,
                     price: offerPrice,
@@ -154,6 +163,7 @@ function buildSingleOffer(params: {
         price: normalizedPrice,
         priceCurrency: currency,
         availability: "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
         sku: params.sku,
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
@@ -163,5 +173,13 @@ function buildSingleOffer(params: {
             merchantReturnLink: `${siteOrigin}/return-policy`,
         },
         shippingDetails,
+    }
+}
+
+function buildDimensionQuantitativeValue(valueCm: number) {
+    return {
+        "@type": "QuantitativeValue",
+        value: Number(valueCm.toFixed(1)),
+        unitCode: "CMT",
     }
 }
