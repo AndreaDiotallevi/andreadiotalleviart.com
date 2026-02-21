@@ -169,6 +169,8 @@ function buildSingleOffer(params: {
             "@type": "MerchantReturnPolicy",
             returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
             merchantReturnDays: 14,
+            returnMethod: "https://schema.org/ReturnByMail",
+            returnFees: "https://schema.org/FreeReturn",
             refundType: "https://schema.org/FullRefund",
             merchantReturnLink: `${siteOrigin}/return-policy`,
         },
