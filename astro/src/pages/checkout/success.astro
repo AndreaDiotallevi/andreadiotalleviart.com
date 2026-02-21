@@ -101,7 +101,9 @@ const success = !!(session && currency && shippingDetails)
                                                     />
                                                 </div>
                                                 <p class="pl-4">
-                                                    {item.quantity} x{" "}
+                                                    {(item.quantity ?? 1) > 1
+                                                        ? `${item.quantity ?? 1} x `
+                                                        : ""}
                                                     {
                                                         price.product.metadata
                                                             .displayName
