@@ -167,6 +167,8 @@ function buildSingleOffer(params: {
         sku: params.sku,
         hasMerchantReturnPolicy: {
             "@type": "MerchantReturnPolicy",
+            applicableCountry:
+                params.destinationCountry === "EU" ? ["IE"] : [params.destinationCountry],
             returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
             merchantReturnDays: 14,
             returnMethod: "https://schema.org/ReturnByMail",
