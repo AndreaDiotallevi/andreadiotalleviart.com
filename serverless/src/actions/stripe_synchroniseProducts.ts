@@ -263,12 +263,12 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula 1 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula I - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebula 1",
+            displayName: "Nebula I",
             displaySubtitle: "First of a series of 3",
             displayOrder: "1",
             orientation: "portrait",
@@ -292,12 +292,12 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula 2 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula II - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebula 2",
+            displayName: "Nebula II",
             displaySubtitle: "Second of a series of 3",
             displayOrder: "2",
             orientation: "portrait",
@@ -321,12 +321,12 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula 3 - 50x70cm Giclée Fine Art Print",
+        name: "Nebula III - 50x70cm Giclée Fine Art Print",
         description:
             "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
-            displayName: "Nebula 3",
+            displayName: "Nebula III",
             displaySubtitle: "Third of a series of 3",
             displayOrder: "3",
             orientation: "portrait",
