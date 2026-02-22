@@ -10,7 +10,7 @@ const nebulaShared: ProductExtraData = {
         "Originally created for a dear friend, Alessandro, who wanted bold, saturated colours to bring life and energy into a darker living room — ideal if you're looking to brighten your space with vibrant, uplifting tones.",
     ],
     framing: [
-        "A simple white frame (50 x 70 cm) with a frame width no wider than 20 mm is recommended. This clean style lets the artwork shine, with the print fitting directly into the frame — no extra mounting needed.",
+        "A simple white frame (50x70 cm, 500x700 mm) with a frame width no wider than 20 mm is recommended. This clean style lets the artwork shine, with the print fitting directly into the frame — no extra mounting needed.",
         "If you're buying this artwork alone (not as part of the series), you can add a 5 cm mount and use a larger frame (60 x 80 cm) for a bold and elegant look.",
     ],
 }

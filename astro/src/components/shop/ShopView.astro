@@ -75,7 +75,7 @@ const { locale, currency, products } = Astro.props as Props
                             })}
                         </p>
                         <p class="text-sm md:text-base md:mt-1 text-gray-600">
-                            {sizeToDescription[product.metadata.size]}
+                            {sizeToDescription[product.metadata.size] ?? product.metadata.size}
                         </p>
                     </a>
                 ))

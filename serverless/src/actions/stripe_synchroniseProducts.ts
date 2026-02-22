@@ -263,16 +263,16 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula I - 50x70cm Giclée Fine Art Print",
+        name: "Nebula I - 50x70 Giclée Fine Art Print",
         description:
-            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500x700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula I",
             displaySubtitle: "First of a series of 3",
             displayOrder: "1",
             orientation: "portrait",
-            size: "50x70cm",
+            size: "50x70",
             slug: "nebula-1",
             sku: "print_nebula-1_50x70",
         },
@@ -292,16 +292,16 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula II - 50x70cm Giclée Fine Art Print",
+        name: "Nebula II - 50x70 Giclée Fine Art Print",
         description:
-            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500x700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula II",
             displaySubtitle: "Second of a series of 3",
             displayOrder: "2",
             orientation: "portrait",
-            size: "50x70cm",
+            size: "50x70",
             slug: "nebula-2",
             sku: "print_nebula-2_50x70",
         },
@@ -321,16 +321,16 @@ const products: ProductInput[] = [
     },
     {
         active: true,
-        name: "Nebula III - 50x70cm Giclée Fine Art Print",
+        name: "Nebula III - 50x70 Giclée Fine Art Print",
         description:
-            "50x70cm giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500x700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula III",
             displaySubtitle: "Third of a series of 3",
             displayOrder: "3",
             orientation: "portrait",
-            size: "50x70cm",
+            size: "50x70",
             slug: "nebula-3",
             sku: "print_nebula-3_50x70",
         },
