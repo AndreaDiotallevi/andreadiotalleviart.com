@@ -158,7 +158,7 @@ const products: ProductInput[] = [
         active: false,
         name: "Marble Lake - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Marble Lake",
@@ -184,7 +184,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Flames - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Flames",
@@ -213,7 +213,7 @@ const products: ProductInput[] = [
         active: false,
         name: "Moonlight 1 - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 1",
@@ -239,7 +239,7 @@ const products: ProductInput[] = [
         active: false,
         name: "Moonlight 2 - A3 Giclée Fine Art Print",
         description:
-            "A3 (297 x 420 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "A3 (297 x 420 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Moonlight 2",
@@ -265,7 +265,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Nebula I - 50x70 Giclée Fine Art Print",
         description:
-            "50x70 (500 x 700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500 x 700 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula I",
@@ -294,7 +294,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Nebula II - 50x70 Giclée Fine Art Print",
         description:
-            "50x70 (500 x 700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500 x 700 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula II",
@@ -323,7 +323,7 @@ const products: ProductInput[] = [
         active: true,
         name: "Nebula III - 50x70 Giclée Fine Art Print",
         description:
-            "50x70 (500 x 700 mm) giclée fine art print on Hahnemühle photo rag 308gsm matte paper.",
+            "50x70 (500 x 700 mm) Giclée Fine Art Print on Hahnemühle Photo Rag 308gsm Matte Paper.",
         metadata: {
             category: "prints",
             displayName: "Nebula III",
