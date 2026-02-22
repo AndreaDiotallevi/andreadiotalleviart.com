@@ -4,6 +4,7 @@ import BackToLink from "@components/BackToLink.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
 import LocaleSelector from "@components/LocaleSelector.astro"
+import SimilarProductsCarousel from "@components/shop/SimilarProductsCarousel.astro"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { productsData } from "@utils/productsData"
@@ -14,10 +15,12 @@ interface Props {
     locale: string
     currency: Currency
     product: any
+    products: any[]
 }
 
-const { locale, currency, product } = Astro.props as Props
+const { locale, currency, product, products = [] } = Astro.props as Props
 const shopHref = buildLocaleUrl('/shop', locale as any)
+const MAX_SIMILAR_PRODUCTS = 8
 
 function normalizeSingleLine(text: string) {
     return text.replace(/\s+/g, " ").trim()
@@ -45,6 +48,29 @@ function parseProductSizeInCm(size: string): { widthCm?: number; heightCm?: numb
     return { widthCm: Number(match[1]), heightCm: Number(match[2]) }
 }
 
+function parseDisplayOrder(displayOrder: unknown): number | undefined {
+    const parsed = Number.parseInt(String(displayOrder ?? ""), 10)
+    return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function getSimilarProductScore(candidate: any, current: any): number {
+    let score = 0
+
+    if (candidate?.metadata?.category === current?.metadata?.category) {
+        score += 100
+    }
+
+    if (candidate?.metadata?.orientation === current?.metadata?.orientation) {
+        score += 20
+    }
+
+    if (candidate?.metadata?.size === current?.metadata?.size) {
+        score += 10
+    }
+
+    return score
+}
+
 const aboutParagraphs = (
     productsData[product.metadata.sku]?.about ??
     [product.description ?? ""]
@@ -69,6 +95,35 @@ const structuredDataDescription = truncateText(
 )
 
 const productSizeCm = parseProductSizeInCm(product.metadata.size)
+const similarProducts = products
+    .filter(
+        candidate =>
+            candidate?.id !== product?.id &&
+            candidate?.metadata?.slug !== product?.metadata?.slug,
+    )
+    .map(candidate => ({
+        candidate,
+        score: getSimilarProductScore(candidate, product),
+    }))
+    .sort((left, right) => {
+        if (right.score !== left.score) return right.score - left.score
+
+        const leftOrder = parseDisplayOrder(left.candidate?.metadata?.displayOrder)
+        const rightOrder = parseDisplayOrder(right.candidate?.metadata?.displayOrder)
+
+        if (typeof leftOrder === "number" && typeof rightOrder === "number" && leftOrder !== rightOrder) {
+            return leftOrder - rightOrder
+        }
+
+        if (typeof leftOrder === "number") return -1
+        if (typeof rightOrder === "number") return 1
+
+        const leftName = left.candidate?.metadata?.displayName ?? left.candidate?.name ?? ""
+        const rightName = right.candidate?.metadata?.displayName ?? right.candidate?.name ?? ""
+        return leftName.localeCompare(rightName)
+    })
+    .map(({ candidate }) => candidate)
+    .slice(0, MAX_SIMILAR_PRODUCTS)
 ---
 
 <BaseLayout
@@ -197,6 +252,11 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
     </form>
 </div>
+{similarProducts.length ? (
+    <div class="px-4 pb-10 max-w-screen-xl mx-auto">
+        <SimilarProductsCarousel locale={locale} currency={currency} products={similarProducts} />
+    </div>
+) : <></>}
 </BaseLayout>
 
 <script>
