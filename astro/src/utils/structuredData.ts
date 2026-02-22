@@ -123,6 +123,7 @@ function buildSingleOffer(params: {
 }) {
     const normalizedPrice = typeof params.price === "string" ? params.price : params.price.toFixed(2)
     const currency = params.priceCurrency.toUpperCase()
+    const priceValidUntil = buildPriceValidUntilDate()
 
     const baseShippingDetails = {
         "@type": "OfferShippingDetails",
@@ -160,6 +161,7 @@ function buildSingleOffer(params: {
         url: params.url,
         price: normalizedPrice,
         priceCurrency: currency,
+        priceValidUntil,
         availability: "https://schema.org/InStock",
         itemCondition: "https://schema.org/NewCondition",
         sku: params.sku,
@@ -175,6 +177,12 @@ function buildSingleOffer(params: {
         },
         shippingDetails,
     }
+}
+
+function buildPriceValidUntilDate() {
+    const date = new Date()
+    date.setUTCFullYear(date.getUTCFullYear() + 10)
+    return date.toISOString().slice(0, 10)
 }
 
 function buildDimensionQuantitativeValue(valueCm: number) {
