@@ -578,6 +578,12 @@ Resources:
             FunctionName: !Sub ${AWS::StackName}-StripeCreateCheckoutSession
             Handler: src/lambdas/api_stripeCreateCheckoutSession.handler
             MemorySize: 3008
+            Environment:
+                Variables:
+                    USE_PARAMETERS_SECRETS_EXTENSION: "true"
+                    SSM_PARAMETER_STORE_TTL: "300"
+            Layers:
+                - "{{resolve:ssm:/aws/service/parameters-and-secrets-lambda-extension/latest}}"
             Events:
                 Root:
                     Type: Api
