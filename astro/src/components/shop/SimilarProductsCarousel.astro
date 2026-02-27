@@ -1,0 +1,218 @@
+---
+import { Image } from "@unpic/astro"
+import { imageBreakpoints } from "@utils/breakpoints"
+import { buildLocaleUrl } from "@utils/currency"
+import { formatCurrency } from "@utils/intl"
+import { sizeToDescription } from "@utils/sizes"
+import type { Currency, StripeProduct } from "@utils/stripe"
+
+interface Props {
+    locale: string
+    currency: Currency
+    products: StripeProduct[]
+}
+
+const { locale, currency, products = [] } = Astro.props as Props
+---
+
+<section
+    aria-labelledby="similar-products-heading"
+    class="text-gray-800"
+    data-similar-products-section
+>
+    <div class="mb-4 flex items-end justify-between gap-4">
+        <div>
+            <h2 id="similar-products-heading" class="text-2xl font-bold md:text-3xl">
+                Explore similar products
+            </h2>
+            <p class="mt-1 text-sm text-gray-600 md:text-base">
+                Swipe or use the arrows to discover more prints.
+            </p>
+        </div>
+
+        <div class="hidden items-center gap-2 md:flex">
+            <button
+                type="button"
+                class="similar-products-control"
+                data-similar-products-prev
+                aria-label="Show previous similar products"
+            >
+                <span aria-hidden="true">←</span>
+            </button>
+            <button
+                type="button"
+                class="similar-products-control"
+                data-similar-products-next
+                aria-label="Show next similar products"
+            >
+                <span aria-hidden="true">→</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="similar-products-embla" data-similar-products-carousel>
+        <div class="similar-products-embla__viewport">
+            <div class="similar-products-embla__container">
+                {
+                    products.map((relatedProduct, index) => (
+                        <div class="similar-products-embla__slide">
+                            <a
+                                href={buildLocaleUrl(
+                                    `/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`,
+                                    locale as any,
+                                )}
+                                class="flex h-full flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
+                            >
+                                <div class="bg-gray-100 p-6 sm:p-8 md:p-10 flex items-center justify-center">
+                                    <Image
+                                        alt={relatedProduct.metadata.displayName}
+                                        src={relatedProduct.images[0]}
+                                        width={1429}
+                                        height={2000}
+                                        sizes="(max-width: 768px) 80vw, (max-width: 1024px) 45vw, 28vw"
+                                        breakpoints={imageBreakpoints({
+                                            maxWidth: 600,
+                                            assetWidth: 1414,
+                                        })}
+                                        loading={index < 2 ? "eager" : "lazy"}
+                                        fetchpriority={index < 2 ? "high" : "low"}
+                                        class="shadow-md max-h-[430px] object-contain"
+                                    />
+                                </div>
+                                <p class="mt-3 text-xl font-bold md:text-2xl">
+                                    {relatedProduct.metadata.displayName}
+                                </p>
+                                <p class="mt-1 text-sm font-semibold md:text-base">
+                                    {formatCurrency({
+                                        value: relatedProduct.default_price
+                                            .currency_options[currency].unit_amount,
+                                        currency,
+                                    })}
+                                </p>
+                                <p class="mt-1 text-sm text-gray-600 md:text-base">
+                                    {sizeToDescription[relatedProduct.metadata.size] ??
+                                        relatedProduct.metadata.size}
+                                </p>
+                            </a>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .similar-products-embla__viewport {
+        overflow: hidden;
+    }
+
+    .similar-products-embla__container {
+        display: flex;
+        margin-left: -0.75rem;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .similar-products-embla__slide {
+        flex: 0 0 84%;
+        min-width: 0;
+        padding-left: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+        .similar-products-embla__slide {
+            flex-basis: 50%;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .similar-products-embla__slide {
+            flex-basis: 33.333%;
+        }
+    }
+
+    .similar-products-control {
+        width: 2.5rem;
+        height: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 9999px;
+        background: #ffffff;
+        color: #1f2937;
+        font-size: 1.1rem;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .similar-products-control:hover:not(:disabled) {
+        background-color: #1f2937;
+        border-color: #1f2937;
+        color: #ffffff;
+    }
+
+    .similar-products-control:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+</style>
+
+<script>
+    import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel"
+
+    document.addEventListener("astro:page-load", async () => {
+        const carouselRoot = document.querySelector(
+            "[data-similar-products-carousel]"
+        ) as HTMLElement | null
+        if (!carouselRoot || carouselRoot.dataset.initialized === "true") return
+        carouselRoot.dataset.initialized = "true"
+
+        const viewportNode = carouselRoot.querySelector(
+            ".similar-products-embla__viewport"
+        ) as HTMLElement | null
+
+        if (!viewportNode) return
+
+        const sectionNode = carouselRoot.closest(
+            "[data-similar-products-section]"
+        ) as HTMLElement | null
+        const previousButton = sectionNode?.querySelector(
+            "[data-similar-products-prev]"
+        ) as HTMLButtonElement | null
+        const nextButton = sectionNode?.querySelector(
+            "[data-similar-products-next]"
+        ) as HTMLButtonElement | null
+
+        const { default: EmblaCarousel } = await import("embla-carousel")
+
+        const options: EmblaOptionsType = {
+            align: "start",
+            containScroll: "trimSnaps",
+            dragFree: false,
+            loop: false,
+        }
+
+        const emblaApi: EmblaCarouselType = EmblaCarousel(viewportNode, options)
+
+        const updateControls = () => {
+            if (previousButton) previousButton.disabled = !emblaApi.canScrollPrev()
+            if (nextButton) nextButton.disabled = !emblaApi.canScrollNext()
+        }
+
+        const onPrevious = () => emblaApi.scrollPrev()
+        const onNext = () => emblaApi.scrollNext()
+
+        previousButton?.addEventListener("click", onPrevious)
+        nextButton?.addEventListener("click", onNext)
+
+        emblaApi.on("init", updateControls)
+        emblaApi.on("select", updateControls)
+        updateControls()
+
+        emblaApi.on("destroy", () => {
+            previousButton?.removeEventListener("click", onPrevious)
+            nextButton?.removeEventListener("click", onNext)
+        })
+    })
+</script>
