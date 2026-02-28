@@ -78,6 +78,7 @@ type CheckoutSessionSummary = Pick<
     | "currency"
 > & {
     order_id: string | null
+    fulfilled: boolean
     amount_discount: number | null
     line_items: CheckoutSessionLineItemSummary[]
 }
@@ -167,6 +168,32 @@ let newsletterContacts: NewsletterContact[] = []
 let activeProducts: StripeProduct[] = []
 const apiUrl = import.meta.env.PUBLIC_API_URL
 const adminSecret = import.meta.env.ADMIN_API_SECRET
+let fulfilledUpdateStatus: "success" | "error" | null = null
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData()
+    const formAction = formData.get("action")
+    const sessionIdValue = formData.get("sessionId")
+    const sessionId = typeof sessionIdValue === "string" ? sessionIdValue.trim() : ""
+
+    if (formAction === "set-fulfilled" && sessionId && apiUrl && adminSecret) {
+        try {
+            const res = await fetch(
+                apiUrl + `/sessions/${encodeURIComponent(sessionId)}/fulfilled`,
+                {
+                    method: "PATCH",
+                    headers: { "X-Admin-Secret": adminSecret },
+                }
+            )
+            fulfilledUpdateStatus = res.ok ? "success" : "error"
+        } catch {
+            fulfilledUpdateStatus = "error"
+        }
+    } else {
+        fulfilledUpdateStatus = "error"
+    }
+}
+
 if (apiUrl) {
     try {
         const res = await fetch(apiUrl + "/products", {
@@ -243,6 +270,17 @@ if (apiUrl && adminSecret) {
         <p class="mt-4">
             You are authenticated as <strong>{sessionClaims.email || "admin user"}</strong>.
         </p>
+        {fulfilledUpdateStatus === "success" ? (
+            <p class="mt-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                Session marked as fulfilled.
+            </p>
+        ) : fulfilledUpdateStatus === "error" ? (
+            <p class="mt-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                Could not mark this session as fulfilled.
+            </p>
+        ) : (
+            <></>
+        )}
         <section class="mt-10" aria-labelledby="active-products-heading">
             <h2 id="active-products-heading" class="text-xl font-semibold">
                 Active products
@@ -328,7 +366,7 @@ if (apiUrl && adminSecret) {
             {checkoutSessions.length > 0 ? (
                 <div class="mt-4 overflow-x-auto pb-1">
                     <div class="w-max min-w-full rounded border border-gray-200 bg-white">
-                    <table class="min-w-[1240px] w-full border-collapse">
+                    <table class="min-w-[1360px] w-full border-collapse">
                         <thead>
                             <tr class="border-b border-gray-200 bg-white">
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
@@ -339,6 +377,9 @@ if (apiUrl && adminSecret) {
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Order ID
+                                </th>
+                                <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                                    Fulfilled
                                 </th>
                                 <th class="px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap">
                                     Customer
@@ -374,6 +415,30 @@ if (apiUrl && adminSecret) {
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {session.order_id ?? "—"}
+                                    </td>
+                                    <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
+                                        {session.fulfilled ? (
+                                            <span class="font-medium">Yes</span>
+                                        ) : (
+                                            <form method="POST">
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="set-fulfilled"
+                                                />
+                                                <input
+                                                    type="hidden"
+                                                    name="sessionId"
+                                                    value={session.id}
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    class="rounded border border-gray-300 bg-white px-2 py-1 text-xs font-medium text-gray-700 transition-colors duration-300 md:hover:border-gray-700 md:hover:text-gray-900"
+                                                >
+                                                    Set as fulfilled
+                                                </button>
+                                            </form>
+                                        )}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm break-all">
                                         {session.customer_email ? (
