@@ -1,0 +1,13 @@
+---
+export const prerender = false
+
+import { getLatestSketch } from "../../sketches/registry"
+
+const latestSketch = getLatestSketch()
+
+if (!latestSketch) {
+    throw new Error("No sketches found in registry.")
+}
+
+return Astro.redirect(`/sketches/${latestSketch.slug}`)
+---
