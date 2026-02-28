@@ -2,9 +2,10 @@ import type { SketchRegistrar } from "../types"
 
 const noiseDunesSketch: SketchRegistrar = (p, getControls) => {
     let appliedNoiseSeed: number | null = null
+    let canvasElement: HTMLCanvasElement | null = null
 
     const fitCanvasToParent = () => {
-        const parent = p.canvas?.parentElement
+        const parent = canvasElement?.parentElement
         if (!parent) return
 
         const width = Math.max(320, parent.clientWidth)
@@ -20,7 +21,8 @@ const noiseDunesSketch: SketchRegistrar = (p, getControls) => {
     }
 
     p.setup = () => {
-        p.createCanvas(1, 1)
+        const renderer = p.createCanvas(1, 1)
+        canvasElement = renderer.elt as HTMLCanvasElement
         p.colorMode(p.HSB, 360, 100, 100, 1)
         p.noFill()
         fitCanvasToParent()
