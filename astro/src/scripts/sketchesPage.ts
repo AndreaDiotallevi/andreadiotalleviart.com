@@ -100,8 +100,9 @@ const initialiseSketchPage = async (): Promise<void> => {
     const randomSeedInput = root.querySelector<HTMLInputElement>("[data-control-random-seed]")
     const randomizeButton = root.querySelector<HTMLButtonElement>("[data-control-randomize-seeds]")
     const resetButton = root.querySelector<HTMLButtonElement>("[data-control-reset]")
+    const saveImageButton = root.querySelector<HTMLButtonElement>("[data-control-save-image]")
 
-    if (!canvasContainer || !noiseSeedInput || !randomSeedInput || !randomizeButton || !resetButton) {
+    if (!canvasContainer || !noiseSeedInput || !randomSeedInput || !randomizeButton || !resetButton || !saveImageButton) {
         return
     }
 
@@ -175,15 +176,23 @@ const initialiseSketchPage = async (): Promise<void> => {
         removeControlParamsFromUrl()
     }
 
+    const handleSaveImage = () => {
+        if (sketchInstance) {
+            sketchInstance.saveCanvas(sketchSlug, "png")
+        }
+    }
+
     noiseSeedInput.addEventListener("change", handleNoiseSeedChange)
     randomSeedInput.addEventListener("change", handleRandomSeedChange)
     randomizeButton.addEventListener("click", handleRandomizeSeeds)
     resetButton.addEventListener("click", handleReset)
+    saveImageButton.addEventListener("click", handleSaveImage)
 
     cleanupFunctions.push(() => noiseSeedInput.removeEventListener("change", handleNoiseSeedChange))
     cleanupFunctions.push(() => randomSeedInput.removeEventListener("change", handleRandomSeedChange))
     cleanupFunctions.push(() => randomizeButton.removeEventListener("click", handleRandomizeSeeds))
     cleanupFunctions.push(() => resetButton.removeEventListener("click", handleReset))
+    cleanupFunctions.push(() => saveImageButton.removeEventListener("click", handleSaveImage))
     cleanupFunctions.push(initialiseMobileMenu(root))
 
     runtimeWindow.__sketchesPageCleanup = () => {
