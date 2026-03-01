@@ -1,9 +1,19 @@
 import type p5 from "p5"
 import type { SketchControls, SketchRegistrar } from "./types"
 
+/** p5 instance wrapped so you can destructure and call methods without a prefix, e.g. const { background, rect } = scope */
+export function createScope(p: p5): p5 {
+    return new Proxy(p, {
+        get(target, prop) {
+            const value = (target as unknown as Record<string | symbol, unknown>)[prop]
+            return typeof value === "function" ? (value as (...args: unknown[]) => unknown).bind(target) : value
+        },
+    }) as p5
+}
+
 export interface SketchDefinition {
-    setup?: (p: p5) => void
-    draw: (p: p5, getControls: () => SketchControls) => void
+    setup?: (scope: p5) => void
+    draw: (scope: p5, getControls: () => SketchControls) => void
 }
 
 export function createSketch(definition: SketchDefinition): SketchRegistrar {
@@ -26,12 +36,14 @@ export function createSketch(definition: SketchDefinition): SketchRegistrar {
     }
 
     return (p, getControls) => {
+        const scope = createScope(p)
+
         p.setup = () => {
             const renderer = p.createCanvas(1, 1)
             canvasElement = renderer.elt as HTMLCanvasElement
             p.colorMode(p.HSB, 360, 100, 100, 1)
             fitCanvasToParent(p)
-            definition.setup?.(p)
+            definition.setup?.(scope)
         }
 
         p.windowResized = () => {
@@ -40,7 +52,7 @@ export function createSketch(definition: SketchDefinition): SketchRegistrar {
 
         p.draw = () => {
             syncNoiseSeed(p, getControls)
-            definition.draw(p, getControls)
+            definition.draw(scope, getControls)
         }
     }
 }

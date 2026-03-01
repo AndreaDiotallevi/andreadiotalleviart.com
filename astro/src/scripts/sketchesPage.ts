@@ -10,22 +10,7 @@ type SketchesWindow = Window & {
 }
 
 const ROOT_SELECTOR = "[data-sketch-page-root]"
-const SKETCH_QUERY_KEYS = ["reverse", "noiseSeed"]
-
-const parseBoolean = (value: string | null, fallback: boolean): boolean => {
-    if (value === null) return fallback
-    const normalisedValue = value.trim().toLowerCase()
-
-    if (normalisedValue === "1" || normalisedValue === "true" || normalisedValue === "yes") {
-        return true
-    }
-
-    if (normalisedValue === "0" || normalisedValue === "false" || normalisedValue === "no") {
-        return false
-    }
-
-    return fallback
-}
+const SKETCH_QUERY_KEYS = ["noiseSeed"]
 
 const parseNoiseSeed = (value: string | null, fallback: number): number => {
     if (value === null) return fallback
@@ -59,7 +44,6 @@ const removeControlParamsFromUrl = () => {
 
 const writeControlsToUrl = (controls: SketchControls) => {
     const searchParams = new URLSearchParams(window.location.search)
-    searchParams.set("reverse", controls.reverse ? "1" : "0")
     searchParams.set("noiseSeed", `${controls.noiseSeed}`)
 
     const nextUrl = `${window.location.pathname}?${searchParams.toString()}${window.location.hash}`
@@ -112,12 +96,11 @@ const initialiseSketchPage = async (): Promise<void> => {
 
     const canvasContainer = root.querySelector<HTMLElement>("[data-sketch-canvas]")
     const errorMessage = root.querySelector<HTMLElement>("[data-sketch-error]")
-    const reverseInput = root.querySelector<HTMLInputElement>("[data-control-reverse]")
     const noiseSeedInput = root.querySelector<HTMLInputElement>("[data-control-noise-seed]")
     const randomSeedButton = root.querySelector<HTMLButtonElement>("[data-control-random-seed]")
     const resetButton = root.querySelector<HTMLButtonElement>("[data-control-reset]")
 
-    if (!canvasContainer || !reverseInput || !noiseSeedInput || !randomSeedButton || !resetButton) {
+    if (!canvasContainer || !noiseSeedInput || !randomSeedButton || !resetButton) {
         return
     }
 
@@ -127,14 +110,12 @@ const initialiseSketchPage = async (): Promise<void> => {
     let controls = hasControlParams(searchParams)
         ? mergeSketchControls(
               {
-                  reverse: parseBoolean(searchParams.get("reverse"), defaultControls.reverse),
                   noiseSeed: parseNoiseSeed(searchParams.get("noiseSeed"), defaultControls.noiseSeed),
               },
               defaultControls,
           )
         : defaultControls
 
-    reverseInput.checked = controls.reverse
     noiseSeedInput.value = `${controls.noiseSeed}`
     if (errorMessage) errorMessage.classList.add("hidden")
 
@@ -145,19 +126,12 @@ const initialiseSketchPage = async (): Promise<void> => {
     const syncControlsFromInputs = () => {
         controls = mergeSketchControls(
             {
-                reverse: reverseInput.checked,
                 noiseSeed: parseNoiseSeed(noiseSeedInput.value, controls.noiseSeed),
             },
             defaultControls,
         )
 
-        reverseInput.checked = controls.reverse
         noiseSeedInput.value = `${controls.noiseSeed}`
-    }
-
-    const handleReverseChange = () => {
-        syncControlsFromInputs()
-        writeControlsToUrl(controls)
     }
 
     const handleNoiseSeedChange = () => {
@@ -167,25 +141,21 @@ const initialiseSketchPage = async (): Promise<void> => {
 
     const handleRandomSeed = () => {
         const randomSeed = Math.floor(Math.random() * 1_000_000)
-        controls = mergeSketchControls({ reverse: reverseInput.checked, noiseSeed: randomSeed }, defaultControls)
-        reverseInput.checked = controls.reverse
+        controls = mergeSketchControls({ noiseSeed: randomSeed }, defaultControls)
         noiseSeedInput.value = `${controls.noiseSeed}`
         writeControlsToUrl(controls)
     }
 
     const handleReset = () => {
         controls = defaultControls
-        reverseInput.checked = controls.reverse
         noiseSeedInput.value = `${controls.noiseSeed}`
         removeControlParamsFromUrl()
     }
 
-    reverseInput.addEventListener("change", handleReverseChange)
     noiseSeedInput.addEventListener("change", handleNoiseSeedChange)
     randomSeedButton.addEventListener("click", handleRandomSeed)
     resetButton.addEventListener("click", handleReset)
 
-    cleanupFunctions.push(() => reverseInput.removeEventListener("change", handleReverseChange))
     cleanupFunctions.push(() => noiseSeedInput.removeEventListener("change", handleNoiseSeedChange))
     cleanupFunctions.push(() => randomSeedButton.removeEventListener("click", handleRandomSeed))
     cleanupFunctions.push(() => resetButton.removeEventListener("click", handleReset))

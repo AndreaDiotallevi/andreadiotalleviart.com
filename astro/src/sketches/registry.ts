@@ -15,7 +15,6 @@ const registry: SketchRegistryItem[] = [
         date: "2026-02-28",
         modulePath: "./definitions/flowField.ts",
         defaultControls: {
-            reverse: false,
             noiseSeed: 1823,
         },
     },
@@ -25,9 +24,14 @@ const registry: SketchRegistryItem[] = [
         date: "2026-02-20",
         modulePath: "./definitions/noiseDunes.ts",
         defaultControls: {
-            reverse: false,
             noiseSeed: 927,
         },
+    },
+    {
+        slug: "fractal1",
+        title: "Fractal 1",
+        date: "2026-03-01",
+        modulePath: "./definitions/fractal1.ts",
     },
 ]
 

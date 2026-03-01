@@ -1,7 +1,6 @@
 import type p5 from "p5"
 
 export interface SketchControls {
-    reverse: boolean
     noiseSeed: number
 }
 
@@ -20,7 +19,6 @@ export interface SketchModule {
 }
 
 export const DEFAULT_SKETCH_CONTROLS: SketchControls = {
-    reverse: false,
     noiseSeed: 1234,
 }
 
@@ -33,7 +31,6 @@ export function mergeSketchControls(
         : base.noiseSeed
 
     return {
-        reverse: typeof overrides.reverse === "boolean" ? overrides.reverse : base.reverse,
         noiseSeed: parsedNoiseSeed,
     }
 }
