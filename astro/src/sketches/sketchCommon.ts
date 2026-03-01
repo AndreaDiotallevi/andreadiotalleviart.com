@@ -21,8 +21,8 @@ export function createSketch(definition: SketchDefinition): SketchRegistrar {
     let appliedNoiseSeed: number | null = null
 
     const fitCanvasToParent = (p: p5) => {
-        const parent = canvasElement?.parentElement
-        if (!parent) return
+        if (!canvasElement?.parentElement || !document.contains(canvasElement)) return
+        const parent = canvasElement.parentElement
         const width = Math.max(1, parent.clientWidth)
         const height = Math.max(1, parent.clientHeight)
         p.resizeCanvas(width, height, true)
@@ -43,6 +43,11 @@ export function createSketch(definition: SketchDefinition): SketchRegistrar {
             canvasElement = renderer.elt as HTMLCanvasElement
             p.colorMode(p.HSB, 360, 100, 100, 1)
             fitCanvasToParent(p)
+            const parent = canvasElement.parentElement
+            if (parent) {
+                const resizeObserver = new ResizeObserver(() => fitCanvasToParent(p))
+                resizeObserver.observe(parent)
+            }
             definition.setup?.(scope)
         }
 
