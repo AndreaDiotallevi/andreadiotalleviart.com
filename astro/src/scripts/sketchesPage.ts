@@ -50,36 +50,6 @@ const writeControlsToUrl = (controls: SketchControls) => {
     window.history.replaceState(window.history.state, "", nextUrl)
 }
 
-const initialiseMobileMenu = (root: HTMLElement): CleanupFn => {
-    const menuPanel = root.querySelector<HTMLElement>("[data-sketch-menu-panel]")
-    const menuToggle = root.querySelector<HTMLButtonElement>("[data-sketch-menu-toggle]")
-    const menuClose = root.querySelector<HTMLButtonElement>("[data-sketch-menu-close]")
-    const menuLinks = root.querySelectorAll<HTMLAnchorElement>("[data-sketch-menu-link]")
-
-    if (!menuPanel || !menuToggle || !menuClose) return () => {}
-
-    const closeMenu = () => {
-        menuPanel.classList.add("hidden")
-        document.body.style.overflow = ""
-    }
-
-    const openMenu = () => {
-        menuPanel.classList.remove("hidden")
-        document.body.style.overflow = "hidden"
-    }
-
-    menuToggle.addEventListener("click", openMenu)
-    menuClose.addEventListener("click", closeMenu)
-    menuLinks.forEach(link => link.addEventListener("click", closeMenu))
-
-    return () => {
-        closeMenu()
-        menuToggle.removeEventListener("click", openMenu)
-        menuClose.removeEventListener("click", closeMenu)
-        menuLinks.forEach(link => link.removeEventListener("click", closeMenu))
-    }
-}
-
 const initialiseSketchPage = async (): Promise<void> => {
     const runtimeWindow = window as SketchesWindow
 
@@ -193,7 +163,6 @@ const initialiseSketchPage = async (): Promise<void> => {
     cleanupFunctions.push(() => randomizeButton.removeEventListener("click", handleRandomizeSeeds))
     cleanupFunctions.push(() => resetButton.removeEventListener("click", handleReset))
     cleanupFunctions.push(() => saveImageButton.removeEventListener("click", handleSaveImage))
-    cleanupFunctions.push(initialiseMobileMenu(root))
 
     runtimeWindow.__sketchesPageCleanup = () => {
         if (disposed) return

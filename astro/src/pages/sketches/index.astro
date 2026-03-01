@@ -17,40 +17,20 @@ const allSketches: SketchItem[] = [...entries]
         date: entry.data.date,
     }))
 
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-})
-
-const formatSketchDate = (value: string): string => {
-    const parsedDate = Date.parse(value)
-    if (Number.isNaN(parsedDate)) return value
-    return dateFormatter.format(new Date(parsedDate))
-}
 ---
 
 <SketchLayout title="Sketches" description="Interactive p5.js sketches.">
     <div class="h-full w-full flex flex-col min-h-0">
-        <section class="flex h-full w-full min-h-0 flex-col">
-            <div class="grid min-h-0 flex-1 md:grid-cols-[260px_1fr]">
-                <aside class="hidden md:flex md:flex-col md:h-full border-r border-gray-200 bg-gray-50 min-h-0">
-                    <div class="border-b border-gray-200 px-4 py-4">
-                        <p class="text-xs uppercase tracking-[0.15em] text-gray-500">Sketches</p>
-                        <p class="text-sm font-medium text-gray-800 mt-1">
-                            {allSketches.length} total
-                        </p>
-                    </div>
+        <section data-sketch-page-root class="flex h-full w-full min-h-0 flex-col">
+            <div class="grid min-h-0 flex-1 grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
+                <aside class="flex min-w-0 flex-col h-full min-h-0 border-r border-gray-200 bg-gray-50">
                     <nav class="flex-1 min-h-0 overflow-y-auto p-2">
                         {allSketches.map((s) => (
                             <a
                                 href={`/sketches/${s.slug}`}
-                                class="block rounded-md px-3 py-2 mb-2 transition-colors duration-200 text-gray-700 md:hover:bg-gray-200"
+                                class="block min-w-0 py-1 mb-0.5 text-blue-600 hover:underline"
                             >
-                                <span class="block text-sm font-semibold">{s.title}</span>
-                                <span class="block text-xs mt-0.5 text-gray-500">
-                                    {formatSketchDate(s.date)}
-                                </span>
+                                <span class="block break-words text-sm">{s.title}</span>
                             </a>
                         ))}
                     </nav>
@@ -63,3 +43,9 @@ const formatSketchDate = (value: string): string => {
         </section>
     </div>
 </SketchLayout>
+
+<script>
+    import { bootSketchesPage } from "@scripts/sketchesPage"
+
+    bootSketchesPage()
+</script>

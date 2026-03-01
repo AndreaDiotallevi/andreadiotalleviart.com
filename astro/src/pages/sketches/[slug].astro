@@ -37,18 +37,6 @@ export async function getStaticPaths() {
 
 const { sketch, allSketches } = Astro.props
 
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-})
-
-const formatSketchDate = (value: string): string => {
-    const parsedDate = Date.parse(value)
-    if (Number.isNaN(parsedDate)) return value
-    return dateFormatter.format(new Date(parsedDate))
-}
-
 const defaults = sketch.defaultControls ?? {}
 const defaultNoiseSeed = defaults.noiseSeed ?? 1234
 const defaultRandomSeed = defaults.randomSeed ?? 5678
@@ -66,94 +54,23 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
             data-default-random-seed={defaultRandomSeed}
             class="flex h-full w-full min-h-0 flex-col"
         >
-            <div class="grid min-h-0 flex-1 md:grid-cols-[260px_1fr]">
-                <aside class="hidden md:flex md:flex-col md:h-full border-r border-gray-200 bg-gray-50 min-h-0">
-                    <div class="border-b border-gray-200 px-4 py-4">
-                        <p class="text-xs uppercase tracking-[0.15em] text-gray-500">Sketches</p>
-                        <p class="text-sm font-medium text-gray-800 mt-1">
-                            {allSketches.length} total
-                        </p>
-                    </div>
+            <div class="grid min-h-0 flex-1 grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
+                <aside class="flex min-w-0 flex-col h-full min-h-0 border-r border-gray-200 bg-gray-50">
                     <nav class="flex-1 min-h-0 overflow-y-auto p-2">
                         {allSketches.map((s) => (
                             <a
                                 href={`/sketches/${s.slug}`}
-                                class={`block rounded-md px-3 py-2 mb-2 transition-colors duration-200 ${
-                                    s.slug === sketch.slug
-                                        ? "bg-gray-800 text-white"
-                                        : "text-gray-700 md:hover:bg-gray-200"
+                                class={`block min-w-0 py-1 mb-0.5 text-blue-600 hover:underline ${
+                                    s.slug === sketch.slug ? "underline font-medium" : ""
                                 }`}
                             >
-                                <span class="block text-sm font-semibold">{s.title}</span>
-                                <span
-                                    class={`block text-xs mt-0.5 ${
-                                        s.slug === sketch.slug
-                                            ? "text-gray-200"
-                                            : "text-gray-500"
-                                    }`}
-                                >
-                                    {formatSketchDate(s.date)}
-                                </span>
+                                <span class="block break-words text-sm">{s.title}</span>
                             </a>
                         ))}
                     </nav>
                 </aside>
 
                 <div class="flex min-h-0 flex-1 flex-col">
-                    <div class="md:hidden border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-                        <div>
-                            <p class="text-xs uppercase tracking-[0.15em] text-gray-500">Sketch</p>
-                            <h1 class="text-base font-semibold text-gray-900">{sketch.title}</h1>
-                        </div>
-                        <button
-                            type="button"
-                            data-sketch-menu-toggle
-                            class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700"
-                        >
-                            Menu
-                        </button>
-                    </div>
-
-                    <div
-                        data-sketch-menu-panel
-                        class="hidden md:hidden fixed inset-0 z-50 bg-white px-4 pt-20 pb-6 overflow-y-auto"
-                    >
-                        <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-lg font-semibold text-gray-900">Sketches</h2>
-                            <button
-                                type="button"
-                                data-sketch-menu-close
-                                class="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700"
-                            >
-                                Close
-                            </button>
-                        </div>
-                        <nav class="space-y-2">
-                            {allSketches.map((s) => (
-                                <a
-                                    data-sketch-menu-link
-                                    href={`/sketches/${s.slug}`}
-                                    class={`block rounded-md px-3 py-2 ${
-                                        s.slug === sketch.slug
-                                            ? "bg-gray-800 text-white"
-                                            : "bg-gray-100 text-gray-800"
-                                    }`}
-                                >
-                                    <span class="block text-sm font-semibold">{s.title}</span>
-                                    <span
-                                        class={`block text-xs mt-0.5 ${
-                                            s.slug === sketch.slug
-                                                ? "text-gray-200"
-                                                : "text-gray-500"
-                                        }`}
-                                    >
-                                        {formatSketchDate(s.date)}
-                                    </span>
-                                </a>
-                            ))}
-                        </nav>
-                    </div>
-
                     <div class="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-2 p-2">
                         <section class="shrink-0 border-b border-gray-200 bg-white p-2">
                             <div class="flex flex-wrap items-end gap-3 md:gap-4">
@@ -180,7 +97,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
                                     data-control-randomize-seeds
                                     class="rounded border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800"
                                 >
-                                    Randomize seeds
+                                    Randomise
                                 </button>
 
                                 <button
@@ -196,7 +113,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
                                     data-control-save-image
                                     class="rounded border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800"
                                 >
-                                    Save image
+                                    Save
                                 </button>
                             </div>
                         </section>
