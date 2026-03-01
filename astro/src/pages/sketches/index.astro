@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro"
+import SketchLayout from "@layouts/SketchLayout.astro"
 import { getCollection } from "astro:content"
 
 type SketchItem = {
@@ -30,11 +30,11 @@ const formatSketchDate = (value: string): string => {
 }
 ---
 
-<BaseLayout title="Sketches" description="Interactive p5.js sketches." hideFooter={true} noIndex={true}>
-    <div class="w-full h-[calc(100dvh-80px)]">
-        <section class="max-w-screen-2xl mx-auto h-full">
-            <div class="h-full min-h-0 grid md:grid-cols-[260px_1fr]">
-                <aside class="hidden md:flex md:flex-col border-r border-gray-200 bg-gray-50 min-h-0">
+<SketchLayout title="Sketches" description="Interactive p5.js sketches.">
+    <div class="h-full w-full flex flex-col min-h-0">
+        <section class="flex h-full w-full min-h-0 flex-col">
+            <div class="grid min-h-0 flex-1 md:grid-cols-[260px_1fr]">
+                <aside class="hidden md:flex md:flex-col md:h-full border-r border-gray-200 bg-gray-50 min-h-0">
                     <div class="border-b border-gray-200 px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.15em] text-gray-500">Sketches</p>
                         <p class="text-sm font-medium text-gray-800 mt-1">
@@ -56,10 +56,10 @@ const formatSketchDate = (value: string): string => {
                     </nav>
                 </aside>
 
-                <div class="flex min-h-0 flex-1 flex-col items-center justify-center p-6 text-gray-500">
+                <div class="flex min-h-0 flex-1 flex-col items-center justify-center p-4 text-gray-500">
                     <p class="text-sm">Choose a sketch from the list.</p>
                 </div>
             </div>
         </section>
     </div>
-</BaseLayout>
+</SketchLayout>

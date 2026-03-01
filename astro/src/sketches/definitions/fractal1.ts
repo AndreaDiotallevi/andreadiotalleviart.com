@@ -1,39 +1,44 @@
 import type p5 from "p5"
 import { createSketch } from "../sketchCommon"
 
-const MAX_DEPTH = 10
-const BRANCH_SCALE_MIN = 0.58
-const BRANCH_SCALE_MAX = 0.78
-const BRANCH_SPREAD_MIN = 0.25
-const BRANCH_SPREAD_MAX = 0.58
-const TRUNK_LENGTH_RATIO = 0.22
+const MAX_DEPTH = 12
+const INNER_BASE_START = 0.12
+const INNER_BASE_END = 0.88
 
-function drawBranch(
+function drawNestedTriangles(
     scope: p5,
-    x: number,
-    y: number,
-    angle: number,
-    length: number,
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
     depth: number,
 ) {
-    const { stroke, strokeWeight, line, random, frameCount } = scope
-    if (depth <= 0 || length < 2) return
+    const { stroke, strokeWeight, triangle: drawTriangle } = scope
+    if (depth <= 0) return
 
-    const x2 = x + Math.cos(angle) * length
-    const y2 = y + Math.sin(angle) * length
+    stroke(0, 0, 0)
+    strokeWeight(Math.max(0.8, 2.5 - depth * 0.25))
+    drawTriangle(x0, y0, x1, y1, x2, y2)
 
-    const hue = (120 - depth * 8 + frameCount * 0.15) % 360
-    stroke(hue, 55, 40, 0.9)
-    strokeWeight(Math.max(1, 4 - depth * 0.35))
-    line(x, y, x2, y2)
+    const baseLeftX = x0 + (x1 - x0) * INNER_BASE_START
+    const baseLeftY = y0 + (y1 - y0) * INNER_BASE_START
+    const baseRightX = x0 + (x1 - x0) * INNER_BASE_END
+    const baseRightY = y0 + (y1 - y0) * INNER_BASE_END
+    const apexX = (x0 + x1 + x2) / 3
+    const apexY = (y0 + y1 + y2) / 3
 
-    const spreadLeft = random(BRANCH_SPREAD_MIN, BRANCH_SPREAD_MAX)
-    const spreadRight = random(BRANCH_SPREAD_MIN, BRANCH_SPREAD_MAX)
-    const scaleLeft = random(BRANCH_SCALE_MIN, BRANCH_SCALE_MAX)
-    const scaleRight = random(BRANCH_SCALE_MIN, BRANCH_SCALE_MAX)
-
-    drawBranch(scope, x2, y2, angle - spreadLeft, length * scaleLeft, depth - 1)
-    drawBranch(scope, x2, y2, angle + spreadRight, length * scaleRight, depth - 1)
+    drawNestedTriangles(
+        scope,
+        baseLeftX,
+        baseLeftY,
+        baseRightX,
+        baseRightY,
+        apexX,
+        apexY,
+        depth - 1,
+    )
 }
 
 export default createSketch({
@@ -41,16 +46,22 @@ export default createSketch({
         const { noFill } = scope
         noFill()
     },
-    draw(scope, getControls) {
-        const { background, width, height, randomSeed } = scope
-        randomSeed(getControls().randomSeed)
-        background(200, 18, 98)
+    draw(scope) {
+        const { background, width, height } = scope
+        background(0, 0, 85)
 
-        const trunkLength = Math.min(width, height) * TRUNK_LENGTH_RATIO
-        const startX = width / 2
-        const startY = height * 0.92
-        const trunkAngle = -Math.PI / 2
+        const cx = width / 2
+        const cy = height / 2
+        const r = Math.min(width, height) * 0.42
 
-        drawBranch(scope, startX, startY, trunkAngle, trunkLength, MAX_DEPTH)
+        const h = r * 0.75
+        const x0 = cx
+        const y0 = cy - h
+        const x1 = cx - r * (Math.sqrt(3) / 2)
+        const y1 = cy + h
+        const x2 = cx + r * (Math.sqrt(3) / 2)
+        const y2 = cy + h
+
+        drawNestedTriangles(scope, x0, y0, x1, y1, x2, y2, MAX_DEPTH)
     },
 })

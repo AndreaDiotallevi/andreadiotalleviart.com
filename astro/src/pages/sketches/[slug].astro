@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro"
+import SketchLayout from "@layouts/SketchLayout.astro"
 import { getCollection } from "astro:content"
 
 type SketchItem = {
@@ -57,17 +57,17 @@ const pageTitle = `${sketch.title} | Sketches`
 const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} hideFooter={true} noIndex={true}>
-    <div class="w-full h-[calc(100dvh-80px)]">
+<SketchLayout title={pageTitle} description={pageDescription}>
+    <div class="h-full w-full flex flex-col min-h-0">
         <section
             data-sketch-page-root
             data-sketch-slug={sketch.slug}
             data-default-noise-seed={defaultNoiseSeed}
             data-default-random-seed={defaultRandomSeed}
-            class="max-w-screen-2xl mx-auto h-full"
+            class="flex h-full w-full min-h-0 flex-col"
         >
-            <div class="h-full min-h-0 grid md:grid-cols-[260px_1fr]">
-                <aside class="hidden md:flex md:flex-col border-r border-gray-200 bg-gray-50 min-h-0">
+            <div class="grid min-h-0 flex-1 md:grid-cols-[260px_1fr]">
+                <aside class="hidden md:flex md:flex-col md:h-full border-r border-gray-200 bg-gray-50 min-h-0">
                     <div class="border-b border-gray-200 px-4 py-4">
                         <p class="text-xs uppercase tracking-[0.15em] text-gray-500">Sketches</p>
                         <p class="text-sm font-medium text-gray-800 mt-1">
@@ -154,8 +154,8 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
                         </nav>
                     </div>
 
-                    <div class="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-3 p-3 md:gap-4 md:p-4">
-                        <section class="rounded-lg border border-gray-200 bg-white p-3 md:p-4">
+                    <div class="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-2 p-2">
+                        <section class="shrink-0 border-b border-gray-200 bg-white p-2">
                             <div class="flex flex-wrap items-end gap-3 md:gap-4">
                                 <label class="flex flex-col text-sm text-gray-800">
                                     <span class="mb-1">Noise seed</span>
@@ -201,8 +201,8 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
                             </div>
                         </section>
 
-                        <section class="min-h-0 rounded-lg border border-gray-200 bg-white">
-                            <div data-sketch-canvas class="h-full min-h-[340px] w-full"></div>
+                        <section class="min-h-0 flex-1 border border-gray-200 bg-white overflow-hidden">
+                            <div data-sketch-canvas class="h-full w-full min-h-[200px]"></div>
                             <p data-sketch-error class="hidden px-4 py-3 text-sm text-red-700"></p>
                         </section>
                     </div>
@@ -210,7 +210,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
             </div>
         </section>
     </div>
-</BaseLayout>
+</SketchLayout>
 
 <script>
     import { bootSketchesPage } from "@scripts/sketchesPage"
