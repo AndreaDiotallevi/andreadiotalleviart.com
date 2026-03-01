@@ -23,8 +23,8 @@ export function createSketch(definition: SketchDefinition): SketchRegistrar {
     const fitCanvasToParent = (p: p5) => {
         const parent = canvasElement?.parentElement
         if (!parent) return
-        const width = Math.max(320, parent.clientWidth)
-        const height = Math.max(320, parent.clientHeight)
+        const width = Math.max(1, parent.clientWidth)
+        const height = Math.max(1, parent.clientHeight)
         p.resizeCanvas(width, height, true)
     }
 

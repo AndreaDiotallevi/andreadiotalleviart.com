@@ -55,7 +55,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
             class="flex h-full w-full min-h-0 flex-col"
         >
             <div class="grid min-h-0 flex-1 grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
-                <aside class="flex min-w-0 flex-col h-full min-h-0 bg-gray-50">
+                <aside class="flex min-w-0 flex-col h-full min-h-0">
                     <nav class="flex-1 min-h-0 overflow-y-auto p-2">
                         {allSketches.map((s) => (
                             <a
@@ -72,7 +72,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
 
                 <div class="flex min-h-0 flex-1 flex-col">
                     <div class="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-2 p-2">
-                        <section class="shrink-0 bg-white">
+                        <section class="shrink-0">
                             <div class="flex flex-col gap-2">
                                 <div class="flex items-end gap-3 md:gap-4">
                                     <label class="flex flex-col text-sm text-gray-800">
@@ -122,7 +122,7 @@ const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
                             </div>
                         </section>
 
-                        <section class="min-h-0 flex-1 border border-gray-200 bg-white overflow-hidden">
+                        <section class="min-h-0 flex-1 overflow-hidden">
                             <div data-sketch-canvas class="h-full w-full min-h-[200px]"></div>
                             <p data-sketch-error class="hidden px-4 py-3 text-sm text-red-700"></p>
                         </section>
