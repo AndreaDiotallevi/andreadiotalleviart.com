@@ -56,11 +56,11 @@ export default createSketch({
 
         const h = r * 0.75
         const x0 = cx
-        const y0 = cy - h
+        const y0 = cy - (4 * h) / 3
         const x1 = cx - r * (Math.sqrt(3) / 2)
-        const y1 = cy + h
+        const y1 = cy + (2 * h) / 3
         const x2 = cx + r * (Math.sqrt(3) / 2)
-        const y2 = cy + h
+        const y2 = cy + (2 * h) / 3
 
         drawNestedTriangles(scope, x0, y0, x1, y1, x2, y2, MAX_DEPTH)
     },
