@@ -16,6 +16,7 @@ const registry: SketchRegistryItem[] = [
         modulePath: "./definitions/flowField.ts",
         defaultControls: {
             noiseSeed: 1823,
+            randomSeed: 45678,
         },
     },
     {
@@ -25,6 +26,7 @@ const registry: SketchRegistryItem[] = [
         modulePath: "./definitions/noiseDunes.ts",
         defaultControls: {
             noiseSeed: 927,
+            randomSeed: 29384,
         },
     },
     {
@@ -32,6 +34,10 @@ const registry: SketchRegistryItem[] = [
         title: "Fractal 1",
         date: "2026-03-01",
         modulePath: "./definitions/fractal1.ts",
+        defaultControls: {
+            noiseSeed: 12345,
+            randomSeed: 78901,
+        },
     },
 ]
 

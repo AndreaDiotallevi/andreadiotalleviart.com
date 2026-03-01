@@ -1,33 +1,38 @@
 import type p5 from "p5"
 import { createSketch } from "../sketchCommon"
 
-const MAX_DEPTH = 12
-const SCALE = 0.72
-const PADDING = 0.08
+const MAX_DEPTH = 10
+const BRANCH_SCALE_MIN = 0.58
+const BRANCH_SCALE_MAX = 0.78
+const BRANCH_SPREAD_MIN = 0.25
+const BRANCH_SPREAD_MAX = 0.58
+const TRUNK_LENGTH_RATIO = 0.22
 
-function drawNestedRects(
+function drawBranch(
     scope: p5,
     x: number,
     y: number,
-    w: number,
-    h: number,
+    angle: number,
+    length: number,
     depth: number,
 ) {
-    if (depth <= 0 || w < 4 || h < 4) return
+    if (depth <= 0 || length < 2) return
 
-    const hue = (280 - depth * 22 + scope.frameCount * 0.3) % 360
-    scope.stroke(hue, 70, 90, 0.95)
-    scope.strokeWeight(Math.max(0.8, 2 - depth * 0.12))
-    scope.rect(x, y, w, h)
+    const x2 = x + Math.cos(angle) * length
+    const y2 = y + Math.sin(angle) * length
 
-    const padX = w * PADDING
-    const padY = h * PADDING
-    const innerW = (w - 2 * padX) * SCALE
-    const innerH = (h - 2 * padY) * SCALE
-    const innerX = x + (w - innerW) / 2
-    const innerY = y + (h - innerH) / 2
+    const hue = (120 - depth * 8 + scope.frameCount * 0.15) % 360
+    scope.stroke(hue, 55, 40, 0.9)
+    scope.strokeWeight(Math.max(1, 4 - depth * 0.35))
+    scope.line(x, y, x2, y2)
 
-    drawNestedRects(scope, innerX, innerY, innerW, innerH, depth - 1)
+    const spreadLeft = scope.random(BRANCH_SPREAD_MIN, BRANCH_SPREAD_MAX)
+    const spreadRight = scope.random(BRANCH_SPREAD_MIN, BRANCH_SPREAD_MAX)
+    const scaleLeft = scope.random(BRANCH_SCALE_MIN, BRANCH_SCALE_MAX)
+    const scaleRight = scope.random(BRANCH_SCALE_MIN, BRANCH_SCALE_MAX)
+
+    drawBranch(scope, x2, y2, angle - spreadLeft, length * scaleLeft, depth - 1)
+    drawBranch(scope, x2, y2, angle + spreadRight, length * scaleRight, depth - 1)
 }
 
 export default createSketch({
@@ -35,14 +40,16 @@ export default createSketch({
         const { noFill } = scope
         noFill()
     },
-    draw(scope) {
-        const { background, width, height } = scope
-        background(260, 12, 98)
+    draw(scope, getControls) {
+        const { background, width, height, randomSeed } = scope
+        randomSeed(getControls().randomSeed)
+        background(200, 18, 98)
 
-        const margin = Math.min(width, height) * 0.06
-        const w = width - 2 * margin
-        const h = height - 2 * margin
+        const trunkLength = Math.min(width, height) * TRUNK_LENGTH_RATIO
+        const startX = width / 2
+        const startY = height * 0.92
+        const trunkAngle = -Math.PI / 2
 
-        drawNestedRects(scope, margin, margin, w, h, MAX_DEPTH)
+        drawBranch(scope, startX, startY, trunkAngle, trunkLength, MAX_DEPTH)
     },
 })

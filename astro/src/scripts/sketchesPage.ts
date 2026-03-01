@@ -10,13 +10,12 @@ type SketchesWindow = Window & {
 }
 
 const ROOT_SELECTOR = "[data-sketch-page-root]"
-const SKETCH_QUERY_KEYS = ["noiseSeed"]
+const SKETCH_QUERY_KEYS = ["noiseSeed", "randomSeed"]
 
-const parseNoiseSeed = (value: string | null, fallback: number): number => {
+const parseSeed = (value: string | null, fallback: number): number => {
     if (value === null) return fallback
-
-    const parsedSeed = Number.parseInt(value, 10)
-    return Number.isNaN(parsedSeed) ? fallback : parsedSeed
+    const parsed = Number.parseInt(value, 10)
+    return Number.isNaN(parsed) ? fallback : parsed
 }
 
 const hasControlParams = (searchParams: URLSearchParams): boolean =>
@@ -45,6 +44,7 @@ const removeControlParamsFromUrl = () => {
 const writeControlsToUrl = (controls: SketchControls) => {
     const searchParams = new URLSearchParams(window.location.search)
     searchParams.set("noiseSeed", `${controls.noiseSeed}`)
+    searchParams.set("randomSeed", `${controls.randomSeed}`)
 
     const nextUrl = `${window.location.pathname}?${searchParams.toString()}${window.location.hash}`
     window.history.replaceState(window.history.state, "", nextUrl)
@@ -97,10 +97,11 @@ const initialiseSketchPage = async (): Promise<void> => {
     const canvasContainer = root.querySelector<HTMLElement>("[data-sketch-canvas]")
     const errorMessage = root.querySelector<HTMLElement>("[data-sketch-error]")
     const noiseSeedInput = root.querySelector<HTMLInputElement>("[data-control-noise-seed]")
-    const randomSeedButton = root.querySelector<HTMLButtonElement>("[data-control-random-seed]")
+    const randomSeedInput = root.querySelector<HTMLInputElement>("[data-control-random-seed]")
+    const randomizeButton = root.querySelector<HTMLButtonElement>("[data-control-randomize-seeds]")
     const resetButton = root.querySelector<HTMLButtonElement>("[data-control-reset]")
 
-    if (!canvasContainer || !noiseSeedInput || !randomSeedButton || !resetButton) {
+    if (!canvasContainer || !noiseSeedInput || !randomSeedInput || !randomizeButton || !resetButton) {
         return
     }
 
@@ -110,13 +111,15 @@ const initialiseSketchPage = async (): Promise<void> => {
     let controls = hasControlParams(searchParams)
         ? mergeSketchControls(
               {
-                  noiseSeed: parseNoiseSeed(searchParams.get("noiseSeed"), defaultControls.noiseSeed),
+                  noiseSeed: parseSeed(searchParams.get("noiseSeed"), defaultControls.noiseSeed),
+                  randomSeed: parseSeed(searchParams.get("randomSeed"), defaultControls.randomSeed),
               },
               defaultControls,
           )
         : defaultControls
 
     noiseSeedInput.value = `${controls.noiseSeed}`
+    randomSeedInput.value = `${controls.randomSeed}`
     if (errorMessage) errorMessage.classList.add("hidden")
 
     let sketchInstance: p5 | null = null
@@ -126,12 +129,14 @@ const initialiseSketchPage = async (): Promise<void> => {
     const syncControlsFromInputs = () => {
         controls = mergeSketchControls(
             {
-                noiseSeed: parseNoiseSeed(noiseSeedInput.value, controls.noiseSeed),
+                noiseSeed: parseSeed(noiseSeedInput.value, controls.noiseSeed),
+                randomSeed: parseSeed(randomSeedInput.value, controls.randomSeed),
             },
             defaultControls,
         )
 
         noiseSeedInput.value = `${controls.noiseSeed}`
+        randomSeedInput.value = `${controls.randomSeed}`
     }
 
     const handleNoiseSeedChange = () => {
@@ -139,25 +144,39 @@ const initialiseSketchPage = async (): Promise<void> => {
         writeControlsToUrl(controls)
     }
 
-    const handleRandomSeed = () => {
-        const randomSeed = Math.floor(Math.random() * 1_000_000)
-        controls = mergeSketchControls({ noiseSeed: randomSeed }, defaultControls)
+    const handleRandomSeedChange = () => {
+        syncControlsFromInputs()
+        writeControlsToUrl(controls)
+    }
+
+    const handleRandomizeSeeds = () => {
+        controls = mergeSketchControls(
+            {
+                noiseSeed: Math.floor(Math.random() * 1_000_000),
+                randomSeed: Math.floor(Math.random() * 1_000_000),
+            },
+            defaultControls,
+        )
         noiseSeedInput.value = `${controls.noiseSeed}`
+        randomSeedInput.value = `${controls.randomSeed}`
         writeControlsToUrl(controls)
     }
 
     const handleReset = () => {
         controls = defaultControls
         noiseSeedInput.value = `${controls.noiseSeed}`
+        randomSeedInput.value = `${controls.randomSeed}`
         removeControlParamsFromUrl()
     }
 
     noiseSeedInput.addEventListener("change", handleNoiseSeedChange)
-    randomSeedButton.addEventListener("click", handleRandomSeed)
+    randomSeedInput.addEventListener("change", handleRandomSeedChange)
+    randomizeButton.addEventListener("click", handleRandomizeSeeds)
     resetButton.addEventListener("click", handleReset)
 
     cleanupFunctions.push(() => noiseSeedInput.removeEventListener("change", handleNoiseSeedChange))
-    cleanupFunctions.push(() => randomSeedButton.removeEventListener("click", handleRandomSeed))
+    cleanupFunctions.push(() => randomSeedInput.removeEventListener("change", handleRandomSeedChange))
+    cleanupFunctions.push(() => randomizeButton.removeEventListener("click", handleRandomizeSeeds))
     cleanupFunctions.push(() => resetButton.removeEventListener("click", handleReset))
     cleanupFunctions.push(initialiseMobileMenu(root))
 
