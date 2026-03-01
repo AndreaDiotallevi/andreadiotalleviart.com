@@ -1,40 +1,10 @@
-import type { SketchRegistrar } from "../types"
+import { createSketch } from "../sketchCommon"
 
-const noiseDunesSketch: SketchRegistrar = (p, getControls) => {
-    let appliedNoiseSeed: number | null = null
-    let canvasElement: HTMLCanvasElement | null = null
-
-    const fitCanvasToParent = () => {
-        const parent = canvasElement?.parentElement
-        if (!parent) return
-
-        const width = Math.max(320, parent.clientWidth)
-        const height = Math.max(320, parent.clientHeight)
-        p.resizeCanvas(width, height, true)
-    }
-
-    const syncNoiseSeed = () => {
-        const { noiseSeed } = getControls()
-        if (appliedNoiseSeed === noiseSeed) return
-        p.noiseSeed(noiseSeed)
-        appliedNoiseSeed = noiseSeed
-    }
-
-    p.setup = () => {
-        const renderer = p.createCanvas(1, 1)
-        canvasElement = renderer.elt as HTMLCanvasElement
-        p.colorMode(p.HSB, 360, 100, 100, 1)
+export default createSketch({
+    setup(p) {
         p.noFill()
-        fitCanvasToParent()
-    }
-
-    p.windowResized = () => {
-        fitCanvasToParent()
-    }
-
-    p.draw = () => {
-        syncNoiseSeed()
-
+    },
+    draw(p) {
         p.background(220, 14, 96)
 
         const rows = 52
@@ -54,7 +24,5 @@ const noiseDunesSketch: SketchRegistrar = (p, getControls) => {
             }
             p.endShape()
         }
-    }
-}
-
-export default noiseDunesSketch
+    },
+})

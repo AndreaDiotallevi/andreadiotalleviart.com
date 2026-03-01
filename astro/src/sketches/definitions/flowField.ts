@@ -1,43 +1,14 @@
-import type { SketchRegistrar } from "../types"
+import { createSketch } from "../sketchCommon"
 
-const flowFieldSketch: SketchRegistrar = (p, getControls) => {
-    const step = 18
-    let appliedNoiseSeed: number | null = null
-    let canvasElement: HTMLCanvasElement | null = null
+const step = 18
 
-    const fitCanvasToParent = () => {
-        const parent = canvasElement?.parentElement
-        if (!parent) return
-
-        const width = Math.max(320, parent.clientWidth)
-        const height = Math.max(320, parent.clientHeight)
-        p.resizeCanvas(width, height, true)
-    }
-
-    const syncNoiseSeed = () => {
-        const { noiseSeed } = getControls()
-        if (appliedNoiseSeed === noiseSeed) return
-        p.noiseSeed(noiseSeed)
-        appliedNoiseSeed = noiseSeed
-    }
-
-    p.setup = () => {
-        const renderer = p.createCanvas(1, 1)
-        canvasElement = renderer.elt as HTMLCanvasElement
-        p.colorMode(p.HSB, 360, 100, 100, 1)
+export default createSketch({
+    setup(p) {
         p.noFill()
         p.strokeWeight(1.2)
-        fitCanvasToParent()
-    }
-
-    p.windowResized = () => {
-        fitCanvasToParent()
-    }
-
-    p.draw = () => {
+    },
+    draw(p, getControls) {
         const { reverse } = getControls()
-        syncNoiseSeed()
-
         p.background(212, 15, reverse ? 10 : 97)
 
         const direction = reverse ? -1 : 1
@@ -56,7 +27,5 @@ const flowFieldSketch: SketchRegistrar = (p, getControls) => {
                 p.line(x, y, x2, y2)
             }
         }
-    }
-}
-
-export default flowFieldSketch
+    },
+})
