@@ -1,6 +1,6 @@
 import p5 from "p5"
-import { getDefaultControlsForSketch, loadSketchModule } from "../sketches/registry"
-import { mergeSketchControls, type SketchControls } from "../sketches/types"
+import { loadSketchModule } from "../sketches/registry"
+import { DEFAULT_SKETCH_CONTROLS, mergeSketchControls, type SketchControls } from "../sketches/types"
 
 type CleanupFn = () => void
 
@@ -105,7 +105,13 @@ const initialiseSketchPage = async (): Promise<void> => {
         return
     }
 
-    const defaultControls = getDefaultControlsForSketch(sketchSlug)
+    const defaultControls: SketchControls = mergeSketchControls(
+        {
+            noiseSeed: parseSeed(root.dataset.defaultNoiseSeed ?? null, DEFAULT_SKETCH_CONTROLS.noiseSeed),
+            randomSeed: parseSeed(root.dataset.defaultRandomSeed ?? null, DEFAULT_SKETCH_CONTROLS.randomSeed),
+        },
+        DEFAULT_SKETCH_CONTROLS,
+    )
     const searchParams = new URLSearchParams(window.location.search)
 
     let controls = hasControlParams(searchParams)

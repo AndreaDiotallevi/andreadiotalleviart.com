@@ -5,14 +5,6 @@ export interface SketchControls {
     randomSeed: number
 }
 
-export interface SketchRegistryItem {
-    slug: string
-    title: string
-    date: string
-    modulePath: string
-    defaultControls?: Partial<SketchControls>
-}
-
 export type SketchRegistrar = (p: p5, getControls: () => SketchControls) => void
 
 export interface SketchModule {

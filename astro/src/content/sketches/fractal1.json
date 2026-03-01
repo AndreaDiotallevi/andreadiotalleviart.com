@@ -1,0 +1,8 @@
+{
+    "title": "Fractal 1",
+    "date": "2026-03-01",
+    "defaultControls": {
+        "noiseSeed": 12345,
+        "randomSeed": 78901
+    }
+}

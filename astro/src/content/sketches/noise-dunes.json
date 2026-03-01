@@ -1,0 +1,8 @@
+{
+    "title": "Noise Dunes",
+    "date": "2026-02-20",
+    "defaultControls": {
+        "noiseSeed": 927,
+        "randomSeed": 29384
+    }
+}
