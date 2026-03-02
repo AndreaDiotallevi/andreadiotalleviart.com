@@ -26,17 +26,24 @@ const COLOUR_PALETTE: HSB[] = [
     [200, 60, 75, 0.9],
 ]
 
-const NUM_SEGMENTS = 8
-const MIN_RADIUS = 10
-const MAX_RADIUS = 58
+const NUM_SEGMENTS = 5
+const MIN_RADIUS = 8
 /** Gaussian mean/sd for radius (clamped to min/max) – smaller so elements don’t fully overlap */
-const RADIUS_MEAN = 30
-const RADIUS_SD = 14
+const SMALL_RADIUS_MEAN = 14
+const SMALL_RADIUS_SD = 5
+/** Large circles up to 30% of canvas diameter; radius = 15% of smaller side */
+const LARGE_RADIUS_FRAC = 0.15
+const LARGE_RADIUS_MEAN_FRAC = 0.12
+const LARGE_RADIUS_SD_FRAC = 0.04
 /** Gaussian mean/sd for ratio of end radii (clamped); >1 = end often bigger, spread = more variety */
 const RATIO_MEAN = 1.1
 const RATIO_SD = 0.7
 const MIN_RATIO = 0.25
 const MAX_RATIO = 4.5
+
+const SHADOW_OFFSET_X = 14
+const SHADOW_OFFSET_Y = 14
+const SHADOW_COLOR = "rgba(0, 0, 0, 0.22)"
 
 /** Convert HSB [h 0–360, s 0–100, b 0–100, a 0–1] to CSS rgba() string */
 function hsbToRgba([h, s, b, a]: HSB): string {
@@ -107,6 +114,24 @@ function drawCone(
 
     const renderer = (scope as unknown as { _renderer?: { drawingContext: CanvasRenderingContext2D } })._renderer
     const ctx = renderer?.drawingContext
+
+    if (ctx) {
+        ctx.fillStyle = SHADOW_COLOR
+        ctx.beginPath()
+        ctx.moveTo(p1x + SHADOW_OFFSET_X, p1y + SHADOW_OFFSET_Y)
+        ctx.lineTo(p4x + SHADOW_OFFSET_X, p4y + SHADOW_OFFSET_Y)
+        ctx.lineTo(p3x + SHADOW_OFFSET_X, p3y + SHADOW_OFFSET_Y)
+        ctx.lineTo(p2x + SHADOW_OFFSET_X, p2y + SHADOW_OFFSET_Y)
+        ctx.closePath()
+        ctx.fill()
+        ctx.beginPath()
+        ctx.ellipse(x1 + SHADOW_OFFSET_X, y1 + SHADOW_OFFSET_Y, r1, r1, 0, 0, scope.TWO_PI)
+        ctx.fill()
+        ctx.beginPath()
+        ctx.ellipse(x2 + SHADOW_OFFSET_X, y2 + SHADOW_OFFSET_Y, r2, r2, 0, 0, scope.TWO_PI)
+        ctx.fill()
+    }
+
     if (ctx) {
         const startStyle = hsbToRgba(colourStart)
         const endStyle = hsbToRgba(colourEnd)
@@ -154,20 +179,26 @@ export default createSketch({
             randomSeed(seed)
             segments = []
             const { randomGaussian, constrain } = scope
+            const minDim = Math.min(width, height)
+            const maxRadius = minDim * LARGE_RADIUS_FRAC
             for (let i = 0; i < NUM_SEGMENTS; i++) {
                 const palette = COLOUR_PALETTE
                 const idx = () => Math.floor(random(palette.length))
+                const useLarge = random() > 0.5
                 const r1 = constrain(
-                    randomGaussian(RADIUS_MEAN, RADIUS_SD),
+                    randomGaussian(
+                        useLarge ? minDim * LARGE_RADIUS_MEAN_FRAC : SMALL_RADIUS_MEAN,
+                        useLarge ? minDim * LARGE_RADIUS_SD_FRAC : SMALL_RADIUS_SD,
+                    ),
                     MIN_RADIUS,
-                    MAX_RADIUS,
+                    maxRadius,
                 )
                 const ratio = constrain(
                     randomGaussian(RATIO_MEAN, RATIO_SD),
                     MIN_RATIO,
                     MAX_RATIO,
                 )
-                const r2 = constrain(r1 * ratio, MIN_RADIUS, MAX_RADIUS)
+                const r2 = constrain(r1 * ratio, MIN_RADIUS, maxRadius)
             segments.push({
                     x1: random(width * 0.1, width * 0.9),
                     y1: random(height * 0.1, height * 0.9),

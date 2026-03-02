@@ -147,9 +147,14 @@ const initialiseSketchPage = async (): Promise<void> => {
     }
 
     const handleSaveImage = () => {
-        if (sketchInstance) {
-            sketchInstance.saveCanvas(sketchSlug, "png")
-        }
+        if (!sketchInstance) return
+        const canvas = canvasContainer.querySelector("canvas")
+        if (!canvas) return
+        const filename = `${sketchSlug}_noise${controls.noiseSeed}_random${controls.randomSeed}_w${sketchInstance.width}_h${sketchInstance.height}.png`
+        const link = document.createElement("a")
+        link.download = filename
+        link.href = canvas.toDataURL("image/png")
+        link.click()
     }
 
     noiseSeedInput.addEventListener("change", handleNoiseSeedChange)
