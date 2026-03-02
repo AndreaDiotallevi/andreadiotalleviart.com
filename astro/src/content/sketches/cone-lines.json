@@ -1,0 +1,8 @@
+{
+    "title": "Cone Lines",
+    "date": "2026-03-02",
+    "defaultControls": {
+        "noiseSeed": 1000,
+        "randomSeed": 4321
+    }
+}
