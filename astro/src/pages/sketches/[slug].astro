@@ -1,0 +1,140 @@
+---
+import SketchLayout from "@layouts/SketchLayout.astro"
+import { getCollection } from "astro:content"
+
+type SketchItem = {
+    slug: string
+    title: string
+    date: string
+    defaultControls?: { noiseSeed?: number; randomSeed?: number }
+}
+
+export async function getStaticPaths() {
+    const entries = await getCollection("sketches")
+    const sorted = [...entries].sort(
+        (a, b) => Date.parse(b.data.date) - Date.parse(a.data.date),
+    )
+    const allSketches: SketchItem[] = sorted.map(entry => ({
+        slug: entry.id,
+        title: entry.data.title,
+        date: entry.data.date,
+        defaultControls: entry.data.defaultControls,
+    }))
+
+    return sorted.map(entry => ({
+        params: { slug: entry.id },
+        props: {
+            sketch: {
+                slug: entry.id,
+                title: entry.data.title,
+                date: entry.data.date,
+                defaultControls: entry.data.defaultControls,
+            } satisfies SketchItem,
+            allSketches,
+        },
+    }))
+}
+
+const { sketch, allSketches } = Astro.props
+
+const defaults = sketch.defaultControls ?? {}
+const defaultNoiseSeed = defaults.noiseSeed ?? 1234
+const defaultRandomSeed = defaults.randomSeed ?? 5678
+
+const pageTitle = `${sketch.title} | Sketches`
+const pageDescription = `Interactive p5 sketch: ${sketch.title}.`
+---
+
+<SketchLayout title={pageTitle} description={pageDescription}>
+    <div class="h-full w-full flex flex-col min-h-0">
+        <section
+            data-sketch-page-root
+            data-sketch-slug={sketch.slug}
+            data-default-noise-seed={defaultNoiseSeed}
+            data-default-random-seed={defaultRandomSeed}
+            class="flex h-full w-full min-h-0 flex-col"
+        >
+            <div class="grid min-h-0 flex-1 grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
+                <aside class="flex min-w-0 flex-col h-full min-h-0">
+                    <nav class="flex-1 min-h-0 overflow-y-auto p-2">
+                        {allSketches.map((s) => (
+                            <a
+                                href={`/sketches/${s.slug}`}
+                                class={`block min-w-0 py-1 mb-0.5 text-blue-600 hover:underline ${
+                                    s.slug === sketch.slug ? "underline font-medium" : ""
+                                }`}
+                            >
+                                <span class="block break-words text-sm">{s.title}</span>
+                            </a>
+                        ))}
+                    </nav>
+                </aside>
+
+                <div class="flex min-h-0 flex-1 flex-col">
+                    <div class="grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-2 p-2">
+                        <section class="shrink-0">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-end gap-3 md:gap-4">
+                                    <label class="flex flex-col text-sm text-gray-800">
+                                        <span class="mb-1">Noise seed</span>
+                                        <input
+                                            data-control-noise-seed
+                                            type="number"
+                                            class="w-24 rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                        />
+                                    </label>
+
+                                    <label class="flex flex-col text-sm text-gray-800">
+                                        <span class="mb-1">Random seed</span>
+                                        <input
+                                            data-control-random-seed
+                                            type="number"
+                                            class="w-24 rounded border border-gray-300 px-2 py-1.5 text-sm"
+                                        />
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center gap-3 md:gap-4">
+                                    <button
+                                        type="button"
+                                        data-control-randomize-seeds
+                                        class="text-blue-600 hover:underline text-sm"
+                                    >
+                                        Randomise
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        data-control-reset
+                                        class="text-blue-600 hover:underline text-sm"
+                                    >
+                                        Reset
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        data-control-save-image
+                                        class="text-blue-600 hover:underline text-sm"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="min-h-0 flex-1 overflow-hidden">
+                            <div data-sketch-canvas class="h-full w-full min-h-[200px]"></div>
+                            <p data-sketch-error class="hidden px-4 py-3 text-sm text-red-700"></p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</SketchLayout>
+
+<script>
+    import { bootSketchesPage } from "@scripts/sketchesPage"
+
+    bootSketchesPage()
+</script>

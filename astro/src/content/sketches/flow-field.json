@@ -1,0 +1,8 @@
+{
+    "title": "Flow Field",
+    "date": "2026-02-28",
+    "defaultControls": {
+        "noiseSeed": 1823,
+        "randomSeed": 45678
+    }
+}

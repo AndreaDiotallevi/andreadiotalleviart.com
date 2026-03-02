@@ -1,0 +1,51 @@
+---
+import SketchLayout from "@layouts/SketchLayout.astro"
+import { getCollection } from "astro:content"
+
+type SketchItem = {
+    slug: string
+    title: string
+    date: string
+}
+
+const entries = await getCollection("sketches")
+const allSketches: SketchItem[] = [...entries]
+    .sort((a, b) => Date.parse(b.data.date) - Date.parse(a.data.date))
+    .map(entry => ({
+        slug: entry.id,
+        title: entry.data.title,
+        date: entry.data.date,
+    }))
+
+---
+
+<SketchLayout title="Sketches" description="Interactive p5.js sketches.">
+    <div class="h-full w-full flex flex-col min-h-0">
+        <section data-sketch-page-root class="flex h-full w-full min-h-0 flex-col">
+            <div class="grid min-h-0 flex-1 grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
+                <aside class="flex min-w-0 flex-col h-full min-h-0">
+                    <nav class="flex-1 min-h-0 overflow-y-auto p-2">
+                        {allSketches.map((s) => (
+                            <a
+                                href={`/sketches/${s.slug}`}
+                                class="block min-w-0 py-1 mb-0.5 text-blue-600 hover:underline"
+                            >
+                                <span class="block break-words text-sm">{s.title}</span>
+                            </a>
+                        ))}
+                    </nav>
+                </aside>
+
+                <div class="flex min-h-0 flex-1 flex-col items-center justify-center p-4 text-gray-500">
+                    <p class="text-sm">Choose a sketch from the list.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</SketchLayout>
+
+<script>
+    import { bootSketchesPage } from "@scripts/sketchesPage"
+
+    bootSketchesPage()
+</script>
