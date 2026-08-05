@@ -101,6 +101,10 @@ export const handler = async (event: SQSEvent): Promise<void> => {
                                     description: product.description,
                                     imageSource: product.images[0],
                                     quantity: item.quantity,
+                                    quantityLabel:
+                                        (item.quantity ?? 1) > 1
+                                            ? `${item.quantity ?? 1} x `
+                                            : "",
                                 }
                             }),
                             orderNumber: session.metadata.orderNumber,

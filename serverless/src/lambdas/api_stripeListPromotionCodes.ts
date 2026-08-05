@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 
-import { newsletterListContacts } from "../actions/ses_listContacts"
+import { listPromotionCodes } from "../actions/stripe_listPromotionCodes"
 
 const corsHeaders = {
     "Access-Control-Allow-Headers": "*",
@@ -14,6 +14,7 @@ export const handler = async (
     const adminSecret = process.env.ADMIN_API_SECRET
     const providedSecret =
         event.headers?.["X-Admin-Secret"] ?? event.headers?.["x-admin-secret"]
+
     if (!adminSecret || providedSecret !== adminSecret) {
         return {
             statusCode: 401,
@@ -22,11 +23,20 @@ export const handler = async (
         }
     }
 
-    const { contacts } = await newsletterListContacts()
+    try {
+        const { promotionCodes } = await listPromotionCodes()
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ contacts }),
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ promotionCodes }),
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+    } catch (error) {
+        console.error("Failed to list promotion codes", error)
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Failed to list promotion codes" }),
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
     }
 }

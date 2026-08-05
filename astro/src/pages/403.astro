@@ -1,0 +1,35 @@
+---
+export const prerender = false
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+
+Astro.response.status = 403
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive")
+---
+
+<BaseLayout
+    title="403 | Andrea Diotallevi Art"
+    description="You are not authorized to access this page."
+    noIndex={true}
+    hideFooter={true}
+>
+    <div class="max-w-screen-md mx-auto px-4 py-8 pt-0 md:pt-8">
+        <h1 class="text-2xl md:text-5xl font-bold">403</h1>
+        <p class="mt-4">You are signed in but not authorized to access this page.</p>
+        <div class="mt-8 flex flex-col gap-3">
+            <a
+                href="/"
+                class="block w-full max-w-lg rounded-lg border border-gray-300 bg-white px-4 py-3 text-center font-bold text-gray-800 transition-colors duration-300 md:hover:border-gray-800 md:hover:bg-gray-800 md:hover:text-white"
+            >
+                Back home
+            </a>
+            <a
+                href="/auth/logout"
+                data-astro-reload
+                class="block w-full max-w-lg rounded-lg border border-gray-300 bg-white px-4 py-3 text-center font-bold text-gray-800 transition-colors duration-300 md:hover:border-gray-800 md:hover:bg-gray-800 md:hover:text-white"
+            >
+                Sign out
+            </a>
+        </div>
+    </div>
+</BaseLayout>

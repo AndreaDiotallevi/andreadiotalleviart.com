@@ -20,11 +20,12 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const items = products
         .map(product => {
-            // Exclude specific mockup image(s) from Merchant Center feed
+            // Exclude specific mockup image(s) and drop first image for feed
             const blockedImageSubstrings = ["mockup-series-vertical_hpqksb"]
-            const imageLinks = (product.images ?? []).filter(url =>
+            const filteredImageLinks = (product.images ?? []).filter(url =>
                 !blockedImageSubstrings.some(sub => url.includes(sub))
             )
+            const imageLinks = filteredImageLinks.slice(1)
             const imageLink = imageLinks[0] ?? ""
             const additionalImages = imageLinks
                 .slice(1)

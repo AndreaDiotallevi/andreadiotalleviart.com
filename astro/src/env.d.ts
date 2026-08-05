@@ -9,6 +9,11 @@ declare namespace App {
 }
 
 interface ImportMetaEnv {
+    readonly COGNITO_AUTH_DOMAIN: string
+    readonly COGNITO_CLIENT_ID: string
+    readonly COGNITO_CLIENT_SECRET: string
+    readonly COGNITO_REGION?: string
+    readonly COGNITO_USER_POOL_ID: string
     readonly CLOUDINARY_API_KEY: string
     readonly CLOUDINARY_API_SECRET: string
     readonly CLOUDINARY_CLOUD_NAME: string
