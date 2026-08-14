@@ -1,0 +1,8 @@
+node_modules/
+
+# Source portraits are personal, keep them out of the repository
+input/
+
+# Vector output is regenerated from the scripts, only previews are committed
+output/*.svg
+output/*.tsp
