@@ -1,5 +1,11 @@
 import { getStripeProducts } from "./serverless"
-import { buildLocaleUrl, defaultLocale, localeToCurrency } from "./currency"
+import {
+    buildLocaleUrl,
+    defaultLocale,
+    eurCountryCodes,
+    localeToCurrency,
+    type Locale,
+} from "./currency"
 
 function escapeXml(value: string): string {
     return value
@@ -10,11 +16,40 @@ function escapeXml(value: string): string {
         .replace(/'/g, "&apos;")
 }
 
+function getShippingConfig(locale: Locale) {
+    if (locale === "en-gb") {
+        return { countries: ["GB"], minTransitDays: 7, maxTransitDays: 14 }
+    }
+    if (locale === "en-us") {
+        return { countries: ["US"], minTransitDays: 14, maxTransitDays: 21 }
+    }
+    return { countries: eurCountryCodes, minTransitDays: 14, maxTransitDays: 21 }
+}
+
+function buildShippingXml(locale: Locale, currencyUpper: string) {
+    const { countries, minTransitDays, maxTransitDays } = getShippingConfig(locale)
+    return countries
+        .map(
+            country => `
+      <g:shipping>
+        <g:country>${escapeXml(country)}</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 ${currencyUpper}</g:price>
+        <g:min_handling_time>0</g:min_handling_time>
+        <g:max_handling_time>0</g:max_handling_time>
+        <g:min_transit_time>${minTransitDays}</g:min_transit_time>
+        <g:max_transit_time>${maxTransitDays}</g:max_transit_time>
+      </g:shipping>`,
+        )
+        .join("")
+}
+
 export async function generateGoogleMerchantXml(locale: keyof typeof localeToCurrency = defaultLocale) {
     const baseUrl = "https://andreadiotalleviart.com"
     const brand = "Andrea Diotallevi Art"
     const currency = localeToCurrency[locale]
     const currencyUpper = currency.toUpperCase()
+    const shipping = buildShippingXml(locale, currencyUpper)
 
     const products = await getStripeProducts()
 
@@ -50,6 +85,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
       <g:availability>in stock</g:availability>
       <g:condition>new</g:condition>
       <g:price>${price}</g:price>
+      ${shipping}
       <g:brand>${escapeXml(brand)}</g:brand>
       <g:identifier_exists>false</g:identifier_exists>
       <g:google_product_category>500044</g:google_product_category>
