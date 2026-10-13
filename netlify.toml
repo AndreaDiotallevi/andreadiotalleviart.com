@@ -1,3 +1,9 @@
+[[redirects]]
+  from = "/portfolio/flames"
+  to = "/shop/prints/flames"
+  status = 301
+  force = true
+
 [context.deploy-preview]
   [[context.deploy-preview.headers]]
     for = "/*"
