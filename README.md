@@ -4,6 +4,10 @@
 
 This is a Astro + AWS Serverless website showcasing my [generative art](https://github.com/AndreaDiotallevi/generative-art) and data visualisation experimentations.
 
+The [sketches](./sketches) folder holds standalone generative sketches that render to
+plotter ready SVG, starting with five approaches to drawing a portrait as a single
+continuous line.
+
 ## Live Website
 
 The application is deployed with Netlify at my custom domain [https://www.andreadiotalleviart.com](https://www.andreadiotalleviart.com).
