@@ -1,9 +1,4 @@
-import { getParameterValue } from "./ssm_getParameterValue"
-
-import {
-    CreateConfirmedOrderResponse,
-    CreateEmbryonicOrderResponse,
-} from "../types/theprintspace"
+import { CreateEmbryonicOrderResponse } from "../types/theprintspace"
 
 export const createConfirmedOrder = async ({
     orderId,
@@ -12,40 +7,48 @@ export const createConfirmedOrder = async ({
     orderId: number
     deliveryOptions: CreateEmbryonicOrderResponse["DeliveryOptions"]
 }) => {
-    const creativehubApiKey = await getParameterValue<string>({
-        name: "CREATIVEHUB_API_KEY",
-        withDecryption: true,
-    })
+    console.log("theprintspace API calls are disabled")
+    void orderId
+    void deliveryOptions
+    throw new Error("theprintspace API calls are disabled")
 
-    const deliveryOption = deliveryOptions.reduce((min, option) =>
-        option.DeliveryChargeExcludingSalesTax <
-        min.DeliveryChargeExcludingSalesTax
-            ? option
-            : min
-    )
-
-    const response = await fetch(
-        `${process.env.CREATIVEHUB_API_URL}/api/v1/orders/confirmed`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `ApiKey ${creativehubApiKey}`,
-            },
-            body: JSON.stringify({
-                OrderId: orderId,
-                DeliveryOptionId: deliveryOption.Id,
-            }),
-        }
-    )
-
-    const data = (await response.json()) as CreateConfirmedOrderResponse
-    console.log("CreateConfirmedOrderResponse: ", JSON.stringify(data))
-
-    if (!response.ok) {
-        console.error(response)
-        throw new Error("Failed to create a confirmed order with theprintspace")
-    }
-
-    return "OK"
+    // import { getParameterValue } from "./ssm_getParameterValue"
+    // import { CreateConfirmedOrderResponse } from "../types/theprintspace"
+    //
+    // const creativehubApiKey = await getParameterValue<string>({
+    //     name: "CREATIVEHUB_API_KEY",
+    //     withDecryption: true,
+    // })
+    //
+    // const deliveryOption = deliveryOptions.reduce((min, option) =>
+    //     option.DeliveryChargeExcludingSalesTax <
+    //     min.DeliveryChargeExcludingSalesTax
+    //         ? option
+    //         : min
+    // )
+    //
+    // const response = await fetch(
+    //     `${process.env.CREATIVEHUB_API_URL}/api/v1/orders/confirmed`,
+    //     {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `ApiKey ${creativehubApiKey}`,
+    //         },
+    //         body: JSON.stringify({
+    //             OrderId: orderId,
+    //             DeliveryOptionId: deliveryOption.Id,
+    //         }),
+    //     }
+    // )
+    //
+    // const data = (await response.json()) as CreateConfirmedOrderResponse
+    // console.log("CreateConfirmedOrderResponse: ", JSON.stringify(data))
+    //
+    // if (!response.ok) {
+    //     console.error(response)
+    //     throw new Error("Failed to create a confirmed order with theprintspace")
+    // }
+    //
+    // return "OK"
 }
