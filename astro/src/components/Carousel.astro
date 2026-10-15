@@ -39,7 +39,10 @@ const { images, width, height, altBase } = Astro.props
             }
         </div>
     </div>
-    <div class={`embla-thumbs ${images.length === 1 ? "hidden" : ""}`}>
+    <div
+        class={`embla-thumbs ${images.length === 1 ? "hidden" : ""}`}
+        style={`--thumb-count: ${Math.max(images.length, 4)}`}
+    >
         <div class="embla-thumbs__viewport">
             <div class="embla-thumbs__container">
                 {
@@ -112,7 +115,7 @@ const { images, width, height, altBase } = Astro.props
             margin-left: calc(var(--thumbs-slide-spacing) * -1);
         }
         .embla-thumbs__slide {
-            flex: 0 0 20%;
+            flex: 0 0 calc(100% / var(--thumb-count, 4));
             min-width: 0;
             padding-left: var(--thumbs-slide-spacing);
         }
