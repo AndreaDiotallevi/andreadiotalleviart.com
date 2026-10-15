@@ -1,7 +1,7 @@
 import Stripe from "stripe"
 import { v2 as cloudinary } from "cloudinary"
 import { initialiseClient } from "./stripe_initialiseClient"
-import { getAllProducts } from "./theprintspace_getAllProducts"
+// import { getAllProducts } from "./theprintspace_getAllProducts"
 
 import { StripePrice } from "../types/stripe"
 
@@ -98,40 +98,42 @@ export const stripeSynchroniseProducts = async () => {
 }
 
 const getProducts = async (): Promise<ProductInput[]> => {
-    const theprintspaceProducts = await getAllProducts()
+    // const theprintspaceProducts = await getAllProducts()
+    //
+    // const getProductByFilename = (fileName: string) => {
+    //     const product = theprintspaceProducts.Data.find(
+    //         product => product.FileName === fileName
+    //     )
+    //
+    //     return product
+    // }
+    //
+    // return products.map(product => {
+    //     let theprintspaceProduct = getProductByFilename(
+    //         product.metadata.sku + ".png"
+    //     )
+    //
+    //     if (product.active && !theprintspaceProduct) {
+    //         if (process.env.ENVIRONMENT === "production") {
+    //             throw new Error(
+    //                 `No theprintspace product found for sku ${product.metadata.sku}`
+    //             )
+    //         }
+    //     }
+    //
+    //     return {
+    //         ...product,
+    //         metadata: {
+    //             ...product.metadata,
+    //             theprintspaceProductId: String(theprintspaceProduct?.Id),
+    //             theprintspacePrintOptionId: String(
+    //                 theprintspaceProduct?.PrintOptions[0].Id
+    //             ),
+    //         },
+    //     }
+    // })
 
-    const getProductByFilename = (fileName: string) => {
-        const product = theprintspaceProducts.Data.find(
-            product => product.FileName === fileName
-        )
-
-        return product
-    }
-
-    return products.map(product => {
-        let theprintspaceProduct = getProductByFilename(
-            product.metadata.sku + ".png"
-        )
-
-        if (product.active && !theprintspaceProduct) {
-            if (process.env.ENVIRONMENT === "production") {
-                throw new Error(
-                    `No theprintspace product found for sku ${product.metadata.sku}`
-                )
-            }
-        }
-
-        return {
-            ...product,
-            metadata: {
-                ...product.metadata,
-                theprintspaceProductId: String(theprintspaceProduct?.Id),
-                theprintspacePrintOptionId: String(
-                    theprintspaceProduct?.PrintOptions[0].Id
-                ),
-            },
-        }
-    })
+    return products
 }
 
 type ProductInput = Pick<
