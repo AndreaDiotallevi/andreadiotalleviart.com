@@ -280,7 +280,6 @@ const products: ProductInput[] = [
             // transformImage("nebulae-mockup-paper-1_gvzthk"),
             transformImage("nebulae1_tiboq3"),
             transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
-            transformImage("mockup-series-vertical_hpqksb"),
             transformImage("A116-nebula1_dxzgjj"),
             transformImage("IMG_5220_cizhq8"),
         ],
@@ -309,7 +308,6 @@ const products: ProductInput[] = [
             // transformImage("nebulae-mockup-paper-2_mynxf0"),
             transformImage("nebulae2_unlnm2"),
             transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
-            transformImage("mockup-series-vertical_hpqksb"),
             transformImage("A116-nebula2_fsxqu9"),
             transformImage("IMG_5224_fqexh6"),
         ],
@@ -338,7 +336,6 @@ const products: ProductInput[] = [
             // transformImage("nebulae-mockup-paper-3_kq6yok"),
             transformImage("nebulae3_y5qb1g"),
             transformImage('nebulae-mockup-with-border-3-portrait_adkdeh'),
-            transformImage("mockup-series-vertical_hpqksb"),
             transformImage("A116-nebula3_bpr7wh"),
             transformImage("IMG_5198_pzut4l"),
             // transformImage("nebulae-3_closeup_or5o0e")
