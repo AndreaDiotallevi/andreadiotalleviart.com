@@ -26,7 +26,7 @@ export const stripeSynchroniseProducts = async () => {
         expand: ["data.default_price", "data.default_price.currency_options"],
     })
 
-    const products = await getProducts()
+    // const products = await getProducts()
 
     for (const product of products) {
         console.log("Input product: ", product.metadata.sku)
@@ -97,44 +97,42 @@ export const stripeSynchroniseProducts = async () => {
     console.log("Products synchronized successfully")
 }
 
-const getProducts = async (): Promise<ProductInput[]> => {
-    // const theprintspaceProducts = await getAllProducts()
-    //
-    // const getProductByFilename = (fileName: string) => {
-    //     const product = theprintspaceProducts.Data.find(
-    //         product => product.FileName === fileName
-    //     )
-    //
-    //     return product
-    // }
-    //
-    // return products.map(product => {
-    //     let theprintspaceProduct = getProductByFilename(
-    //         product.metadata.sku + ".png"
-    //     )
-    //
-    //     if (product.active && !theprintspaceProduct) {
-    //         if (process.env.ENVIRONMENT === "production") {
-    //             throw new Error(
-    //                 `No theprintspace product found for sku ${product.metadata.sku}`
-    //             )
-    //         }
-    //     }
-    //
-    //     return {
-    //         ...product,
-    //         metadata: {
-    //             ...product.metadata,
-    //             theprintspaceProductId: String(theprintspaceProduct?.Id),
-    //             theprintspacePrintOptionId: String(
-    //                 theprintspaceProduct?.PrintOptions[0].Id
-    //             ),
-    //         },
-    //     }
-    // })
-
-    return products
-}
+// const getProducts = async (): Promise<ProductInput[]> => {
+//     const theprintspaceProducts = await getAllProducts()
+//
+//     const getProductByFilename = (fileName: string) => {
+//         const product = theprintspaceProducts.Data.find(
+//             product => product.FileName === fileName
+//         )
+//
+//         return product
+//     }
+//
+//     return products.map(product => {
+//         let theprintspaceProduct = getProductByFilename(
+//             product.metadata.sku + ".png"
+//         )
+//
+//         if (product.active && !theprintspaceProduct) {
+//             if (process.env.ENVIRONMENT === "production") {
+//                 throw new Error(
+//                     `No theprintspace product found for sku ${product.metadata.sku}`
+//                 )
+//             }
+//         }
+//
+//         return {
+//             ...product,
+//             metadata: {
+//                 ...product.metadata,
+//                 theprintspaceProductId: String(theprintspaceProduct?.Id),
+//                 theprintspacePrintOptionId: String(
+//                     theprintspaceProduct?.PrintOptions[0].Id
+//                 ),
+//             },
+//         }
+//     })
+// }
 
 type ProductInput = Pick<
     StripePrice["product"],
