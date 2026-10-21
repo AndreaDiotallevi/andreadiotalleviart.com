@@ -13,7 +13,7 @@ const transformImage = (displayName: string) => {
     return cloudinary.url(displayName, {
         transformation: {
             quality: "auto",
-            format: "auto",
+            fetch_format: "auto",
         },
     })
 }
