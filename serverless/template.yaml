@@ -7,6 +7,8 @@ Globals:
         CodeUri: ./
         Timeout: 100
         Runtime: nodejs22.x
+        RuntimeManagementConfig:
+            UpdateRuntimeOn: Auto
         MemorySize: 1024
         Tracing: Active
         Architectures:

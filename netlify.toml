@@ -17,4 +17,4 @@
       X-Robots-Tag = "noindex, nofollow"
 
 [build.environment]
-  NODE_VERSION = "22.19.0"
+  NODE_VERSION = "22.23.4"
