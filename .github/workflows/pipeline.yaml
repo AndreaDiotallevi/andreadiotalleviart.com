@@ -44,7 +44,7 @@ jobs:
         if: github.event_name == 'push'
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - run: |
                   # trigger the tests here
 
@@ -53,14 +53,14 @@ jobs:
         needs: [test]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: aws-actions/setup-sam@v2
+            - uses: actions/checkout@v5
+            - uses: aws-actions/setup-sam@v3
               with:
                   use-installer: true
             - run: sam build --template ${SAM_TEMPLATE} --use-container
 
             - name: Assume the staging pipeline user role
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
@@ -101,8 +101,8 @@ jobs:
         needs: [test]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: aws-actions/setup-sam@v2
+            - uses: actions/checkout@v5
+            - uses: aws-actions/setup-sam@v3
               with:
                   use-installer: true
 
@@ -110,7 +110,7 @@ jobs:
               run: sam build --template ${SAM_TEMPLATE} --use-container
 
             - name: Assume the staging pipeline user role
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
@@ -127,13 +127,13 @@ jobs:
                     --region ${STAGING_REGION} \
                     --output-template-file packaged-staging.yaml
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v6
               with:
                   name: packaged-staging.yaml
                   path: serverless/packaged-staging.yaml
 
             - name: Assume the prod pipeline user role
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
@@ -150,7 +150,7 @@ jobs:
                     --region ${PROD_REGION} \
                     --output-template-file packaged-prod.yaml
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v6
               with:
                   name: packaged-prod.yaml
                   path: serverless/packaged-prod.yaml
@@ -160,16 +160,16 @@ jobs:
         needs: [build-and-package]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: aws-actions/setup-sam@v2
+            - uses: actions/checkout@v5
+            - uses: aws-actions/setup-sam@v3
               with:
                   use-installer: true
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v7
               with:
                   name: packaged-staging.yaml
 
             - name: Assume the staging pipeline user role
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
@@ -210,7 +210,7 @@ jobs:
         needs: [deploy-staging]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
             - run: |
                   # trigger the integration tests here
 
@@ -222,16 +222,16 @@ jobs:
         # https://docs.github.com/en/actions/reference/environments
         # environment: <configured-environment>
         steps:
-            - uses: actions/checkout@v4
-            - uses: aws-actions/setup-sam@v2
+            - uses: actions/checkout@v5
+            - uses: aws-actions/setup-sam@v3
               with:
                   use-installer: true
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v7
               with:
                   name: packaged-prod.yaml
 
             - name: Assume the prod pipeline user role
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
