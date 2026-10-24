@@ -36,8 +36,16 @@ export function generateStructuredData(options: GenerateStructuredDataOptions) {
         {
             "@type": "WebSite",
             "@id": `${siteOrigin}/#website`,
+            // Preferred site name for Google Search (sitename in SERPs).
+            // alternateName gives Google fallbacks when it lacks confidence in `name`.
+            // See: https://developers.google.com/search/docs/appearance/site-names
             name: "Andrea Diotallevi Art",
-            url: siteOrigin,
+            alternateName: [
+                "Andrea Diotallevi",
+                "andreadiotalleviart",
+                "andreadiotalleviart.com",
+            ],
+            url: `${siteOrigin}/`,
             publisher: { "@id": `${siteOrigin}/#organization` },
         },
         {
