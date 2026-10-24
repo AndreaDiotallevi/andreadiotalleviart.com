@@ -42,7 +42,7 @@ env:
 jobs:
     test:
         if: github.event_name == 'push'
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - run: |
@@ -51,7 +51,7 @@ jobs:
     build-and-deploy-staging:
         if: startsWith(github.ref, 'refs/heads/staging')
         needs: [test]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - uses: aws-actions/setup-sam@v2
@@ -99,7 +99,7 @@ jobs:
     build-and-package:
         if: github.ref == 'refs/heads/main'
         needs: [test]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - uses: aws-actions/setup-sam@v2
@@ -158,7 +158,7 @@ jobs:
     deploy-staging:
         if: github.ref == 'refs/heads/main'
         needs: [build-and-package]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - uses: aws-actions/setup-sam@v2
@@ -208,7 +208,7 @@ jobs:
     integration-test:
         if: github.ref == 'refs/heads/main'
         needs: [deploy-staging]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             - run: |
@@ -217,7 +217,7 @@ jobs:
     deploy-prod:
         if: github.ref == 'refs/heads/main'
         needs: [integration-test]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         # Configure GitHub Action Environment to have a manual approval step before deployment to production
         # https://docs.github.com/en/actions/reference/environments
         # environment: <configured-environment>
