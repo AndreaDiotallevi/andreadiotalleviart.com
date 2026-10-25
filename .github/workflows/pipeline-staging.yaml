@@ -1,0 +1,86 @@
+name: Pipeline Staging
+
+defaults:
+    run:
+        working-directory: ./serverless
+
+# Same jobs as a push to staging*: test + build-and-deploy-staging.
+# Used for staging* pushes and all pull requests. Never deploys prod.
+on:
+    push:
+        branches:
+            - "staging*"
+        paths:
+            - "serverless/**"
+            - .github/workflows/pipeline-staging.yaml
+    pull_request:
+        paths:
+            - "serverless/**"
+            - .github/workflows/pipeline-staging.yaml
+            - .github/workflows/pipeline.yaml
+
+env:
+    PIPELINE_USER_ACCESS_KEY_ID: ${{ secrets.PIPELINE_USER_ACCESS_KEY_ID }}
+    PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.PIPELINE_USER_SECRET_ACCESS_KEY }}
+    SAM_TEMPLATE: template.yaml
+    STAGING_STACK_NAME: andreadiotalleviart
+    STAGING_PIPELINE_EXECUTION_ROLE: ${{ secrets.STAGING_PIPELINE_EXECUTION_ROLE }}
+    STAGING_CLOUDFORMATION_EXECUTION_ROLE: ${{ secrets.STAGING_CLOUDFORMATION_EXECUTION_ROLE }}
+    STAGING_ARTIFACTS_BUCKET: aws-sam-cli-managed-staging-pipel-artifactsbucket-1571mu0d2n3o
+    STAGING_REGION: eu-west-2
+    NETLIFY_BUILD_HOOK_STAGING: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - run: |
+                  # trigger the tests here
+
+    build-and-deploy-staging:
+        needs: [test]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: aws-actions/setup-sam@v3
+              with:
+                  use-installer: true
+            - run: sam build --template ${SAM_TEMPLATE} --use-container
+
+            - name: Assume the staging pipeline user role
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.STAGING_REGION }}
+                  role-to-assume: ${{ env.STAGING_PIPELINE_EXECUTION_ROLE }}
+                  role-session-name: staging-deployment
+                  role-duration-seconds: 3600
+                  role-skip-session-tagging: true
+
+            - name: Deploy to staging stack in the staging account
+              shell: bash
+              run: |
+                  sam deploy --stack-name ${STAGING_STACK_NAME} \
+                    --parameter-overrides Environment=staging \
+                    --capabilities CAPABILITY_IAM \
+                    --region ${STAGING_REGION} \
+                    --s3-bucket ${STAGING_ARTIFACTS_BUCKET} \
+                    --no-fail-on-empty-changeset \
+                    --role-arn ${STAGING_CLOUDFORMATION_EXECUTION_ROLE}
+            - name: Sync Stripe products (staging)
+              run: |
+                  aws lambda invoke \
+                    --region ${STAGING_REGION} \
+                    --function-name ${STAGING_STACK_NAME}-StripeSynchroniseProducts \
+                    --payload '{}' \
+                    --log-type Tail \
+                    --query 'LogResult' \
+                    --output text \
+                    /dev/null | base64 --decode
+            - name: Trigger Netlify deploy (staging)
+              if: ${{ env.NETLIFY_BUILD_HOOK_STAGING != '' }}
+              run: |
+                  echo "Triggering Netlify build hook for staging..."
+                  curl -s -X POST "${{ env.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
