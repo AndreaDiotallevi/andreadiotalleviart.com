@@ -113,7 +113,7 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
         <div class="mb-4 md:hidden">
             <h1 class="text-2xl font-bold">{product.metadata.displayName}</h1>
-            {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
+            {product.metadata.displaySubtitle? <p class="text-sm md:text-base font-semibold text-gray-600 mt-1">{product.metadata.displaySubtitle}</p>:<></>}
         </div>
         <Carousel images={product.images} width={1429} height={2000} altBase={product.metadata.displayName} />
         {/* Mobile-only submit button under images */}
@@ -130,7 +130,7 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         <div class="hidden md:flex items-start justify-between mb-6">
             <div>
                 <h1 class="text-5xl font-bold">{product.metadata.displayName}</h1>
-                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+                {product.metadata.displaySubtitle? <p class="text-sm md:text-base font-semibold text-gray-600 mt-2">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
             <div class="flex items-center">
                 <label for="locale-selector-product" class="sr-only">Region / language</label>
