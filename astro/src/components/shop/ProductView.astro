@@ -1,12 +1,14 @@
 ---
+import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import BackToLink from "@components/BackToLink.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
 import LocaleSelector from "@components/LocaleSelector.astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
-import { productsData } from "@utils/productsData"
+import { getRelatedSeriesProducts, productsData } from "@utils/productsData"
 import type { Currency } from "@utils/stripe"
 import { buildLocaleUrl } from "@utils/currency"
 
@@ -14,10 +16,12 @@ interface Props {
     locale: string
     currency: Currency
     product: any
+    products?: any[]
 }
 
-const { locale, currency, product } = Astro.props as Props
+const { locale, currency, product, products = [] } = Astro.props as Props
 const shopHref = buildLocaleUrl('/shop', locale as any)
+const relatedSeries = getRelatedSeriesProducts(product.metadata.sku, products)
 
 function normalizeSingleLine(text: string) {
     return text.replace(/\s+/g, " ").trim()
@@ -197,6 +201,46 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
     </form>
 </div>
+
+{relatedSeries ? (
+    <section class="max-w-screen-xl mx-auto px-4 pb-8 pt-4 md:pt-10 text-gray-800 border-t border-gray-200">
+        <h2 class="text-2xl font-bold mb-4 md:mb-6">{relatedSeries.heading}</h2>
+        <div class="grid grid-cols-2 gap-x-2 gap-y-8 md:max-w-3xl">
+            {relatedSeries.products.map(relatedProduct => (
+                <a
+                    href={buildLocaleUrl(`/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`, locale as any)}
+                    class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
+                >
+                    <div class="bg-gray-100 p-4 sm:p-6 md:p-10 flex items-center justify-center">
+                        <Image
+                            alt={relatedProduct.metadata.displayName}
+                            src={relatedProduct.images[1] ?? relatedProduct.images[0]}
+                            width={1429}
+                            height={2000}
+                            sizes="(max-width: 768px) 50vw, 360px"
+                            breakpoints={imageBreakpoints({
+                                maxWidth: 480,
+                                assetWidth: 1414,
+                            })}
+                            loading="lazy"
+                            fetchpriority="low"
+                            class="shadow-md max-h-[360px] object-contain"
+                        />
+                    </div>
+                    <p class="font-bold md:text-xl mt-2 md:mt-3">
+                        {relatedProduct.metadata.displayName}
+                    </p>
+                    <p class="font-semibold text-sm md:text-base md:mt-1">
+                        {formatCurrency({
+                            value: relatedProduct.default_price.currency_options[currency].unit_amount,
+                            currency,
+                        })}
+                    </p>
+                </a>
+            ))}
+        </div>
+    </section>
+) : <></>}
 </BaseLayout>
 
 <script>

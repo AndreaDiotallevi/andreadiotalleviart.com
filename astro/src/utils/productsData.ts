@@ -1,9 +1,16 @@
+export type ProductSeries = {
+    id: string
+    heading: string
+    order: number
+}
+
 export type ProductExtraData = {
     about: string[]
     framing: string[]
+    series?: ProductSeries
 }
 
-const nebulaShared: ProductExtraData = {
+const nebulaShared = {
     about: [
         "This generative artwork is built from overlapping circles that grow in size, layered to create depth and movement. A gently warming background hue ties the trilogy together as it progresses.",
         "The transparency of the circles creates nuanced colour blends and a sense of motion, preserving fine detail that feels alive from any viewing distance.",
@@ -13,6 +20,11 @@ const nebulaShared: ProductExtraData = {
         "A simple white frame (50 x 70 cm) with a frame width no wider than 20 mm is recommended. This clean style lets the artwork shine, with the print fitting directly into the frame — no extra mounting needed.",
         "If you're buying this artwork alone (not as part of the trilogy), you can add a 5 cm mount and use a larger frame (60 x 80 cm) for a bold and elegant look.",
     ],
+}
+
+const nebulaSeriesBase = {
+    id: "nebula",
+    heading: "More from the Nebula trilogy",
 }
 
 export const productsData: Record<string, ProductExtraData> = {
@@ -34,6 +46,7 @@ export const productsData: Record<string, ProductExtraData> = {
             "The transparency of the circles creates nuanced colour blends and a sense of motion, preserving fine detail that feels alive from any viewing distance.",
         ],
         framing: nebulaShared.framing,
+        series: { ...nebulaSeriesBase, order: 1 },
     },
     "print_nebula-2_50x70": {
         about: [
@@ -43,6 +56,7 @@ export const productsData: Record<string, ProductExtraData> = {
             "The transparency of the overlapping circles continues to generate unexpected colour blends and a sense of motion.",
         ],
         framing: nebulaShared.framing,
+        series: { ...nebulaSeriesBase, order: 2 },
     },
     "print_nebula-3_50x70": {
         about: [
@@ -52,7 +66,31 @@ export const productsData: Record<string, ProductExtraData> = {
             "The transparency of the overlapping circles generates unexpected colour blends — a signature effect across the trilogy.",
         ],
         framing: nebulaShared.framing,
+        series: { ...nebulaSeriesBase, order: 3 },
     },
+}
+
+export function getRelatedSeriesProducts<T extends { metadata: { sku: string } }>(
+    currentSku: string,
+    products: T[],
+): { heading: string; products: T[] } | null {
+    const currentSeries = productsData[currentSku]?.series
+    if (!currentSeries) return null
+
+    const related = products
+        .filter(product => {
+            const series = productsData[product.metadata.sku]?.series
+            return series?.id === currentSeries.id && product.metadata.sku !== currentSku
+        })
+        .sort((a, b) => {
+            const orderA = productsData[a.metadata.sku]?.series?.order ?? 0
+            const orderB = productsData[b.metadata.sku]?.series?.order ?? 0
+            return orderA - orderB
+        })
+
+    if (!related.length) return null
+
+    return { heading: currentSeries.heading, products: related }
 }
 
 export default productsData
