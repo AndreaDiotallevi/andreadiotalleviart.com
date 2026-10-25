@@ -269,7 +269,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebula I",
-            displaySubtitle: "First of a series of 3",
+            displaySubtitle: "First piece of the Nebula trilogy",
             displayOrder: "1",
             orientation: "portrait",
             size: "50x70",
@@ -297,7 +297,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebula II",
-            displaySubtitle: "Second of a series of 3",
+            displaySubtitle: "Second piece of the Nebula trilogy",
             displayOrder: "2",
             orientation: "portrait",
             size: "50x70",
@@ -325,7 +325,7 @@ const products: ProductInput[] = [
         metadata: {
             category: "prints",
             displayName: "Nebula III",
-            displaySubtitle: "Third of a series of 3",
+            displaySubtitle: "Third piece of the Nebula trilogy",
             displayOrder: "3",
             orientation: "portrait",
             size: "50x70",
