@@ -196,7 +196,6 @@ const products: ProductInput[] = [
             sku: "print_flames_A3",
         },
         images: [
-            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("flames-mockup_gzj45v"),
             // transformImage("flames-mockup-2_veo56n"),
             transformImage("flames-mockup-2_ysiocl"),
@@ -278,7 +277,6 @@ const products: ProductInput[] = [
             sku: "print_nebula-1_50x70",
         },
         images: [
-            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-1_gvzthk"),
             transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
             transformImage("nebulae1_tiboq3"),
@@ -307,7 +305,6 @@ const products: ProductInput[] = [
             sku: "print_nebula-2_50x70",
         },
         images: [
-            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-2_mynxf0"),
             transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
             transformImage("nebulae2_unlnm2"),
@@ -336,7 +333,6 @@ const products: ProductInput[] = [
             sku: "print_nebula-3_50x70",
         },
         images: [
-            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-3_kq6yok"),
             transformImage('nebulae-mockup-with-border-3-portrait_adkdeh'),
             transformImage("nebulae3_y5qb1g"),

@@ -4,8 +4,6 @@ defaults:
     run:
         working-directory: ./serverless
 
-# Main-only release path: package → staging → integration → prod.
-# Never runs on pull requests.
 on:
     push:
         branches:
