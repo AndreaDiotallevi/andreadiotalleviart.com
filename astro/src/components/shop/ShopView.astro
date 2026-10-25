@@ -48,22 +48,20 @@ const { locale, currency, products } = Astro.props as Props
                         href={buildLocaleUrl(`/shop/${product.metadata.category}/${product.metadata.slug}`, locale as any)}
                         class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                     >
-                        <div class="bg-gray-100 p-6 sm:p-10 md:p-15 lg:p-20 flex items-center justify-center">
-                            <Image
-                                alt={product.name}
-                                src={product.images[1] ?? product.images[0]}
-                                width={1429}
-                                height={2000}
-                                sizes="(max-width: 1280px) 200vw, 100vw"
-                                breakpoints={imageBreakpoints({
-                                    maxWidth: 735,
-                                    assetWidth: 1414,
-                                })}
-                                loading={index < 4 ? "eager" : "lazy"}
-                                fetchpriority={index < 4 ? "high" : "low"}
-                                class="shadow-md max-h-[500px] object-contain"
-                            />
-                        </div>
+                        <Image
+                            alt={product.name}
+                            src={product.images[0]}
+                            width={1429}
+                            height={2000}
+                            sizes="(max-width: 1280px) 200vw, 100vw"
+                            breakpoints={imageBreakpoints({
+                                maxWidth: 735,
+                                assetWidth: 1414,
+                            })}
+                            loading={index < 4 ? "eager" : "lazy"}
+                            fetchpriority={index < 4 ? "high" : "low"}
+                            class="w-full max-h-[500px] object-contain"
+                        />
                         <p class="font-bold md:text-2xl mt-2 md:mt-4">
                             {product.metadata.displayName}
                         </p>
