@@ -196,10 +196,11 @@ const products: ProductInput[] = [
             sku: "print_flames_A3",
         },
         images: [
+            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("flames-mockup_gzj45v"),
-            transformImage("flames-artwork_ioxny4"),
             // transformImage("flames-mockup-2_veo56n"),
             transformImage("flames-mockup-2_ysiocl"),
+            transformImage("flames-artwork_ioxny4"),
             transformImage("A116-flames_voptyx"),
             transformImage("flames-paper-closeup_x7sh8y")
         ],
@@ -277,9 +278,10 @@ const products: ProductInput[] = [
             sku: "print_nebula-1_50x70",
         },
         images: [
+            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-1_gvzthk"),
-            transformImage("nebulae1_tiboq3"),
             transformImage("nebulae-mockup-with-border-1-portrait_n8x30i"),
+            transformImage("nebulae1_tiboq3"),
             transformImage("A116-nebula1_dxzgjj"),
             transformImage("IMG_5220_cizhq8"),
         ],
@@ -305,9 +307,10 @@ const products: ProductInput[] = [
             sku: "print_nebula-2_50x70",
         },
         images: [
+            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-2_mynxf0"),
-            transformImage("nebulae2_unlnm2"),
             transformImage("nebulae-mockup-with-border-2-portrait_yzrf1b"),
+            transformImage("nebulae2_unlnm2"),
             transformImage("A116-nebula2_fsxqu9"),
             transformImage("IMG_5224_fqexh6"),
         ],
@@ -333,9 +336,10 @@ const products: ProductInput[] = [
             sku: "print_nebula-3_50x70",
         },
         images: [
+            // Primary image for display + SEO/Merchant metadata (mockup first).
             // transformImage("nebulae-mockup-paper-3_kq6yok"),
-            transformImage("nebulae3_y5qb1g"),
             transformImage('nebulae-mockup-with-border-3-portrait_adkdeh'),
+            transformImage("nebulae3_y5qb1g"),
             transformImage("A116-nebula3_bpr7wh"),
             transformImage("IMG_5198_pzut4l"),
             // transformImage("nebulae-3_closeup_or5o0e")

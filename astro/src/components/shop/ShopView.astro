@@ -6,7 +6,6 @@ import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import LocaleSelector from "@components/LocaleSelector.astro"
 import { buildLocaleUrl } from "@utils/currency"
-import { productMetadataImage } from "@utils/productMetadataImages"
 import type { Currency } from "@utils/stripe"
 
 interface Props {
@@ -21,7 +20,7 @@ const { locale, currency, products } = Astro.props as Props
 <BaseLayout
     title="Shop | Giclée Fine Art Prints | Andrea Diotallevi Art"
     description="Generative giclée fine art prints on Hahnemühle Photo Rag 308gsm. Museum-quality, archival inks. Free carbon‑neutral shipping."
-    image={products[0] ? productMetadataImage(products[0].images) : undefined}
+    image={products[0] ? products[0].images[0] : undefined}
     currency={currency}
     newsletter={false}
     newsletter={true}
