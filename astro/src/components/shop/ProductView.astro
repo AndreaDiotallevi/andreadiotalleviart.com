@@ -205,29 +205,26 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
 {relatedSeries ? (
     <section class="max-w-screen-xl mx-auto px-4 pb-8 pt-4 md:pt-10 text-gray-800 border-t border-gray-200">
         <h2 class="text-2xl font-bold mb-4 md:mb-6">{relatedSeries.heading}</h2>
-        <div class="grid grid-cols-2 gap-x-2 gap-y-8 md:max-w-3xl">
+        <div class="grid grid-cols-2 gap-x-2 md:gap-x-8 gap-y-8">
             {relatedSeries.products.map(relatedProduct => (
                 <a
                     href={buildLocaleUrl(`/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`, locale as any)}
                     class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                 >
-                    <div class="bg-gray-100 p-4 sm:p-6 md:p-10 flex items-center justify-center">
-                        <Image
-                            alt={relatedProduct.metadata.displayName}
-                            src={relatedProduct.images[1] ?? relatedProduct.images[0]}
-                            width={1429}
-                            height={2000}
-                            sizes="(max-width: 768px) 50vw, 360px"
-                            breakpoints={imageBreakpoints({
-                                maxWidth: 480,
-                                assetWidth: 1414,
-                            })}
-                            loading="lazy"
-                            fetchpriority="low"
-                            class="shadow-md max-h-[360px] object-contain"
-                        />
-                    </div>
-                    <p class="font-bold md:text-xl mt-2 md:mt-3">
+                    <Image
+                        alt={relatedProduct.metadata.displayName}
+                        src={relatedProduct.images[1] ?? relatedProduct.images[0]}
+                        width={1429}
+                        height={2000}
+                        sizes="(max-width: 768px) 200vw, 100vw"
+                        breakpoints={imageBreakpoints({
+                            maxWidth: 1500,
+                            assetWidth: 1429,
+                        })}
+                        loading="lazy"
+                        fetchpriority="low"
+                    />
+                    <p class="font-bold md:text-2xl mt-2 md:mt-4">
                         {relatedProduct.metadata.displayName}
                     </p>
                     <p class="font-semibold text-sm md:text-base md:mt-1">
