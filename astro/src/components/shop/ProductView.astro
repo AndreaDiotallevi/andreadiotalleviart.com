@@ -205,29 +205,29 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
 {relatedSeries ? (
     <section class="max-w-screen-xl mx-auto px-4 pb-8 pt-4 md:pt-10 text-gray-800 border-t border-gray-200">
         <h2 class="text-2xl font-bold mb-4 md:mb-6">{relatedSeries.heading}</h2>
-        <div class="grid grid-cols-2 gap-x-2 md:gap-x-8 gap-y-8">
+        <div class="related-thumbs">
             {relatedSeries.products.map(relatedProduct => (
                 <a
                     href={buildLocaleUrl(`/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`, locale as any)}
-                    class="flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
+                    class="related-thumbs__item flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
                 >
                     <Image
                         alt={relatedProduct.metadata.displayName}
                         src={relatedProduct.images[1] ?? relatedProduct.images[0]}
                         width={1429}
                         height={2000}
-                        sizes="(max-width: 768px) 200vw, 100vw"
+                        sizes="600px"
                         breakpoints={imageBreakpoints({
-                            maxWidth: 1500,
+                            maxWidth: 600,
                             assetWidth: 1429,
                         })}
                         loading="lazy"
                         fetchpriority="low"
                     />
-                    <p class="font-bold md:text-2xl mt-2 md:mt-4">
+                    <p class="font-bold text-sm md:text-base mt-2">
                         {relatedProduct.metadata.displayName}
                     </p>
-                    <p class="font-semibold text-sm md:text-base md:mt-1">
+                    <p class="font-semibold text-xs md:text-sm md:mt-0.5">
                         {formatCurrency({
                             value: relatedProduct.default_price.currency_options[currency].unit_amount,
                             currency,
@@ -238,6 +238,27 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
     </section>
 ) : <></>}
+
+<style>
+    .related-thumbs {
+        --related-thumb-spacing: 0.8rem;
+        display: flex;
+        flex-direction: row;
+        margin-left: calc(var(--related-thumb-spacing) * -1);
+    }
+    .related-thumbs__item {
+        /* Mobile: 1/4 of full product column (same as carousel thumbs) */
+        flex: 0 0 25%;
+        min-width: 0;
+        padding-left: var(--related-thumb-spacing);
+    }
+    @media (min-width: 768px) {
+        .related-thumbs__item {
+            /* Desktop: match carousel thumbs (1/4 of the half-width gallery column) */
+            flex: 0 0 calc(50% / 4);
+        }
+    }
+</style>
 </BaseLayout>
 
 <script>
