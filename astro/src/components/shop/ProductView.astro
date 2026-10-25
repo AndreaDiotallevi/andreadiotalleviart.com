@@ -160,13 +160,13 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
                         }
                     </option>
                 </select>
-                <p class="mb-1">The image is printed full bleed with no border. Any frames shown in images are for display purposes only.</p>
+                <p class="mb-1">The image is printed right to the edge, with no border. Frames in the photos are for display only — they aren't included.</p>
             </div>
             <div>
-                <h2 class="text-2xl font-bold mb-2">Fine art printing</h2>
+                <h2 class="text-2xl font-bold mb-2">How it's printed</h2>
                 <div class="space-y-2">
-                    <p>Each print is produced using Giclée printing, a museum-quality process that lays microscopic droplets of archival pigment ink onto the paper for vivid colour and exceptional detail.</p>
-                    <p>Printed on Hahnemühle Photo Rag 308gsm — a soft cotton rag paper chosen for depth, longevity, and fine detail.</p>
+                    <p>I print each piece as a giclée on soft, textured cotton paper — Hahnemühle Photo Rag 308gsm. It's a high-quality fine art process that holds colour and detail beautifully, and is made to last.</p>
+                    <p>I chose this paper because it brings out the depth in the work and feels lovely in the hand.</p>
                 </div>
             </div>
             {productsData[product.metadata.sku]?.framing?.length ? (
@@ -182,16 +182,16 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
             <div>
                 <h2 class="text-2xl font-bold mb-2">Shipping</h2>
                 <div class="space-y-2">
-                    <p>Free carbon-neutral shipping, with protective packaging so the artwork arrives in perfect condition.</p>
-                    <p>Delivery is typically 1–2 weeks within the UK, and 2–3 weeks internationally.</p>
-                    <p>Orders outside the UK may be subject to import duties, taxes, and fees. These aren't collected at checkout and are payable on delivery.</p>
+                    <p>Shipping is free and carbon-neutral. I pack each print carefully so it arrives safely.</p>
+                    <p>UK delivery usually takes about 1–2 weeks; outside the UK, around 2–3 weeks.</p>
+                    <p>If you're ordering from outside the UK, customs may charge import duties or taxes on arrival — these aren't included at checkout.</p>
                 </div>
             </div>
             <div>
                 <h2 class="text-2xl font-bold mb-2">{
                     formatCurrency({ value: product.default_price.currency_options[currency].unit_amount, currency })
                 }</h2>
-                <p>Apply promotion codes on the cart page.</p>
+                <p>You can add a promotion code in the cart.</p>
             </div>
             <Button id="submit-button-desktop" buttonText="Add to cart" errorMessage="There was an error creating your session. Please try again." />
         </div>
