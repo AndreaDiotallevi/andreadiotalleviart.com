@@ -8,7 +8,7 @@ import LocaleSelector from "@components/LocaleSelector.astro"
 import { imageBreakpoints } from "@utils/breakpoints"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
-import { getRelatedSeriesProducts, productsData } from "@utils/productsData"
+import { productsData } from "@utils/productsData"
 import type { Currency } from "@utils/stripe"
 import { buildLocaleUrl } from "@utils/currency"
 
@@ -21,7 +21,15 @@ interface Props {
 
 const { locale, currency, product, products = [] } = Astro.props as Props
 const shopHref = buildLocaleUrl('/shop', locale as any)
-const relatedSeries = getRelatedSeriesProducts(product.metadata.sku, products)
+
+const relatedNebulaSlugs: Record<string, string[]> = {
+    "nebula-1": ["nebula-2", "nebula-3"],
+    "nebula-2": ["nebula-1", "nebula-3"],
+    "nebula-3": ["nebula-1", "nebula-2"],
+}
+const relatedProducts = (relatedNebulaSlugs[product.metadata.slug] ?? [])
+    .map(slug => products.find(p => p.metadata.slug === slug))
+    .filter(Boolean)
 
 function normalizeSingleLine(text: string) {
     return text.replace(/\s+/g, " ").trim()
@@ -202,11 +210,11 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
     </form>
 </div>
 
-{relatedSeries ? (
+{relatedProducts.length ? (
     <section class="max-w-screen-xl mx-auto px-4 pb-8 pt-4 md:pt-10 text-gray-800">
-        <h2 class="text-sm md:text-base font-semibold text-gray-600 mb-3 md:mb-4">{relatedSeries.heading}</h2>
+        <h2 class="text-sm md:text-base font-semibold text-gray-600 mb-3 md:mb-4">More from the Nebula trilogy</h2>
         <div class="related-thumbs">
-            {relatedSeries.products.map(relatedProduct => (
+            {relatedProducts.map(relatedProduct => (
                 <a
                     href={buildLocaleUrl(`/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`, locale as any)}
                     class="related-thumbs__item flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
