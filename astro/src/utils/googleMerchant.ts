@@ -20,10 +20,7 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const items = products
         .map(product => {
-            const blockedImageSubstrings = ["mockup-series-vertical_hpqksb"]
-            const imageLinks = (product.images ?? []).filter(
-                url => !blockedImageSubstrings.some(sub => url.includes(sub))
-            )
+            const imageLinks = product.images ?? []
             const imageLink = imageLinks[0] ?? ""
             const additionalImages = imageLinks
                 .slice(1)
