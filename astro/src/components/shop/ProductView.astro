@@ -247,15 +247,15 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         margin-left: calc(var(--related-thumb-spacing) * -1);
     }
     .related-thumbs__item {
-        /* Mobile: 1/4 of full product column (same as carousel thumbs) */
-        flex: 0 0 25%;
+        /* Mobile: 1/3 of full product column */
+        flex: 0 0 calc(100% / 3);
         min-width: 0;
         padding-left: var(--related-thumb-spacing);
     }
     @media (min-width: 768px) {
         .related-thumbs__item {
-            /* Desktop: match carousel thumbs (1/4 of the half-width gallery column) */
-            flex: 0 0 calc(50% / 4);
+            /* Desktop: 1/3 of the half-width gallery column */
+            flex: 0 0 calc(50% / 3);
         }
     }
 </style>
