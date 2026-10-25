@@ -5,21 +5,21 @@ export type ProductExtraData = {
 
 const nebulaShared: ProductExtraData = {
     about: [
-        "This piece is built from overlapping circles that grow larger as they layer, creating depth and movement. A gently warming background ties the trilogy together as it progresses.",
-        "Where the circles overlap, the colours blend in soft, unexpected ways — with a quiet sense of motion that holds up even when you look closely.",
-        "I originally made it for a dear friend, Alessandro, who wanted bold, saturated colours to bring life into a darker living room. It's a good fit if you're looking to brighten a space.",
+        "This generative artwork is built from overlapping circles that grow in size, layered to create depth and movement. A gently warming background hue ties the trilogy together as it progresses.",
+        "The transparency of the circles creates subtle colour blends and a sense of motion, with fine detail that holds up from any viewing distance.",
+        "Originally created for a dear friend, Alessandro, who wanted bold, saturated colours to bring life and energy into a darker living room — ideal if you're looking to brighten your space.",
     ],
     framing: [
-        "I'd recommend a simple white frame (50 × 70 cm), no wider than about 20 mm. The print fits directly into the frame — no mount needed — so the artwork stays the focus.",
-        "If you're getting this piece on its own (not as part of the trilogy), you can add a 5 cm mount and use a larger 60 × 80 cm frame for a bit more breathing room.",
+        "A simple white frame (50 x 70 cm) with a frame width no wider than 20 mm is recommended. This clean style lets the artwork shine, with the print fitting directly into the frame — no extra mounting needed.",
+        "If you're buying this artwork alone (not as part of the trilogy), you can add a 5 cm mount and use a larger frame (60 x 80 cm) for a bold, elegant look.",
     ],
 }
 
 export const productsData: Record<string, ProductExtraData> = {
     "print_flames_A3": {
         about: [
-            "This piece starts from a source image. I use a pixel-sorting algorithm that reorders the pixels by colour, pulling them into flowing ribbons.",
-            "The result is a soft, rich texture — edges dissolve into gradients, with a depth that feels somehow both natural and made by code.",
+            "This generative artwork is created using a pixel-sorting technique applied to a source image. The algorithm reorders pixels based on their colour, sweeping them into flowing ribbons.",
+            "This process produces a rich, soft texture where edges dissolve into gradients, revealing subtle transitions and a depth that feels both organic and computational.",
         ],
         framing: [],
         // framing: [
@@ -29,27 +29,27 @@ export const productsData: Record<string, ProductExtraData> = {
     },
     "print_nebula-1_50x70": {
         about: [
-            "The first piece of the Nebula trilogy. Here the nebula is just beginning to form — the circles are still small, and you can see the overall shape starting to emerge.",
-            "The background is a soft, light yellow, which gives the piece an airy, open feel.",
-            "Where the circles overlap, the colours blend gently, with a quiet sense of motion that holds up even close up.",
+            "The first piece of the Nebula trilogy. The nebula is at the origin of its formation — the circles are still small, and you can see the overall shape beginning to emerge.",
+            "The background is a soft yellow and still quite light, giving the piece an airy, open feel.",
+            "The transparency of the circles creates subtle colour blends and a sense of motion, with fine detail that holds up from any viewing distance.",
         ],
         framing: nebulaShared.framing,
     },
     "print_nebula-2_50x70": {
         about: [
-            "The second piece of the Nebula trilogy. The same circular forms from Nebula I are now exactly double the size, and take up more of the composition.",
-            "Circles gather to suggest a larger sphere, with others clustering around it.",
-            "The background shifts a little darker toward orange — warm and balanced.",
-            "Overlapping circles keep creating unexpected colour blends and a quiet sense of motion.",
+            "The second piece of the Nebula trilogy. The same circular forms from Nebula I are now exactly double the size, occupying more of the composition.",
+            "Individual circles cluster to suggest a larger sphere, with surrounding circles gathering around it.",
+            "The background shifts slightly darker toward orange, creating a warm, well-balanced feel.",
+            "The transparency of the overlapping circles continues to create unexpected colour blends and a sense of motion.",
         ],
         framing: nebulaShared.framing,
     },
     "print_nebula-3_50x70": {
         about: [
-            "The third and final piece of the Nebula trilogy. The circles are exactly double the size of Nebula II (four times Nebula I).",
-            "Most of them extend beyond the frame, so the image feels quite different from the earlier pieces.",
-            "The background deepens to a dark orange-red, with stronger contrast against the circle colours.",
-            "As throughout the trilogy, the overlapping circles create unexpected colour blends.",
+            "The third piece of the Nebula trilogy. The circles are exactly double the size of Nebula II (four times Nebula I).",
+            "Most circles extend beyond the frame, filling the composition so that the overall image feels quite different from the previous pieces.",
+            "The background deepens to a dark orange-red, adding strong character and striking contrast against the circle colours.",
+            "The transparency of the overlapping circles creates unexpected colour blends — a signature effect across the trilogy.",
         ],
         framing: nebulaShared.framing,
     },
