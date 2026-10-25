@@ -1,0 +1,22 @@
+{
+    "name": "sketches",
+    "private": true,
+    "description": "Single continuous line portrait sketches",
+    "scripts": {
+        "test-portrait": "ts-node src/tools/make-test-portrait.ts",
+        "stipple-tsp": "ts-node src/01-stipple-tsp.ts",
+        "wandering-line": "ts-node src/02-wandering-line.ts",
+        "contour-stitch": "ts-node src/03-contour-stitch.ts",
+        "serpentine": "ts-node src/04-serpentine.ts",
+        "space-filling": "ts-node src/05-space-filling.ts",
+        "all": "npm run stipple-tsp && npm run wandering-line && npm run contour-stitch && npm run serpentine && npm run space-filling",
+        "type-check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "sharp": "^0.33.3"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    }
+}
