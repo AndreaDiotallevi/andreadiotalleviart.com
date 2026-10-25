@@ -51,7 +51,7 @@ const { locale, currency, products } = Astro.props as Props
                         <div class="bg-gray-100 p-6 sm:p-10 md:p-15 lg:p-20 flex items-center justify-center">
                             <Image
                                 alt={product.name}
-                                src={product.images[0]}
+                                src={product.images[1] ?? product.images[0]}
                                 width={1429}
                                 height={2000}
                                 sizes="(max-width: 1280px) 200vw, 100vw"
