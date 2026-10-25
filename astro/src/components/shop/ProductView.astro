@@ -227,12 +227,6 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
                     <p class="font-bold text-sm md:text-base mt-2">
                         {relatedProduct.metadata.displayName}
                     </p>
-                    <p class="font-semibold text-xs md:text-sm md:mt-0.5">
-                        {formatCurrency({
-                            value: relatedProduct.default_price.currency_options[currency].unit_amount,
-                            currency,
-                        })}
-                    </p>
                 </a>
             ))}
         </div>
