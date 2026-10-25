@@ -1,9 +1,11 @@
 ---
+import { Image } from "@unpic/astro"
 import BaseLayout from "@layouts/BaseLayout.astro"
 import BackToLink from "@components/BackToLink.astro"
 import Button from "@components/Button.astro"
 import Carousel from "@components/Carousel.astro"
 import LocaleSelector from "@components/LocaleSelector.astro"
+import { imageBreakpoints } from "@utils/breakpoints"
 import { formatCurrency } from "@utils/intl"
 import { sizeToDescription } from "@utils/sizes"
 import { productsData } from "@utils/productsData"
@@ -14,10 +16,20 @@ interface Props {
     locale: string
     currency: Currency
     product: any
+    products?: any[]
 }
 
-const { locale, currency, product } = Astro.props as Props
+const { locale, currency, product, products = [] } = Astro.props as Props
 const shopHref = buildLocaleUrl('/shop', locale as any)
+
+const relatedNebulaSlugs: Record<string, string[]> = {
+    "nebula-1": ["nebula-2", "nebula-3"],
+    "nebula-2": ["nebula-1", "nebula-3"],
+    "nebula-3": ["nebula-1", "nebula-2"],
+}
+const relatedProducts = (relatedNebulaSlugs[product.metadata.slug] ?? [])
+    .map(slug => products.find(p => p.metadata.slug === slug))
+    .filter(Boolean)
 
 function normalizeSingleLine(text: string) {
     return text.replace(/\s+/g, " ").trim()
@@ -109,7 +121,7 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
         <div class="mb-4 md:hidden">
             <h1 class="text-2xl font-bold">{product.metadata.displayName}</h1>
-            {product.metadata.displaySubtitle? <p class="text-sm mt-1">{product.metadata.displaySubtitle}</p>:<></>}
+            {product.metadata.displaySubtitle? <p class="text-sm md:text-base font-semibold text-gray-600 mt-1">{product.metadata.displaySubtitle}</p>:<></>}
         </div>
         <Carousel images={product.images} width={1429} height={2000} altBase={product.metadata.displayName} />
         {/* Mobile-only submit button under images */}
@@ -126,7 +138,7 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         <div class="hidden md:flex items-start justify-between mb-6">
             <div>
                 <h1 class="text-5xl font-bold">{product.metadata.displayName}</h1>
-                {product.metadata.displaySubtitle? <p class="font-normal mt-2">{product.metadata.displaySubtitle}</p>:<></>}
+                {product.metadata.displaySubtitle? <p class="text-sm md:text-base font-semibold text-gray-600 mt-2">{product.metadata.displaySubtitle}</p>:<></>}
             </div>
             <div class="flex items-center">
                 <label for="locale-selector-product" class="sr-only">Region / language</label>
@@ -197,6 +209,58 @@ const productSizeCm = parseProductSizeInCm(product.metadata.size)
         </div>
     </form>
 </div>
+
+{relatedProducts.length ? (
+    <section class="max-w-screen-xl mx-auto px-4 pb-8 pt-4 md:pt-10 text-gray-800">
+        <h2 class="text-sm md:text-base font-semibold text-gray-600 mb-3 md:mb-4">More from the Nebula trilogy</h2>
+        <div class="related-thumbs">
+            {relatedProducts.map(relatedProduct => (
+                <a
+                    href={buildLocaleUrl(`/shop/${relatedProduct.metadata.category}/${relatedProduct.metadata.slug}`, locale as any)}
+                    class="related-thumbs__item flex flex-col no-underline text-gray-800 md:hover:opacity-70 transition-opacity duration-300"
+                >
+                    <Image
+                        alt={relatedProduct.metadata.displayName}
+                        src={relatedProduct.images[0]}
+                        width={1429}
+                        height={2000}
+                        sizes="600px"
+                        breakpoints={imageBreakpoints({
+                            maxWidth: 600,
+                            assetWidth: 1429,
+                        })}
+                        loading="lazy"
+                        fetchpriority="low"
+                    />
+                    <p class="font-bold text-sm md:text-base mt-2">
+                        {relatedProduct.metadata.displayName}
+                    </p>
+                </a>
+            ))}
+        </div>
+    </section>
+) : <></>}
+
+<style>
+    .related-thumbs {
+        --related-thumb-spacing: 0.8rem;
+        display: flex;
+        flex-direction: row;
+        margin-left: calc(var(--related-thumb-spacing) * -1);
+    }
+    .related-thumbs__item {
+        /* Mobile: 1/3 of full product column */
+        flex: 0 0 calc(100% / 3);
+        min-width: 0;
+        padding-left: var(--related-thumb-spacing);
+    }
+    @media (min-width: 768px) {
+        .related-thumbs__item {
+            /* Desktop: 1/3 of the half-width gallery column */
+            flex: 0 0 calc(50% / 3);
+        }
+    }
+</style>
 </BaseLayout>
 
 <script>

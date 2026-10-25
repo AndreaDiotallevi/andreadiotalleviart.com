@@ -24,4 +24,4 @@ const product = products.filter(product => product.metadata.slug === slug)[0]
 if (!product) return Astro.redirect("/404")
 ---
 
-<ProductView locale={defaultLocale} currency={currency} product={product} />
+<ProductView locale={defaultLocale} currency={currency} product={product} products={products} />
