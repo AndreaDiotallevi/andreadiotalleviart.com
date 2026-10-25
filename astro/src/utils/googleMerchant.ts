@@ -1,6 +1,5 @@
 import { getStripeProducts } from "./serverless"
 import { buildLocaleUrl, defaultLocale, localeToCurrency } from "./currency"
-import { productMetadataImages } from "./productMetadataImages"
 
 function escapeXml(value: string): string {
     return value
@@ -21,10 +20,9 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const items = products
         .map(product => {
-            // Skip first gallery image (flat artwork); never use it for Merchant metadata.
-            // Also exclude specific blocked mockup(s).
+            // Use gallery order as-is: images[0] is the primary mockup for display + metadata.
             const blockedImageSubstrings = ["mockup-series-vertical_hpqksb"]
-            const imageLinks = productMetadataImages(product.images).filter(
+            const imageLinks = (product.images ?? []).filter(
                 url => !blockedImageSubstrings.some(sub => url.includes(sub))
             )
             const imageLink = imageLinks[0] ?? ""
