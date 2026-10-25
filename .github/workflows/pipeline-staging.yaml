@@ -29,6 +29,8 @@ env:
     STAGING_ARTIFACTS_BUCKET: aws-sam-cli-managed-staging-pipel-artifactsbucket-1571mu0d2n3o
     STAGING_REGION: eu-west-2
     NETLIFY_BUILD_HOOK_STAGING: ${{ secrets.NETLIFY_BUILD_HOOK_STAGING }}
+    NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
 jobs:
     test:
@@ -84,3 +86,22 @@ jobs:
               run: |
                   echo "Triggering Netlify build hook for staging..."
                   curl -s -X POST "${{ env.NETLIFY_BUILD_HOOK_STAGING }}" || exit 1
+
+            # After backend/Stripe sync, rebuild the PR deploy preview so it
+            # picks up the updated API data (build hooks can't target PR branches).
+            - name: Trigger Netlify deploy preview (PR branch)
+              if: ${{ github.event_name == 'pull_request' && env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != '' }}
+              run: |
+                  echo "Triggering Netlify build for PR branch ${GITHUB_HEAD_REF}..."
+                  response="$(curl -sS -w "\n%{http_code}" -X POST \
+                    "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}/builds" \
+                    -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"branch\":\"${GITHUB_HEAD_REF}\"}")"
+                  http_code="$(echo "$response" | tail -n1)"
+                  body="$(echo "$response" | sed '$d')"
+                  echo "$body"
+                  if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+                    echo "Netlify API returned HTTP ${http_code}"
+                    exit 1
+                  fi
