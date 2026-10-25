@@ -20,7 +20,6 @@ export async function generateGoogleMerchantXml(locale: keyof typeof localeToCur
 
     const items = products
         .map(product => {
-            // Use gallery order as-is: images[0] is the primary mockup for display + metadata.
             const blockedImageSubstrings = ["mockup-series-vertical_hpqksb"]
             const imageLinks = (product.images ?? []).filter(
                 url => !blockedImageSubstrings.some(sub => url.includes(sub))
