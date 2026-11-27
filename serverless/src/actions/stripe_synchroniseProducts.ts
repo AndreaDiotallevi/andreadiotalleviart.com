@@ -1,8 +1,6 @@
 import Stripe from "stripe"
 import { v2 as cloudinary } from "cloudinary"
 import { initialiseClient } from "./stripe_initialiseClient"
-// import { getAllProducts } from "./theprintspace_getAllProducts"
-
 import { StripePrice } from "../types/stripe"
 
 cloudinary.config({

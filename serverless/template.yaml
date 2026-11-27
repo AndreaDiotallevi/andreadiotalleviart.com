@@ -155,8 +155,8 @@ Resources:
             Targets:
                 - Arn: !GetAtt SendOrderConfirmationEmailQueue.Arn
                   Id: SendOrderConfirmationEmailQueueTarget
-                - Arn: !GetAtt TheprintspaceCreateOrderQueue.Arn
-                  Id: TheprintspaceCreateOrderQueueTarget
+                - Arn: !GetAtt SendAdminOrderNotificationQueue.Arn
+                  Id: SendAdminOrderNotificationQueueTarget
 
     # QUEUES
     SendOrderConfirmationEmailQueuePolicy:
@@ -188,7 +188,7 @@ Resources:
             QueueName: !Sub ${AWS::StackName}-SendOrderConfirmationEmailDLQ
             MessageRetentionPeriod: 1209600
 
-    TheprintspaceCreateOrderQueuePolicy:
+    SendAdminOrderNotificationQueuePolicy:
         Type: AWS::SQS::QueuePolicy
         Properties:
             PolicyDocument:
@@ -197,53 +197,24 @@ Resources:
                       Principal:
                           Service: events.amazonaws.com
                       Action: sqs:SendMessage
-                      Resource: !GetAtt TheprintspaceCreateOrderQueue.Arn
+                      Resource: !GetAtt SendAdminOrderNotificationQueue.Arn
             Queues:
-                - Ref: TheprintspaceCreateOrderQueue
+                - Ref: SendAdminOrderNotificationQueue
 
-    TheprintspaceCreateOrderQueue:
+    SendAdminOrderNotificationQueue:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-TheprintspaceCreateOrderQueue
+            QueueName: !Sub ${AWS::StackName}-SendAdminOrderNotificationQueue
             VisibilityTimeout: 100
             ReceiveMessageWaitTimeSeconds: 20
             RedrivePolicy:
-                deadLetterTargetArn: !GetAtt TheprintspaceCreateOrderDLQ.Arn
-                maxReceiveCount: 1
-
-    TheprintspaceCreateOrderDLQ:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-TheprintspaceCreateOrderDLQ
-            MessageRetentionPeriod: 1209600
-
-    SendOrderShippedEmailQueuePolicy:
-        Type: AWS::SQS::QueuePolicy
-        Properties:
-            PolicyDocument:
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service: events.amazonaws.com
-                      Action: sqs:SendMessage
-                      Resource: !GetAtt SendOrderShippedEmailQueue.Arn
-            Queues:
-                - Ref: SendOrderShippedEmailQueue
-
-    SendOrderShippedEmailQueue:
-        Type: AWS::SQS::Queue
-        Properties:
-            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailQueue
-            VisibilityTimeout: 100
-            ReceiveMessageWaitTimeSeconds: 20
-            RedrivePolicy:
-                deadLetterTargetArn: !GetAtt SendOrderShippedEmailDLQ.Arn
+                deadLetterTargetArn: !GetAtt SendAdminOrderNotificationDLQ.Arn
                 maxReceiveCount: 3
 
-    SendOrderShippedEmailDLQ:
+    SendAdminOrderNotificationDLQ:
         Type: AWS::SQS::Queue
         Properties:
-            QueueName: !Sub ${AWS::StackName}-SendOrderShippedEmailDLQ
+            QueueName: !Sub ${AWS::StackName}-SendAdminOrderNotificationDLQ
             MessageRetentionPeriod: 1209600
 
     # TOPICS
@@ -260,30 +231,17 @@ Resources:
             TopicArn: !Ref SendOrderConfirmationEmailTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
-    SendOrderShippedEmailTopic:
+    SendAdminOrderNotificationTopic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: SendOrderShippedEmailTopic
-            TopicName: SendOrderShippedEmailTopic
+            DisplayName: SendAdminOrderNotificationTopic
+            TopicName: SendAdminOrderNotificationTopic
 
-    SendOrderShippedEmailTopicSubscription:
+    SendAdminOrderNotificationTopicSubscription:
         Type: AWS::SNS::Subscription
         Properties:
             Protocol: email
-            TopicArn: !Ref SendOrderShippedEmailTopic
-            Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
-
-    TheprintspaceCreateOrderTopic:
-        Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: TheprintspaceCreateOrderTopic
-            TopicName: TheprintspaceCreateOrderTopic
-
-    TheprintspaceCreateOrderTopicSubscription:
-        Type: AWS::SNS::Subscription
-        Properties:
-            Protocol: email
-            TopicArn: !Ref TheprintspaceCreateOrderTopic
+            TopicArn: !Ref SendAdminOrderNotificationTopic
             Endpoint: "{{resolve:ssm:EMAIL_SNS_TOPICS}}"
 
     AchievementsNotificationTopic:
@@ -318,41 +276,23 @@ Resources:
             AlarmActions:
                 - !Ref SendOrderConfirmationEmailTopic
 
-    SendOrderShippedEmailAlarm:
+    SendAdminOrderNotificationAlarm:
         Type: AWS::CloudWatch::Alarm
         Properties:
-            AlarmName: SendOrderShippedEmailAlarm
-            AlarmDescription: "There was an error while sending the email after order shipped."
+            AlarmName: SendAdminOrderNotificationAlarm
+            AlarmDescription: "There was an error while sending the admin notification email after checkout session completed."
             Namespace: AWS/SQS
             MetricName: ApproximateNumberOfMessagesVisible
             Dimensions:
                 - Name: QueueName
-                  Value: !GetAtt SendOrderShippedEmailDLQ.QueueName
+                  Value: !GetAtt SendAdminOrderNotificationDLQ.QueueName
             Statistic: Sum
             Period: 300
             EvaluationPeriods: 1
             Threshold: 1
             ComparisonOperator: GreaterThanOrEqualToThreshold
             AlarmActions:
-                - !Ref SendOrderShippedEmailTopic
-
-    TheprintspaceCreateOrderAlarm:
-        Type: AWS::CloudWatch::Alarm
-        Properties:
-            AlarmName: TheprintspaceCreateOrderAlarm
-            AlarmDescription: "There was an error while creating an order with Theprintspace."
-            Namespace: AWS/SQS
-            MetricName: ApproximateNumberOfMessagesVisible
-            Dimensions:
-                - Name: QueueName
-                  Value: !GetAtt TheprintspaceCreateOrderDLQ.QueueName
-            Statistic: Sum
-            Period: 300
-            EvaluationPeriods: 1
-            Threshold: 1
-            ComparisonOperator: GreaterThanOrEqualToThreshold
-            AlarmActions:
-                - !Ref TheprintspaceCreateOrderTopic
+                - !Ref SendAdminOrderNotificationTopic
 
     # EMAIL TEMPLATES
     OrderConfirmationEmailTemplate:
@@ -420,70 +360,43 @@ Resources:
                     </html>
                 SubjectPart: "Your order - {{orderNumber}}"
 
-    OrderShippedEmailTemplate:
+    AdminNewOrderEmailTemplate:
         Type: AWS::SES::Template
         Properties:
             Template:
-                TemplateName: OrderShippedEmailTemplate
+                TemplateName: AdminNewOrderEmailTemplate
                 HtmlPart: !Sub |
                     <html>
-                        <head>
-                            <meta name="format-detection" content="email=no" />
-                        </head>
                         <body>
-                            <style>
-                                .address-block a { color: inherit !important; text-decoration: none !important; }
-                            </style>
-                            <p>Order number: {{orderNumber}}.</p>
-                            <h3>Dear {{name}},</h3>
-                            <p>Your order has been shipped and is now on its way!</p>
-                            <h3>Shipment details</h3>
-                            <div>
-                                Carrier name: {{carrierName}}<br>
-                                Carrier service: {{carrierService}}<br>
-                                {{#if trackingNumber}}
-                                    Tracking number: {{trackingNumber}}<br>
-                                {{/if}}
-                                {{#if trackingUrl}}
-                                    Tracking link: <a href="{{trackingUrl}}">here</a>
-                                {{/if}}
-                            </div>
+                            <p>New paid order <strong>{{orderNumber}}</strong>, placed {{purchasedAt}} (UK time).</p>
                             <h3>Items</h3>
                             <table>
                                 <tbody>
                                     {{#each item}}
-                                        <tr style="margin-bottom: 8px;">
-                                            <td width="20%">
-                                                <img src="{{imageSource}}" alt="{{displayName}}" style="width: 100%; height: auto;">
-                                            </td>
-                                            <td width="80%" style="vertical-align: top; padding-left: 12px;">
-                                                {{quantity}} x {{displayName}} - {{description}}
-                                            </td>
+                                        <tr>
+                                            <td style="padding-right: 12px;">{{quantity}} x {{displayName}}</td>
+                                            <td style="padding-right: 12px; font-family: monospace;">{{sku}}</td>
+                                            <td>{{amount}}</td>
                                         </tr>
+                                        {{#if variantMissing}}
+                                            <tr>
+                                                <td colspan="3" style="color: #b00020;">No CreativeHub variant is set for this SKU. Add it to theprintspace_variants.ts before ordering.</td>
+                                            </tr>
+                                        {{/if}}
                                     {{/each}}
                                 </tbody>
                             </table>
-                            <h3>Delivery address</h3>
-                            <span class="address-block">
-                                {{name}}<br>
-                                {{addressLine1}}<br>
-                                {{#if addressLine2}}
-                                    {{addressLine2}}<br>
-                                {{/if}}
-                                {{#if postcode}}
-                                    {{postcode}}<br>
-                                {{/if}}
-                                {{#if town}}
-                                    {{town}}<br>
-                                {{/if}}
-                                {{country}}<br>
-                            </span>
-                            <p>For any questions regarding your order, you can reply to this email.</p>
-                            <h3>Thank you</h3>
-                            <p>Andrea</p>
+                            <h3>Totals</h3>
+                            <div>
+                                Subtotal: {{amountSubtotal}}<br>
+                                Discount: {{amountDiscount}}<br>
+                                Total paid: {{amountTotal}}<br>
+                                Destination country: {{country}}
+                            </div>
+                            <p><a href="{{adminUrl}}">Open order in admin</a></p>
                         </body>
                     </html>
-                SubjectPart: "Your order {{orderNumber}} has been shipped"
+                SubjectPart: "New order {{orderNumber}} ({{country}})"
 
     ContactPageEmailTemplate:
         Type: AWS::SES::Template
@@ -812,38 +725,6 @@ Resources:
                 EntryPoints:
                     - src/lambdas/checkoutCompleted_sendOrderConfirmationEmail.ts
 
-    SendOrderShippedEmailFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-SendOrderShippedEmail
-            Handler: src/lambdas/api_sendOrderShippedEmail.handler
-            Environment:
-                Variables:
-                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
-            Policies:
-                - Statement:
-                      - Sid: sendOrderShippedEmail
-                        Effect: Allow
-                        Action:
-                            - SES:SendEmail
-                            - SES:SendTemplatedEmail
-                        Resource: "*"
-                - Statement:
-                      - Sid: readParameterStore
-                        Effect: Allow
-                        Action:
-                            - SSM:GetParameter
-                        Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/api_sendOrderShippedEmail.ts
-
     SendContactPageEmailFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -882,52 +763,43 @@ Resources:
                 EntryPoints:
                     - src/lambdas/api_sendContactPageEmail.ts
 
-    TheprintspaceHandleWebhooksFunction:
+    SendAdminOrderNotificationFunction:
         Type: AWS::Serverless::Function
         Properties:
-            FunctionName: !Sub ${AWS::StackName}-TheprintspaceHandleWebhooks
-            Handler: src/lambdas/api_theprintspaceHandleWebhooks.handler
+            FunctionName: !Sub ${AWS::StackName}-SendAdminOrderNotification
+            Handler: src/lambdas/checkoutCompleted_sendAdminOrderNotificationEmail.handler
             Environment:
                 Variables:
-                    EVENT_BUS_NAME: !Ref EventBus
-            Events:
-                TheprintspaceWebhook:
-                    Type: Api
-                    Properties:
-                        RestApiId: !Ref ApiGateway
-                        Path: /theprintspace-handle-webhooks
-                        Method: POST
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Target: "es2020"
-                EntryPoints:
-                    - src/lambdas/api_theprintspaceHandleWebhooks.ts
-
-    TheprintspaceCreateOrderFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: !Sub ${AWS::StackName}-TheprintspaceCreateOrder
-            Handler: src/lambdas/checkoutCompleted_theprintspaceCreateOrder.handler
+                    CONFIGURATION_SET_NAME: !Ref SESConfigurationSet
+                    ADMIN_BASE_URL: !If
+                        - IsProduction
+                        - "https://andreadiotalleviart.com"
+                        - !If
+                            - IsStaging
+                            - "https://staging--andreadiotalleviart.netlify.app"
+                            - "http://localhost:4321"
             Events:
                 MySQSEvent:
                     Type: SQS
                     Properties:
-                        Queue: !GetAtt TheprintspaceCreateOrderQueue.Arn
+                        Queue: !GetAtt SendAdminOrderNotificationQueue.Arn
                         BatchSize: 5
-            Environment:
-                Variables:
-                    CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
-                    ENVIRONMENT: !Ref Environment
             Policies:
+                - Statement:
+                      - Sid: sendAdminOrderNotification
+                        Effect: Allow
+                        Action:
+                            - SES:SendEmail
+                            - SES:SendTemplatedEmail
+                        Resource: "*"
                 - Statement:
                       - Sid: readParameterStore
                         Effect: Allow
                         Action:
                             - SSM:GetParameter
                         Resource:
-                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ORDERS
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/EMAIL_ANDREA
                             - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
         Metadata:
             BuildMethod: esbuild
@@ -935,7 +807,77 @@ Resources:
                 Minify: true
                 Target: "es2020"
                 EntryPoints:
-                    - src/lambdas/checkoutCompleted_theprintspaceCreateOrder.ts
+                    - src/lambdas/checkoutCompleted_sendAdminOrderNotificationEmail.ts
+
+    AdminGetOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-AdminGetOrder
+            Handler: src/lambdas/api_adminGetOrder.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /admin/orders/{sessionId}
+                        Method: GET
+            Environment:
+                Variables:
+                    ENVIRONMENT: !Ref Environment
+                    CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_adminGetOrder.ts
+
+    AdminFulfilOrderFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub ${AWS::StackName}-AdminFulfilOrder
+            Handler: src/lambdas/api_adminFulfilOrder.handler
+            Events:
+                Root:
+                    Type: Api
+                    Properties:
+                        RestApiId: !Ref ApiGateway
+                        Path: /admin/orders/{sessionId}/fulfil
+                        Method: POST
+            Environment:
+                Variables:
+                    ENVIRONMENT: !Ref Environment
+                    CREATIVEHUB_API_URL: "{{resolve:ssm:CREATIVEHUB_API_URL}}"
+                    ADMIN_API_SECRET: "{{resolve:ssm:ADMIN_API_SECRET}}"
+            Policies:
+                - Statement:
+                      - Sid: readParameterStore
+                        Effect: Allow
+                        Action:
+                            - SSM:GetParameter
+                        Resource:
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/STRIPE_SECRET_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CREATIVEHUB_API_KEY
+                            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/ADMIN_API_SECRET
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Target: "es2020"
+                EntryPoints:
+                    - src/lambdas/api_adminFulfilOrder.ts
 
     NewsletterListContactsFunction:
         Type: AWS::Serverless::Function

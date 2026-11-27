@@ -10,8 +10,6 @@ export type ProductMetadata = {
     size: string
     slug: string
     sku: string
-    theprintspaceProductId?: string
-    theprintspacePrintOptionId?: string
 }
 
 export type ProductWithMetadata = Omit<Stripe.Product, "metadata"> & {
@@ -29,8 +27,6 @@ const metadataSchema = z.object({
     size: z.string(),
     slug: z.string(),
     sku: z.string(),
-    theprintspacePrintOptionId: z.string(),
-    theprintspaceProductId: z.string(),
 })
 
 const currencyOptionsSchema = z
