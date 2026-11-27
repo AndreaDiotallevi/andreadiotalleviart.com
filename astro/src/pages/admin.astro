@@ -370,7 +370,12 @@ if (apiUrl && adminSecret) {
                                         {formatCheckoutSessionDate(session.created)}
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 font-mono text-xs md:px-4 md:text-sm max-w-[180px] break-all whitespace-normal leading-tight">
-                                        {session.id}
+                                        <a
+                                            href={`/admin/orders/${session.id}`}
+                                            class="underline hover:text-gray-600"
+                                        >
+                                            {session.id}
+                                        </a>
                                     </td>
                                     <td class="px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm whitespace-nowrap">
                                         {session.order_id ?? "—"}

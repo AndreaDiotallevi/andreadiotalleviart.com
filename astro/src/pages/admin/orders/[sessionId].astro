@@ -1,0 +1,384 @@
+---
+export const prerender = false
+
+import BaseLayout from "@layouts/BaseLayout.astro"
+import {
+    ADMIN_SESSION_COOKIE_NAME,
+    isAdminUser,
+    verifyAdminSessionToken,
+} from "@utils/auth"
+
+const NOINDEX_ROBOTS_TAG = "noindex, nofollow, noarchive"
+
+const redirectWithNoIndex = (location: string): Response =>
+    new Response(null, {
+        status: 302,
+        headers: {
+            Location: location,
+            "X-Robots-Tag": NOINDEX_ROBOTS_TAG,
+        },
+    })
+
+const sessionId = Astro.params.sessionId ?? ""
+const returnTo = `/admin/orders/${encodeURIComponent(sessionId)}`
+
+const sessionToken = Astro.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value
+if (!sessionToken) {
+    return redirectWithNoIndex(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`)
+}
+
+const sessionClaims = await verifyAdminSessionToken(sessionToken)
+if (!sessionClaims) {
+    return redirectWithNoIndex(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`)
+}
+
+if (!isAdminUser(sessionClaims.groups)) {
+    return redirectWithNoIndex("/403")
+}
+
+Astro.response.headers.set("X-Robots-Tag", NOINDEX_ROBOTS_TAG)
+
+type Address = {
+    line1: string | null
+    line2: string | null
+    city: string | null
+    state: string | null
+    postal_code: string | null
+    country: string | null
+}
+
+type FulfilmentLine = {
+    sku: string | null
+    displayName: string
+    quantity: number
+    amountTotal: number | null
+    currency: string | null
+    variantId: string | null
+}
+
+type CreativehubOrder = {
+    id?: string
+    order_number?: string
+    status?: string
+    date_due?: string | null
+    dispatched_at?: string | null
+    tracking?: {
+        carrier?: string
+        tracking_number?: string
+        tracking_url?: string
+    } | null
+}
+
+type OrderDetail = {
+    session: {
+        id: string
+        created: number
+        livemode: boolean
+        status: string | null
+        paymentStatus: string | null
+        currency: string | null
+        amountSubtotal: number | null
+        amountDiscount: number
+        amountTotal: number | null
+        orderNumber: string | null
+        refunded: boolean
+        customer: { name: string | null; email: string | null; phone: string | null }
+        shipping: { name: string | null; address: Address | null }
+    }
+    lines: FulfilmentLine[]
+    creativehubOrder: CreativehubOrder | null
+    creativehubError: string | null
+    quote: {
+        currency?: string
+        production_cost?: number
+        delivery_cost?: number
+        addon_cost?: number
+        total_vat?: number
+        total_incl_vat?: number
+    } | null
+    quoteError: string | null
+    canOrder: boolean
+    blockers: string[]
+}
+
+const apiUrl = import.meta.env.PUBLIC_API_URL
+const adminSecret = import.meta.env.ADMIN_API_SECRET
+
+let detail: OrderDetail | null = null
+let loadError: string | null = null
+
+if (!apiUrl || !adminSecret) {
+    loadError = "The admin API is not configured for this environment."
+} else {
+    try {
+        const response = await fetch(
+            `${apiUrl}/admin/orders/${encodeURIComponent(sessionId)}`,
+            { headers: { "X-Admin-Secret": adminSecret } }
+        )
+        if (response.ok) {
+            detail = (await response.json()) as OrderDetail
+        } else if (response.status === 404) {
+            loadError = "Checkout session not found."
+        } else {
+            loadError = `Could not load this order (status ${response.status}).`
+        }
+    } catch {
+        loadError = "Could not reach the order service."
+    }
+}
+
+const fulfilmentResult = Astro.url.searchParams.get("fulfilment")
+const fulfilmentMessage = Astro.url.searchParams.get("message")
+
+const formatMinor = (amount: number | null | undefined, currency: string | null | undefined) => {
+    if (typeof amount !== "number" || !currency) return "—"
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: currency.toUpperCase(),
+    }).format(amount / 100)
+}
+
+const formatMajor = (amount: number | undefined, currency: string | undefined) => {
+    if (typeof amount !== "number") return "—"
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: (currency ?? "GBP").toUpperCase(),
+    }).format(amount)
+}
+
+const formatDateTime = (unixSeconds: number) =>
+    new Intl.DateTimeFormat("en-GB", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Europe/London",
+    }).format(new Date(unixSeconds * 1000))
+
+const formatIsoDate = (iso: string | null | undefined) =>
+    iso
+        ? new Intl.DateTimeFormat("en-GB", {
+              dateStyle: "medium",
+              timeStyle: "short",
+              timeZone: "Europe/London",
+          }).format(new Date(iso))
+        : "—"
+
+const sectionClass = "mt-10"
+const headingClass = "text-xl font-semibold"
+const tableHeadClass =
+    "px-3 py-2 text-left text-xs md:px-4 md:text-sm font-medium text-gray-600 whitespace-nowrap"
+const tableCellClass = "px-3 py-2 text-gray-800 text-xs md:px-4 md:text-sm align-top"
+const labelClass = "text-sm text-gray-500"
+---
+
+<BaseLayout
+    title="Order | Admin | Andrea Diotallevi Art"
+    description="Admin order detail."
+    noIndex={true}
+    hideFooter={true}
+>
+    <div class="max-w-screen-md mx-auto px-4 py-8 pt-0 md:pt-8">
+        <a href="/admin" class="text-sm underline hover:text-gray-600">Back to admin</a>
+        <h1 class="mt-4 text-2xl md:text-4xl font-bold">Order</h1>
+        <p class="mt-2 font-mono text-xs break-all text-gray-600">{sessionId}</p>
+
+        {fulfilmentResult === "ordered" && (
+            <p class="mt-6 rounded border border-green-300 bg-green-50 px-4 py-3 text-green-900">
+                {fulfilmentMessage}
+            </p>
+        )}
+        {fulfilmentResult === "error" && (
+            <p class="mt-6 rounded border border-red-300 bg-red-50 px-4 py-3 text-red-900">
+                {fulfilmentMessage}
+            </p>
+        )}
+
+        {loadError && (
+            <p class="mt-6 rounded border border-red-300 bg-red-50 px-4 py-3 text-red-900">
+                {loadError}
+            </p>
+        )}
+
+        {detail && (
+            <>
+                <section class={sectionClass} aria-labelledby="payment-heading">
+                    <h2 id="payment-heading" class={headingClass}>Payment</h2>
+                    <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                        <dt class={labelClass}>Placed</dt>
+                        <dd>{formatDateTime(detail.session.created)}</dd>
+                        <dt class={labelClass}>Mode</dt>
+                        <dd>
+                            {detail.session.livemode ? (
+                                <span class="font-semibold text-green-800">Live</span>
+                            ) : (
+                                <span class="font-semibold text-amber-700">Test</span>
+                            )}
+                        </dd>
+                        <dt class={labelClass}>Payment status</dt>
+                        <dd>{detail.session.paymentStatus ?? "—"}</dd>
+                        <dt class={labelClass}>Refunded</dt>
+                        <dd>{detail.session.refunded ? "Yes" : "No"}</dd>
+                        <dt class={labelClass}>Order number</dt>
+                        <dd>{detail.session.orderNumber ?? "—"}</dd>
+                        <dt class={labelClass}>Subtotal</dt>
+                        <dd>{formatMinor(detail.session.amountSubtotal, detail.session.currency)}</dd>
+                        <dt class={labelClass}>Discount</dt>
+                        <dd>{formatMinor(detail.session.amountDiscount, detail.session.currency)}</dd>
+                        <dt class={labelClass}>Total paid</dt>
+                        <dd class="font-semibold">{formatMinor(detail.session.amountTotal, detail.session.currency)}</dd>
+                    </dl>
+                </section>
+
+                <section class={sectionClass} aria-labelledby="items-heading">
+                    <h2 id="items-heading" class={headingClass}>Items</h2>
+                    <div class="mt-4 overflow-x-auto rounded border border-gray-200 bg-white">
+                        <table class="min-w-[560px] w-full border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class={tableHeadClass}>Item</th>
+                                    <th class={tableHeadClass}>SKU</th>
+                                    <th class={tableHeadClass}>Qty</th>
+                                    <th class={tableHeadClass}>Paid</th>
+                                    <th class={tableHeadClass}>CreativeHub variant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {detail.lines.map((line) => (
+                                    <tr class="border-b border-gray-100 last:border-b-0">
+                                        <td class={tableCellClass}>{line.displayName}</td>
+                                        <td class={`${tableCellClass} font-mono`}>{line.sku ?? "—"}</td>
+                                        <td class={tableCellClass}>{line.quantity}</td>
+                                        <td class={tableCellClass}>{formatMinor(line.amountTotal, line.currency)}</td>
+                                        <td class={tableCellClass}>
+                                            {line.variantId ? (
+                                                <span class="font-mono break-all">{line.variantId}</span>
+                                            ) : (
+                                                <span class="font-semibold text-red-700">Not set</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class={sectionClass} aria-labelledby="customer-heading">
+                    <h2 id="customer-heading" class={headingClass}>Customer and shipping</h2>
+                    <div class="mt-4 text-sm leading-relaxed">
+                        <p>{detail.session.customer.name ?? "—"}</p>
+                        <p>{detail.session.customer.email ?? "—"}</p>
+                        <p>{detail.session.customer.phone ?? "—"}</p>
+                        {detail.session.shipping.address && (
+                            <address class="mt-3 not-italic">
+                                {detail.session.shipping.name && <div>{detail.session.shipping.name}</div>}
+                                {detail.session.shipping.address.line1 && <div>{detail.session.shipping.address.line1}</div>}
+                                {detail.session.shipping.address.line2 && <div>{detail.session.shipping.address.line2}</div>}
+                                {detail.session.shipping.address.city && <div>{detail.session.shipping.address.city}</div>}
+                                {detail.session.shipping.address.state && <div>{detail.session.shipping.address.state}</div>}
+                                {detail.session.shipping.address.postal_code && <div>{detail.session.shipping.address.postal_code}</div>}
+                                {detail.session.shipping.address.country && <div>{detail.session.shipping.address.country}</div>}
+                            </address>
+                        )}
+                    </div>
+                </section>
+
+                <section class={sectionClass} aria-labelledby="fulfilment-heading">
+                    <h2 id="fulfilment-heading" class={headingClass}>theprintspace</h2>
+
+                    {detail.creativehubError && (
+                        <p class="mt-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+                            Could not check CreativeHub: {detail.creativehubError}
+                        </p>
+                    )}
+
+                    {detail.creativehubOrder ? (
+                        <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                            <dt class={labelClass}>Order number</dt>
+                            <dd>{detail.creativehubOrder.order_number ?? "—"}</dd>
+                            <dt class={labelClass}>Status</dt>
+                            <dd>{detail.creativehubOrder.status ?? "—"}</dd>
+                            <dt class={labelClass}>Due date</dt>
+                            <dd>{detail.creativehubOrder.date_due ?? "—"}</dd>
+                            <dt class={labelClass}>Dispatched</dt>
+                            <dd>{formatIsoDate(detail.creativehubOrder.dispatched_at)}</dd>
+                            <dt class={labelClass}>Tracking</dt>
+                            <dd>
+                                {detail.creativehubOrder.tracking?.tracking_url ? (
+                                    <a
+                                        href={detail.creativehubOrder.tracking.tracking_url}
+                                        class="underline hover:text-gray-600"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {detail.creativehubOrder.tracking.tracking_number ?? "Track parcel"}
+                                    </a>
+                                ) : (
+                                    <span>{detail.creativehubOrder.tracking?.tracking_number ?? "Not yet dispatched"}</span>
+                                )}
+                            </dd>
+                        </dl>
+                        <p class="mt-4 text-sm text-gray-600">
+                            Cancellations need to go to info@theprintspace.co.uk before 00:00 UK time, when the overnight billing run starts.
+                        </p>
+                    ) : (
+                        <>
+                            {detail.quote ? (
+                                <dl class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                                    <dt class={labelClass}>Production</dt>
+                                    <dd>{formatMajor(detail.quote.production_cost, detail.quote.currency)}</dd>
+                                    <dt class={labelClass}>Delivery</dt>
+                                    <dd>{formatMajor(detail.quote.delivery_cost, detail.quote.currency)}</dd>
+                                    <dt class={labelClass}>VAT</dt>
+                                    <dd>{formatMajor(detail.quote.total_vat, detail.quote.currency)}</dd>
+                                    <dt class={labelClass}>CreativeHub total</dt>
+                                    <dd class="font-semibold">{formatMajor(detail.quote.total_incl_vat, detail.quote.currency)}</dd>
+                                    <dt class={labelClass}>Buyer paid</dt>
+                                    <dd>{formatMinor(detail.session.amountTotal, detail.session.currency)}</dd>
+                                </dl>
+                            ) : (
+                                detail.quoteError && (
+                                    <p class="mt-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+                                        Quote unavailable: {detail.quoteError}
+                                    </p>
+                                )
+                            )}
+
+                            {detail.blockers.length > 0 && (
+                                <ul class="mt-4 list-disc pl-5 text-sm text-gray-700 space-y-1">
+                                    {detail.blockers.map((blocker) => (
+                                        <li>{blocker}</li>
+                                    ))}
+                                </ul>
+                            )}
+
+                            {detail.canOrder && (
+                                <form
+                                    method="POST"
+                                    action={`/api/admin/orders/${encodeURIComponent(sessionId)}/fulfil`}
+                                    class="mt-6"
+                                    onsubmit="return confirm('Place this order with theprintspace? It will be billed to your saved card in the overnight run (00:00-03:00 UK time).')"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="w-full max-w-lg rounded-lg border border-gray-800 bg-gray-800 px-4 py-3 font-bold text-white transition-colors duration-300 md:hover:bg-white md:hover:text-gray-800"
+                                    >
+                                        Order on theprintspace
+                                    </button>
+                                </form>
+                            )}
+                        </>
+                    )}
+                </section>
+            </>
+        )}
+
+        <div class="mt-10">
+            <a
+                href="/admin"
+                class="block w-full max-w-lg rounded-lg border border-gray-300 bg-white px-4 py-3 text-center font-bold text-gray-800 transition-colors duration-300 md:hover:border-gray-800 md:hover:bg-gray-800 md:hover:text-white"
+            >
+                Back to admin
+            </a>
+        </div>
+    </div>
+</BaseLayout>
